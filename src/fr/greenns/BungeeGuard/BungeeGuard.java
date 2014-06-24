@@ -24,7 +24,7 @@ public class BungeeGuard extends Plugin {
 	public BungeeGuardUtils utils;
 	public HashMap<String,Integer> mute;
 	public HashMap<String,ProxiedPlayer> reply;
-	public ArrayList<String> serv = new ArrayList<>();
+	public ArrayList<String> serv = new ArrayList<String>();
 	public BungeeGuardListener BGListener;
 	
     @Override
@@ -53,8 +53,8 @@ public class BungeeGuard extends Plugin {
 		}
 
 		BGListener = new BungeeGuardListener(this);
-		mute = new HashMap<>();
-		reply = new HashMap<>();
+		mute = new HashMap<String,Integer>();
+		reply = new HashMap<String,ProxiedPlayer>();
 		utils = new BungeeGuardUtils(this);
 		sql.close();
 
