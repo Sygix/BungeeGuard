@@ -1,10 +1,13 @@
 package fr.greenns.BungeeGuard.commands;
 
 import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
+
+import java.util.UUID;
 
 public class CommandReply extends Command {
 
@@ -56,6 +59,11 @@ public class CommandReply extends Command {
 					pe.sendMessage("§8[§a" + sender.getName() + " §7➠  §ame§8] §7" + text);
 					sender.sendMessage("§8[§ame §7➠  §a" + pe + "§8] §7" + text);
 					plugin.reply.put(sender.getName(), pe);
+                    for(String sp : plugin.spy)
+                    {
+                        ProxiedPlayer admin = BungeeCord.getInstance().getPlayer(UUID.fromString(sp));
+                        admin.sendMessage(ChatColor.GRAY + sender.getName() + ": /r " + pe.getName() + " " + text);
+                    }
 
 					return;
 				}

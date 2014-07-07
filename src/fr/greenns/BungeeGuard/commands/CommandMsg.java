@@ -1,10 +1,13 @@
 package fr.greenns.BungeeGuard.commands;
 
 import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
+
+import java.util.UUID;
 
 public class CommandMsg extends Command {
 
@@ -12,7 +15,7 @@ public class CommandMsg extends Command {
 
 	public CommandMsg(BungeeGuard plugin)
 	{
-		super("msg", "bungeeguard.msg");
+		super("msg", "bungeeguard.msg", "m");
 		this.plugin = plugin;
 	}
 
@@ -36,7 +39,9 @@ public class CommandMsg extends Command {
 
 		if(args.length == 0)
 		{
-			sender.sendMessage("§cLa bonne commande est :");
+			sender.sendMessage("§c/msg <joueur> <message>");
+			sender.sendMessage("§c/m <joueur> <message>");
+            sender.sendMessage("§cExemple :");
 			sender.sendMessage("§c/msg NomDeMonAmi Hey sa te dit de jouer avec moi ?");
 			return;
 		}
@@ -57,6 +62,11 @@ public class CommandMsg extends Command {
 						p.sendMessage("§8[§a" + sender.getName() + " §7➠  §ame§8] §7" + text);
 						sender.sendMessage("§8[§ame §7➠  §a" + p.getName() + "§8] §7" + text);
 						plugin.reply.put(sender.getName(), p);
+                        for(String sp : plugin.spy)
+                        {
+                            ProxiedPlayer admin = BungeeCord.getInstance().getPlayer(UUID.fromString(sp));
+                            admin.sendMessage(ChatColor.GRAY + sender.getName() + ": /msg " + p.getName() + " " + text);
+                        }
 
 						return;
 					}

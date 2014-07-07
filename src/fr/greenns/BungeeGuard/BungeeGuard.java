@@ -4,16 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import fr.greenns.BungeeGuard.SQL.MySQL;
-import fr.greenns.BungeeGuard.commands.CommandBan;
-import fr.greenns.BungeeGuard.commands.CommandCheck;
-import fr.greenns.BungeeGuard.commands.CommandKick;
-import fr.greenns.BungeeGuard.commands.CommandMsg;
-import fr.greenns.BungeeGuard.commands.CommandMute;
-import fr.greenns.BungeeGuard.commands.CommandReply;
-import fr.greenns.BungeeGuard.commands.CommandSay;
-import fr.greenns.BungeeGuard.commands.CommandSilence;
-import fr.greenns.BungeeGuard.commands.CommandUnban;
-import fr.greenns.BungeeGuard.commands.CommandUnmute;
+import fr.greenns.BungeeGuard.commands.*;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -24,6 +15,7 @@ public class BungeeGuard extends Plugin {
 	public BungeeGuardUtils utils;
 	public HashMap<String,Integer> mute;
 	public HashMap<String,ProxiedPlayer> reply;
+	public ArrayList<String> spy;
 	public ArrayList<String> serv = new ArrayList<String>();
 	public BungeeGuardListener BGListener;
 	
@@ -55,16 +47,19 @@ public class BungeeGuard extends Plugin {
 		BGListener = new BungeeGuardListener(this);
 		mute = new HashMap<String,Integer>();
 		reply = new HashMap<String,ProxiedPlayer>();
+        spy = new ArrayList<String>();
 		utils = new BungeeGuardUtils(this);
 		sql.close();
 
 		ProxyServer.getInstance().getPluginManager().registerListener(this, BGListener);
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandKick(this));
-        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandBan(this));
-        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandUnban(this));
-        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandCheck(this));
-        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMute(this));
-        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandUnmute(this));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandLobby(this));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandSpychat(this));
+        //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandBan(this));
+        //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandUnban(this));
+        //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandCheck(this));
+        //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMute(this));
+        //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandUnmute(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandSilence(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandSay(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMsg(this));

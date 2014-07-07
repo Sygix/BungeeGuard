@@ -5,7 +5,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
 
-public class CommandHelp  extends Command {
+public class CommandHelp extends Command {
 
 	public BungeeGuard plugin;
 

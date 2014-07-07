@@ -45,7 +45,7 @@ public class CommandSay extends Command {
 			for (ProxiedPlayer p : BungeeCord.getInstance().getPlayers())
 			{
                 p.sendMessage(" ");
-                p.sendMessage("§8[§cAlert§8]"+ ChatColor.RESET +"§c"+msg);
+                p.sendMessage("§b[§a***§b]"+ ChatColor.RESET +"§7"+msg);
                 p.sendMessage(" ");
 			}
 		}
