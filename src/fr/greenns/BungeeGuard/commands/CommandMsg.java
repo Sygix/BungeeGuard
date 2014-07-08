@@ -15,7 +15,7 @@ public class CommandMsg extends Command {
 
     public CommandMsg(BungeeGuard plugin)
     {
-        super("msg", "bungeeguard.msg", "m");
+        super("msg", "bungeeguard.msg", "m", "w");
         this.plugin = plugin;
     }
 
