@@ -22,8 +22,9 @@ public class BungeeGuard extends Plugin {
     @Override
     public void onEnable() {
     	
-    	sql = new MySQL(getLogger(), "", "localhost", "3306", "plugin", "root", "b1t3du68250_mysql");
-		sql.open();
+    	//sql = new MySQL(getLogger(), "", "localhost", "3306", "plugin", "root", "b1t3du68250_mysql");
+        sql = new MySQL(getLogger(), "", "localhost", "3306", "testSQL", "testSQL", "X5SvEef9uDAHzV9P");
+        sql.open();
 
 		if (this.sql.checkConnection())
 		{
@@ -64,7 +65,9 @@ public class BungeeGuard extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandSay(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMsg(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandReply(this));
- 
+
+
+
     }
     
     

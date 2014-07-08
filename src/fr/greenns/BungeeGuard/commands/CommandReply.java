@@ -30,47 +30,55 @@ public class CommandReply extends Command {
                 return;
             }
         }
-
-        if(plugin.mute.containsKey(plugin.mute.containsKey(sender.getName())))
+        else
         {
-            sender.sendMessage("§cVous êtes muté temporairement !");
+            sender.sendMessage(ChatColor.RED + "Vous devez etre un joueur pour executer cette command !");
+            return;
+        }
+
+        ProxiedPlayer p = (ProxiedPlayer)sender;
+
+        if(plugin.mute.containsKey(plugin.mute.containsKey(p.getName())))
+        {
+            p.sendMessage("§cVous êtes muté temporairement !");
             return;
         }
 
         if(args.length == 0)
         {
-            sender.sendMessage("§cLa bonne commande est :");
-            sender.sendMessage("§c/r je te répond apres");
+            p.sendMessage("§cLa bonne commande est :");
+            p.sendMessage("§c/r je te répond apres");
             return;
         }
 
         if(args.length >= 1 )
         {
-            if (plugin.reply.get(sender.getName()) == null)
+            if (plugin.reply.get(p.getName()) == null)
             {
-                sender.sendMessage(ChatColor.RED + "Vous n'avez personne à qui répondre !");
+                p.sendMessage(ChatColor.RED + "Vous n'avez personne à qui répondre !");
                 return;
             }
 
-            for (ProxiedPlayer p : BungeeCord.getInstance().getPlayers())
+            for (ProxiedPlayer pl : BungeeCord.getInstance().getPlayers())
             {
-                if (plugin.reply.get(sender.getName()) == p)
+                if (plugin.reply.get(p.getName()) == pl)
                 {
-                    ProxiedPlayer pe = plugin.reply.get(sender.getName());
+                    ProxiedPlayer pe = plugin.reply.get(p.getName());
                     String text1 = "";
                     for (int i = 0; i < args.length; i++)
                         text1 = text1 + args[i] + " ";
 
                     String text = text1;
-                    pe.sendMessage("§8[§a" + sender.getName() + " §7➠  §ame§8] §7" + text);
-                    sender.sendMessage("§8[§ame §7➠  §a" + pe + "§8] §7" + text);
-                    plugin.reply.put(sender.getName(), pe);
+                    pe.sendMessage("§8[§a" + p.getName() + " §7➠  §aMoi§8] §f" + text);
+                    p.sendMessage("§8[§aMoi §7➠  §a" + pe + "§8] §f" + text);
+                    plugin.reply.put(p.getName(), pe);
+                    plugin.reply.put(pe.getName(), p);
                     for(String sp : plugin.spy)
                     {
                         try
                         {
                             ProxiedPlayer admin = BungeeCord.getInstance().getPlayer(UUID.fromString(sp));
-                            admin.sendMessage(ChatColor.GRAY + sender.getName() + ": /r " + pe.getName() + " " + text);
+                            admin.sendMessage("§7[§cSPY§7] "+ChatColor.GRAY + p.getName() + ": /r " + pe.getName() + " " + text);
                         }
                         catch (Exception e)
                         {
@@ -81,7 +89,7 @@ public class CommandReply extends Command {
                     return;
                 }
             }
-            sender.sendMessage("§cLe joueur que vous chercher a contacter n'est pas en ligne !");
+            p.sendMessage("§cLe joueur que vous chercher a contacter n'est pas en ligne !");
         }
 
     }

@@ -38,6 +38,10 @@ public class BungeeGuardListener implements Listener {
 		}
 		if(plugin.serv.contains(p.getServer().getInfo().getName()))
 		{
+            if(event.isCommand())
+            {
+                return;
+            }
 			if(p.hasPermission("bungeeguard.bypasschat"))
 			{
 				return;
