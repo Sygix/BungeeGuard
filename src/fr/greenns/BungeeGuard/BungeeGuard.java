@@ -13,7 +13,7 @@ public class BungeeGuard extends Plugin {
 
 	public MySQL sql;
 	public BungeeGuardUtils utils;
-	public HashMap<String,Integer> mute;
+	public HashMap<String,Long> mute;
 	public HashMap<String,ProxiedPlayer> reply;
 	public ArrayList<String> spy;
 	public ArrayList<String> serv = new ArrayList<String>();
@@ -46,7 +46,7 @@ public class BungeeGuard extends Plugin {
 		}
 
 		BGListener = new BungeeGuardListener(this);
-		mute = new HashMap<String,Integer>();
+		mute = new HashMap<String,Long>();
 		reply = new HashMap<String,ProxiedPlayer>();
         spy = new ArrayList<String>();
 		utils = new BungeeGuardUtils(this);
