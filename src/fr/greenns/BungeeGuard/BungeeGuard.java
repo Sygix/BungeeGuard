@@ -27,21 +27,21 @@ public class BungeeGuard extends Plugin {
 
 		if (this.sql.checkConnection())
 		{
-			System.out.println("BungeeUtils - Connexion BDD reussite !");
+			System.out.println("BungeeGuard - Connexion BDD reussite !");
 		}
 		else
 		{
-			System.out.println("BungeeUtils - Connexion BDD §cIMPOSSIBLE  §r!!!!!");
+			System.out.println("BungeeGuard - Connexion BDD §cIMPOSSIBLE  §r!!!!!");
 		}
 		if(sql.checkTable("BungeeGuard_Ban"))
 		{
-			System.out.println("BungeeUtils - Table BungeeGuard_Ban trouvée !");
+			System.out.println("BungeeGuard - Table BungeeGuard_Ban trouvée !");
 		}
 		else 
 		{
-			System.out.println("BungeeUtils - Table BungeeUtils_Ban inéxistante, creation en cours ...");
+			System.out.println("BungeeGuard - Table BungeeGuard_Ban inéxistante, creation en cours ...");
 			sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Ban` (`id` int(11) NOT NULL AUTO_INCREMENT,`nameBanned` varchar(255) NOT NULL,`nameAdmin` varchar(255) NOT NULL,`ip` varchar(255) NOT NULL,`ban` int(11) NOT NULL,`unban` int(11) NOT NULL,`reason` text NOT NULL,`unbanReason` text,`unbanName` varchar(255) NOT NULL,`status` int(11) NOT NULL,PRIMARY KEY (`id`))");
-			System.out.println("BungeeUtils - Table BungeeUtils_Ban crée !");
+			System.out.println("BungeeGuard - Table BungeeGuard_Ban crée !");
 		}
 
 		BGListener = new BungeeGuardListener(this);
