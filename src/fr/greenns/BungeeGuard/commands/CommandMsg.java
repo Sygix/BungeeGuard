@@ -73,7 +73,7 @@ public class CommandMsg extends Command {
                             try
                             {
                                 ProxiedPlayer admin = BungeeCord.getInstance().getPlayer(UUID.fromString(sp));
-                                admin.sendMessage("§7[§cSPY§7] "+ChatColor.GRAY + p.getName() + ": /msg " + p.getName() + " " + text);
+                                admin.sendMessage("§7[§cSPY§7] "+ChatColor.GRAY + p.getName() + ": /msg " + pl.getName() + " " + text);
                             }
                             catch (Exception e)
                             {

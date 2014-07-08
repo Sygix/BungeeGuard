@@ -22,7 +22,7 @@ public class BungeeGuardListener implements Listener {
 
 		if (plugin.mute.containsKey(p.getName()))
 		{
-			int time = plugin.mute.get(p.getName());
+			long time = plugin.mute.get(p.getName());
 
 			long unixTime = System.currentTimeMillis() / 1000L;
 			if(unixTime-time > 0)

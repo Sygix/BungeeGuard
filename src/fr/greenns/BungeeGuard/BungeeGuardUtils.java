@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class BungeeGuardUtils {
 
 	public BungeeGuard plugin;
-	public String staffBroadcast = "§7§l[§cSTAFF§7]§r ";
+	public String staffBroadcast = "§7§l[§c§LSTAFF§7§l]§r ";
     private static final Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", 2);
 
 	public BungeeGuardUtils(BungeeGuard plugin)

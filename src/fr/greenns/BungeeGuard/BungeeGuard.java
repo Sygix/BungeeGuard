@@ -22,8 +22,8 @@ public class BungeeGuard extends Plugin {
     @Override
     public void onEnable() {
     	
-    	//sql = new MySQL(getLogger(), "", "localhost", "3306", "plugin", "root", "b1t3du68250_mysql");
-        sql = new MySQL(getLogger(), "", "localhost", "3306", "testSQL", "testSQL", "X5SvEef9uDAHzV9P");
+    	sql = new MySQL(getLogger(), "", "localhost", "3306", "plugin", "root", "b1t3du68250_mysql");
+        //sql = new MySQL(getLogger(), "", "localhost", "3306", "testSQL", "testSQL", "X5SvEef9uDAHzV9P");
         sql.open();
 
 		if (this.sql.checkConnection())
