@@ -11,65 +11,78 @@ import java.util.UUID;
 
 public class CommandReply extends Command {
 
-	public BungeeGuard plugin;
+    public BungeeGuard plugin;
 
-	public CommandReply(BungeeGuard plugin)
-	{
-		super("r", "bungeeguard.reply");
-		this.plugin = plugin;
-	}
+    public CommandReply(BungeeGuard plugin)
+    {
+        super("r", "bungeeguard.reply");
+        this.plugin = plugin;
+    }
 
-	public void execute(CommandSender sender, String[] args)
-	{
-		if(sender instanceof ProxiedPlayer)
-		{
-			ProxiedPlayer p = (ProxiedPlayer)sender;
+    public void execute(CommandSender sender, String[] args)
+    {
+        if(sender instanceof ProxiedPlayer)
+        {
+            ProxiedPlayer p = (ProxiedPlayer)sender;
 
-			if(!p.hasPermission("bungeeguard.reply"))	
-			{
-				return;
-			}
-		}
+            if(!p.hasPermission("bungeeguard.reply"))
+            {
+                return;
+            }
+        }
 
-		if(plugin.mute.containsKey(plugin.mute.containsKey(sender.getName())))
-		{
-			sender.sendMessage("§cVous êtes muté temporairement !");
-			return;
-		}
+        if(plugin.mute.containsKey(plugin.mute.containsKey(sender.getName())))
+        {
+            sender.sendMessage("§cVous êtes muté temporairement !");
+            return;
+        }
 
-		if(args.length == 0)
-		{
-			sender.sendMessage("§cLa bonne commande est :");
-			sender.sendMessage("§c/r je te répond apres");
-			return;
-		}
+        if(args.length == 0)
+        {
+            sender.sendMessage("§cLa bonne commande est :");
+            sender.sendMessage("§c/r je te répond apres");
+            return;
+        }
 
-		if(args.length >= 1 )
-		{
-			for (ProxiedPlayer p : BungeeCord.getInstance().getPlayers())
-			{
-				if (plugin.reply.get(sender.getName()) == p)
-				{
-					ProxiedPlayer pe = plugin.reply.get(sender.getName());
-					String text1 = "";
-					for (int i = 0; i < args.length; i++)
-						text1 = text1 + args[i] + " ";
+        if(args.length >= 1 )
+        {
+            if (plugin.reply.get(sender.getName()) == null)
+            {
+                sender.sendMessage(ChatColor.RED + "Vous n'avez personne à qui répondre !");
+                return;
+            }
 
-					String text = text1;
-					pe.sendMessage("§8[§a" + sender.getName() + " §7➠  §ame§8] §7" + text);
-					sender.sendMessage("§8[§ame §7➠  §a" + pe + "§8] §7" + text);
-					plugin.reply.put(sender.getName(), pe);
+            for (ProxiedPlayer p : BungeeCord.getInstance().getPlayers())
+            {
+                if (plugin.reply.get(sender.getName()) == p)
+                {
+                    ProxiedPlayer pe = plugin.reply.get(sender.getName());
+                    String text1 = "";
+                    for (int i = 0; i < args.length; i++)
+                        text1 = text1 + args[i] + " ";
+
+                    String text = text1;
+                    pe.sendMessage("§8[§a" + sender.getName() + " §7➠  §ame§8] §7" + text);
+                    sender.sendMessage("§8[§ame §7➠  §a" + pe + "§8] §7" + text);
+                    plugin.reply.put(sender.getName(), pe);
                     for(String sp : plugin.spy)
                     {
-                        ProxiedPlayer admin = BungeeCord.getInstance().getPlayer(UUID.fromString(sp));
-                        admin.sendMessage(ChatColor.GRAY + sender.getName() + ": /r " + pe.getName() + " " + text);
+                        try
+                        {
+                            ProxiedPlayer admin = BungeeCord.getInstance().getPlayer(UUID.fromString(sp));
+                            admin.sendMessage(ChatColor.GRAY + sender.getName() + ": /r " + pe.getName() + " " + text);
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
                     }
 
-					return;
-				}
-			}
-			sender.sendMessage("§cLe joueur que vous chercher a contacter n'est pas en ligne !");
-		}
+                    return;
+                }
+            }
+            sender.sendMessage("§cLe joueur que vous chercher a contacter n'est pas en ligne !");
+        }
 
-	}
+    }
 }
