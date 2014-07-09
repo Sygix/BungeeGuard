@@ -47,9 +47,9 @@ public class CommandSilence extends Command {
 				String servName = p.getServer().getInfo().getName();
 				for (ProxiedPlayer playerdwa : BungeeCord.getInstance().getPlayers())
 				{
-					if(playerdwa.hasPermission("bungeeguard.notify"))
+					if(playerdwa.getServer().getInfo().getName().equalsIgnoreCase(servName) && playerdwa.hasPermission("bungeeguard.notify"))
 					{
-						playerdwa.sendMessage(plugin.utils.staffBroadcast + "§7 le chat du serveur §b"+servName+"§7 a été §cdésactivé §7!");
+						playerdwa.sendMessage(plugin.utils.staffBroadcast + "§7Le chat du serveur §b"+servName+"§7 a été §cdésactivé §7!");
 					}
 				}
 			}
@@ -59,9 +59,9 @@ public class CommandSilence extends Command {
 				String servName = p.getServer().getInfo().getName();
 				for (ProxiedPlayer playerdwa : BungeeCord.getInstance().getPlayers())
 				{
-					if(playerdwa.hasPermission("bungeeguard.notify"))
+					if(playerdwa.getServer().getInfo().getName().equalsIgnoreCase(servName) && playerdwa.hasPermission("bungeeguard.notify"))
 					{
-						playerdwa.sendMessage(plugin.utils.staffBroadcast + "§7 le chat du serveur §b"+servName+"§7 a été §aréactiver §7!");
+						playerdwa.sendMessage(plugin.utils.staffBroadcast + "§7Le chat du serveur §b"+servName+"§7 a été §aréactiver §7!");
 					}
 				}
 			}
