@@ -1,7 +1,9 @@
 package fr.greenns.BungeeGuard;
 
+import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
+import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -50,4 +52,11 @@ public class BungeeGuardListener implements Listener {
 			p.sendMessage("§cLe chat est désactivé temporairement !");
 		}
 	}
+
+    @EventHandler
+    public void onPing(ProxyPingEvent e)
+    {
+        ServerPing sp = e.getResponse();
+        sp.setDescription(plugin.motd);
+    }
 }

@@ -5,6 +5,8 @@ import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -15,40 +17,72 @@ import java.util.regex.Pattern;
 
 public class BungeeGuardUtils {
 
-	public BungeeGuard plugin;
-	public String staffBroadcast = "§7§l[§c§LSTAFF§7§l]§r ";
+    public BungeeGuard plugin;
+    public String staffBroadcast = "§7§l[§c§LSTAFF§7§l]§r ";
     private static final Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", 2);
 
-	public BungeeGuardUtils(BungeeGuard plugin)
-	{
-		this.plugin = plugin;
-	}
-	
-	public boolean isParsableToInt(String i) {
-		try {
-			Integer.parseInt(i);
-			return true;
-		} catch (NumberFormatException nfe) {
-			return false;
-		}
-	}
-	
-	public void msgPluginCommand(CommandSender sender)
-	{
-		sender.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + "                            "+ChatColor.RESET+"§6.: BungeeManager :."+ ChatColor.RED + "" + ChatColor.UNDERLINE +"                           ");
-		sender.sendMessage(ChatColor.RED + " ");
-		sender.sendMessage(ChatColor.RED + " /ban <Player> [temps en minutes/0 pour définitif] [raison ...]");
-		sender.sendMessage(ChatColor.RED + " /kick <Player> [raison ...]");
-		sender.sendMessage(ChatColor.RED + " /unban <Player> [raison ...]");
-		sender.sendMessage(ChatColor.RED + " /check <Player>");
-		sender.sendMessage(ChatColor.RED + " /mute <Player>");
-		sender.sendMessage(ChatColor.RED + " /unmute <Player>");
-		sender.sendMessage(ChatColor.RED + " /silence (on/off)");
-		sender.sendMessage(ChatColor.RED + " /say [message]");
-		sender.sendMessage(ChatColor.RED + " /msg <Player> [message]");
-		sender.sendMessage(ChatColor.RED + " /spychat (toggle)");
-		sender.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + "                                                                               ");
-	}
+    public BungeeGuardUtils(BungeeGuard plugin)
+    {
+        this.plugin = plugin;
+    }
+
+    public boolean isParsableToInt(String i) {
+        try {
+            Integer.parseInt(i);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
+    public void refreshMotd()
+    {
+        ResultSet res;
+        plugin.sql.open();
+
+        if(plugin.sql.getConnection() == null)
+        {
+            System.out.println(ChatColor.RED + "[MYSQL] Connection error ... when claim a ticket !");
+            return;
+        }
+
+        try
+        {
+            res = plugin.sql.query("SELECT `motd` FROM `BungeeGuard_Motd` WHERE id=1");
+
+            if(res.next())
+            {
+                plugin.motd = res.getString("motd");
+            }
+
+            if (!plugin.sql.getConnection().isClosed())
+            {
+                plugin.sql.close();
+            }
+        }
+        catch (SQLException ex)
+        {
+            System.out.println(ex);
+        }
+
+    }
+    public void msgPluginCommand(CommandSender sender)
+    {
+        sender.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + "                            "+ChatColor.RESET+"§6.: BungeeManager :."+ ChatColor.RED + "" + ChatColor.UNDERLINE +"                           ");
+        sender.sendMessage(ChatColor.RED + " ");
+        sender.sendMessage(ChatColor.RED + " /ban <Player> [temps en minutes/0 pour définitif] [raison ...]");
+        sender.sendMessage(ChatColor.RED + " /kick <Player> [raison ...]");
+        sender.sendMessage(ChatColor.RED + " /unban <Player> [raison ...]");
+        sender.sendMessage(ChatColor.RED + " /check <Player>");
+        sender.sendMessage(ChatColor.RED + " /mute <Player>");
+        sender.sendMessage(ChatColor.RED + " /unmute <Player>");
+        sender.sendMessage(ChatColor.RED + " /silence (on/off)");
+        sender.sendMessage(ChatColor.RED + " /say [message]");
+        sender.sendMessage(ChatColor.RED + " /msg <Player> [message]");
+        sender.sendMessage(ChatColor.RED + " /spychat (toggle)");
+        sender.sendMessage(ChatColor.RED + " /motd (refresh)");
+        sender.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + "                                                                               ");
+    }
 
     public static long parseDuration(final String durationStr) throws IllegalArgumentException {
         final Matcher m = timePattern.matcher(durationStr);

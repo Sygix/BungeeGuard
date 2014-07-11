@@ -1,5 +1,9 @@
 package fr.greenns.BungeeGuard;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,6 +12,10 @@ import fr.greenns.BungeeGuard.commands.*;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
+
+import javax.security.auth.login.Configuration;
 
 public class BungeeGuard extends Plugin {
 
@@ -18,6 +26,7 @@ public class BungeeGuard extends Plugin {
 	public ArrayList<String> spy;
 	public ArrayList<String> serv = new ArrayList<String>();
 	public BungeeGuardListener BGListener;
+    public String motd;
 	
     @Override
     public void onEnable() {
@@ -44,6 +53,21 @@ public class BungeeGuard extends Plugin {
 			sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Ban` (`id` int(11) NOT NULL AUTO_INCREMENT,`nameBanned` varchar(255) NOT NULL,`nameAdmin` varchar(255) NOT NULL,`ip` varchar(255) NOT NULL,`ban` int(11) NOT NULL,`unban` int(11) NOT NULL,`reason` text NOT NULL,`unbanReason` text,`unbanName` varchar(255) NOT NULL,`status` int(11) NOT NULL,PRIMARY KEY (`id`))");
 			System.out.println("BungeeGuard - Table BungeeGuard_Ban crée !");
 		}
+        if(sql.checkTable("BungeeGuard_Motd"))
+		{
+			System.out.println("BungeeGuard - Table BungeeGuard_Motd trouvée !");
+		}
+		else
+		{
+			System.out.println("BungeeGuard - Table BungeeGuard_Motd inéxistante, creation en cours ...");
+			sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Motd` (" +
+                    "  `id` int(11) NOT NULL," +
+                    "  `motd` varchar(255) NOT NULL," +
+                    "  PRIMARY KEY (`id`))");
+			System.out.println("BungeeGuard - Table BungeeGuard_Motd crée !");
+		}
+
+
 
 		BGListener = new BungeeGuardListener(this);
 		mute = new HashMap<String,Long>();
