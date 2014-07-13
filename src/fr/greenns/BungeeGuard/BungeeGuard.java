@@ -32,7 +32,7 @@ public class BungeeGuard extends Plugin {
     @Override
     public void onEnable() {
     	
-    	sql = new MySQL(getLogger(), "", "localhost", "3306", "plugin", "root", "b1t3du68250_mysql");
+    	sql = new MySQL(getLogger(), "", "vm-db-01.uhcwork.net", "3306", "plugin", "minecraft", "2R9r7p9sDG");
         //sql = new MySQL(getLogger(), "", "localhost", "3306", "testSQL", "testSQL", "X5SvEef9uDAHzV9P");
         sql.open();
 
