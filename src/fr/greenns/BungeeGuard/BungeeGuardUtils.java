@@ -52,7 +52,8 @@ public class BungeeGuardUtils {
 
             if(res.next())
             {
-                plugin.motd = res.getString("motd");
+                String te = res.getString("motd");
+                plugin.motd = translateCodes(te);
             }
 
             if (!plugin.sql.getConnection().isClosed())
@@ -64,8 +65,14 @@ public class BungeeGuardUtils {
         {
             System.out.println(ex);
         }
-
     }
+
+    public String translateCodes(String message)
+    {
+        message = message.replaceAll("&([0-9a-fk-or])", "§$1");
+        return message = message.replaceAll("%n", "\n");
+    }
+
     public void msgPluginCommand(CommandSender sender)
     {
         sender.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + "                            "+ChatColor.RESET+"§6.: BungeeManager :."+ ChatColor.RED + "" + ChatColor.UNDERLINE +"                           ");

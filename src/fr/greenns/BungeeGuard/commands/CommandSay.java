@@ -40,7 +40,7 @@ public class CommandSay extends Command {
 			String msg = "";
 			for( int a=0; a<args.length;a++)msg += " "+args[a];
 			
-			msg = msg.replaceAll("(&([a-o0-9]))", "§$2");
+			msg = plugin.utils.translateCodes(msg);
 			
 			for (ProxiedPlayer p : BungeeCord.getInstance().getPlayers())
 			{

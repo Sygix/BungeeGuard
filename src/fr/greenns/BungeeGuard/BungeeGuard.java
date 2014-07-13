@@ -20,6 +20,7 @@ import javax.security.auth.login.Configuration;
 public class BungeeGuard extends Plugin {
 
 	public MySQL sql;
+    public Configuration config;
 	public BungeeGuardUtils utils;
 	public HashMap<String,Long> mute;
 	public HashMap<String,ProxiedPlayer> reply;
@@ -86,10 +87,12 @@ public class BungeeGuard extends Plugin {
         //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMute(this));
         //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandUnmute(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandSilence(this));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMotd(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandSay(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMsg(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandReply(this));
 
+        utils.refreshMotd();
 
 
     }

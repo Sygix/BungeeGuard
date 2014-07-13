@@ -28,7 +28,7 @@ public class CommandMotd extends Command {
         if(args.length == 0)
         {
             plugin.utils.refreshMotd();
-            sender.sendMessage("§aMotd updated !");
+            sender.sendMessage("Â§aMotd updated !");
             return;
         }
     }
