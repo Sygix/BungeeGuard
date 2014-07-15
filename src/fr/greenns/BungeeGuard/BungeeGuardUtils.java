@@ -7,10 +7,8 @@ import net.md_5.bungee.api.CommandSender;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +32,15 @@ public class BungeeGuardUtils {
             return false;
         }
     }
+
+    public String getDateFormat(long time)
+    {
+        Date date = new Date(time);
+        String dateString = new SimpleDateFormat("HH:mm:ss").format(date);
+
+        return dateString;
+    }
+
 
     public void refreshMotd()
     {
@@ -70,6 +77,7 @@ public class BungeeGuardUtils {
     public String translateCodes(String message)
     {
         message = message.replaceAll("&([0-9a-fk-or])", "§$1");
+        message = message.replaceAll("%timer", getDateFormat(plugin.time));
         return message = message.replaceAll("%n", "\n");
     }
 
