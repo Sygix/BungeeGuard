@@ -8,6 +8,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
 
+import java.util.UUID;
+
 public class CommandMute extends Command {
 
     public BungeeGuard plugin;
@@ -86,7 +88,9 @@ public class CommandMute extends Command {
         {
             if(args[0] != null)
             {
-                initialMinute = plugin.utils.parseDuration(args[1]);
+                String temps = "";
+                for( int a=1; a<args.length;a++)temps += " "+args[a];
+                initialMinute = plugin.utils.parseDuration(temps);
                 long unixTime = System.currentTimeMillis();
                 czas = (unixTime+initialMinute);
                 timeformat = plugin.utils.getDuration(initialMinute);
@@ -110,17 +114,6 @@ public class CommandMute extends Command {
                 for( int a=1; a<args.length;a++)powodd += " "+args[a];
             else
                 for( int a=2; a<args.length;a++)powodd += " "+args[a];
-
-            /*if(minuteIncrease == 0 && hourIncrease == 0 && dateIncrease == 0)
-            {
-                targetmsg = "§cVous etes muté 24 heures par " + name +" pour: " + powodd + " !";
-                msg = "§c" + name + " a muté 24 heures " + nick + " pour:" + powodd + " !";
-            }
-            else
-            {
-                targetmsg = "§cVous etes bannis pour " + days  + hours  + minutes + "par " + name+" pour: " + powodd + " !";
-                msg = "§c" + name + " a bannis " + nick + " " + days  + hours  + minutes + "pour:" + powodd + " !";
-            }*/
         }
 
 
@@ -128,27 +121,27 @@ public class CommandMute extends Command {
         {
             ProxiedPlayer cel = BungeeCord.getInstance().getPlayer(args[0]);
 
-            if(plugin.mute.containsKey(cel.getName()))
+            if(plugin.mute.containsKey(cel.getUUID().toString()))
             {
                 sender.sendMessage("§c"+cel.getName()+" est deja mute !");
                 return;
             }
             else
             {
-                plugin.mute.put(cel.getName(),czas);
+                plugin.mute.put(cel.getUUID().toString(),czas);
             }
             cel.sendMessage(targetmsg);
         }
         else
         {
-            if(plugin.mute.containsKey(args[0]))
+            if(plugin.mute.containsKey(BungeeCord.getInstance().getPlayer(args[0]).getUUID().toString()))
             {
                 sender.sendMessage("§c"+args[0]+" est deja mute !");
                 return;
             }
             else
             {
-                plugin.mute.put(args[0],czas);
+                plugin.mute.put(BungeeCord.getInstance().getPlayer(args[0]).getUUID().toString(),czas);
             }
         }
 

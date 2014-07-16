@@ -77,7 +77,7 @@ public class BungeeGuardUtils {
     public String translateCodes(String message)
     {
         message = message.replaceAll("&([0-9a-fk-or])", "§$1");
-        message = message.replaceAll("%timer", getDateFormat(plugin.time));
+        //message = message.replaceAll("%timer", getDateFormat(plugin.time));
         return message = message.replaceAll("%n", "\n");
     }
 
@@ -174,9 +174,8 @@ public class BungeeGuardUtils {
 
 
     public static String getDuration(final long futureTimestamp) {
-        int seconds = (int) ((futureTimestamp - System.currentTimeMillis()) / 1000) + 1;
-        Preconditions.checkArgument(seconds > 0,
-                "The timestamp passed in parameter must be superior to the current timestamp !");
+        int seconds = (int) ((futureTimestamp - System.currentTimeMillis()) / 1000);
+        Preconditions.checkArgument(seconds > 0,"Le timestamp doit etre supérieur au current timestamp !");
 
         final List<String> item = new ArrayList<String>();
 
@@ -186,7 +185,7 @@ public class BungeeGuardUtils {
             seconds -= 2678400;
         }
         if (months > 0) {
-            item.add(months + " months");
+            item.add(months + " mois");
         }
 
         int days = 0;
@@ -195,7 +194,7 @@ public class BungeeGuardUtils {
             seconds -= 86400;
         }
         if (days > 0) {
-            item.add(days + " days");
+            item.add(days + " jours");
         }
 
         int hours = 0;
@@ -204,7 +203,7 @@ public class BungeeGuardUtils {
             seconds -= 3600;
         }
         if (hours > 0) {
-            item.add(hours + " hours");
+            item.add(hours + " heures");
         }
 
         int mins = 0;
@@ -213,14 +212,30 @@ public class BungeeGuardUtils {
             seconds -= 60;
         }
         if (mins > 0) {
-            item.add(mins + " mins");
+            item.add(mins + " minutes");
         }
 
         if (seconds > 0) {
-            item.add(seconds + " secs");
+            item.add(seconds + " secondes");
         }
 
         return Joiner.on(", ").join(item);
     }
+
+    public static String getFinalArg(String[] args, int start)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = start; i < args.length; i++)
+        {
+            if (i != start) {
+                sb.append(" ");
+            }
+            sb.append(args[i]);
+        }
+        String msg = sb.toString();
+        sb.setLength(0);
+        return msg;
+    }
+
 
 }

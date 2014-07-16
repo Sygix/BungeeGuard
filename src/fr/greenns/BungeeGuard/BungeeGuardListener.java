@@ -27,14 +27,14 @@ public class BungeeGuardListener implements Listener {
 	{
 		ProxiedPlayer p = (ProxiedPlayer) event.getSender();
 
-		if (plugin.mute.containsKey(p.getName()))
+		if (plugin.mute.containsKey(p.getUUID().toString()))
 		{
-			long time = plugin.mute.get(p.getName());
+			long time = plugin.mute.get(p.getUUID().toString());
 
 			long unixTime = System.currentTimeMillis() / 1000L;
 			if(unixTime-time > 0)
 			{
-				plugin.mute.remove(p.getName());
+				plugin.mute.remove(p.getUUID().toString());
 				p.sendMessage("§7Vous avez été §adémuté §7!");
 			}
 			else

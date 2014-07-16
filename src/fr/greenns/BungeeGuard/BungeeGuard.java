@@ -57,7 +57,23 @@ public class BungeeGuard extends Plugin {
         else
         {
             System.out.println("BungeeGuard - Table BungeeGuard_Ban inéxistante, creation en cours ...");
-            sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Ban` (`id` int(11) NOT NULL AUTO_INCREMENT,`nameBanned` varchar(255) NOT NULL,`nameAdmin` varchar(255) NOT NULL,`ip` varchar(255) NOT NULL,`ban` int(11) NOT NULL,`unban` int(11) NOT NULL,`reason` text NOT NULL,`unbanReason` text,`unbanName` varchar(255) NOT NULL,`status` int(11) NOT NULL,PRIMARY KEY (`id`))");
+
+            sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Ban` (\n" +
+                    "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
+                    "  `nameBanned` varchar(255) NOT NULL,\n" +
+                    "  `nameAdmin` varchar(255) NOT NULL,\n" +
+                    "  `uuidBanned` varchar(255) NOT NULL,\n" +
+                    "  `uuidAdmin` varchar(255) NOT NULL,\n" +
+                    "  `ip` varchar(255) NOT NULL,\n" +
+                    "  `ban` int(11) NOT NULL,\n" +
+                    "  `unban` int(11) NOT NULL,\n" +
+                    "  `reason` text NOT NULL,\n" +
+                    "  `unbanReason` text,\n" +
+                    "  `unbanName` varchar(255) NOT NULL,\n" +
+                    "  `status` int(11) NOT NULL,\n" +
+                    "  PRIMARY KEY (`id`)\n" +
+                    ") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+
             System.out.println("BungeeGuard - Table BungeeGuard_Ban crée !");
         }
         if(sql.checkTable("BungeeGuard_Motd"))
@@ -87,17 +103,19 @@ public class BungeeGuard extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandKick(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandLobby(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandSpychat(this));
-        //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandBan(this));
-        //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandUnban(this));
-        //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandCheck(this));
-        //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMute(this));
-        //ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandUnmute(this));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandBan(this));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandUnban(this));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandCheck(this));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMute(this));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandUnmute(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandSilence(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMotd(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandSay(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMsg(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandReply(this));
 
+
+        utils.refreshMotd();
 
         /*time = 1405443600000L - System.currentTimeMillis();
 

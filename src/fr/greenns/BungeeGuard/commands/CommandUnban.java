@@ -71,7 +71,7 @@ public class CommandUnban extends Command {
 
 				boolean activeBan = false;
 
-				//moved out of while block, why reset it each time, it's already prepaired 
+				//moved out of while block, why reset it each time, it's already prepaired
 
 				PreparedStatement pstmt = plugin.sql.prepare("UPDATE BungeeGuard_Ban SET status = 2, unbanreason=?, unbanname=? WHERE id=?");
 

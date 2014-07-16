@@ -43,9 +43,9 @@ public class CommandUnmute  extends Command {
 
 		if(args.length > 0)
 		{	
-			if(plugin.mute.containsKey(args[0]))
+			if(plugin.mute.containsKey(BungeeCord.getInstance().getPlayer(args[0]).getUUID().toString()))
 			{
-				plugin.mute.remove(args[0]);
+				plugin.mute.remove(BungeeCord.getInstance().getPlayer(args[0]).getUUID().toString());
 				sender.sendMessage("§a"+args[0]+"§7 a été démuté !");
 			}
 			else
