@@ -105,6 +105,7 @@ public class BungeeGuard extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandSpychat(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandBan(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandUnban(this));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandList(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandCheck(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMute(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandUnmute(this));
