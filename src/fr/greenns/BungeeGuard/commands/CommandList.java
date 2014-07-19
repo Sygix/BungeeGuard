@@ -24,14 +24,7 @@ public class CommandList extends Command {
     {
         if(args.length == 0)
         {
-            int onlineplayer=0;
-
-            for (ProxiedPlayer players : BungeeCord.getInstance().getPlayers())
-            {
-                onlineplayer++;
-            }
-
-            sender.sendMessage("§bIl y a actuellement §c"+onlineplayer+" §bjoueurs en ligne sur le serveur !");
+            sender.sendMessage(ChatColor.AQUA + "Il y a actuellement "+ChatColor.RED+BungeeCord.getInstance().getPlayers().size()+ChatColor.AQUA+" joueurs en ligne sur le serveur !");
         }
     }
 }
