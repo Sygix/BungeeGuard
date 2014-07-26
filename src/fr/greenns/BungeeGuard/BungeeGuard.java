@@ -112,7 +112,7 @@ public class BungeeGuard extends Plugin {
         serv = new ArrayList<String>();
         utils = new BungeeGuardUtils(this);
         sql.close();
- 
+
         ProxyServer.getInstance().getPluginManager().registerListener(this, BGListener);
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandKick(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandLobby(this));
