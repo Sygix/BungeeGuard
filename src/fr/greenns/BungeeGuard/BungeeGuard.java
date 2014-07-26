@@ -9,11 +9,17 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import fr.greenns.BungeeGuard.Lobbies.Lobby;
+import fr.greenns.BungeeGuard.Lobbies.LobbyUtils;
 import fr.greenns.BungeeGuard.SQL.MySQL;
 import fr.greenns.BungeeGuard.commands.*;
 import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -27,10 +33,14 @@ public class BungeeGuard extends Plugin {
     public MySQL sql;
     public Configuration config;
     public BungeeGuardUtils utils;
+    public LobbyUtils lobbyUtils;
+    public Lobby lobby;
     public HashMap<String,Long> mute;
     public HashMap<String,ProxiedPlayer> reply;
     public ArrayList<String> spy;
-    public ArrayList<String> serv = new ArrayList<String>();
+    public ArrayList<String> serv;
+    public ArrayList<Lobby> lobbyList;
+    public HashMap<String, Boolean> serversUp = new HashMap<String, Boolean>();
     public BungeeGuardListener BGListener;
     public String motd;
     public Long time;
@@ -93,9 +103,13 @@ public class BungeeGuard extends Plugin {
 
 
         BGListener = new BungeeGuardListener(this);
+        lobby = new Lobby(this);
+        lobbyUtils = new LobbyUtils(this);
         mute = new HashMap<String,Long>();
         reply = new HashMap<String,ProxiedPlayer>();
         spy = new ArrayList<String>();
+        lobbyList = new ArrayList<Lobby>();
+        serv = new ArrayList<String>();
         utils = new BungeeGuardUtils(this);
         sql.close();
 
@@ -115,6 +129,13 @@ public class BungeeGuard extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMsg(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandReply(this));
 
+        for (final ServerInfo serverInfo : getProxy().getServers().values()){
+        	if(serverInfo.getName().contains("lobby"))
+        	{
+        		new Lobby(serverInfo.getName(), serverInfo.getPlayers().size(), this);
+                declarePing(serverInfo);
+        	}
+        }
 
         utils.refreshMotd();
 
@@ -138,6 +159,21 @@ public class BungeeGuard extends Plugin {
     }
 
 
+    public void declarePing(final ServerInfo serverInfo1)
+    {
+        getProxy().getScheduler().schedule(this, new Runnable() {
+            @Override
+            public void run() {
+                serverInfo1.ping(new Callback<ServerPing>() {
+                    @Override
+                    public void done(ServerPing result, Throwable error) {
+                        serversUp.put(serverInfo1.getName(), error == null);
+                    }
+                });
+            }
+
+        }, 0, 10, TimeUnit.SECONDS);
+    }
 
     @Override
     public void onDisable()
