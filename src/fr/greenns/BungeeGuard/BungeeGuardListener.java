@@ -42,7 +42,7 @@ public class BungeeGuardListener implements Listener {
 		}
 
 		event.setCancelled(true);
-		event.setCancelReason(ChatColor.RED + "Nos services sont momentanément indisponible"+'\n'+ChatColor.RED+"Veuillez réessayer dans quelque instant");
+		event.setCancelReason(ChatColor.RED + "Nos services sont momentanément indisponibles"+'\n'+ChatColor.RED+"Veuillez réessayer dans quelques instants");
 	}
 
 	@EventHandler
@@ -66,7 +66,7 @@ public class BungeeGuardListener implements Listener {
 				{
 					event.setTarget(BungeeCord.getInstance().getServerInfo("limbo"));
 				}
-				event.getPlayer().disconnect(ChatColor.RED + "Nos services sont momentanément indisponible"+'\n'+ChatColor.RED+"Veuillez réessayer dans quelque instant");
+				event.getPlayer().disconnect(ChatColor.RED + "Nos services sont momentanément indisponibles"+'\n'+ChatColor.RED+"Veuillez réessayer dans quelques instants");
 			}
 		}
 	}

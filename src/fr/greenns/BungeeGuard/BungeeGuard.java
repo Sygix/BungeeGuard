@@ -156,6 +156,18 @@ public class BungeeGuard extends Plugin {
                 utils.refreshMotd();
             }
         }, 1, 1, TimeUnit.SECONDS);*/
+        
+        for (final Lobby l : lobbyList){
+    	BungeeCord.getInstance().getScheduler().schedule(this, new Runnable() {
+                @SuppressWarnings("deprecation")
+                @Override
+                public void run()
+                {
+            		int newSlot = l.getServerInfo().getPlayers().size();
+            		l.setSlot(newSlot);
+                }
+            }, 5, 5, TimeUnit.SECONDS);
+    	}
     }
 
 

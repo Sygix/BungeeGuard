@@ -22,7 +22,6 @@ public class Lobby {
 	{
 		this.name = name;
 		this.slot = slot;
-		updateSlot();
 		pl.lobbyList.add(this);
 	}
 
@@ -45,18 +44,5 @@ public class Lobby {
 	public ServerInfo getServerInfo()
 	{
 		return BungeeCord.getInstance().getServerInfo(this.name);
-	}
-
-	public void updateSlot()
-	{
-		BungeeCord.getInstance().getScheduler().schedule(plugin, new Runnable() {
-            @SuppressWarnings("deprecation")
-            @Override
-            public void run()
-            {
-        		int newSlot = getServerInfo().getPlayers().size();
-        		setSlot(slot);
-            }
-        }, 5, 5, TimeUnit.SECONDS);
 	}
 }
