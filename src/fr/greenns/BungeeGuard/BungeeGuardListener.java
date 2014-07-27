@@ -183,7 +183,7 @@ public class BungeeGuardListener implements Listener {
 	public void onServerTurnOff(final ServerKickEvent event)
 	{
 		plugin.getProxy().getConsole().sendMessage(new TextComponent(ChatColor.YELLOW + event.getPlayer().getName() + "(" + event.getState().toString() + " - " + event.getKickReason() + ")"));
-		if(!(event.getKickReason().contains("ban") || event.getKickReason().contains("Nos services") || event.getKickReason().contains("kické") || event.getKickReason().contains("bannis") || event.getKickReason().contains("maintenance") || event.getKickReason().contains("kick"))){
+		if(!(event.getKickReason().contains("ban") || event.getKickReason().contains("Plein") || event.getKickReason().contains("Full") || event.getKickReason().contains("Nos services") || event.getKickReason().contains("kické") || event.getKickReason().contains("bannis") || event.getKickReason().contains("maintenance") || event.getKickReason().contains("kick"))){
 			ServerInfo best = getBestTarget(event.getPlayer(), event.getCancelServer());
 			event.getPlayer().setReconnectServer(best);
 			event.setCancelled(true);
