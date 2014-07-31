@@ -129,13 +129,6 @@ public class BungeeGuard extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMsg(this));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandReply(this));
 
-        for (final ServerInfo serverInfo : getProxy().getServers().values()){
-        	if(serverInfo.getName().contains("lobby"))
-        	{
-        		new Lobby(serverInfo.getName(), serverInfo.getPlayers().size(), this);
-                declarePing(serverInfo);
-        	}
-        }
 
         utils.refreshMotd();
 
@@ -156,6 +149,15 @@ public class BungeeGuard extends Plugin {
                 utils.refreshMotd();
             }
         }, 1, 1, TimeUnit.SECONDS);*/
+
+        for (final ServerInfo serverInfo : getProxy().getServers().values())
+        {
+        	if(serverInfo.getName().contains("lobby"))
+        	{
+        		new Lobby(serverInfo.getName(), serverInfo.getPlayers().size(), this);
+                declarePing(serverInfo);
+        	}
+        }
         
         for (final Lobby l : lobbyList){
     	BungeeCord.getInstance().getScheduler().schedule(this, new Runnable() {
@@ -173,10 +175,12 @@ public class BungeeGuard extends Plugin {
 
     public void declarePing(final ServerInfo serverInfo1)
     {
-        getProxy().getScheduler().schedule(this, new Runnable() {
+    	BungeeCord.getInstance().getScheduler().schedule(this, new Runnable() {
             @Override
-            public void run() {
-                serverInfo1.ping(new Callback<ServerPing>() {
+            public void run()
+            {
+                serverInfo1.ping(new Callback<ServerPing>()
+                		{
                     @Override
                     public void done(ServerPing result, Throwable error) {
                         serversUp.put(serverInfo1.getName(), error == null);
