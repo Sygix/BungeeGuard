@@ -178,14 +178,19 @@ public class BungeeGuardListener implements Listener {
 	@EventHandler
 	public void onServerTurnOff(final ServerKickEvent event)
 	{
-		plugin.getProxy().getConsole().sendMessage(new TextComponent(ChatColor.YELLOW + event.getPlayer().getName() + "(" + event.getState().toString() + " - " + event.getKickReason() + ")"));
-		if(!(event.getKickReason().contains("ban") || event.getKickReason().contains("Plein") || event.getKickReason().contains("Full") || event.getKickReason().contains("Nos services") || event.getKickReason().contains("kické") || event.getKickReason().contains("bannis") || event.getKickReason().contains("maintenance") || event.getKickReason().contains("kick"))){
+		if(!(event.getKickReason().contains("ban") || event.getKickReason().contains("plein") || 
+				event.getKickReason().contains("Full") || event.getKickReason().contains("fly") ||
+				event.getKickReason().contains("Nos services") || event.getKickReason().contains("kické") ||
+				event.getKickReason().contains("bannis") || event.getKickReason().contains("maintenance") ||
+				event.getKickReason().contains("kick") || event.getKickReason().contains("VIP"))){
 			ServerInfo best = getBestTarget(event.getPlayer(), event.getCancelServer());
+			BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + event.getPlayer().getName() + " a perdu la connection (" + event.getState().toString() + " - " + event.getKickReason() + ")"));
+			BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + event.getPlayer().getName() + " Redirigé vers "+ best.getName().toUpperCase()));
 			event.getPlayer().setReconnectServer(best);
 			event.setCancelled(true);
 			event.setCancelServer(best);
 			try {
-				Thread.sleep(2);
+				Thread.sleep(5);
 			} catch (InterruptedException e) {
 			}
 			event.getPlayer().sendMessage("§cLe serveur sur lequel vous êtiez est probablement down vous avez été redirigé vers un serveur de secours ...");

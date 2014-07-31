@@ -22,7 +22,7 @@ public class LobbyUtils {
 	{
 		for (int max=0; max<60;)
 		{
-			max=max+30;
+			max=max+15;
 			for(Lobby l: plugin.lobbyList)
 			{
 				if(l.getSlot() < max)
