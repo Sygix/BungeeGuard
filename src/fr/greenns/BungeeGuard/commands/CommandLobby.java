@@ -36,7 +36,7 @@ public class CommandLobby extends Command {
             }
             else
             {
-                p.connect(BungeeCord.getInstance().getServerInfo("lobby"));
+                p.connect(BungeeCord.getInstance().getServerInfo("hub"));
                 p.sendMessage(ChatColor.GREEN + "Connexion vers le lobby . . .");
             }
         }

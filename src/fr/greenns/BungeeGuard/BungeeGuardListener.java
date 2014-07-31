@@ -48,11 +48,7 @@ public class BungeeGuardListener implements Listener {
 	@EventHandler
 	public void onServerConnect(ServerConnectEvent event)
 	{
-		if (!event.getTarget().getName().contains("lobby"))
-		{
-			return;
-		}
-		else
+		if (event.getTarget().getName().equalsIgnoreCase("hub"))
 		{
 			Lobby l = plugin.lobbyUtils.bestLobbyTarget();
 
