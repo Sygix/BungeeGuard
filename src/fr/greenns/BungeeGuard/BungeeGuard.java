@@ -208,5 +208,6 @@ public class BungeeGuard extends Plugin {
 	public void onDisable()
 	{
 		sql.close();
+		BungeeCord.getInstance().getScheduler().cancel(this);
 	}
 }

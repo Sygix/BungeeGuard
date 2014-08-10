@@ -2,8 +2,11 @@ package fr.greenns.BungeeGuard;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,7 +43,6 @@ public class BungeeGuardUtils {
 
         return dateString;
     }
-
 
     public void refreshMotd()
     {

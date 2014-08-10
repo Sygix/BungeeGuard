@@ -17,9 +17,6 @@ import net.md_5.bungee.event.EventHandler;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
 
 public class BungeeGuardListener implements Listener {
@@ -71,36 +68,51 @@ public class BungeeGuardListener implements Listener {
 	@EventHandler
 	public void onChat(ChatEvent event)
 	{
+
 		ProxiedPlayer p = (ProxiedPlayer) event.getSender();
 
-		if (plugin.mute.containsKey(p.getUUID().toString()))
-		{
-			long time = plugin.mute.get(p.getUUID().toString());
-
-			long unixTime = System.currentTimeMillis() / 1000L;
-			if(unixTime-time > 0)
-			{
-				plugin.mute.remove(p.getUUID().toString());
-				p.sendMessage("§7Vous avez été §adémuté §7!");
-			}
-			else
-			{
-				event.setCancelled(true);
-				p.sendMessage("§cVous êtes muté temporairement !");
-			}
-		}
-		if(plugin.serv.contains(p.getServer().getInfo().getName()))
+		if (!event.getMessage().startsWith("/") && (event.getSender() instanceof ProxiedPlayer))
 		{
 			if(event.isCommand())
 			{
 				return;
 			}
-			if(p.hasPermission("bungeeguard.bypasschat"))
+			if (plugin.mute.containsKey(p.getUUID().toString()))
 			{
-				return;
+				long time = plugin.mute.get(p.getUUID().toString());
+
+				long unixTime = System.currentTimeMillis() / 1000L;
+				if(unixTime-time > 0)
+				{
+					plugin.mute.remove(p.getUUID().toString());
+					p.sendMessage("§7Vous avez été §adémuté §7!");
+				}
+				else
+				{
+					event.setCancelled(true);
+					p.sendMessage("§cVous êtes muté temporairement !");
+				}
 			}
-			event.setCancelled(true);
-			p.sendMessage("§cLe chat est désactivé temporairement !");
+			if(plugin.serv.contains(p.getServer().getInfo().getName()))
+			{
+				if(p.hasPermission("bungeeguard.bypasschat"))
+				{
+					return;
+				}
+				event.setCancelled(true);
+				p.sendMessage("§cLe chat est désactivé temporairement !");
+			}
+			if ((p.hasPermission("bungeeguard.staffchat")) && (event.getMessage().startsWith("!")))
+			{
+				for (ProxiedPlayer player : BungeeCord.getInstance().getPlayers())
+				{
+					if (player.hasPermission("bungeeguard.staffchat"))
+					{
+						player.sendMessage(new TextComponent(ChatColor.RED + "["+p.getServer().getInfo().getName()+"] "+p.getName()+": "+event.getMessage()));
+					}
+				}
+				event.setCancelled(true);
+			}
 		}
 	}
 
