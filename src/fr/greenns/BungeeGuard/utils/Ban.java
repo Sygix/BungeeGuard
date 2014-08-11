@@ -126,7 +126,7 @@ public class Ban {
 
 	}
 
-	public void removeBanFromBDD() {
+	public void removeBanFromBDD(String unbanReason, String unbanName) {
 		try
 		{
 			if (BungeeGuard.plugin.sql.getConnection().isClosed())
@@ -139,8 +139,8 @@ public class Ban {
 				System.out.println("[MYSQL] Connection error ...");
 			}
 
-			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='Auto-timeEnd' WHERE uuidBanned='"+getUUID()+"' AND status='1'");
-
+			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='"+unbanReason+"', unbanName='"+unbanName+"' WHERE uuidBanned='"+getUUID()+"' AND status='1'");
+			BungeeGuard.bans.remove(this);
 		}
 		catch (final SQLException ex)
 		{

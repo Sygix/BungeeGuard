@@ -57,8 +57,7 @@ public class BungeeGuardListener implements Listener {
 				return;
 			}
 			else {
-				BannedUser.removeBanFromBDD();
-				BungeeGuard.bans.remove(BannedUser);
+				BannedUser.removeBanFromBDD("TimeEnd", "Automatique");
 			}
 		}
 		

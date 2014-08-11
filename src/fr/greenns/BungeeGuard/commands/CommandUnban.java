@@ -1,15 +1,18 @@
 package fr.greenns.BungeeGuard.commands;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.UUID;
 
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.utils.Ban;
+import fr.greenns.BungeeGuard.utils.BanType;
+import fr.greenns.BungeeGuard.utils.UUIDFetcher;
 
 public class CommandUnban extends Command {
 
@@ -23,97 +26,49 @@ public class CommandUnban extends Command {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 
-		String unbanReason = "";
-		String unbanName = "";
-
-		if (sender instanceof ProxiedPlayer) {
-			ProxiedPlayer p = (ProxiedPlayer) sender;
-
-			if (!p.hasPermission("bungeeguard.unban")) {
-				return;
-			}
-			unbanName = sender.getName().toString();
-		} else {
-			unbanName = "*Console*";
-		}
-
 		if (args.length == 0) {
-			plugin.utils.msgPluginCommand(sender);
-			return;
+			sender.sendMessage(new ComponentBuilder("Usage: /unban <pseudo> [reason]").color(ChatColor.RED).create());
 		}
-		if (args.length >= 1) {
-
-			if (args.length >= 1) {
-				for (int a = 1; a < args.length; a++)
-					unbanReason += " " + args[a];
+		else if (args.length >= 1) {
+			String unbanReason = "";
+			String unbanName = (sender instanceof ProxiedPlayer) ? sender.getName() : "UHConsole";
+			
+			if (args.length > 1) {
+				for (int i = 1; i < args.length; i++)
+					unbanReason += " " + args[i];
 			}
-
-			plugin.sql.open();
-
-			if (plugin.sql.getConnection() == null) {
-				sender.sendMessage(ChatColor.RED
-						+ "[MYSQL] Connection error ...");
-				return;
-			}
-			String safenick = args[0].toLowerCase().replaceAll("'", "\"");
-
-			try {
-				ResultSet res = plugin.sql
-						.query("SELECT id FROM `BungeeGuard_Ban` WHERE `nameBanned` = '"
-								+ safenick + "' and `status` = 1");
-				// res.last();
-
-				boolean activeBan = false;
-
-				// moved out of while block, why reset it each time, it's
-				// already prepaired
-
-				PreparedStatement pstmt = plugin.sql
-						.prepare("UPDATE BungeeGuard_Ban SET status = 2, unbanreason=?, unbanname=? WHERE id=?");
-
-				while (res.next()) {
-					int id = res.getInt("id");
-					pstmt.setString(1, unbanReason);
-					pstmt.setString(2, unbanName);
-					pstmt.setInt(3, id);
-
-					pstmt.executeUpdate();
-
-					activeBan = true;
-				}
-				pstmt.close();
-				pstmt = null; // throw it away
-
-				if (activeBan == true) {
-					String msg = "";
-
-					msg = "§a" + safenick + "§c a été débanni par §7"
-							+ unbanName;
-
-					System.out.println(msg);
-
-					for (ProxiedPlayer playerdwa : BungeeCord.getInstance()
-							.getPlayers()) {
-						if (playerdwa.hasPermission("bungeeguard.notify")) {
-							playerdwa.sendMessage(plugin.utils.staffBroadcast
-									+ msg);
-						}
-					}
-				} else {
-					sender.sendMessage("§c" + safenick
-							+ " joueur n'est pas banni ...");
-				}
-
-			} catch (final SQLException ex) {
-				System.out.println("SQL problem (exception) : " + ex);
-			} finally {
+			String bannedName = args[0];
+			
+			ProxiedPlayer bannedPlayer = plugin.getProxy().getPlayer(bannedName);
+			UUID bannedUUID;
+			if(bannedPlayer == null) {
 				try {
-					if (!plugin.sql.getConnection().isClosed()) {
-						plugin.sql.close();
+					bannedUUID = UUIDFetcher.getUUIDOf(bannedName);
+					if(bannedUUID == null) {
+						sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'existe pas.").color(ChatColor.RED).create());
+						return;
 					}
-				} catch (SQLException ex) {
-					System.out.println(ex);
+				} catch (Exception e) {
+					sender.sendMessage(new ComponentBuilder("Erreur lors de la récupération de l'UUID :").color(ChatColor.RED).append(e.getMessage()).color(ChatColor.GRAY).create());
+					return;
 				}
+			} else {
+				bannedUUID = bannedPlayer.getUniqueId();
+			}
+			
+			Ban Ban = BungeeGuardUtils.getBan(bannedUUID);
+			if(Ban == null) {
+				sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas banni.").color(ChatColor.RED).create());
+			} else {
+				Ban.removeBanFromBDD(unbanReason, unbanName);
+				
+				BanType BanTypeVar = (unbanReason == "") ? BanType.UNBAN : BanType.UNBAN_W_REASON;
+				String adminFormat = BanTypeVar.adminFormat("", unbanReason, unbanName, bannedName);
+				BaseComponent[] message = new ComponentBuilder(adminFormat).create();
+				for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
+					if(p.hasPermission("bungeeguard.notify")) p.sendMessage(message);
+				}
+				System.out.print(adminFormat);
 			}
 		}
 	}
