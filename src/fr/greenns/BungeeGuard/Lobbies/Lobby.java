@@ -1,7 +1,5 @@
 package fr.greenns.BungeeGuard.Lobbies;
 
-import java.util.concurrent.TimeUnit;
-
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.config.ServerInfo;
 import fr.greenns.BungeeGuard.BungeeGuard;
@@ -10,16 +8,14 @@ public class Lobby {
 
 	public BungeeGuard plugin;
 
-	public Lobby(BungeeGuard plugin)
-	{
+	public Lobby(BungeeGuard plugin) {
 		this.plugin = plugin;
 	}
 
 	private String name;
 	private int slot;
 
-	public Lobby(String name, int slot, BungeeGuard pl)
-	{
+	public Lobby(String name, int slot, BungeeGuard pl) {
 		this.name = name;
 		this.slot = slot;
 		pl.lobbyList.add(this);
@@ -41,8 +37,7 @@ public class Lobby {
 		this.slot = slot;
 	}
 
-	public ServerInfo getServerInfo()
-	{
+	public ServerInfo getServerInfo() {
 		return BungeeCord.getInstance().getServerInfo(this.name);
 	}
 }

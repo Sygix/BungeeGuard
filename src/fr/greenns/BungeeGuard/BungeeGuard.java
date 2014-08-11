@@ -1,35 +1,38 @@
 package fr.greenns.BungeeGuard;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import fr.greenns.BungeeGuard.Lobbies.Lobby;
-import fr.greenns.BungeeGuard.Lobbies.LobbyUtils;
-import fr.greenns.BungeeGuard.SQL.MySQL;
-import fr.greenns.BungeeGuard.commands.*;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.Callback;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
-import net.md_5.bungee.scheduler.BungeeScheduler;
-
-import javax.security.auth.login.Configuration;
+import net.md_5.bungee.config.Configuration;
+import fr.greenns.BungeeGuard.Lobbies.Lobby;
+import fr.greenns.BungeeGuard.Lobbies.LobbyUtils;
+import fr.greenns.BungeeGuard.SQL.MySQL;
+import fr.greenns.BungeeGuard.commands.CommandBan;
+import fr.greenns.BungeeGuard.commands.CommandCheck;
+import fr.greenns.BungeeGuard.commands.CommandKick;
+import fr.greenns.BungeeGuard.commands.CommandList;
+import fr.greenns.BungeeGuard.commands.CommandLobby;
+import fr.greenns.BungeeGuard.commands.CommandMotd;
+import fr.greenns.BungeeGuard.commands.CommandMsg;
+import fr.greenns.BungeeGuard.commands.CommandMute;
+import fr.greenns.BungeeGuard.commands.CommandReply;
+import fr.greenns.BungeeGuard.commands.CommandSay;
+import fr.greenns.BungeeGuard.commands.CommandSilence;
+import fr.greenns.BungeeGuard.commands.CommandSpychat;
+import fr.greenns.BungeeGuard.commands.CommandUnban;
+import fr.greenns.BungeeGuard.commands.CommandUnmute;
+import fr.greenns.BungeeGuard.utils.Ban;
 
 public class BungeeGuard extends Plugin {
 
@@ -38,19 +41,23 @@ public class BungeeGuard extends Plugin {
 	public BungeeGuardUtils utils;
 	public LobbyUtils lobbyUtils;
 	public Lobby lobby;
-	public HashMap<String,Long> mute;
+	public HashMap<UUID, Long> mute;
 	public HashMap<String,ProxiedPlayer> reply;
-	public ArrayList<String> spy;
+	public ArrayList<UUID> spy;
 	public ArrayList<String> serv;
 	public ArrayList<Lobby> lobbyList;
 	public HashMap<String, Boolean> serversUp = new HashMap<String, Boolean>();
 	public BungeeGuardListener BGListener;
 	public String motd;
 	public Long time;
+	public static BungeeGuard plugin;
+	
+	public static List<Ban> bans = new ArrayList<Ban>();
 
 	@Override
 	public void onEnable() {
-
+		plugin = this;
+		
 		sql = new MySQL(getLogger(), "", "vm-db-01.uhcwork.net", "3306", "plugin", "minecraft", "tn8E6VhU9P3m");
 		//sql = new MySQL(getLogger(), "", "localhost", "3306", "testSQL", "testSQL", "X5SvEef9uDAHzV9P");
 		sql.open();
@@ -61,46 +68,45 @@ public class BungeeGuard extends Plugin {
 		}
 		else
 		{
-			System.out.println("BungeeGuard - Connexion BDD §cIMPOSSIBLE  §r!!!!!");
+			System.out.println("BungeeGuard - Connexion BDD Â§cIMPOSSIBLE  Â§r!!!!!");
 		}
 		if(sql.checkTable("BungeeGuard_Ban"))
 		{
-			System.out.println("BungeeGuard - Table BungeeGuard_Ban trouvée !");
+			System.out.println("BungeeGuard - Table BungeeGuard_Ban trouvÃ©e !");
 		}
 		else
 		{
-			System.out.println("BungeeGuard - Table BungeeGuard_Ban inéxistante, creation en cours ...");
+			System.out.println("BungeeGuard - Table BungeeGuard_Ban inÃ©xistante, creation en cours ...");
 
-			sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Ban` (\n" +
-					"  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
-					"  `nameBanned` varchar(255) NOT NULL,\n" +
-					"  `nameAdmin` varchar(255) NOT NULL,\n" +
-					"  `uuidBanned` varchar(255) NOT NULL,\n" +
-					"  `uuidAdmin` varchar(255) NOT NULL,\n" +
-					"  `ip` varchar(255) NOT NULL,\n" +
-					"  `ban` int(11) NOT NULL,\n" +
-					"  `unban` int(11) NOT NULL,\n" +
-					"  `reason` text NOT NULL,\n" +
-					"  `unbanReason` text,\n" +
-					"  `unbanName` varchar(255) NOT NULL,\n" +
-					"  `status` int(11) NOT NULL,\n" +
-					"  PRIMARY KEY (`id`)\n" +
+			sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Ban` (" +
+					"  `id` int(11) NOT NULL AUTO_INCREMENT," +
+					"  `nameBanned` varchar(255) NOT NULL," +
+					"  `nameAdmin` varchar(255) NOT NULL," +
+					"  `uuidBanned` varchar(255) NOT NULL," +
+					"  `uuidAdmin` varchar(255) NOT NULL," +
+					"  `ban` bigint(20) NOT NULL," +
+					"  `unban` bigint(20) NOT NULL," +
+					"  `reason` text NOT NULL," +
+					"  `unbanReason` text," +
+					"  `unbanName` varchar(255) NOT NULL," +
+					"  `status` int(11) NOT NULL," +
+					"  PRIMARY KEY (`id`)" +
 					") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
 
-			System.out.println("BungeeGuard - Table BungeeGuard_Ban crée !");
+			System.out.println("BungeeGuard - Table BungeeGuard_Ban crÃ©e !");
 		}
 		if(sql.checkTable("BungeeGuard_Motd"))
 		{
-			System.out.println("BungeeGuard - Table BungeeGuard_Motd trouvée !");
+			System.out.println("BungeeGuard - Table BungeeGuard_Motd trouvÃ©e !");
 		}
 		else
 		{
-			System.out.println("BungeeGuard - Table BungeeGuard_Motd inéxistante, creation en cours ...");
+			System.out.println("BungeeGuard - Table BungeeGuard_Motd inÃ©xistante, creation en cours ...");
 			sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Motd` (" +
 					"  `id` int(11) NOT NULL," +
 					"  `motd` varchar(255) NOT NULL," +
 					"  PRIMARY KEY (`id`))");
-			System.out.println("BungeeGuard - Table BungeeGuard_Motd crée !");
+			System.out.println("BungeeGuard - Table BungeeGuard_Motd crÃ©e !");
 		}
 
 
@@ -108,9 +114,9 @@ public class BungeeGuard extends Plugin {
 		BGListener = new BungeeGuardListener(this);
 		lobby = new Lobby(this);
 		lobbyUtils = new LobbyUtils(this);
-		mute = new HashMap<String,Long>();
+		mute = new HashMap<UUID,Long>();
 		reply = new HashMap<String,ProxiedPlayer>();
-		spy = new ArrayList<String>();
+		spy = new ArrayList<UUID>();
 		lobbyList = new ArrayList<Lobby>();
 		serv = new ArrayList<String>();
 		utils = new BungeeGuardUtils(this);
@@ -173,7 +179,7 @@ public class BungeeGuard extends Plugin {
 
 		for (final Lobby l : lobbyList){
 			BungeeCord.getInstance().getScheduler().schedule(this, new Runnable() {
-				@SuppressWarnings("deprecation")
+				
 				@Override
 				public void run()
 				{

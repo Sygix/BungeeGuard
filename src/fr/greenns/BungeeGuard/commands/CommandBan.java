@@ -1,213 +1,111 @@
 package fr.greenns.BungeeGuard.commands;
 
-import java.net.InetAddress;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.utils.Ban;
+import fr.greenns.BungeeGuard.utils.BanType;
+import fr.greenns.BungeeGuard.utils.UUIDFetcher;
 
 public class CommandBan extends Command {
 
-    public BungeeGuard plugin;
+	public BungeeGuard plugin;
+	Pattern timePattern = Pattern.compile("([0-9]+)([ywdhms])");
 
-    public CommandBan(BungeeGuard plugin)
-    {
-        super("ban", "bungeeguard.ban");
-        this.plugin = plugin;
-    }
+	public CommandBan(BungeeGuard plugin) {
+		super("ban", "bungeeguard.ban");
+		this.plugin = plugin;
+	}
 
-    public void execute(CommandSender sender, String[] args)
-    {
-        String name;
-        String uuidA;
-        if(sender instanceof ProxiedPlayer)
-        {
-            ProxiedPlayer p = (ProxiedPlayer)sender;
+	// => /ban <pseudo> [raison]
+	
+	@Override
+	public void execute(CommandSender sender, String[] args) {
+		String adminName = sender.getName();
+		String adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId().toString() : "CONSOLE";
 
-            if(!p.hasPermission("bungeeguard.ban"))
-            {
-                return;
-            }
-
-            name = p.getName();
-            uuidA = p.getUUID().toString();
-        }
-        else
-        {
-            name = "*Console*";
-            uuidA = "";
-        }
-
-        if(args.length == 0)
-        {
-            plugin.utils.msgPluginCommand(sender);
-            return;
-        }
-
-        String msg = "";
-        String kickmsg = "";
-        String powodd = "";
-        String time = "0"; // normal non unix time
-        String days ="";
-        String hours ="";
-        String minutes ="";
-        String nick = "";
-        String uuidB = "";
-        int minuteIncrease = 0;
-        int hourIncrease = 0;
-        int dateIncrease = 0;
-        int czas = 0; // ban time in in unix settings
-        int initialMinute;
-        boolean onlinePlayer = false;
-        boolean noTime = false;
-
-        if(args.length > 0)
-        {
-            if(BungeeCord.getInstance().getPlayer(args[0]) != null)
-            {
-                ProxiedPlayer cel = BungeeCord.getInstance().getPlayer(args[0]);
-                nick = cel.getName();
-                uuidB = cel.getUUID().toString();
-                onlinePlayer = true;
-            }
-            else
-            {
-                nick = args[0];
-                try
-                {
-                    uuidB = BungeeCord.getInstance().getPlayer(args[0]).getUUID().toString();
-                }
-                catch (Exception e){}
-                onlinePlayer = false;
-                if(nick.isEmpty())
-                {
-                    sender.sendMessage("§cNom du joueur incorrecte ...");
-                    return;
-                }
-            }
-
-            if(args.length == 1)
-            {
-                kickmsg = "§cVous etes banni définitivement par " + name +" !";
-                msg = "§c" + name + " a bannis définitivement " + nick + " !";
-            }
-        }
-        if(args.length > 1)
-        {
-
-            long dura = plugin.utils.parseDuration(args[1]);
-
-            if(args[0] != null)
-            {
-                if(plugin.utils.isParsableToInt(args[1]))
-                {
-                    if(Integer.valueOf(args[1])<=0)
-                    {
-                        time = args[1] = "0";
-                    }
-                    else
-                    {
-                        long unixTime = System.currentTimeMillis() / 1000L;
-                        czas = (int)(unixTime+dura);
-                        time = args[1]=args[1];
-                    }
-                }
-                else
-                {
-                    time = args[1] = "0";
-                }
-            }
-            else
-            {
-                time = args[1] = "0";
-            }
-
-                kickmsg = "§cVous etes bannis pour " + plugin.utils.getDuration(dura) + " par " + name +" !";
-                msg = "§c" + name + " a bannis " + nick + " " + plugin.utils.getDuration(dura) + " !";
-        }
-        if(args.length > 2)
-        {
-            long dura = plugin.utils.parseDuration(args[1]);
-            powodd = "";
-            if ( noTime )
-                for( int a=1; a<args.length;a++)powodd += " "+args[a];
-            else
-                for( int a=2; a<args.length;a++)powodd += " "+args[a];
-
-            if(noTime)
-            {
-                kickmsg = "§cVous etes banni définitivement par " + name +" pour: \n" + powodd + " !";
-                msg = "§c" + name + " a bannis définitivement " + nick + " pour:" + powodd + " !";
-            }
-            else
-            {
-                kickmsg = "§cVous etes bannis pour " +plugin.utils.getDuration(dura)+ " par " + name+" pour: \n" + powodd + " !";
-                msg = "§c" + name + " a bannis " + nick + " " +plugin.utils.getDuration(dura) + " pour:" + powodd + " !";
-            }
-        }
-
-        System.out.println(msg);
-
-        for (ProxiedPlayer playerdwa : BungeeCord.getInstance().getPlayers())
-        {
-            if(playerdwa.hasPermission("bungeeguard.notify"))
-            {
-                playerdwa.sendMessage(plugin.utils.staffBroadcast + msg);
-            }
-        }
-
-
-        String safenick = nick.toLowerCase().replaceAll("'", "\"");
-        String safeAdminNick = name.replaceAll("'", "\"");
-        String safereason = powodd.replaceAll("'", "\"");
-
-        plugin.sql.open();
-
-        if(plugin.sql.getConnection() == null)
-        {
-            sender.sendMessage(ChatColor.RED+"[MYSQL] Connection error ...");
-            return;
-        }
-        ProxiedPlayer cel = BungeeCord.getInstance().getPlayer(args[0]);
-        int banfrom = (int) (System.currentTimeMillis() / 1000L);
-        InetAddress ipcel = cel.getAddress().getAddress();
-        String ipst = ipcel.toString();
-        String ip = ipst.replaceAll("/", "");
-
-        if(safereason == null)
-        {
-            safereason="";
-        }
-
-        if(onlinePlayer==true)
-        {
-            cel.disconnect(new TextComponent(kickmsg));
-        }
-
-        try
-        {
-            if(onlinePlayer)
-            {
-                plugin.sql.query("INSERT INTO `BungeeGuard_Ban` (`id`, `nameBanned`, `nameAdmin` , `uuidBanned` , `uuidAdmin` , `ip`, `ban`, `unban`, `reason`, `unbanReason`, `unbanName`, `status`) VALUES (NULL, '"+safenick+"', '" + safeAdminNick + "', '" + uuidA + "', '" + uuidB + "' ,'"+ip+"', '"+banfrom+"', '"+czas+"', '"+safereason+"', '', '', '1');");
-            }
-            else
-            {
-                plugin.sql.query("INSERT INTO `BungeeGuard_Ban` (`id`, `nameBanned`, `nameAdmin` , `ip`, `ban`, `unban`, `reason`, `unbanReason`, `unbanName`, `status`) VALUES (NULL, '"+safenick+"', '" + safeAdminNick + "', '" + uuidA + "', '" + uuidB + "','', '"+banfrom+"', '"+czas+"', '"+safereason+"', '', '', '1');");
-            }
-            if (!plugin.sql.getConnection().isClosed())
-            {
-                plugin.sql.close();
-            }
-        }
-        catch (SQLException ex)
-        {
-            System.out.println(ex);
-        }
-    }
+		if (args.length == 0) {
+			sender.sendMessage(new ComponentBuilder("Usage: /ban <pseudo> [duration] [reason]").color(ChatColor.RED).create());
+		} else {
+			boolean duration = false;
+			long bannedUntilTime = -1;
+			if(args.length > 1) {
+				Matcher m = timePattern.matcher(args[1]);
+				long bannedTime = 0;
+				while (m.find()) {
+					if (m.group() == null || m.group().isEmpty()) {
+						continue;
+					} else if(m.group(1) != null && !m.group(1).isEmpty() && m.group(2) != null && !m.group(2).isEmpty()) {
+						int number = Integer.parseInt(m.group(1));
+						String type = m.group(2);
+						duration = true;
+						
+						switch(type) {
+							case "y": bannedTime += number*365*24*60*60*1000; break;
+							case "w": bannedTime += number*7*24*60*60*1000; break;
+							case "d": bannedTime += number*24*60*60*1000; break;
+							case "h": bannedTime += number*60*60*1000; break;
+							case "m": bannedTime += number*60*1000; break;
+							case "s": bannedTime += number*1000; break;
+						}
+					}
+				}
+				bannedUntilTime = System.currentTimeMillis() + bannedTime + 1;
+			}
+			
+			int startArgForReason = (duration) ? 2 : 1; 
+			
+			String reason = "";
+			if(args.length > startArgForReason) {
+				for (int i = startArgForReason; i < args.length; i++){
+					reason += " " + args[i];
+				}
+			}
+			if(reason == "") reason = null;
+			
+			BanType BanTypeVar;
+			if(duration) {
+				BanTypeVar = (reason != null) ? BanType.NON_PERMANENT_W_REASON : BanType.NON_PERMANENT;
+			} else {
+				BanTypeVar = (reason != null) ? BanType.PERMANENT_W_REASON : BanType.PERMANENT;
+			}
+			System.err.print(BanTypeVar.kickFormat("1000", "lol"));
+			
+			String bannedName = args[0];
+			ProxiedPlayer bannedPlayer = plugin.getProxy().getPlayer(bannedName);
+			UUID bannedUUID;
+			String bannedDurationStr = (duration) ? BungeeGuardUtils.getDuration(bannedUntilTime) : "-1";
+			if(bannedPlayer == null) {
+				try {
+					bannedUUID = UUIDFetcher.getUUIDOf(bannedName);
+				} catch (Exception e) {
+					sender.sendMessage(new ComponentBuilder("Erreur lors de la récupération de l'UUID :").color(ChatColor.RED).append(e.getMessage()).color(ChatColor.GRAY).create());
+					return;
+				}
+			} else {
+				bannedUUID = bannedPlayer.getUniqueId();
+				bannedPlayer.disconnect(new ComponentBuilder(BanTypeVar.kickFormat(bannedDurationStr, reason)).create());
+			}
+			
+			Ban alreadyBan = BungeeGuardUtils.getBan(bannedUUID);
+			if(alreadyBan != null) BungeeGuard.bans.remove(alreadyBan);
+			
+			Ban Ban = new Ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
+			Ban.addToBdd();
+			
+			BungeeGuard.bans.add(Ban);
+			
+			for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
+				if(p.hasPermission("bungeeguard.notify")) p.sendMessage(new ComponentBuilder(BanTypeVar.adminFormat(bannedDurationStr, reason, adminName, bannedName)).create());
+			}
+		}
+	}
 }

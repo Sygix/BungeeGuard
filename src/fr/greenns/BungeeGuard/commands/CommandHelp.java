@@ -9,33 +9,28 @@ public class CommandHelp extends Command {
 
 	public BungeeGuard plugin;
 
-	public CommandHelp(BungeeGuard plugin)
-	{
+	public CommandHelp(BungeeGuard plugin) {
 		super("help", "bungeeguard.help");
 		this.plugin = plugin;
 	}
 
-	public void execute(CommandSender sender, String[] args)
-	{
-		if(sender instanceof ProxiedPlayer)
-		{
-			ProxiedPlayer p = (ProxiedPlayer)sender;
+	@Override
+	public void execute(CommandSender sender, String[] args) {
+		if (sender instanceof ProxiedPlayer) {
+			ProxiedPlayer p = (ProxiedPlayer) sender;
 
-			if(!p.hasPermission("bungeeguard.help"))	
-			{
+			if (!p.hasPermission("bungeeguard.help")) {
 				return;
 			}
 		}
 
-		if(args.length == 0)
-		{
+		if (args.length == 0) {
 			sender.sendMessage("");
 			return;
 		}
 
-		else
-		{
-			
+		else {
+
 		}
 	}
 
