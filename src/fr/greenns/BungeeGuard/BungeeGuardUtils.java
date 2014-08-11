@@ -180,21 +180,39 @@ public class BungeeGuardUtils {
 	}
 
 	public static String getDuration(final long futureTimestamp) {
+		if(futureTimestamp == -1) return "";
 		int seconds = (int) ((futureTimestamp - System.currentTimeMillis()) / 1000);
-		Preconditions.checkArgument(seconds > 0,
-				"Le timestamp doit etre supérieur au current timestamp !");
+		Preconditions.checkArgument(seconds > 0, "Le timestamp doit etre supérieur au current timestamp !");
 
 		final List<String> item = new ArrayList<String>();
-
+		
+		int years = 0;
+		while (seconds >= 31536000) {
+			years++;
+			seconds -= 31536000;
+		}
+		if (years > 0) {
+			item.add(years + " an" + ((years != 1) ? "s" : ""));
+		}		
+		
 		int months = 0;
-		while (seconds >= 2678400) {
+		while (seconds >= 2592000) {
 			months++;
-			seconds -= 2678400;
+			seconds -= 2592000;
 		}
 		if (months > 0) {
 			item.add(months + " mois");
 		}
 
+		int weeks = 0;
+		while (seconds >= 604800) {
+			weeks++;
+			seconds -= 604800;
+		}
+		if (weeks > 0) {
+			item.add(weeks + " semaine" + ((weeks != 1) ? "s" : ""));
+		}
+		
 		int days = 0;
 		while (seconds >= 86400) {
 			days++;

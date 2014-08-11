@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -18,7 +19,7 @@ import fr.greenns.BungeeGuard.utils.UUIDFetcher;
 public class CommandBan extends Command {
 
 	public BungeeGuard plugin;
-	Pattern timePattern = Pattern.compile("([0-9]+)([ywdhms])");
+	Pattern timePattern = Pattern.compile("([0-9]+)(mo|[ywdhms])");
 
 	public CommandBan(BungeeGuard plugin) {
 		super("ban", "bungeeguard.ban");
@@ -29,8 +30,9 @@ public class CommandBan extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		String adminName = sender.getName();
-		String adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId().toString() : "CONSOLE";
+		long startTime = System.currentTimeMillis();
+		String adminName = (sender instanceof ProxiedPlayer) ? sender.getName() : "UHConsole";
+		String adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId().toString() : "UHConsole";
 
 		if (args.length == 0) {
 			sender.sendMessage(new ComponentBuilder("Usage: /ban <pseudo> [duration] [reason]").color(ChatColor.RED).create());
@@ -49,16 +51,17 @@ public class CommandBan extends Command {
 						duration = true;
 						
 						switch(type) {
-							case "y": bannedTime += number*365*24*60*60*1000; break;
-							case "w": bannedTime += number*7*24*60*60*1000; break;
-							case "d": bannedTime += number*24*60*60*1000; break;
-							case "h": bannedTime += number*60*60*1000; break;
-							case "m": bannedTime += number*60*1000; break;
-							case "s": bannedTime += number*1000; break;
+							case "y": bannedTime += number*31536000000L; break;
+							case "mo": bannedTime += number*2592000000L; break;
+							case "w": bannedTime += number*604800000L; break;
+							case "d": bannedTime += number*86400000L; break;
+							case "h": bannedTime += number*3600000L; break;
+							case "m": bannedTime += number*60000L; break;
+							case "s": bannedTime += number*1000L; break;
 						}
 					}
 				}
-				bannedUntilTime = System.currentTimeMillis() + bannedTime + 1;
+				bannedUntilTime = System.currentTimeMillis() + bannedTime;
 			}
 			
 			int startArgForReason = (duration) ? 2 : 1; 
@@ -74,18 +77,23 @@ public class CommandBan extends Command {
 			BanType BanTypeVar;
 			if(duration) {
 				BanTypeVar = (reason != null) ? BanType.NON_PERMANENT_W_REASON : BanType.NON_PERMANENT;
+				bannedUntilTime += (System.currentTimeMillis() - startTime);
 			} else {
 				BanTypeVar = (reason != null) ? BanType.PERMANENT_W_REASON : BanType.PERMANENT;
+				bannedUntilTime = -1;
 			}
-			System.err.print(BanTypeVar.kickFormat("1000", "lol"));
 			
 			String bannedName = args[0];
 			ProxiedPlayer bannedPlayer = plugin.getProxy().getPlayer(bannedName);
 			UUID bannedUUID;
-			String bannedDurationStr = (duration) ? BungeeGuardUtils.getDuration(bannedUntilTime) : "-1";
+			String bannedDurationStr = BungeeGuardUtils.getDuration(bannedUntilTime);
 			if(bannedPlayer == null) {
 				try {
 					bannedUUID = UUIDFetcher.getUUIDOf(bannedName);
+					if(bannedUUID == null) {
+						sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'existe pas.").color(ChatColor.RED).create());
+						return;
+					}
 				} catch (Exception e) {
 					sender.sendMessage(new ComponentBuilder("Erreur lors de la récupération de l'UUID :").color(ChatColor.RED).append(e.getMessage()).color(ChatColor.GRAY).create());
 					return;
@@ -97,15 +105,16 @@ public class CommandBan extends Command {
 			
 			Ban alreadyBan = BungeeGuardUtils.getBan(bannedUUID);
 			if(alreadyBan != null) BungeeGuard.bans.remove(alreadyBan);
-			
+
 			Ban Ban = new Ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
 			Ban.addToBdd();
 			
-			BungeeGuard.bans.add(Ban);
-			
+			String adminFormat = BanTypeVar.adminFormat(bannedDurationStr, reason, adminName, bannedName);
+			BaseComponent[] message = new ComponentBuilder(adminFormat).create();			
 			for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
-				if(p.hasPermission("bungeeguard.notify")) p.sendMessage(new ComponentBuilder(BanTypeVar.adminFormat(bannedDurationStr, reason, adminName, bannedName)).create());
+				if(p.hasPermission("bungeeguard.notify")) p.sendMessage(message);
 			}
+			System.out.print(adminFormat);
 		}
 	}
 }

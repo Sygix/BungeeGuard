@@ -77,7 +77,7 @@ public class Ban {
 	}
 
 	public boolean isBanned() {
-		return (System.currentTimeMillis() < time);
+		return (System.currentTimeMillis() <= time);
 	}
 
 	/**
@@ -105,7 +105,6 @@ public class Ban {
 			BungeeGuard.plugin.sql.query("INSERT INTO `BungeeGuard_Ban` "
 					+ "(`id`, `nameBanned`, `nameAdmin` , `uuidBanned` , `uuidAdmin` , `ban`, `unban`, `reason`, `unbanReason`, `unbanName`, `status`) VALUES "
 					+ "(NULL, '"+getPseudo()+"', '" + getAdminName() + "', '" + getUUID() + "', '" + getAdminUUID() + "' , '"+System.currentTimeMillis()+"', '"+getTime()+"', '"+getReason()+"', '', '', '1');");
-			System.out.print(System.currentTimeMillis());
 		}
 		catch (final SQLException ex)
 		{
