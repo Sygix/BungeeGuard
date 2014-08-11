@@ -1,5 +1,7 @@
 package fr.greenns.BungeeGuard;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -64,15 +66,38 @@ public class BungeeGuard extends Plugin {
 
 		if (this.sql.checkConnection())
 		{
-			System.out.println("BungeeGuard - Connexion BDD reussite !");
+			System.out.println("BungeeGuard - Connexion BDD réussite !");
 		}
 		else
 		{
-			System.out.println("BungeeGuard - Connexion BDD Â§cIMPOSSIBLE  Â§r!!!!!");
+			System.out.println("BungeeGuard - Connexion BDD §cIMPOSSIBLE  §r!!!!!");
 		}
 		if(sql.checkTable("BungeeGuard_Ban"))
 		{
-			System.out.println("BungeeGuard - Table BungeeGuard_Ban trouvÃ©e !");
+			System.out.println("BungeeGuard - Table BungeeGuard_Ban trouvée !");
+			
+			System.out.println("BungeeGuard - Chargement des bannis ...");
+			try
+			{
+				if (BungeeGuard.plugin.sql.getConnection().isClosed())
+				{
+					BungeeGuard.plugin.sql.open();
+				}
+
+				if(BungeeGuard.plugin.sql.getConnection() == null)
+				{
+					System.out.println("[MYSQL] Connection error ...");
+				}
+				ResultSet res = sql.query("SELECT * FROM BungeeGuard_Ban WHERE status = 1");
+				
+				while(res.next()) {
+					new Ban(UUID.fromString(res.getString("uuidBanned")), res.getString("nameBanned"), res.getLong("unban"), res.getString("reason"), res.getString("nameAdmin"), res.getString("uuidAdmin"));
+				}
+			}
+			catch (final SQLException ex)
+			{
+				System.out.println("SQL problem (exception) when add banned player to BDD : " + ex );
+			}
 		}
 		else
 		{
@@ -93,7 +118,7 @@ public class BungeeGuard extends Plugin {
 					"  PRIMARY KEY (`id`)" +
 					") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
 
-			System.out.println("BungeeGuard - Table BungeeGuard_Ban crÃ©e !");
+			System.out.println("BungeeGuard - Table BungeeGuard_Ban créé !");
 		}
 		if(sql.checkTable("BungeeGuard_Motd"))
 		{
@@ -106,7 +131,7 @@ public class BungeeGuard extends Plugin {
 					"  `id` int(11) NOT NULL," +
 					"  `motd` varchar(255) NOT NULL," +
 					"  PRIMARY KEY (`id`))");
-			System.out.println("BungeeGuard - Table BungeeGuard_Motd crÃ©e !");
+			System.out.println("BungeeGuard - Table BungeeGuard_Motd créé !");
 		}
 
 

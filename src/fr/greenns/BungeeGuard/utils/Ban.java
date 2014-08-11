@@ -21,7 +21,6 @@ public class Ban {
 		this.adminName = adminName;
 		this.adminUUID = adminUUID;
 		BungeeGuard.bans.add(this);
-		addToBdd();
 	}
 
 	public String getPseudo() {
@@ -100,7 +99,7 @@ public class Ban {
 				System.out.println("[MYSQL] Connection error ...");
 			}
 
-			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='BungeeGuard-ReBan', unban='"+System.currentTimeMillis()+"' WHERE uuidBanned='"+getUUID()+"' AND status='1'");
+			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='ReBan-By-"+getAdminName()+"', unban='"+System.currentTimeMillis()+"' WHERE uuidBanned='"+getUUID()+"' AND status='1'");
 
 			BungeeGuard.plugin.sql.query("INSERT INTO `BungeeGuard_Ban` "
 					+ "(`id`, `nameBanned`, `nameAdmin` , `uuidBanned` , `uuidAdmin` , `ban`, `unban`, `reason`, `unbanReason`, `unbanName`, `status`) VALUES "
@@ -140,7 +139,7 @@ public class Ban {
 				System.out.println("[MYSQL] Connection error ...");
 			}
 
-			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0' WHERE uuidBanned='"+getUUID()+"' AND status='1'");
+			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='Auto-timeEnd' WHERE uuidBanned='"+getUUID()+"' AND status='1'");
 
 		}
 		catch (final SQLException ex)
