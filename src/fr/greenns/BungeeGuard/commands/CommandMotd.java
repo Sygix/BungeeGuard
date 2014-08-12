@@ -3,6 +3,7 @@ package fr.greenns.BungeeGuard.commands;
 import fr.greenns.BungeeGuard.BungeeGuard;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.plugin.Command;
 
 /**
@@ -21,7 +22,7 @@ public class CommandMotd extends Command {
 	public void execute(CommandSender sender, String[] args) {
 		if (args.length == 0) {
 			plugin.utils.refreshMotd();
-			sender.sendMessage(ChatColor.GREEN +"Motd updated !");
+			sender.sendMessage(new ComponentBuilder("Motd updated !").color(ChatColor.GREEN).create());
 			return;
 		}
 	}

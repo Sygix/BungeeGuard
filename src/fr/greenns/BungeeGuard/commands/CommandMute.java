@@ -22,7 +22,7 @@ public class CommandMute extends Command {
 	Pattern timePattern = Pattern.compile("([0-9]+)([wdhms])");
 
 	public CommandMute(BungeeGuard plugin) {
-		super("ban", "bungeeguard.mute");
+		super("mute", "bungeeguard.mute");
 		this.plugin = plugin;
 	}
 	

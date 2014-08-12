@@ -12,7 +12,7 @@ public class LobbyUtils {
 		this.plugin = plugin;
 	}
 
-	public List getLobbies() {
+	public List<Lobby> getLobbies() {
 		return plugin.lobbyList;
 	}
 

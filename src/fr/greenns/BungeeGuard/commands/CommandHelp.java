@@ -25,7 +25,8 @@ public class CommandHelp extends Command {
 		}
 
 		if (args.length == 0) {
-			sender.sendMessage("");
+			// TODO liste des commandes utiles
+			// sender.sendMessage("");
 			return;
 		}
 

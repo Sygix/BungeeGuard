@@ -4,6 +4,7 @@ import fr.greenns.BungeeGuard.BungeeGuard;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -22,17 +23,15 @@ public class CommandLobby extends Command {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (!(sender instanceof ProxiedPlayer)) {
-			sender.sendMessage(ChatColor.RED
-					+ "Vous devez etre un joueur pour executer cette command !");
+			sender.sendMessage(new ComponentBuilder("Vous devez etre un joueur pour executer cette command !").color(ChatColor.RED).create());
 			return;
 		} else {
 			ProxiedPlayer p = (ProxiedPlayer) sender;
 			if (p.getServer().getInfo().getName().equalsIgnoreCase("lobby")) {
-				p.sendMessage(ChatColor.RED
-						+ "Vous etes déjà connecté a ce serveur !");
+				p.sendMessage(new ComponentBuilder("Vous etes déjà connecté a ce serveur !").color(ChatColor.RED).create());
 			} else {
 				p.connect(BungeeCord.getInstance().getServerInfo("hub"));
-				p.sendMessage(ChatColor.GREEN + "Connexion vers le lobby . . .");
+				p.sendMessage(new ComponentBuilder("Connexion vers le lobby . . .").color(ChatColor.GREEN).create());
 			}
 		}
 

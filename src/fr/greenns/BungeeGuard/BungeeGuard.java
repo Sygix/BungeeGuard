@@ -97,7 +97,7 @@ public class BungeeGuard extends Plugin {
 			}
 			catch (final SQLException ex)
 			{
-				System.out.println("SQL problem (exception) when add banned player to BDD : " + ex );
+				System.out.println("SQL problem (exception) when gettings banned players from BDD : " + ex );
 			}
 		}
 		else
@@ -115,6 +115,54 @@ public class BungeeGuard extends Plugin {
 					"  `reason` text NOT NULL," +
 					"  `unbanReason` text," +
 					"  `unbanName` varchar(255) NOT NULL," +
+					"  `status` int(11) NOT NULL," +
+					"  PRIMARY KEY (`id`)" +
+					") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+
+			System.out.println("BungeeGuard - Table BungeeGuard_Ban créé !");
+		}
+		if(sql.checkTable("BungeeGuard_Mute"))
+		{
+			System.out.println("BungeeGuard - Table BungeeGuard_Mute trouvée !");
+			
+			System.out.println("BungeeGuard - Chargement des mutes ...");
+			try
+			{
+				if (BungeeGuard.plugin.sql.getConnection().isClosed())
+				{
+					BungeeGuard.plugin.sql.open();
+				}
+
+				if(BungeeGuard.plugin.sql.getConnection() == null)
+				{
+					System.out.println("[MYSQL] Connection error ...");
+				}
+				ResultSet res = sql.query("SELECT * FROM BungeeGuard_Mute WHERE status = 1");
+				
+				while(res.next()) {
+					new Mute(UUID.fromString(res.getString("uuidMute")), res.getString("nameMute"), res.getLong("unmute"), res.getString("reason"), res.getString("nameAdmin"), res.getString("uuidAdmin"));
+				}
+			}
+			catch (final SQLException ex)
+			{
+				System.out.println("SQL problem (exception) when getting mute players from BDD : " + ex );
+			}
+		}
+		else
+		{
+			System.out.println("BungeeGuard - Table BungeeGuard_Ban inéxistante, création en cours ...");
+
+			sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Mute` (" +
+					"  `id` int(11) NOT NULL AUTO_INCREMENT," +
+					"  `nameMute` varchar(255) NOT NULL," +
+					"  `nameAdmin` varchar(255) NOT NULL," +
+					"  `uuidMute` varchar(255) NOT NULL," +
+					"  `uuidAdmin` varchar(255) NOT NULL," +
+					"  `mute` bigint(20) NOT NULL," +
+					"  `unmute` bigint(20) NOT NULL," +
+					"  `reason` text NOT NULL," +
+					"  `unmuteReason` text," +
+					"  `unmuteName` varchar(255) NOT NULL," +
 					"  `status` int(11) NOT NULL," +
 					"  PRIMARY KEY (`id`)" +
 					") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");

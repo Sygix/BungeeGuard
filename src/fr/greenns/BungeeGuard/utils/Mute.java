@@ -97,7 +97,7 @@ public class Mute {
 
 			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Mute` SET status='0', unmuteReason='ReMute-By-"+getAdminName()+"', unmute='"+System.currentTimeMillis()+"' WHERE uuidMute='"+getUUID()+"' AND status='1'");
 
-			BungeeGuard.plugin.sql.query("INSERT INTO `BungeeGuard_Ban` "
+			BungeeGuard.plugin.sql.query("INSERT INTO `BungeeGuard_Mute` "
 					+ "(`id`, `nameMute`, `nameAdmin` , `uuidMute` , `uuidAdmin` , `mute`, `unmute`, `reason`, `unmuteReason`, `unmuteName`, `status`) VALUES "
 					+ "(NULL, '"+getPseudo()+"', '" + getAdminName() + "', '" + getUUID() + "', '" + getAdminUUID() + "' , '"+System.currentTimeMillis()+"', '"+getTime()+"', '"+getReason()+"', '', '', '1');");
 		}
@@ -135,7 +135,7 @@ public class Mute {
 				System.out.println("[MYSQL] Connection error ...");
 			}
 
-			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Mute` SET status='0', unmuteReason='"+unbanReason+"', unmuteName='"+unbanName+"' WHERE uuidBanned='"+getUUID()+"' AND status='1'");
+			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Mute` SET status='0', unmuteReason='"+unbanReason+"', unmuteName='"+unbanName+"' WHERE uuidMute='"+getUUID()+"' AND status='1'");
 			BungeeGuard.bans.remove(this);
 		}
 		catch (final SQLException ex)

@@ -65,19 +65,16 @@ public class CommandMsg extends Command {
 							text1 = text1 + args[i] + " ";
 
 						String text = text1;
-						pl.sendMessage("§8[§a" + p.getName()
-								+ " §7➠  §aMoi§8] §f" + text);
-						p.sendMessage("§8[§aMoi §7➠  §a" + pl.getName()
-								+ "§8] §f" + text);
+						pl.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append(p.getName()).color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
+						p.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(pl.getName()).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
+
+						
 						plugin.reply.put(p.getName(), pl);
 						plugin.reply.put(pl.getName(), p);
 						for (UUID uuid : plugin.spy) {
 							try {
-								ProxiedPlayer admin = BungeeCord.getInstance()
-										.getPlayer(uuid);
-								admin.sendMessage("§7[§cSPY§7] "
-										+ ChatColor.GRAY + p.getName()
-										+ ": /msg " + pl.getName() + " " + text);
+								ProxiedPlayer admin = BungeeCord.getInstance().getPlayer(uuid);
+								admin.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("]").color(ChatColor.GRAY).append(p.getName()).append(": /msg ").append(pl.getName() + " " + text).create());
 							} catch (Exception e) {
 
 							}

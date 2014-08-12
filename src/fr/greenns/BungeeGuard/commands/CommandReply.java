@@ -31,8 +31,7 @@ public class CommandReply extends Command {
 				return;
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED
-					+ "Vous devez etre un joueur pour executer cette command !");
+			sender.sendMessage(new ComponentBuilder("Vous devez être un joueur pour exécuter cette commande !").color(ChatColor.RED).create());
 			return;
 		}
 
@@ -52,15 +51,14 @@ public class CommandReply extends Command {
 		}
 
 		if (args.length == 0) {
-			p.sendMessage("§cLa bonne commande est :");
-			p.sendMessage("§c/r je te répond apres");
+			p.sendMessage(new ComponentBuilder("La bonne commande est :").color(ChatColor.RED).create());
+			p.sendMessage(new ComponentBuilder("/r je te répond après").color(ChatColor.RED).create());
 			return;
 		}
 
 		if (args.length >= 1) {
 			if (plugin.reply.get(p.getName()) == null) {
-				p.sendMessage(ChatColor.RED
-						+ "Vous n'avez personne à qui répondre !");
+				p.sendMessage(new ComponentBuilder("Vous n'avez personne à qui répondre !").color(ChatColor.RED).create());
 				return;
 			}
 
@@ -72,19 +70,15 @@ public class CommandReply extends Command {
 						text1 = text1 + args[i] + " ";
 
 					String text = text1;
-					pe.sendMessage("§8[§a" + p.getName()
-							+ " §7➠  §aMoi§8] §f" + text);
-					p.sendMessage("§8[§aMoi §7➠  §a" + pe + "§8] §f"
-							+ text);
+					pe.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append(p.getName()).color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
+					p.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(pe.getName()).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
+
 					plugin.reply.put(p.getName(), pe);
 					plugin.reply.put(pe.getName(), p);
 					for (UUID uuid : plugin.spy) {
 						try {
-							ProxiedPlayer admin = BungeeCord.getInstance()
-									.getPlayer(uuid);
-							admin.sendMessage("§7[§cSPY§7] "
-									+ ChatColor.GRAY + p.getName() + ": /r "
-									+ pe.getName() + " " + text);
+							ProxiedPlayer admin = BungeeCord.getInstance().getPlayer(uuid);
+							admin.sendMessage(new ComponentBuilder("]").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("]").color(ChatColor.GRAY).append(p.getName()).append(": /r ").append(pe.getName() + " " + text).create());
 						} catch (Exception e) {
 
 						}
@@ -93,7 +87,7 @@ public class CommandReply extends Command {
 					return;
 				}
 			}
-			p.sendMessage("§cLe joueur que vous chercher a contacter n'est pas en ligne !");
+			p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());
 		}
 
 	}
