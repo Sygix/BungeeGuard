@@ -142,12 +142,12 @@ public class JSONValue {
 		}
 		
 		if(value instanceof Map){
-			JSONObject.writeJSONString((Map)value, out);
+			JSONObject.writeJSONString((Map<?, ?>)value, out);
 			return;
 		}
 		
 		if(value instanceof List){
-			JSONArray.writeJSONString((List)value, out);
+			JSONArray.writeJSONString((List<?>)value, out);
             return;
 		}
 		
@@ -199,10 +199,10 @@ public class JSONValue {
 			return ((JSONAware)value).toJSONString();
 		
 		if(value instanceof Map)
-			return JSONObject.toJSONString((Map)value);
+			return JSONObject.toJSONString((Map<?, ?>)value);
 		
 		if(value instanceof List)
-			return JSONArray.toJSONString((List)value);
+			return JSONArray.toJSONString((List<?>)value);
 		
 		return value.toString();
 	}
