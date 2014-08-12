@@ -21,6 +21,8 @@ import net.md_5.bungee.event.EventHandler;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import fr.greenns.BungeeGuard.utils.Ban;
 import fr.greenns.BungeeGuard.utils.BanType;
+import fr.greenns.BungeeGuard.utils.Mute;
+import fr.greenns.BungeeGuard.utils.MuteType;
 
 public class BungeeGuardListener implements Listener {
 
@@ -57,7 +59,7 @@ public class BungeeGuardListener implements Listener {
 				return;
 			}
 			else {
-				BannedUser.removeBanFromBDD("TimeEnd", "Automatique");
+				BannedUser.removeFromBDD("TimeEnd", "Automatique");
 			}
 		}
 		
@@ -104,18 +106,16 @@ public class BungeeGuardListener implements Listener {
 			if(e.isCommand()) {
 				return;
 			}
-			if (plugin.mute.containsKey(p.getUniqueId())) {
-				long time = plugin.mute.get(p.getUniqueId());
+			Mute MuteUser = BungeeGuardUtils.getMute(p.getUniqueId());
+			if (MuteUser != null) {
 
-				long unixTime = System.currentTimeMillis() / 1000L;
-				if(unixTime-time > 0) {
-					plugin.mute.remove(p.getUniqueId());
-					p.sendMessage(new ComponentBuilder("Vous avez été").color(ChatColor.GRAY).append(" démuté").color(ChatColor.GREEN).append(" !").color(ChatColor.GRAY).create());
+				if(MuteUser.isMute()) {
+					MuteType MuteType = (MuteUser.getReason() != null) ? fr.greenns.BungeeGuard.utils.MuteType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.utils.MuteType.NON_PERMANENT;
+					String MuteMsg = MuteType.playerFormat("", MuteUser.getReason());
+					p.sendMessage(new ComponentBuilder(MuteMsg).create());		
 				}
 				else {
-					e.setCancelled(true);
-					String durationStr = BungeeGuardUtils.getDuration(time);
-					p.sendMessage(new ComponentBuilder("Vous êtes mute pour ").color(ChatColor.RED).append(durationStr).color(ChatColor.AQUA).append(" !").color(ChatColor.RED).create());
+					MuteUser.removeFromBDD("TimeEnd", "Automatique");
 				}
 			}
 			if(plugin.serv.contains(p.getServer().getInfo().getName()))

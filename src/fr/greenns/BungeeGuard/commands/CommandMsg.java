@@ -3,9 +3,13 @@ package fr.greenns.BungeeGuard.commands;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.utils.Mute;
+import fr.greenns.BungeeGuard.utils.MuteType;
 
 import java.util.UUID;
 
@@ -27,21 +31,28 @@ public class CommandMsg extends Command {
 				return;
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED
-					+ "Vous devez etre un joueur pour executer cette command !");
+			sender.sendMessage(new ComponentBuilder("Vous devez etre un joueur pour executer cette command !").color(ChatColor.RED).create());
 			return;
 		}
 
 		ProxiedPlayer p = (ProxiedPlayer) sender;
 
-		if (plugin.mute.containsKey(plugin.mute.containsKey(p.getName()))) {
-			p.sendMessage("§cVous êtes muté temporairement !");
+		Mute MuteUser = BungeeGuardUtils.getMute(p.getUniqueId());
+		if (MuteUser != null) {
+			if(MuteUser.isMute()) {
+				MuteType MuteType = (MuteUser.getReason() != null) ? fr.greenns.BungeeGuard.utils.MuteType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.utils.MuteType.NON_PERMANENT;
+				String MuteMsg = MuteType.playerFormat("", MuteUser.getReason());
+				p.sendMessage(new ComponentBuilder(MuteMsg).create());		
+			}
+			else {
+				MuteUser.removeFromBDD("TimeEnd", "Automatique");
+			}
 			return;
 		}
 
 		if (args.length == 0) {
-			p.sendMessage("§cExemple :");
-			p.sendMessage("§c/msg NomDeMonAmi Hey sa te dit de jouer avec moi ?");
+			p.sendMessage(new ComponentBuilder("Exemple :").color(ChatColor.RED).create());
+			p.sendMessage(new ComponentBuilder("/msg NomDeMonAmi Hey sa te dit de jouer avec moi ?").color(ChatColor.RED).create());
 			return;
 		}
 
@@ -75,9 +86,9 @@ public class CommandMsg extends Command {
 						return;
 					}
 				}
-				p.sendMessage("§cLe joueur que vous chercher a contacter n'est pas en ligne !");
+				p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());
 			} else {
-				p.sendMessage("§cVous ne pouvez pas envoyer un message à vous-même !");
+				p.sendMessage(new ComponentBuilder("Vous ne pouvez pas envoyer un message à vous-même !").color(ChatColor.RED).create());
 			}
 		}
 	}

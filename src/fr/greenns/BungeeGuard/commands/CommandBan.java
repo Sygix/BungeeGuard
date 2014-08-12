@@ -25,8 +25,6 @@ public class CommandBan extends Command {
 		super("ban", "bungeeguard.ban");
 		this.plugin = plugin;
 	}
-
-	// => /ban <pseudo> [raison]
 	
 	@Override
 	public void execute(CommandSender sender, String[] args) {

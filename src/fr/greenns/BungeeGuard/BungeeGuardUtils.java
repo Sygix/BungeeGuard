@@ -19,6 +19,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
 import fr.greenns.BungeeGuard.utils.Ban;
+import fr.greenns.BungeeGuard.utils.Mute;
 
 public class BungeeGuardUtils {
 	public BungeeGuard plugin;
@@ -262,6 +263,14 @@ public class BungeeGuardUtils {
 
 	public static Ban getBan(UUID UUID) {
 		for (Ban Ban : BungeeGuard.bans) {
+			if (Ban.getUUID().equals(UUID))
+				return Ban;
+		}
+		return null;
+	}
+
+	public static Mute getMute(UUID UUID) {
+		for (Mute Ban : BungeeGuard.mutes) {
 			if (Ban.getUUID().equals(UUID))
 				return Ban;
 		}

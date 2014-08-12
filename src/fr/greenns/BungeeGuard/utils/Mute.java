@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import fr.greenns.BungeeGuard.BungeeGuard;
 
-public class Ban {
+public class Mute {
 	UUID UUID;
 	String Pseudo;
 	long time;
@@ -13,14 +13,14 @@ public class Ban {
 	String adminName;
 	String adminUUID;
 
-	public Ban(UUID UUID, String Pseudo, long time, String reason, String adminName, String adminUUID) {
+	public Mute(UUID UUID, String Pseudo, long time, String reason, String adminName, String adminUUID) {
 		this.UUID = UUID;
 		this.Pseudo = Pseudo;
 		this.time = time;
 		this.reason = reason;
 		this.adminName = adminName;
 		this.adminUUID = adminUUID;
-		BungeeGuard.bans.add(this);
+		BungeeGuard.mutes.add(this);
 	}
 
 	public String getPseudo() {
@@ -71,11 +71,7 @@ public class Ban {
 		return reason;
 	}
 
-	public boolean isDefBanned() {
-		return (time == -1);
-	}
-
-	public boolean isBanned() {
+	public boolean isMute() {
 		return (System.currentTimeMillis() <= time);
 	}
 
@@ -99,15 +95,15 @@ public class Ban {
 				System.out.println("[MYSQL] Connection error ...");
 			}
 
-			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='ReBan-By-"+getAdminName()+"', unban='"+System.currentTimeMillis()+"' WHERE uuidBanned='"+getUUID()+"' AND status='1'");
+			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Mute` SET status='0', unmuteReason='ReMute-By-"+getAdminName()+"', unmute='"+System.currentTimeMillis()+"' WHERE uuidMute='"+getUUID()+"' AND status='1'");
 
 			BungeeGuard.plugin.sql.query("INSERT INTO `BungeeGuard_Ban` "
-					+ "(`id`, `nameBanned`, `nameAdmin` , `uuidBanned` , `uuidAdmin` , `ban`, `unban`, `reason`, `unbanReason`, `unbanName`, `status`) VALUES "
+					+ "(`id`, `nameMute`, `nameAdmin` , `uuidMute` , `uuidAdmin` , `mute`, `unmute`, `reason`, `unmuteReason`, `unmuteName`, `status`) VALUES "
 					+ "(NULL, '"+getPseudo()+"', '" + getAdminName() + "', '" + getUUID() + "', '" + getAdminUUID() + "' , '"+System.currentTimeMillis()+"', '"+getTime()+"', '"+getReason()+"', '', '', '1');");
 		}
 		catch (final SQLException ex)
 		{
-			System.out.println("SQL problem (exception) when add banned player to BDD : " + ex );
+			System.out.println("SQL problem (exception) when add mute player to BDD : " + ex );
 		}
 		finally
 		{
@@ -139,12 +135,12 @@ public class Ban {
 				System.out.println("[MYSQL] Connection error ...");
 			}
 
-			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='"+unbanReason+"', unbanName='"+unbanName+"' WHERE uuidBanned='"+getUUID()+"' AND status='1'");
+			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Mute` SET status='0', unmuteReason='"+unbanReason+"', unmuteName='"+unbanName+"' WHERE uuidBanned='"+getUUID()+"' AND status='1'");
 			BungeeGuard.bans.remove(this);
 		}
 		catch (final SQLException ex)
 		{
-			System.out.println("SQL problem (exception) when remove banned player to BDD : " + ex );
+			System.out.println("SQL problem (exception) when remove mute player to BDD : " + ex );
 		}
 		finally
 		{

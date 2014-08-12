@@ -1,131 +1,114 @@
 package fr.greenns.BungeeGuard.commands;
 
-import net.md_5.bungee.BungeeCord;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.utils.Mute;
+import fr.greenns.BungeeGuard.utils.MuteType;
+import fr.greenns.BungeeGuard.utils.UUIDFetcher;
 
 public class CommandMute extends Command {
 
 	public BungeeGuard plugin;
-	public long czas;
+	Pattern timePattern = Pattern.compile("([0-9]+)([wdhms])");
 
 	public CommandMute(BungeeGuard plugin) {
-		super("mute", "bungeeguard.mute");
+		super("ban", "bungeeguard.mute");
 		this.plugin = plugin;
 	}
-
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		String name;
-
-		if (sender instanceof ProxiedPlayer) {
-			ProxiedPlayer p = (ProxiedPlayer) sender;
-
-			if (!p.hasPermission("bungeeguard.mute")) {
-				return;
-			}
-			name = p.getDisplayName();
-		} else {
-			name = "*Console*";
-		}
+		long startTime = System.currentTimeMillis();
+		String adminName = (sender instanceof ProxiedPlayer) ? sender.getName() : "UHConsole";
+		String adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId().toString() : "UHConsole";
 
 		if (args.length == 0) {
-			plugin.utils.msgPluginCommand(sender);
-			return;
-		}
-
-		String msg = "";
-		String targetmsg = "";
-		String powodd = "";
-		String timeformat = "";
-		String nick = "";
-		czas = 0; // ban time in in unix settings
-		long initialMinute;
-		boolean onlinePlayer = false;
-		boolean noTime = false;
-
-		if (args.length > 0) {
-			if (BungeeCord.getInstance().getPlayer(args[0]) != null) {
-				ProxiedPlayer cel = BungeeCord.getInstance().getPlayer(args[0]);
-				nick = cel.getName();
-				onlinePlayer = true;
-			} else {
-				nick = args[0];
-				onlinePlayer = false;
-				if (nick.isEmpty()) {
-					sender.sendMessage("§cNom du joueur incorrecte ...");
-					return;
+			sender.sendMessage(new ComponentBuilder("Usage: /mute <pseudo> [duration] [reason]").color(ChatColor.RED).create());
+		} else {
+			boolean duration = false;
+			long muteUntilTime = -1;
+			if(args.length > 1) {
+				Matcher m = timePattern.matcher(args[1]);
+				long muteTime = 0;
+				while (m.find()) {
+					if (m.group() == null || m.group().isEmpty()) {
+						continue;
+					} else if(m.group(1) != null && !m.group(1).isEmpty() && m.group(2) != null && !m.group(2).isEmpty()) {
+						int number = Integer.parseInt(m.group(1));
+						String type = m.group(2);
+						duration = true;
+						
+						switch(type) {
+							case "w": muteTime += number*604800000L; break;
+							case "d": muteTime += number*86400000L; break;
+							case "h": muteTime += number*3600000L; break;
+							case "m": muteTime += number*60000L; break;
+							case "s": muteTime += number*1000L; break;
+						}
+					}
+				}
+				if(muteTime > 604800000L) muteTime = 604800000L;
+				if(!duration) muteTime = 604800000L;
+				muteUntilTime = System.currentTimeMillis() + muteTime;
+			}
+			
+			int startArgForReason = (duration) ? 2 : 1;
+			
+			String reason = "";
+			if(args.length > startArgForReason) {
+				for (int i = startArgForReason; i < args.length; i++){
+					reason += " " + args[i];
 				}
 			}
-
-			if (args.length == 1) {
-				targetmsg = "§cVous etes muté 24 heures par " + name + " !";
-				msg = "§c" + name + " a muté 24 heures " + nick + " !";
-
-				long unixTime = System.currentTimeMillis() / 1000L;
-				czas = (int) (unixTime + (1440 * 60));
-			}
-		}
-		if (args.length > 1) {
-			if (args[0] != null) {
-				String temps = "";
-				for (int a = 1; a < args.length; a++)
-					temps += " " + args[a];
-				initialMinute = BungeeGuardUtils.parseDuration(temps);
-				long unixTime = System.currentTimeMillis();
-				czas = (unixTime + initialMinute);
-				timeformat = BungeeGuardUtils.getDuration(initialMinute);
+			if(reason == "") reason = null;
+			
+			MuteType MuteTypeVar;
+			MuteTypeVar = (reason != null) ? MuteType.NON_PERMANENT_W_REASON : MuteType.NON_PERMANENT;
+			muteUntilTime += (System.currentTimeMillis() - startTime);
+			
+			
+			String muteName = args[0];
+			ProxiedPlayer mutePlayer = plugin.getProxy().getPlayer(muteName);
+			UUID muteUUID;
+			String muteDurationStr = BungeeGuardUtils.getDuration(muteUntilTime);
+			if(mutePlayer == null) {
+				try {
+					muteUUID = UUIDFetcher.getUUIDOf(muteName);
+					if(muteUUID == null) {
+						sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'existe pas.").color(ChatColor.RED).create());
+						return;
+					}
+				} catch (Exception e) {
+					sender.sendMessage(new ComponentBuilder("Erreur lors de la récupération de l'UUID :").color(ChatColor.RED).append(e.getMessage()).color(ChatColor.GRAY).create());
+					return;
+				}
 			} else {
-				noTime = true;
-				initialMinute = 86400000;
-				long unixTime = System.currentTimeMillis();
-				czas = (unixTime + initialMinute);
-				timeformat = BungeeGuardUtils.getDuration(initialMinute);
+				muteUUID = mutePlayer.getUniqueId();
+				mutePlayer.sendMessage(new ComponentBuilder(MuteTypeVar.playerFormat(muteDurationStr, reason)).create());
 			}
+			
+			Mute alreadyMute = BungeeGuardUtils.getMute(muteUUID);
+			if(alreadyMute != null) BungeeGuard.mutes.remove(alreadyMute);
 
-			targetmsg = "§cVous etes muté pour " + timeformat + "par " + name
-					+ " !";
-			msg = "§c" + name + " a muté " + nick + " " + timeformat + "!";
-		} else if (args.length > 2) {
-			powodd = "";
-			if (noTime)
-				for (int a = 1; a < args.length; a++)
-					powodd += " " + args[a];
-			else
-				for (int a = 2; a < args.length; a++)
-					powodd += " " + args[a];
-		}
-
-		if (onlinePlayer) {
-			ProxiedPlayer cel = BungeeCord.getInstance().getPlayer(args[0]);
-
-			if (plugin.mute.containsKey(cel.getUUID().toString())) {
-				sender.sendMessage("§c" + cel.getName() + " est deja mute !");
-				return;
-			} else {
-				plugin.mute.put(cel.getUniqueId(), czas);
+			Mute Mute = new Mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
+			Mute.addToBdd();
+			
+			String adminFormat = MuteTypeVar.adminFormat(muteDurationStr, reason, adminName, muteName);
+			BaseComponent[] message = new ComponentBuilder(adminFormat).create();			
+			for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
+				if(p.hasPermission("bungeeguard.notify")) p.sendMessage(message);
 			}
-			cel.sendMessage(targetmsg);
-		} else {
-			if (plugin.mute.containsKey(BungeeCord.getInstance()
-					.getPlayer(args[0]).getUUID().toString())) {
-				sender.sendMessage("§c" + args[0] + " est deja mute !");
-				return;
-			} else {
-				plugin.mute.put(BungeeCord.getInstance().getPlayer(args[0])
-						.getUniqueId(), czas);
-			}
-		}
-
-		System.out.println(msg);
-
-		for (ProxiedPlayer playerdwa : BungeeCord.getInstance().getPlayers()) {
-			if (playerdwa.hasPermission("bungeeguard.notify")) {
-				playerdwa.sendMessage(plugin.utils.staffBroadcast + msg);
-			}
+			System.out.print(adminFormat);
 		}
 	}
 }

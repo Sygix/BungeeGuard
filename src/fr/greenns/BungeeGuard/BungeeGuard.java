@@ -35,6 +35,7 @@ import fr.greenns.BungeeGuard.commands.CommandSpychat;
 import fr.greenns.BungeeGuard.commands.CommandUnban;
 import fr.greenns.BungeeGuard.commands.CommandUnmute;
 import fr.greenns.BungeeGuard.utils.Ban;
+import fr.greenns.BungeeGuard.utils.Mute;
 
 public class BungeeGuard extends Plugin {
 
@@ -43,7 +44,6 @@ public class BungeeGuard extends Plugin {
 	public BungeeGuardUtils utils;
 	public LobbyUtils lobbyUtils;
 	public Lobby lobby;
-	public HashMap<UUID, Long> mute;
 	public HashMap<String,ProxiedPlayer> reply;
 	public ArrayList<UUID> spy;
 	public ArrayList<String> serv;
@@ -55,6 +55,7 @@ public class BungeeGuard extends Plugin {
 	public static BungeeGuard plugin;
 	
 	public static List<Ban> bans = new ArrayList<Ban>();
+	public static List<Mute> mutes = new ArrayList<Mute>();
 
 	@Override
 	public void onEnable() {
@@ -139,7 +140,6 @@ public class BungeeGuard extends Plugin {
 		BGListener = new BungeeGuardListener(this);
 		lobby = new Lobby(this);
 		lobbyUtils = new LobbyUtils(this);
-		mute = new HashMap<UUID,Long>();
 		reply = new HashMap<String,ProxiedPlayer>();
 		spy = new ArrayList<UUID>();
 		lobbyList = new ArrayList<Lobby>();

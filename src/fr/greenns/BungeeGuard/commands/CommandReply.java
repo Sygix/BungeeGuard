@@ -3,9 +3,13 @@ package fr.greenns.BungeeGuard.commands;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.utils.Mute;
+import fr.greenns.BungeeGuard.utils.MuteType;
 
 import java.util.UUID;
 
@@ -34,8 +38,16 @@ public class CommandReply extends Command {
 
 		ProxiedPlayer p = (ProxiedPlayer) sender;
 
-		if (plugin.mute.containsKey(plugin.mute.containsKey(p.getName()))) {
-			p.sendMessage("§cVous êtes muté temporairement !");
+		Mute MuteUser = BungeeGuardUtils.getMute(p.getUniqueId());
+		if (MuteUser != null) {
+			if(MuteUser.isMute()) {
+				MuteType MuteType = (MuteUser.getReason() != null) ? fr.greenns.BungeeGuard.utils.MuteType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.utils.MuteType.NON_PERMANENT;
+				String MuteMsg = MuteType.playerFormat("", MuteUser.getReason());
+				p.sendMessage(new ComponentBuilder(MuteMsg).create());		
+			}
+			else {
+				MuteUser.removeFromBDD("TimeEnd", "Automatique");
+			}
 			return;
 		}
 

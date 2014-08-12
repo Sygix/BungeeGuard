@@ -19,7 +19,7 @@ public class CommandUnban extends Command {
 	public BungeeGuard plugin;
 
 	public CommandUnban(BungeeGuard plugin) {
-		super("unban", "bungeeguard.unban");
+		super("unban", "bungeeguard.ban");
 		this.plugin = plugin;
 	}
 
@@ -60,7 +60,7 @@ public class CommandUnban extends Command {
 			if(Ban == null) {
 				sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas banni.").color(ChatColor.RED).create());
 			} else {
-				Ban.removeBanFromBDD(unbanReason, unbanName);
+				Ban.removeFromBDD(unbanReason, unbanName);
 				
 				BanType BanTypeVar = (unbanReason == "") ? BanType.UNBAN : BanType.UNBAN_W_REASON;
 				String adminFormat = BanTypeVar.adminFormat("", unbanReason, unbanName, bannedName);
