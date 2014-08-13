@@ -15,14 +15,17 @@ import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
+import fr.greenns.BungeeGuard.utils.AuthPlayer;
 import fr.greenns.BungeeGuard.utils.Ban;
 import fr.greenns.BungeeGuard.utils.BanType;
 import fr.greenns.BungeeGuard.utils.Mute;
 import fr.greenns.BungeeGuard.utils.MuteType;
+import fr.greens.BungeeGuard.Authenticator.Authenticator;
 
 public class BungeeGuardListener implements Listener {
 
@@ -32,7 +35,6 @@ public class BungeeGuardListener implements Listener {
 	{
 		this.plugin = plugin;
 	}
-
 
 	@EventHandler
 	public void onLogin(LoginEvent event)
@@ -72,37 +74,70 @@ public class BungeeGuardListener implements Listener {
 		event.setCancelled(true);
 		event.setCancelReason(ChatColor.RED + "Nos services sont momentanément indisponibles"+'\n'+ChatColor.RED+"Veuillez réessayer dans quelques instants");
 	}
-
+	
 	@EventHandler
-	public void onServerConnect(ServerConnectEvent event)
+	public void onServerConnect(ServerConnectEvent e)
 	{
-		if (event.getTarget().getName().equalsIgnoreCase("hub"))
+		AuthPlayer AuthPlayer = BungeeGuardUtils.getUnloggedAuthPlayer(e.getPlayer().getUniqueId());
+		if(AuthPlayer != null){
+			e.setTarget(BungeeCord.getInstance().getServerInfo("loginserver"));
+			return;
+		}
+		
+		if (e.getTarget().getName().equalsIgnoreCase("hub"))
 		{
 			Lobby l = plugin.lobbyUtils.bestLobbyTarget();
 
 			if(l != null)
 			{
-				event.setTarget(l.getServerInfo());
+				e.setTarget(l.getServerInfo());
 			}
 			else
 			{
 				if(BungeeCord.getInstance().getServerInfo("limbo").getPlayers().size()<70)
 				{
-					event.setTarget(BungeeCord.getInstance().getServerInfo("limbo"));
+					e.setTarget(BungeeCord.getInstance().getServerInfo("limbo"));
 				}
-				event.getPlayer().disconnect(new ComponentBuilder(ChatColor.RED + "Nos services sont momentanément indisponibles"+'\n'+ChatColor.RED+"Veuillez réessayer dans quelques instants").create());
+				e.getPlayer().disconnect(new ComponentBuilder(ChatColor.RED + "Nos services sont momentanément indisponibles"+'\n'+ChatColor.RED+"Veuillez réessayer dans quelques instants").create());
 			}
 		}
 	}
 
+	@EventHandler
+	public void onServerConnected(ServerConnectedEvent event)
+	{
+		if (event.getServer().getInfo().getName().equalsIgnoreCase("loginserver")) {
+			event.getPlayer().sendMessage(new ComponentBuilder("Bienvenue sur UHCGames !").color(ChatColor.AQUA).create());
+			event.getPlayer().sendMessage(new ComponentBuilder("Veuillez saisir votre code d'authentification dans le chat pour vous connecter.").color(ChatColor.RED).create());
+		}
+	}
 
 	@EventHandler
 	public void onChat(ChatEvent e)
 	{
-
 		ProxiedPlayer p = (ProxiedPlayer) e.getSender();
+		AuthPlayer AuthPlayer = BungeeGuardUtils.getUnloggedAuthPlayer(p.getUniqueId());
+		if(AuthPlayer != null){
+			if(e.isCommand()) {
+				p.sendMessage(new ComponentBuilder("Veuillez saisir votre code d'authentification dans le chat pour vous connecter.").color(ChatColor.RED).create());
+			} else {
+				String code = e.getMessage();
+				String secretKey = AuthPlayer.getSecretKey();
+				if(Authenticator.valid_code(code, secretKey)) {
+					p.sendMessage(new ComponentBuilder("Code validé ! Vous êtes maintenant connecté !").color(ChatColor.GREEN).create());
+					AuthPlayer.setLogged();
+					p.connect(BungeeCord.getInstance().getServerInfo("hub"));
+				} else {
+					p.disconnect(new ComponentBuilder("Code Invalide ! Vous avez été déconnecté !").color(ChatColor.RED).create());
+				}
+			}
+			
+			e.setCancelled(true);
+			return;
+		}
 
 		if (!e.getMessage().startsWith("/") && (e.getSender() instanceof ProxiedPlayer)) {
+			
 			if(e.isCommand()) {
 				return;
 			}

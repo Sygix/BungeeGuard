@@ -34,6 +34,7 @@ import fr.greenns.BungeeGuard.commands.CommandSilence;
 import fr.greenns.BungeeGuard.commands.CommandSpychat;
 import fr.greenns.BungeeGuard.commands.CommandUnban;
 import fr.greenns.BungeeGuard.commands.CommandUnmute;
+import fr.greenns.BungeeGuard.utils.AuthPlayer;
 import fr.greenns.BungeeGuard.utils.Ban;
 import fr.greenns.BungeeGuard.utils.Mute;
 
@@ -54,6 +55,7 @@ public class BungeeGuard extends Plugin {
 	public Long time;
 	public static BungeeGuard plugin;
 	
+	public static List<AuthPlayer> authplayers = new ArrayList<AuthPlayer>();
 	public static List<Ban> bans = new ArrayList<Ban>();
 	public static List<Mute> mutes = new ArrayList<Mute>();
 
@@ -150,7 +152,7 @@ public class BungeeGuard extends Plugin {
 		}
 		else
 		{
-			System.out.println("BungeeGuard - Table BungeeGuard_Ban inéxistante, création en cours ...");
+			System.out.println("BungeeGuard - Table BungeeGuard_Mute inéxistante, création en cours ...");
 
 			sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Mute` (" +
 					"  `id` int(11) NOT NULL AUTO_INCREMENT," +
@@ -167,7 +169,47 @@ public class BungeeGuard extends Plugin {
 					"  PRIMARY KEY (`id`)" +
 					") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
 
-			System.out.println("BungeeGuard - Table BungeeGuard_Ban créé !");
+			System.out.println("BungeeGuard - Table BungeeGuard_Mute créé !");
+		}
+		if(sql.checkTable("BungeeGuard_AdminAuth"))
+		{
+			System.out.println("BungeeGuard - Table BungeeGuard_AdminAuth trouvée !");
+			
+			System.out.println("BungeeGuard - Chargement des adminAuth ...");
+			try
+			{
+				if (BungeeGuard.plugin.sql.getConnection().isClosed())
+				{
+					BungeeGuard.plugin.sql.open();
+				}
+
+				if(BungeeGuard.plugin.sql.getConnection() == null)
+				{
+					System.out.println("[MYSQL] Connection error ...");
+				}
+				ResultSet res = sql.query("SELECT * FROM BungeeGuard_AdminAuth");
+				
+				while(res.next()) {
+					new AuthPlayer(UUID.fromString(res.getString("UUID")), res.getString("AuthKey"));
+				}
+			}
+			catch (final SQLException ex)
+			{
+				System.out.println("SQL problem (exception) when getting adminAuth players from BDD : " + ex );
+			}
+		}
+		else
+		{
+			System.out.println("BungeeGuard - Table BungeeGuard_AdminAuth inéxistante, création en cours ...");
+
+			sql.createTable("CREATE TABLE `BungeeGuard_AdminAuth` (" +
+			  "`UUID` varchar(255) NOT NULL," +
+			  "`Pseudo` varchar(45) NOT NULL," +
+			  "`AuthKey` varchar(255) NOT NULL," +
+			  "PRIMARY KEY (`UUID`)" +
+			") ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+			System.out.println("BungeeGuard - Table BungeeGuard_AdminAuth créé !");
 		}
 		if(sql.checkTable("BungeeGuard_Motd"))
 		{

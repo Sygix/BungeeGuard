@@ -18,6 +18,7 @@ import net.md_5.bungee.api.CommandSender;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
+import fr.greenns.BungeeGuard.utils.AuthPlayer;
 import fr.greenns.BungeeGuard.utils.Ban;
 import fr.greenns.BungeeGuard.utils.Mute;
 
@@ -273,6 +274,13 @@ public class BungeeGuardUtils {
 		for (Mute Ban : BungeeGuard.mutes) {
 			if (Ban.getUUID().equals(UUID))
 				return Ban;
+		}
+		return null;
+	}
+	public static AuthPlayer getUnloggedAuthPlayer(UUID UUID) {
+		for (AuthPlayer AuthPlayer : BungeeGuard.authplayers) {
+			if (AuthPlayer.getUUID().equals(UUID) && !AuthPlayer.isLogged())
+				return AuthPlayer;
 		}
 		return null;
 	}
