@@ -19,12 +19,12 @@ import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import fr.greenns.BungeeGuard.Ban.Ban;
+import fr.greenns.BungeeGuard.Ban.BanType;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
+import fr.greenns.BungeeGuard.Mute.Mute;
+import fr.greenns.BungeeGuard.Mute.MuteType;
 import fr.greenns.BungeeGuard.utils.AuthPlayer;
-import fr.greenns.BungeeGuard.utils.Ban;
-import fr.greenns.BungeeGuard.utils.BanType;
-import fr.greenns.BungeeGuard.utils.Mute;
-import fr.greenns.BungeeGuard.utils.MuteType;
 import fr.greens.BungeeGuard.Authenticator.Authenticator;
 
 public class BungeeGuardListener implements Listener {
@@ -44,7 +44,7 @@ public class BungeeGuardListener implements Listener {
 			if(BannedUser.isDefBanned()) {
 				event.setCancelled(true);
 				
-				BanType BanType = (BannedUser.getReason() != null) ? fr.greenns.BungeeGuard.utils.BanType.PERMANENT_W_REASON : fr.greenns.BungeeGuard.utils.BanType.PERMANENT;
+				BanType BanType = (BannedUser.getReason() != null) ? fr.greenns.BungeeGuard.Ban.BanType.PERMANENT_W_REASON : fr.greenns.BungeeGuard.Ban.BanType.PERMANENT;
 				String CancelMsg = BanType.kickFormat("", BannedUser.getReason());
 				
 				event.setCancelReason(CancelMsg);
@@ -54,7 +54,7 @@ public class BungeeGuardListener implements Listener {
 				event.setCancelled(true);
 				
 				String durationStr = BungeeGuardUtils.getDuration(BannedUser.getTime());
-				BanType BanType = (BannedUser.getReason() != null) ? fr.greenns.BungeeGuard.utils.BanType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.utils.BanType.NON_PERMANENT;
+				BanType BanType = (BannedUser.getReason() != null) ? fr.greenns.BungeeGuard.Ban.BanType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.Ban.BanType.NON_PERMANENT;
 				String CancelMsg = BanType.kickFormat(durationStr, BannedUser.getReason());
 				
 				event.setCancelReason(CancelMsg);
@@ -145,7 +145,7 @@ public class BungeeGuardListener implements Listener {
 			if (MuteUser != null) {
 
 				if(MuteUser.isMute()) {
-					MuteType MuteType = (MuteUser.getReason() != null) ? fr.greenns.BungeeGuard.utils.MuteType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.utils.MuteType.NON_PERMANENT;
+					MuteType MuteType = (MuteUser.getReason() != null) ? fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT;
 					String MuteMsg = MuteType.playerFormat("", MuteUser.getReason());
 					p.sendMessage(new ComponentBuilder(MuteMsg).create());		
 				}

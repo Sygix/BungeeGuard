@@ -1,4 +1,4 @@
-package fr.greenns.BungeeGuard.commands;
+package fr.greenns.BungeeGuard.Ban;
 
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -12,8 +12,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
-import fr.greenns.BungeeGuard.utils.Ban;
-import fr.greenns.BungeeGuard.utils.BanType;
 import fr.greenns.BungeeGuard.utils.UUIDFetcher;
 
 public class CommandBan extends Command {

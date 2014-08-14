@@ -1,4 +1,4 @@
-package fr.greenns.BungeeGuard.utils;
+package fr.greenns.BungeeGuard.Ban;
 
 import java.sql.SQLException;
 import java.util.UUID;

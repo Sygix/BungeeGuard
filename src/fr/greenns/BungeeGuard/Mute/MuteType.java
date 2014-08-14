@@ -1,4 +1,4 @@
-package fr.greenns.BungeeGuard.utils;
+package fr.greenns.BungeeGuard.Mute;
 
 import net.md_5.bungee.api.ChatColor;
 

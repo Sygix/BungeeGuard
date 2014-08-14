@@ -16,26 +16,26 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
+import fr.greenns.BungeeGuard.Ban.Ban;
+import fr.greenns.BungeeGuard.Ban.CommandBan;
+import fr.greenns.BungeeGuard.Ban.CommandUnban;
+import fr.greenns.BungeeGuard.Kick.CommandKick;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import fr.greenns.BungeeGuard.Lobbies.LobbyUtils;
+import fr.greenns.BungeeGuard.Mute.CommandMute;
+import fr.greenns.BungeeGuard.Mute.CommandUnmute;
+import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.SQL.MySQL;
-import fr.greenns.BungeeGuard.commands.CommandBan;
 import fr.greenns.BungeeGuard.commands.CommandCheck;
-import fr.greenns.BungeeGuard.commands.CommandKick;
 import fr.greenns.BungeeGuard.commands.CommandList;
 import fr.greenns.BungeeGuard.commands.CommandLobby;
 import fr.greenns.BungeeGuard.commands.CommandMotd;
 import fr.greenns.BungeeGuard.commands.CommandMsg;
-import fr.greenns.BungeeGuard.commands.CommandMute;
 import fr.greenns.BungeeGuard.commands.CommandReply;
 import fr.greenns.BungeeGuard.commands.CommandSay;
 import fr.greenns.BungeeGuard.commands.CommandSilence;
 import fr.greenns.BungeeGuard.commands.CommandSpychat;
-import fr.greenns.BungeeGuard.commands.CommandUnban;
-import fr.greenns.BungeeGuard.commands.CommandUnmute;
 import fr.greenns.BungeeGuard.utils.AuthPlayer;
-import fr.greenns.BungeeGuard.utils.Ban;
-import fr.greenns.BungeeGuard.utils.Mute;
 
 public class BungeeGuard extends Plugin {
 

@@ -1,4 +1,4 @@
-package fr.greenns.BungeeGuard.commands;
+package fr.greenns.BungeeGuard.Kick;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -7,7 +7,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
-import fr.greenns.BungeeGuard.utils.KickType;
 
 public class CommandKick extends Command {
 

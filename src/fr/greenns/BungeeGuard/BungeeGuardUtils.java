@@ -18,10 +18,10 @@ import net.md_5.bungee.api.CommandSender;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
+import fr.greenns.BungeeGuard.Ban.Ban;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
+import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.utils.AuthPlayer;
-import fr.greenns.BungeeGuard.utils.Ban;
-import fr.greenns.BungeeGuard.utils.Mute;
 
 public class BungeeGuardUtils {
 	public BungeeGuard plugin;
