@@ -324,6 +324,19 @@ public class BungeeGuard extends Plugin {
 
 		}, 5, 5, TimeUnit.SECONDS);
 	}
+	
+	// TODO
+	public void updateLobbysStatus() {
+		for (final ServerInfo serverInfo : BungeeCord.getInstance().getServers().values())
+		{
+			if(serverInfo.getName().contains("lobby"))
+			{
+				// Vérification du status du serveur
+				// Nombre de joueurs
+				// On-Off
+			}
+		}
+	}
 
 	@Override
 	public void onDisable()
