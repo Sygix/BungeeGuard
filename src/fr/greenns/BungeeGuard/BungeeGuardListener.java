@@ -35,7 +35,7 @@ public class BungeeGuardListener implements Listener {
 	{
 		this.plugin = plugin;
 	}
-
+	
 	@EventHandler
 	public void onLogin(LoginEvent event)
 	{

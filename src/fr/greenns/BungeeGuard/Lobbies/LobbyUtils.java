@@ -17,11 +17,10 @@ public class LobbyUtils {
 	}
 
 	public Lobby bestLobbyTarget() {
-		for (int max = 0; max < 60;) {
-			max = max + 15;
-			for (Lobby l : plugin.lobbyList) {
-				if (l.getSlot() < max) {
-					return l;
+		for (int maxPlayers = 0; maxPlayers < 60; maxPlayers += 15) {
+			for (Lobby Lobby : BungeeGuard.lobbys) {
+				if (Lobby.isOnline() && Lobby.getTps() >= 12 && Lobby.getNbrPlayers() < maxPlayers) {
+					return Lobby;
 				}
 			}
 		}

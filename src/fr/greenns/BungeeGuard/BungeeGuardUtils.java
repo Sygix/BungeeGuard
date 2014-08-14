@@ -18,6 +18,7 @@ import net.md_5.bungee.api.CommandSender;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
+import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import fr.greenns.BungeeGuard.utils.AuthPlayer;
 import fr.greenns.BungeeGuard.utils.Ban;
 import fr.greenns.BungeeGuard.utils.Mute;
@@ -262,6 +263,14 @@ public class BungeeGuardUtils {
 		return msg;
 	}
 
+	public static Lobby getLobby(String name) {
+		for (Lobby Lobby : BungeeGuard.lobbys) {
+			if (Lobby.getName().equals(name))
+				return Lobby;
+		}
+		return null;
+	}
+	
 	public static Ban getBan(UUID UUID) {
 		for (Ban Ban : BungeeGuard.bans) {
 			if (Ban.getUUID().equals(UUID))

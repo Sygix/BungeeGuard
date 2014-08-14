@@ -3,7 +3,6 @@ package fr.greenns.BungeeGuard;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -44,7 +43,6 @@ public class BungeeGuard extends Plugin {
 	public Configuration config;
 	public BungeeGuardUtils utils;
 	public LobbyUtils lobbyUtils;
-	public Lobby lobby;
 	public HashMap<String,ProxiedPlayer> reply;
 	public ArrayList<UUID> spy;
 	public ArrayList<String> serv;
@@ -58,6 +56,7 @@ public class BungeeGuard extends Plugin {
 	public static List<AuthPlayer> authplayers = new ArrayList<AuthPlayer>();
 	public static List<Ban> bans = new ArrayList<Ban>();
 	public static List<Mute> mutes = new ArrayList<Mute>();
+	public static List<Lobby> lobbys = new ArrayList<Lobby>();
 
 	@Override
 	public void onEnable() {
@@ -228,7 +227,6 @@ public class BungeeGuard extends Plugin {
 
 
 		BGListener = new BungeeGuardListener(this);
-		lobby = new Lobby(this);
 		lobbyUtils = new LobbyUtils(this);
 		reply = new HashMap<String,ProxiedPlayer>();
 		spy = new ArrayList<UUID>();
@@ -274,68 +272,38 @@ public class BungeeGuard extends Plugin {
             }
         }, 1, 1, TimeUnit.SECONDS);*/
 
-		ArrayList<String> si = new ArrayList<>();
 
+		getProxy().getScheduler().schedule(this, new Runnable() {
+			@Override
+			public void run() {
+				updateLobbysStatus();
+			}
+		}, 0, 5, TimeUnit.SECONDS);
+	}
+	
+	public void updateLobbysStatus() {
+		final List<Lobby> new_lobbys = new ArrayList<Lobby>();
+		
 		for (final ServerInfo serverInfo : BungeeCord.getInstance().getServers().values())
 		{
 			if(serverInfo.getName().contains("lobby"))
 			{
-				si.add(serverInfo.getName());
-			}
-		}
-		Collections.sort(si);
-
-		for(String serv : si)
-		{
-			ServerInfo serverInfo = BungeeCord.getInstance().getServerInfo(serv);
-			new Lobby(serv, 0, this);
-			declarePing(serverInfo);
-		}
-
-		for (final Lobby l : lobbyList){
-			BungeeCord.getInstance().getScheduler().schedule(this, new Runnable() {
-				
-				@Override
-				public void run()
-				{
-					int newSlot = l.getServerInfo().getPlayers().size();
-					l.setSlot(newSlot);
-				}
-			}, 5, 5, TimeUnit.SECONDS);
-		}
-	}
-
-
-	public void declarePing(final ServerInfo serverInfo1)
-	{
-		BungeeCord.getInstance().getScheduler().schedule(this, new Runnable() {
-			@Override
-			public void run()
-			{
-				serverInfo1.ping(new Callback<ServerPing>()
+				serverInfo.ping(new Callback<ServerPing>()
 				{
 					@Override
 					public void done(ServerPing result, Throwable error)
 					{
-						serversUp.put(serverInfo1.getName(), error == null);
+						int players = serverInfo.getPlayers().size();
+						double tps = 0;
+						if(error == null) tps = Double.parseDouble(result.getDescription());
+						Lobby Lobby = new Lobby(serverInfo.getName(), players, tps, (error == null));
+						new_lobbys.add(Lobby);
 					}
 				});
 			}
-
-		}, 5, 5, TimeUnit.SECONDS);
-	}
-	
-	// TODO
-	public void updateLobbysStatus() {
-		for (final ServerInfo serverInfo : BungeeCord.getInstance().getServers().values())
-		{
-			if(serverInfo.getName().contains("lobby"))
-			{
-				// Vérification du status du serveur
-				// Nombre de joueurs
-				// On-Off
-			}
 		}
+		
+		lobbys = new_lobbys;
 	}
 
 	@Override

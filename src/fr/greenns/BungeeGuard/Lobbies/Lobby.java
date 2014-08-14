@@ -2,41 +2,37 @@ package fr.greenns.BungeeGuard.Lobbies;
 
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.config.ServerInfo;
-import fr.greenns.BungeeGuard.BungeeGuard;
 
 public class Lobby {
 
-	public BungeeGuard plugin;
-
-	public Lobby(BungeeGuard plugin) {
-		this.plugin = plugin;
-	}
-
 	private String name;
-	private int slot;
+	private int players;
+	private boolean online;
+	private double tps;
 
-	public Lobby(String name, int slot, BungeeGuard pl) {
+	public Lobby(String name, int players, double tps, boolean online) {
 		this.name = name;
-		this.slot = slot;
-		pl.lobbyList.add(this);
+		this.players = players;
+		this.tps = tps;
+		this.online = online;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public Integer getNbrPlayers() {
+		return players;
 	}
 
-	public Integer getSlot() {
-		return slot;
+	public boolean isOnline() {
+		return online;
 	}
-
-	public void setSlot(Integer slot) {
-		this.slot = slot;
+	
+	public double getTps() {
+		return tps;
 	}
-
+	
 	public ServerInfo getServerInfo() {
 		return BungeeCord.getInstance().getServerInfo(this.name);
 	}
