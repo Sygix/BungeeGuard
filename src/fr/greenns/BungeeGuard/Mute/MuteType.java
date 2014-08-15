@@ -4,12 +4,14 @@ import net.md_5.bungee.api.ChatColor;
 
 public enum MuteType {
 	NON_PERMANENT(ChatColor.RED + "Vous avez été mute pendant " + ChatColor.AQUA + "+timeStr" + ChatColor.RED + ".", ChatColor.AQUA + "+adminName" + ChatColor.RED + " a mute " + ChatColor.GREEN + "+muteName" + ChatColor.RED + " pendant " + ChatColor.AQUA + "+timeStr" + ChatColor.RED + "."),
-	NON_PERMANENT_W_REASON(ChatColor.RED + "Vous avez été mute pendant " + ChatColor.AQUA + "+timeStr" + ChatColor.RED + " pour: "+'\n'+"+reasonStr", ChatColor.AQUA + "+adminName" + ChatColor.RED +" a mute " +ChatColor.GREEN+ "+muteName" + ChatColor.RED + "pendant "+ChatColor.AQUA+"+timeStr" + ChatColor.RED + " pour: "+'\n'+ ChatColor.AQUA + "+reasonStr"),
+	NON_PERMANENT_W_REASON(ChatColor.RED + "Vous avez été mute pendant " + ChatColor.AQUA + "+timeStr" + ChatColor.RED + " pour: "+'\n'+"+reasonStr", ChatColor.AQUA + "+adminName" + ChatColor.RED +" a mute " +ChatColor.GREEN+ "+muteName" + ChatColor.RED + " pendant "+ChatColor.AQUA+"+timeStr" + ChatColor.RED + " pour: "+ ChatColor.AQUA + "+reasonStr"),
 	UNMUTE("", ChatColor.AQUA + "+adminName" + ChatColor.RED + " a démute " + ChatColor.GREEN + "+muteName" + ChatColor.RED + "."),
-	UNMUTE_W_REASON("", ChatColor.AQUA + "+adminName" + ChatColor.RED + " a démute " + ChatColor.GREEN + "+muteName" + ChatColor.RED + " avec la raison:" + ChatColor.AQUA + "+reasonStr" + ChatColor.RED + ".");
+	UNMUTE_W_REASON("", ChatColor.AQUA + "+adminName" + ChatColor.RED + " a démute " + ChatColor.GREEN + "+muteName" + ChatColor.RED + " avec la raison: " + ChatColor.AQUA + "+reasonStr" + ChatColor.RED + ".");
 	
 	String kickFormat;
 	String adminFormat;
+	String adminPrefix = ChatColor.RED+"[BungeeGuard] ";
+	
 	private MuteType(String kickFormat, String adminFormat) {
 		this.kickFormat = kickFormat;
 		this.adminFormat = adminFormat;
@@ -40,6 +42,6 @@ public enum MuteType {
 		if(message.contains("+muteName")) {
 			message = message.replaceAll("\\+muteName", muteName);
 		}
-		return message;
+		return adminPrefix+message;
 	}
 }

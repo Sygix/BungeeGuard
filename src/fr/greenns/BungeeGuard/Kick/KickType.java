@@ -10,6 +10,8 @@ public enum KickType {
 	
 	String kickFormat;
 	String adminFormat;
+	String adminPrefix = ChatColor.RED+"[BungeeGuard] ";
+	
 	private KickType(String kickFormat, String adminFormat) {
 		this.kickFormat = kickFormat;
 		this.adminFormat = adminFormat;
@@ -34,6 +36,6 @@ public enum KickType {
 		if(message.contains("+kickedName")) {
 			message = message.replaceAll("\\+kickedName", kickedName);
 		}
-		return message;
+		return adminPrefix+message;
 	}
 }

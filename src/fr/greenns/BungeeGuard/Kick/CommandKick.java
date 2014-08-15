@@ -38,6 +38,7 @@ public class CommandKick extends Command {
 			ProxiedPlayer bannedPlayer = plugin.getProxy().getPlayer(bannedName);
 			if(bannedPlayer == null) {
 				sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas en ligne.").color(ChatColor.RED).create());
+				return;
 			} else {
 				bannedPlayer.disconnect(new ComponentBuilder(KickTypeVar.kickFormat(reason)).create());
 			}

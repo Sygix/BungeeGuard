@@ -12,6 +12,8 @@ public enum BanType {
 	
 	String kickFormat;
 	String adminFormat;
+	String adminPrefix = ChatColor.RED+"[BungeeGuard] ";
+	
 	private BanType(String kickFormat, String adminFormat) {
 		this.kickFormat = kickFormat;
 		this.adminFormat = adminFormat;
@@ -42,6 +44,6 @@ public enum BanType {
 		if(message.contains("+bannedName")) {
 			message = message.replaceAll("\\+bannedName", bannedName);
 		}
-		return message;
+		return adminPrefix+message;
 	}
 }
