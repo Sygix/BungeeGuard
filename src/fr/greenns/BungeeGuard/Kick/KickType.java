@@ -1,5 +1,7 @@
 package fr.greenns.BungeeGuard.Kick;
 
+import java.util.regex.Matcher;
+
 import net.md_5.bungee.api.ChatColor;
 
 public enum KickType {
@@ -20,6 +22,7 @@ public enum KickType {
 	public String kickFormat(String reasonStr) {
 		String message = kickFormat;
 		if(message.contains("+reasonStr")) {
+			reasonStr = Matcher.quoteReplacement(reasonStr);
 			message = message.replaceAll("\\+reasonStr", reasonStr);
 		}
 		return message;
@@ -28,12 +31,15 @@ public enum KickType {
 	public String adminFormat(String reasonStr, String adminName, String kickedName) {
 		String message = adminFormat;
 		if(message.contains("+reasonStr")) {
+			reasonStr = Matcher.quoteReplacement(reasonStr);
 			message = message.replaceAll("\\+reasonStr", reasonStr);
 		}
 		if(message.contains("+adminName")) {
+			adminName = Matcher.quoteReplacement(adminName);
 			message = message.replaceAll("\\+adminName", adminName);
 		}
 		if(message.contains("+kickedName")) {
+			kickedName = Matcher.quoteReplacement(kickedName);
 			message = message.replaceAll("\\+kickedName", kickedName);
 		}
 		return adminPrefix+message;

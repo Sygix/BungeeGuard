@@ -1,5 +1,7 @@
 package fr.greenns.BungeeGuard.Ban;
 
+import java.util.regex.Matcher;
+
 import net.md_5.bungee.api.ChatColor;
 
 public enum BanType {
@@ -22,9 +24,11 @@ public enum BanType {
 	public String kickFormat(String timeStr, String reasonStr) {
 		String message = kickFormat;
 		if(message.contains("+timeStr")) {
+			timeStr = Matcher.quoteReplacement(timeStr);
 			message = message.replaceAll("\\+timeStr", timeStr);
 		} 
 		if(message.contains("+reasonStr")) {
+			reasonStr = Matcher.quoteReplacement(reasonStr);
 			message = message.replaceAll("\\+reasonStr", reasonStr);
 		}
 		return message;
@@ -33,15 +37,19 @@ public enum BanType {
 	public String adminFormat(String timeStr, String reasonStr, String adminName, String bannedName) {
 		String message = adminFormat;
 		if(message.contains("+timeStr")) {
+			timeStr = Matcher.quoteReplacement(timeStr);
 			message = message.replaceAll("\\+timeStr", timeStr);
 		} 
 		if(message.contains("+reasonStr")) {
+			reasonStr = Matcher.quoteReplacement(reasonStr);
 			message = message.replaceAll("\\+reasonStr", reasonStr);
 		}
 		if(message.contains("+adminName")) {
+			adminName = Matcher.quoteReplacement(adminName);
 			message = message.replaceAll("\\+adminName", adminName);
 		}
 		if(message.contains("+bannedName")) {
+			bannedName = Matcher.quoteReplacement(bannedName);
 			message = message.replaceAll("\\+bannedName", bannedName);
 		}
 		return adminPrefix+message;

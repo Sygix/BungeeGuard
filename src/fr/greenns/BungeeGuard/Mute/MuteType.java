@@ -1,5 +1,7 @@
 package fr.greenns.BungeeGuard.Mute;
 
+import java.util.regex.Matcher;
+
 import net.md_5.bungee.api.ChatColor;
 
 public enum MuteType {
@@ -20,9 +22,11 @@ public enum MuteType {
 	public String playerFormat(String timeStr, String reasonStr) {
 		String message = kickFormat;
 		if(message.contains("+timeStr")) {
+			timeStr = Matcher.quoteReplacement(timeStr);
 			message = message.replaceAll("\\+timeStr", timeStr);
 		} 
 		if(message.contains("+reasonStr")) {
+			reasonStr = Matcher.quoteReplacement(reasonStr);
 			message = message.replaceAll("\\+reasonStr", reasonStr);
 		}
 		return message;
@@ -31,15 +35,19 @@ public enum MuteType {
 	public String adminFormat(String timeStr, String reasonStr, String adminName, String muteName) {
 		String message = adminFormat;
 		if(message.contains("+timeStr")) {
+			timeStr = Matcher.quoteReplacement(timeStr);
 			message = message.replaceAll("\\+timeStr", timeStr);
 		} 
 		if(message.contains("+reasonStr")) {
+			reasonStr = Matcher.quoteReplacement(reasonStr);
 			message = message.replaceAll("\\+reasonStr", reasonStr);
 		}
 		if(message.contains("+adminName")) {
+			adminName = Matcher.quoteReplacement(adminName);
 			message = message.replaceAll("\\+adminName", adminName);
 		}
 		if(message.contains("+muteName")) {
+			muteName = Matcher.quoteReplacement(muteName);
 			message = message.replaceAll("\\+muteName", muteName);
 		}
 		return adminPrefix+message;
