@@ -20,13 +20,13 @@ import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import fr.greenns.BungeeGuard.Authenticator.Authenticator;
 import fr.greenns.BungeeGuard.Ban.Ban;
 import fr.greenns.BungeeGuard.Ban.BanType;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.Mute.MuteType;
 import fr.greenns.BungeeGuard.utils.AuthPlayer;
-import fr.greens.BungeeGuard.Authenticator.Authenticator;
 
 public class BungeeGuardListener implements Listener {
 

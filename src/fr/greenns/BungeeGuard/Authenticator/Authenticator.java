@@ -1,4 +1,4 @@
-package fr.greens.BungeeGuard.Authenticator;
+package fr.greenns.BungeeGuard.Authenticator;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
