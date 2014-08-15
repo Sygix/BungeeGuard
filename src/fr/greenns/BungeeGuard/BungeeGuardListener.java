@@ -246,17 +246,24 @@ public class BungeeGuardListener implements Listener {
 				event.getKickReason().contains("Nos services") || event.getKickReason().contains("kické") ||
 				event.getKickReason().contains("bannis") || event.getKickReason().contains("maintenance") ||
 				event.getKickReason().contains("kick") || event.getKickReason().contains("VIP"))){
-			ServerInfo best = getBestTarget(event.getPlayer(), event.getCancelServer());
-			BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + event.getPlayer().getName() + " a perdu la connection (" + event.getState().toString() + " - " + event.getKickReason() + ")"));
-			BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + event.getPlayer().getName() + " Redirigé vers "+ best.getName().toUpperCase()));
-			event.getPlayer().setReconnectServer(best);
-			event.setCancelled(true);
-			event.setCancelServer(best);
-			try {
-				Thread.sleep(5);
-			} catch (InterruptedException e) {
+			Lobby l = plugin.lobbyUtils.bestLobbyTarget();
+			ServerInfo server = BungeeCord.getInstance().getServerInfo("limbo");
+			if(l != null){
+				server = l.getServerInfo();
 			}
-			event.getPlayer().sendMessage(new ComponentBuilder("Le serveur sur lequel vous êtiez est probablement down vous avez été redirigé vers un serveur de secours ...").color(ChatColor.RED).create());
+			
+			BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + event.getPlayer().getName() + " a perdu la connection (" + event.getState().toString() + " - " + event.getKickReason() + ")"));
+			if(server.getName().equals("limbo") && BungeeCord.getInstance().getServerInfo("limbo").getPlayers().size()>70)
+			{
+				BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + event.getPlayer().getName() + " déconnecté "));
+				return;
+			}
+			else {
+				BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + event.getPlayer().getName() + " Redirigé vers "+ server.getName().toUpperCase()));
+				event.getPlayer().setReconnectServer(server);
+				event.setCancelled(true);
+				event.setCancelServer(server);
+			}
 		}
 		else
 		{

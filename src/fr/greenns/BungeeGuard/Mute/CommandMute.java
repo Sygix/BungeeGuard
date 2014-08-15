@@ -35,9 +35,9 @@ public class CommandMute extends Command {
 		} else {
 			boolean duration = false;
 			long muteUntilTime = -1;
+			long muteTime = 0;
 			if(args.length > 1) {
 				Matcher m = timePattern.matcher(args[1]);
-				long muteTime = 0;
 				while (m.find()) {
 					if (m.group() == null || m.group().isEmpty()) {
 						continue;
@@ -55,10 +55,10 @@ public class CommandMute extends Command {
 						}
 					}
 				}
-				if(muteTime > 604800000L) muteTime = 604800000L;
-				if(!duration) muteTime = 604800000L;
-				muteUntilTime = System.currentTimeMillis() + muteTime;
 			}
+			if(muteTime > 604800000L) muteTime = 604800000L;
+			if(!duration) muteTime = 604800000L;
+			muteUntilTime = System.currentTimeMillis() + muteTime;
 			
 			int startArgForReason = (duration) ? 2 : 1;
 			
