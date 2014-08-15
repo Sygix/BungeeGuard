@@ -17,6 +17,7 @@ import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.event.ServerKickEvent;
+import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import fr.greenns.BungeeGuard.Ban.Ban;
@@ -261,6 +262,15 @@ public class BungeeGuardListener implements Listener {
 		{
 			event.getPlayer().disconnect(new ComponentBuilder(event.getKickReason()).create());
 			return;
+		}
+	}
+	
+	@EventHandler
+	public void onTabCompleteEvent(TabCompleteEvent e) {
+		String[] Message = e.getCursor().split("\\s+");
+		String DebutDePseudo = Message[Message.length-1].toLowerCase();
+		for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
+			if(p.getName().toLowerCase().startsWith(DebutDePseudo)) e.getSuggestions().add(p.getName());
 		}
 	}
 }

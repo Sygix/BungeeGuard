@@ -295,7 +295,9 @@ public class BungeeGuard extends Plugin {
 					{
 						int players = serverInfo.getPlayers().size();
 						double tps = 0;
+						try {
 						if(error == null) tps = Double.parseDouble(result.getDescription());
+						} catch(NumberFormatException e) {tps = 20;}
 						Lobby Lobby = new Lobby(serverInfo.getName(), players, tps, (error == null));
 						new_lobbys.add(Lobby);
 					}
