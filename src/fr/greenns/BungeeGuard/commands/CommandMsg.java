@@ -75,7 +75,7 @@ public class CommandMsg extends Command {
 							for (UUID uuid : plugin.spy) {
 								try {
 									ProxiedPlayer admin = BungeeCord.getInstance().getPlayer(uuid);
-									admin.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("]").color(ChatColor.GRAY).append(p.getName()).append(": /msg ").append(pl.getName() + " " + text).create());
+									admin.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("] ").color(ChatColor.GRAY).append(p.getName()).append(": /msg ").append(pl.getName() + " " + text).create());
 								} catch (Exception e) {
 	
 								}
