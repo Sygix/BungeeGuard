@@ -108,7 +108,9 @@ public class CommandBan extends Command {
 			String adminFormat = BanTypeVar.adminFormat(bannedDurationStr, reason, adminName, bannedName);
 			BaseComponent[] message = new ComponentBuilder(adminFormat).create();			
 			for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
-				if(p.hasPermission("bungeeguard.notify")) p.sendMessage(message);
+				if(p.hasPermission("bungeeguard.notify")) {
+					p.sendMessage(message);
+				}
 			}
 			System.out.print(adminFormat);
 		}

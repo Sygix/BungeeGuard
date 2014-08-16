@@ -46,7 +46,9 @@ public class CommandKick extends Command {
 			String adminFormat = KickTypeVar.adminFormat(reason, adminName, bannedName);
 			BaseComponent[] message = new ComponentBuilder(adminFormat).create();			
 			for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
-				if(p.hasPermission("bungeeguard.notify")) p.sendMessage(message);
+				if(p.hasPermission("bungeeguard.notify")) {
+					p.sendMessage(message);
+				}
 			}
 			System.out.print(adminFormat);
 		}

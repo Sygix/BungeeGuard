@@ -104,7 +104,9 @@ public class CommandMute extends Command {
 			String adminFormat = MuteTypeVar.adminFormat(muteDurationStr, reason, adminName, muteName);
 			BaseComponent[] message = new ComponentBuilder(adminFormat).create();			
 			for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
-				if(p.hasPermission("bungeeguard.notify")) p.sendMessage(message);
+				if(p.hasPermission("bungeeguard.notify")) {
+					p.sendMessage(message);
+				}
 			}
 			System.out.print(adminFormat);
 		}
