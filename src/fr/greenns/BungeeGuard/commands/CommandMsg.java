@@ -60,7 +60,7 @@ public class CommandMsg extends Command {
 			if (!args[0].equalsIgnoreCase(p.getName())) {
 				ProxiedPlayer pl = plugin.getProxy().getPlayer(args[0]);
 					if (pl != null) {
-						if(!pl.hasPermission("bungeeguard.moremsg") || p.hasPermission("bungeeguard.moremsg")) {
+						if(!pl.hasPermission("bungeeguard.moremsg") || p.hasPermission("bungeeguard.moremsg") || plugin.reply.get(p.getName()).equals(pl)) {
 							String text1 = "";
 							for (int i = 1; i < args.length; i++)
 								text1 = text1 + args[i] + " ";
