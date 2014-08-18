@@ -27,6 +27,7 @@ import fr.greenns.BungeeGuard.Mute.CommandUnmute;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.SQL.MySQL;
 import fr.greenns.BungeeGuard.commands.CommandCheck;
+import fr.greenns.BungeeGuard.commands.CommandHelp;
 import fr.greenns.BungeeGuard.commands.CommandList;
 import fr.greenns.BungeeGuard.commands.CommandLobby;
 import fr.greenns.BungeeGuard.commands.CommandMotd;
@@ -250,6 +251,7 @@ public class BungeeGuard extends Plugin {
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandSay(this));
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMsg(this));
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandReply(this));
+		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandHelp(this));
 
 
 		utils.refreshMotd();
