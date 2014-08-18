@@ -136,7 +136,7 @@ public class Mute {
 			}
 
 			BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Mute` SET status='0', unmuteReason='"+unbanReason+"', unmuteName='"+unbanName+"' WHERE uuidMute='"+getUUID()+"' AND status='1'");
-			BungeeGuard.bans.remove(this);
+			BungeeGuard.mutes.remove(this);
 		}
 		catch (final SQLException ex)
 		{
