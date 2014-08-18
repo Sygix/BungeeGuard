@@ -13,9 +13,16 @@ public class LobbyUtils {
 	}
 
 	public List<Lobby> getLobbies() {
-		return plugin.lobbyList;
+		return BungeeGuard.lobbys;
 	}
 
+	public Lobby getLobby(String servername) {
+		for(Lobby Lobby: BungeeGuard.lobbys) {
+			if(Lobby.getName().equals(servername)) return Lobby;
+		}
+		return null;
+	}
+	
 	public Lobby bestLobbyTarget() {
 		for (int maxPlayers = 0; maxPlayers < 60; maxPlayers += 15) {
 			for (Lobby Lobby : BungeeGuard.lobbys) {

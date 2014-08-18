@@ -248,6 +248,15 @@ public class BungeeGuardListener implements Listener {
 				event.getKickReason().contains("Nos services") || event.getKickReason().contains("kické") ||
 				event.getKickReason().contains("bannis") || event.getKickReason().contains("maintenance") ||
 				event.getKickReason().contains("kick") || event.getKickReason().contains("VIP"))){
+			
+			if(event.getKickReason().contains("closed")) {
+				ServerInfo kickedFrom = event.getKickedFrom();
+				if(kickedFrom.getName().contains("lobby")) {
+					Lobby Lobby = plugin.lobbyUtils.getLobby(kickedFrom.getName());
+					Lobby.setOffline();
+				}
+			}
+			
 			Lobby l = plugin.lobbyUtils.bestLobbyTarget();
 			ServerInfo server = BungeeCord.getInstance().getServerInfo("limbo");
 			if(l != null){

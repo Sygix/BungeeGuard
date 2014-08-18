@@ -24,6 +24,14 @@ public class Lobby {
 	public Integer getNbrPlayers() {
 		return players;
 	}
+	
+	public void setOffline() {
+		this.online = false;
+	}
+	
+	public void setOnline() {
+		this.online = true;
+	}
 
 	public boolean isOnline() {
 		return online;

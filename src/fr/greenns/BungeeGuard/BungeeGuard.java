@@ -47,7 +47,6 @@ public class BungeeGuard extends Plugin {
 	public HashMap<String,ProxiedPlayer> reply;
 	public ArrayList<UUID> spy;
 	public ArrayList<String> serv;
-	public ArrayList<Lobby> lobbyList;
 	public HashMap<String, Boolean> serversUp = new HashMap<String, Boolean>();
 	public BungeeGuardListener BGListener;
 	public String motd;
@@ -231,7 +230,6 @@ public class BungeeGuard extends Plugin {
 		lobbyUtils = new LobbyUtils(this);
 		reply = new HashMap<String,ProxiedPlayer>();
 		spy = new ArrayList<UUID>();
-		lobbyList = new ArrayList<Lobby>();
 		serv = new ArrayList<String>();
 		utils = new BungeeGuardUtils(this);
 		sql.close();
