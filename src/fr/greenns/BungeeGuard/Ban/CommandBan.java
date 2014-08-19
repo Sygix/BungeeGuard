@@ -70,6 +70,7 @@ public class CommandBan extends Command {
 				}
 			}
 			if(reason == "") reason = null;
+			if(reason != null) reason = ChatColor.translateAlternateColorCodes('&', reason);
 			
 			BanType BanTypeVar;
 			if(duration) {

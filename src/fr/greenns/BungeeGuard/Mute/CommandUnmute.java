@@ -62,6 +62,7 @@ public class CommandUnmute extends Command {
 				Mute.removeFromBDD(unmuteReason, unmuteName);
 				
 				MuteType MuteTypeVar = (unmuteReason == "") ? MuteType.UNMUTE : MuteType.UNMUTE_W_REASON;
+				if(unmuteReason != "") unmuteReason = ChatColor.translateAlternateColorCodes('&', unmuteReason);
 				String adminFormat = MuteTypeVar.adminFormat("", unmuteReason, unmuteName, muteName);
 				BaseComponent[] message = ComponentManager.generate(adminFormat);
 				for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {

@@ -73,8 +73,8 @@ public class CommandMute extends Command {
 			
 			MuteType MuteTypeVar;
 			MuteTypeVar = (reason != null) ? MuteType.NON_PERMANENT_W_REASON : MuteType.NON_PERMANENT;
+			if(reason != null) reason = ChatColor.translateAlternateColorCodes('&', reason);
 			muteUntilTime += (System.currentTimeMillis() - startTime);
-			
 			
 			String muteName = args[0];
 			ProxiedPlayer mutePlayer = plugin.getProxy().getPlayer(muteName);

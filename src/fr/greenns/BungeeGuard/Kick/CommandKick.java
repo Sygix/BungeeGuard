@@ -32,6 +32,7 @@ public class CommandKick extends Command {
 				}
 			}
 			if(reason == "") reason = null;
+			if(reason != null) reason = ChatColor.translateAlternateColorCodes('&', reason);
 			
 			KickType KickTypeVar = (reason != null) ? KickType.KICK_W_REASON : KickType.KICK;
 			

@@ -62,6 +62,7 @@ public class CommandUnban extends Command {
 				Ban.removeFromBDD(unbanReason, unbanName);
 				
 				BanType BanTypeVar = (unbanReason == "") ? BanType.UNBAN : BanType.UNBAN_W_REASON;
+				if(unbanReason != "") unbanReason = ChatColor.translateAlternateColorCodes('&', unbanReason);
 				String adminFormat = BanTypeVar.adminFormat("", unbanReason, unbanName, bannedName);
 				BaseComponent[] message = ComponentManager.generate(adminFormat);
 				for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
