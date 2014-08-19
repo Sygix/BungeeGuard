@@ -1,7 +1,6 @@
 package fr.greenns.BungeeGuard;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import net.md_5.bungee.BungeeCord;
@@ -27,6 +26,7 @@ import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.Mute.MuteType;
 import fr.greenns.BungeeGuard.utils.AuthPlayer;
+import fr.greenns.BungeeGuard.utils.ComponentManager;
 
 public class BungeeGuardListener implements Listener {
 
@@ -118,7 +118,7 @@ public class BungeeGuardListener implements Listener {
 	{
 		ProxiedPlayer p = (ProxiedPlayer) e.getSender();
 		AuthPlayer AuthPlayer = BungeeGuardUtils.getUnloggedAuthPlayer(p.getUniqueId());
-		if(AuthPlayer != null){
+		if(AuthPlayer != null) {
 			if(e.isCommand()) {
 				p.sendMessage(new ComponentBuilder("Veuillez saisir votre code d'authentification dans le chat pour vous connecter.").color(ChatColor.RED).create());
 			} else {
@@ -163,7 +163,7 @@ public class BungeeGuardListener implements Listener {
 					return;
 				}
 				e.setCancelled(true);
-				p.sendMessage(new ComponentBuilder("Le chat est désactivé temporairement !").color(ChatColor.RED).create());
+				p.sendMessage(ComponentManager.generate(ChatColor.RED + "Le chat est désactivé temporairement !"));
 			}
 			if ((p.hasPermission("bungeeguard.staffchat")) && (e.getMessage().startsWith("!")))
 			{
@@ -210,34 +210,6 @@ public class BungeeGuardListener implements Listener {
 		}
 		e.getResponse().getPlayers().setSample(players);
 	}
-
-	public ServerInfo getBestTarget(final ProxiedPlayer player) {
-		return getBestTarget(player, null);
-	}
-
-
-	public ServerInfo getBestTarget(final ProxiedPlayer player, ServerInfo si)
-	{
-		ServerInfo best = null;
-		List<ServerInfo> servers = new ArrayList<ServerInfo>();
-		for (ServerInfo serverInfo : plugin.getProxy().getServers().values())
-		{
-			servers.add(serverInfo);
-		}
-		Collections.reverse(servers);
-		for (final ServerInfo serverInfo : servers)
-		{
-			if (best == null && serverInfo.canAccess(player) && (plugin.serversUp.containsKey(serverInfo.getName()) && plugin.serversUp.get(serverInfo.getName()))) {
-				best = serverInfo;
-				continue;
-			}
-			if ((best != null && best.getPlayers().size() > serverInfo.getPlayers().size()) && plugin.serversUp.get(serverInfo.getName()) && serverInfo.canAccess(player) && (si == null ||si != serverInfo )) {
-				best = serverInfo;
-			}
-		}
-		return best;
-	}
-
 
 	@SuppressWarnings({ "deprecation"})
 	@EventHandler

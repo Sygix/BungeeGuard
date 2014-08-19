@@ -12,6 +12,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.utils.ComponentManager;
 import fr.greenns.BungeeGuard.utils.UUIDFetcher;
 
 public class CommandBan extends Command {
@@ -96,7 +97,7 @@ public class CommandBan extends Command {
 				}
 			} else {
 				bannedUUID = bannedPlayer.getUniqueId();
-				bannedPlayer.disconnect(new ComponentBuilder(BanTypeVar.kickFormat(bannedDurationStr, reason)).create());
+				bannedPlayer.disconnect(ComponentManager.generate(BanTypeVar.kickFormat(bannedDurationStr, reason)));
 			}
 			
 			Ban alreadyBan = BungeeGuardUtils.getBan(bannedUUID);
@@ -106,7 +107,7 @@ public class CommandBan extends Command {
 			Ban.addToBdd();
 			
 			String adminFormat = BanTypeVar.adminFormat(bannedDurationStr, reason, adminName, bannedName);
-			BaseComponent[] message = new ComponentBuilder(adminFormat).create();			
+			BaseComponent[] message = ComponentManager.generate(adminFormat);			
 			for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
 				if(p.hasPermission("bungeeguard.notify")) {
 					p.sendMessage(message);

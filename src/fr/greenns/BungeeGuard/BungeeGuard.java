@@ -47,7 +47,6 @@ public class BungeeGuard extends Plugin {
 	public HashMap<String,ProxiedPlayer> reply;
 	public ArrayList<UUID> spy;
 	public ArrayList<String> serv;
-	public HashMap<String, Boolean> serversUp = new HashMap<String, Boolean>();
 	public BungeeGuardListener BGListener;
 	public String motd;
 	public Long time;
@@ -57,6 +56,7 @@ public class BungeeGuard extends Plugin {
 	public static List<Ban> bans = new ArrayList<Ban>();
 	public static List<Mute> mutes = new ArrayList<Mute>();
 	public static List<Lobby> lobbys = new ArrayList<Lobby>();
+	public HashMap<UUID, List<UUID>> ignore = new HashMap<UUID, List<UUID>>();
 
 	@Override
 	public void onEnable() {

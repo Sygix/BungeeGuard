@@ -12,6 +12,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.utils.ComponentManager;
 import fr.greenns.BungeeGuard.utils.UUIDFetcher;
 
 public class CommandMute extends Command {
@@ -92,7 +93,7 @@ public class CommandMute extends Command {
 				}
 			} else {
 				muteUUID = mutePlayer.getUniqueId();
-				mutePlayer.sendMessage(new ComponentBuilder(MuteTypeVar.playerFormat(muteDurationStr, reason)).create());
+				mutePlayer.sendMessage(ComponentManager.generate(MuteTypeVar.playerFormat(muteDurationStr, reason)));
 			}
 			
 			Mute alreadyMute = BungeeGuardUtils.getMute(muteUUID);
@@ -102,7 +103,7 @@ public class CommandMute extends Command {
 			Mute.addToBdd();
 			
 			String adminFormat = MuteTypeVar.adminFormat(muteDurationStr, reason, adminName, muteName);
-			BaseComponent[] message = new ComponentBuilder(adminFormat).create();			
+			BaseComponent[] message = ComponentManager.generate(adminFormat);			
 			for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
 				if(p.hasPermission("bungeeguard.notify")) {
 					p.sendMessage(message);

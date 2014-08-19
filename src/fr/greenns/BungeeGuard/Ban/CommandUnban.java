@@ -10,6 +10,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.utils.ComponentManager;
 import fr.greenns.BungeeGuard.utils.UUIDFetcher;
 
 public class CommandUnban extends Command {
@@ -62,7 +63,7 @@ public class CommandUnban extends Command {
 				
 				BanType BanTypeVar = (unbanReason == "") ? BanType.UNBAN : BanType.UNBAN_W_REASON;
 				String adminFormat = BanTypeVar.adminFormat("", unbanReason, unbanName, bannedName);
-				BaseComponent[] message = new ComponentBuilder(adminFormat).create();
+				BaseComponent[] message = ComponentManager.generate(adminFormat);
 				for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
 					if(p.hasPermission("bungeeguard.notify")) {
 						p.sendMessage(message);

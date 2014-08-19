@@ -7,6 +7,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.utils.ComponentManager;
 
 public class CommandKick extends Command {
 
@@ -40,11 +41,11 @@ public class CommandKick extends Command {
 				sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas en ligne.").color(ChatColor.RED).create());
 				return;
 			} else {
-				bannedPlayer.disconnect(new ComponentBuilder(KickTypeVar.kickFormat(reason)).create());
+				bannedPlayer.disconnect(ComponentManager.generate(KickTypeVar.kickFormat(reason)));
 			}
 			
 			String adminFormat = KickTypeVar.adminFormat(reason, adminName, bannedName);
-			BaseComponent[] message = new ComponentBuilder(adminFormat).create();			
+			BaseComponent[] message = ComponentManager.generate(adminFormat);
 			for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
 				if(p.hasPermission("bungeeguard.notify")) {
 					p.sendMessage(message);
