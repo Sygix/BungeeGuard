@@ -27,8 +27,10 @@ public class CommandSay extends Command {
 
 		if (args.length > 0) {
 			String msg = "";
-			for (int a = 0; a < args.length; a++)
+			for (int a = 0; a < args.length; a++) {
+				if(a>0) msg += " ";
 				msg += " " + args[a];
+			}
 
 			msg = plugin.utils.translateCodes(msg);
 

@@ -26,7 +26,9 @@ import fr.greenns.BungeeGuard.Mute.CommandMute;
 import fr.greenns.BungeeGuard.Mute.CommandUnmute;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.SQL.MySQL;
+import fr.greenns.BungeeGuard.commands.CommandBCast;
 import fr.greenns.BungeeGuard.commands.CommandCheck;
+import fr.greenns.BungeeGuard.commands.CommandGtp;
 import fr.greenns.BungeeGuard.commands.CommandHelp;
 import fr.greenns.BungeeGuard.commands.CommandList;
 import fr.greenns.BungeeGuard.commands.CommandLobby;
@@ -57,6 +59,7 @@ public class BungeeGuard extends Plugin {
 	public static List<Mute> mutes = new ArrayList<Mute>();
 	public static List<Lobby> lobbys = new ArrayList<Lobby>();
 	public HashMap<UUID, List<UUID>> ignore = new HashMap<UUID, List<UUID>>();
+	public HashMap<UUID, UUID> gtp = new HashMap<UUID, UUID>();
 
 	@Override
 	public void onEnable() {
@@ -250,6 +253,8 @@ public class BungeeGuard extends Plugin {
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandMsg(this));
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandReply(this));
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandHelp(this));
+		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandBCast(this));
+		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandGtp(this));
 
 
 		utils.refreshMotd();

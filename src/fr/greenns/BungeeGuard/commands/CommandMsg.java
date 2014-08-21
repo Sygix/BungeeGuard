@@ -66,6 +66,7 @@ public class CommandMsg extends Command {
 								text1 = text1 + args[i] + " ";
 	
 							String text = text1;
+							if(p.hasPermission("bungeeguard.colormsg")) text = ChatColor.translateAlternateColorCodes('&', text);
 							pl.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append(p.getName()).color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
 							p.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(pl.getName()).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
 	
