@@ -260,7 +260,7 @@ public class BungeeGuardListener implements Listener {
 		String[] Message = e.getCursor().split("\\s+");
 		String DebutDePseudo = Message[Message.length-1].toLowerCase();
 		for(ProxiedPlayer p: plugin.getProxy().getPlayers()) {
-			if(p.getName().toLowerCase().startsWith(DebutDePseudo)) e.getSuggestions().add(p.getName());
+			if(p.getName().toLowerCase().startsWith(DebutDePseudo) && !e.getSuggestions().contains(p.getName())) e.getSuggestions().add(p.getName());
 		}
 	}
 }
