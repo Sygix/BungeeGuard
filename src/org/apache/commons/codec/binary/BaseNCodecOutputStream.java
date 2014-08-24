@@ -41,7 +41,6 @@ public class BaseNCodecOutputStream extends FilterOutputStream {
 
     private final Context context = new Context();
 
-    // TODO should this be protected?
     public BaseNCodecOutputStream(final OutputStream out, final BaseNCodec basedCodec, final boolean doEncode) {
         super(out);
         this.baseNCodec = basedCodec;
