@@ -43,7 +43,7 @@ public class BungeeGuardListener implements Listener {
 		String hostString = event.getConnection().getVirtualHost().getHostString();
 		if(!hostString.equalsIgnoreCase("mc.uhcgames.com") && !hostString.equalsIgnoreCase("build.uhcgames.com")) {
 			event.setCancelled(true);
-			event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.AQUA + "" + ChatColor.BOLD + "mc.uhcgames.com");
+			event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD +".uhcgames.com");
 			return;
 		}
 		Ban BannedUser = BungeeGuardUtils.getBan(event.getConnection().getUniqueId());
