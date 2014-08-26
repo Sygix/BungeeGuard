@@ -65,25 +65,35 @@ public class CommandReply extends Command {
 			for (ProxiedPlayer pl : BungeeCord.getInstance().getPlayers()) {
 				if (plugin.reply.get(p.getName()) == pl) {
 					ProxiedPlayer pe = plugin.reply.get(p.getName());
-					String text1 = "";
-					for (int i = 0; i < args.length; i++)
-						text1 = text1 + args[i] + " ";
-
-					String text = text1;
-					pe.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append(p.getName()).color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
-					p.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(pe.getName()).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
-
-					plugin.reply.put(p.getName(), pe);
-					plugin.reply.put(pe.getName(), p);
-					for (UUID uuid : plugin.spy) {
-						try {
-							ProxiedPlayer admin = BungeeCord.getInstance().getPlayer(uuid);
-							admin.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("] ").color(ChatColor.GRAY).append(p.getName()).append(": /r ").append(pe.getName() + " " + text).create());
-						} catch (Exception e) {
-
+					if(!(plugin.ignore.containsKey(pe.getUniqueId()) && plugin.ignore.get(pe.getUniqueId()).size() != 0 && plugin.ignore.get(pe.getUniqueId()).contains(p.getUniqueId())) || pe.hasPermission("bungeeguard.ignore.ignore")) {
+						if(!(plugin.ignore.containsKey(p.getUniqueId()) && plugin.ignore.get(p.getUniqueId()).size() != 0 && plugin.ignore.get(p.getUniqueId()).contains(pe.getUniqueId())) || p.hasPermission("bungeeguard.ignore.ignore")) {
+							String text1 = "";
+							for (int i = 0; i < args.length; i++)
+								text1 = text1 + args[i] + " ";
+		
+							String text = text1;
+							if(p.hasPermission("bungeeguard.colormsg")) text = ChatColor.translateAlternateColorCodes('&', text);
+							pe.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append(p.getName()).color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
+							p.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(pe.getName()).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
+		
+							plugin.reply.put(p.getName(), pe);
+							plugin.reply.put(pe.getName(), p);
+							for (UUID uuid : plugin.spy) {
+								try {
+									ProxiedPlayer admin = BungeeCord.getInstance().getPlayer(uuid);
+									admin.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("] ").color(ChatColor.GRAY).append(p.getName()).append(": /r ").append(pe.getName() + " " + text).create());
+								} catch (Exception e) {
+		
+								}
+							}
+						}
+						else { 
+							p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
 						}
 					}
-
+					else { 
+						p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
+					}
 					return;
 				}
 			}

@@ -30,6 +30,7 @@ import fr.greenns.BungeeGuard.commands.CommandBCast;
 import fr.greenns.BungeeGuard.commands.CommandCheck;
 import fr.greenns.BungeeGuard.commands.CommandGtp;
 import fr.greenns.BungeeGuard.commands.CommandHelp;
+import fr.greenns.BungeeGuard.commands.CommandIgnore;
 import fr.greenns.BungeeGuard.commands.CommandList;
 import fr.greenns.BungeeGuard.commands.CommandLobby;
 import fr.greenns.BungeeGuard.commands.CommandMotd;
@@ -255,6 +256,7 @@ public class BungeeGuard extends Plugin {
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandHelp(this));
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandBCast(this));
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandGtp(this));
+		ProxyServer.getInstance().getPluginManager().registerCommand(this, new CommandIgnore(this));
 
 
 		utils.refreshMotd();
