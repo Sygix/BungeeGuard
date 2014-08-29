@@ -1,6 +1,7 @@
 package fr.greenns.BungeeGuard.commands;
 
 import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -21,9 +22,9 @@ public class CommandMotd extends Command {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (args.length == 0) {
+            BungeeGuardUtils.getMB().sendChannelMessage("refreshMOTD", "");
 			plugin.utils.refreshMotd();
 			sender.sendMessage(new ComponentBuilder("Motd updated !").color(ChatColor.GREEN).create());
-			return;
-		}
+        }
 	}
 }
