@@ -29,10 +29,8 @@ public class CommandBCast extends Command {
 
         if (args.length > 0) {
             String msg = "";
-            for (int a = 0; a < args.length; a++) {
-                if (a > 0) msg += " ";
-                msg += args[a];
-            }
+            for (String m : args)
+                msg += m + " ";
 
             msg = plugin.utils.translateCodes(msg);
             List<String> serversList = new ArrayList<>();

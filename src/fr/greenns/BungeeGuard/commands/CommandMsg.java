@@ -5,13 +5,12 @@ import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.Mute.MuteType;
 import fr.greenns.BungeeGuard.utils.ComponentManager;
-import net.md_5.bungee.BungeeCord;
+import fr.greenns.BungeeGuard.utils.Permissions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -60,43 +59,43 @@ public class CommandMsg extends Command {
         if (args.length >= 1) {
             if (args[0].equalsIgnoreCase(p.getName())) {
                 p.sendMessage(new ComponentBuilder("Vous ne pouvez pas envoyer un message à vous-même !").color(ChatColor.RED).create());
+                return;
             }
-            if (BungeeGuardUtils.getMB().isPlayerOnline(args[0])) {
-                if (args.length > 1) {
-                    UUID receiverUUID = BungeeGuardUtils.getMB().getUuidFromName(args[0]);
-                    ProxiedPlayer pl = BungeeCord.getInstance().getPlayer(receiverUUID);
-                    if(pl.c)
-                    if (!pl.hasPermission("bungeeguard.moremsg") || p.hasPermission("bungeeguard.moremsg") || (plugin.reply.containsKey(p.getName()) && plugin.reply.get(p.getName()).equals(pl))) {
-                        if (!(plugin.ignore.containsKey(pl.getUniqueId()) && plugin.ignore.get(pl.getUniqueId()).size() != 0 && plugin.ignore.get(pl.getUniqueId()).contains(p.getUniqueId())) || pl.hasPermission("bungeeguard.ignore.ignore")) {
-                            if (!(plugin.ignore.containsKey(p.getUniqueId()) && plugin.ignore.get(p.getUniqueId()).size() != 0 && plugin.ignore.get(p.getUniqueId()).contains(pl.getUniqueId())) || p.hasPermission("bungeeguard.ignore.ignore")) {
-                                String text1 = "";
-                                for (int i = 1; i < args.length; i++)
-                                    text1 = text1 + args[i] + " ";
-
-                                String text = text1;
-                                if (p.hasPermission("bungeeguard.colormsg"))
-                                    text = ChatColor.translateAlternateColorCodes('&', text);
-                                BungeeGuardUtils.getMB().sendPrivateMessage(p.getName(), pl.getName(), text)
-                                p.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(pl.getName()).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
-
-
-                                plugin.reply.put(p.getName(), pl);
-                                plugin.reply.put(pl.getName(), p);
-                            } else {
-                                p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
-                            }
-                        } else {
-                            p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
-                        }
-                    } else {
-                        p.sendMessage(new ComponentBuilder("Vous n'avez pas la permission de parler à ce joueur !").color(ChatColor.RED).create());
-                    }
-                } else {
-                    p.sendMessage(ComponentManager.generate(ChatColor.RED + "Votre message ne peut pas être vide !"));
-                }
-            } else {
+            if (!BungeeGuardUtils.getMB().isPlayerOnline(args[0])) {
                 p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());
+                return;
             }
+            if (args.length <= 1) {
+                p.sendMessage(ComponentManager.generate(ChatColor.RED + "Votre message ne peut pas être vide !"));
+                return;
+            }
+            UUID receiverUUID = BungeeGuardUtils.getMB().getUuidFromName(args[0]);
+            boolean isReply = !plugin.reply.containsKey(p.getUniqueId()) || !plugin.reply.get(p.getUniqueId()).equals(receiverUUID);
+            if (Permissions.hasPerm(args[0], "bungeeguard.moremsg") && !p.hasPermission("bungeeguard.moremsg") && !isReply) {
+                p.sendMessage(new ComponentBuilder("Vous n'avez pas la permission de parler à ce joueur !").color(ChatColor.RED).create());
+                return;
+            }
+            if ((plugin.ignore.containsKey(receiverUUID) && plugin.ignore.get(receiverUUID).size() != 0 && plugin.ignore.get(receiverUUID).contains(p.getUniqueId())) && !Permissions.hasPerm(args[0], "bungeeguard.ignore.ignore")) {
+                p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
+                return;
+            }
+            if ((plugin.ignore.containsKey(p.getUniqueId()) && plugin.ignore.get(p.getUniqueId()).size() != 0 && plugin.ignore.get(p.getUniqueId()).contains(receiverUUID)) && !p.hasPermission("bungeeguard.ignore.ignore")) {
+                p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
+                return;
+            }
+            String text1 = "";
+            for (int i = 1; i < args.length; i++)
+                text1 = text1 + args[i] + " ";
+
+            String text = text1;
+            if (p.hasPermission("bungeeguard.colormsg"))
+                text = ChatColor.translateAlternateColorCodes('&', text);
+            BungeeGuardUtils.getMB().sendPrivateMessage(p.getName(), receiverUUID, text);
+            p.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(args[0]).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + text).create());
+
+
+            plugin.reply.put(p.getUniqueId(), args[0]);
+
 
         }
     }

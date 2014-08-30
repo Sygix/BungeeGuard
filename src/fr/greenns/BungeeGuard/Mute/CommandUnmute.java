@@ -41,6 +41,7 @@ public class CommandUnmute extends Command {
                 sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas mute.").color(ChatColor.RED).create());
             } else {
                 mute.removeFromBDD(unmuteReason, unmuteName);
+                BungeeGuardUtils.getMB().unmutePlayer(muteUUID);
 
                 MuteType MuteTypeVar = (unmuteReason.equals("")) ? MuteType.UNMUTE : MuteType.UNMUTE_W_REASON;
                 if (!unmuteReason.equals(""))

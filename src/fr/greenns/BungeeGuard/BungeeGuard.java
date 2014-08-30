@@ -18,16 +18,12 @@ import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class BungeeGuard extends Plugin {
@@ -36,9 +32,9 @@ public class BungeeGuard extends Plugin {
     public Configuration config;
     public BungeeGuardUtils utils;
     public LobbyUtils lobbyUtils;
-    public HashMap<String, ProxiedPlayer> reply = new HashMap<>();
-    public ArrayList<UUID> spy = new ArrayList<>();
-    public ArrayList<String> serv = new ArrayList<>();
+    public Map<UUID, String> reply = new HashMap<>();
+    public List<UUID> spy = new ArrayList<>();
+    public List<String> serv = new ArrayList<>();
     public BungeeGuardListener BGListener;
     public String motd;
     public Long time;

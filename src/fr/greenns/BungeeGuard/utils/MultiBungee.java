@@ -321,6 +321,27 @@ public class MultiBungee {
     }
 
     public void broadcastServers(List<String> serversList, String message) {
-        sendChannelMessage("broadcast", Joiner.on(";").join(serversList) + SEPARATOR + message);
+        broadcastServers(Joiner.on(";").join(serversList), message);
+    }
+
+    public void sendPrivateMessage(String senderName, UUID receiverUUID, String message) {
+        sendChannelMessage("privateMessage", senderName + SEPARATOR + receiverUUID + message);
+    }
+
+    public void broadcastServers(String servers, String message) {
+        sendChannelMessage("broadcast", servers + SEPARATOR + message);
+    }
+
+    public void unmutePlayer(UUID muteUUID) {
+        sendChannelMessage("unmute", "" + muteUUID);
+    }
+
+    public void banPlayer(UUID bannedUUID, String bannedName, long bannedUntilTime, String reason, String adminName, String adminUUID) {
+        sendChannelMessage("ban", bannedUUID + SEPARATOR + bannedName + SEPARATOR + bannedUntilTime + SEPARATOR + reason + SEPARATOR + adminName + SEPARATOR + adminUUID);
+
+    }
+
+    public void unban(UUID bannedUUID) {
+        sendChannelMessage("unban", "" + bannedUUID);
     }
 }

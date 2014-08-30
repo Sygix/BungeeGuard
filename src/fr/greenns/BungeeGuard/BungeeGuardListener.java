@@ -292,6 +292,15 @@ public class BungeeGuardListener implements Listener {
             case "refreshMOTD":
                 handler = new UpdateMOTDHandler(plugin);
                 break;
+            case "privateMessage":
+                handler = new PrivateMessageHandler(plugin);
+                break;
+            case "unmute":
+                handler = new UnmuteHandler();
+                break;
+            case "unban":
+                handler = new UnBanHandler();
+                break;
         }
         handler.handle(channel, message, args);
     }

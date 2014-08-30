@@ -6,6 +6,10 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Part of fr.greenns.BungeeGuard.commands
  * Date: 30/08/2014
@@ -15,7 +19,12 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 public class BroadcastHandler implements PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
-        String[] servers = args[0].split(";");
+        Set<String> servers;
+        if (args[0].equalsIgnoreCase("*")) {
+            servers = BungeeCord.getInstance().getServers().keySet();
+        } else {
+            servers = new HashSet<String>(Arrays.asList(args[0].split(";")));
+        }
         ServerInfo SI;
         for (String server : servers) {
             SI = BungeeCord.getInstance().getServerInfo(server);

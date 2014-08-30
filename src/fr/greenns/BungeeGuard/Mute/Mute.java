@@ -14,10 +14,6 @@ public class Mute {
     String adminName;
     String adminUUID;
 
-    public Mute(String uuid, String Pseudo, String time, String reason, String adminName, String adminUUID) {
-        this(Util.getUUID(uuid), Pseudo, Long.parseLong(time), reason, adminName, adminUUID);
-    }
-
     public Mute(UUID uuid, String Pseudo, Long time, String reason, String adminName, String adminUUID) {
         this.UUID = uuid;
         this.Pseudo = Pseudo;
@@ -125,7 +121,7 @@ public class Mute {
             }
 
             BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Mute` SET status='0', unmuteReason='" + unbanReason + "', unmuteName='" + unbanName + "' WHERE uuidMute='" + getUUID() + "' AND status='1'");
-            BungeeGuard.mutes.remove(this);
+            remove();
         } catch (final SQLException ex) {
             System.out.println("SQL problem (exception) when remove mute player to BDD : " + ex);
         } finally {
@@ -137,5 +133,9 @@ public class Mute {
                 System.out.println(ex);
             }
         }
+    }
+
+    public void remove() {
+        BungeeGuard.mutes.remove(this);
     }
 }
