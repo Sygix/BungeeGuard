@@ -13,27 +13,26 @@ import net.md_5.bungee.api.plugin.Command;
  */
 public class CommandLobby extends Command {
 
-	public BungeeGuard plugin;
+    public BungeeGuard plugin;
 
-	public CommandLobby(BungeeGuard plugin) {
-		super("lobby", "", "leave", "hub", "quit", "spawn");
-		this.plugin = plugin;
-	}
+    public CommandLobby(BungeeGuard plugin) {
+        super("lobby", "", "leave", "hub", "quit", "spawn");
+        this.plugin = plugin;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		if (!(sender instanceof ProxiedPlayer)) {
-			sender.sendMessage(new ComponentBuilder("Vous devez etre un joueur pour executer cette command !").color(ChatColor.RED).create());
-			return;
-		} else {
-			ProxiedPlayer p = (ProxiedPlayer) sender;
-			if (p.getServer().getInfo().getName().equalsIgnoreCase("lobby")) {
-				p.sendMessage(new ComponentBuilder("Vous etes déjà connecté a ce serveur !").color(ChatColor.RED).create());
-			} else {
-				p.connect(BungeeCord.getInstance().getServerInfo("hub"));
-				p.sendMessage(new ComponentBuilder("Connexion vers le lobby . . .").color(ChatColor.GREEN).create());
-			}
-		}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        if (!(sender instanceof ProxiedPlayer)) {
+            sender.sendMessage(new ComponentBuilder("Vous devez etre un joueur pour executer cette command !").color(ChatColor.RED).create());
+        } else {
+            ProxiedPlayer p = (ProxiedPlayer) sender;
+            if (p.getServer().getInfo().getName().equalsIgnoreCase("lobby")) {
+                p.sendMessage(new ComponentBuilder("Vous etes déjà connecté a ce serveur !").color(ChatColor.RED).create());
+            } else {
+                p.connect(BungeeCord.getInstance().getServerInfo("hub"));
+                p.sendMessage(new ComponentBuilder("Connexion vers le lobby . . .").color(ChatColor.GREEN).create());
+            }
+        }
 
-	}
+    }
 }

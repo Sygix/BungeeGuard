@@ -1,0 +1,24 @@
+package fr.greenns.BungeeGuard.PubSub;
+
+import fr.greenns.BungeeGuard.Ban.Ban;
+import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import net.md_5.bungee.Util;
+
+import java.util.UUID;
+
+/**
+ * Part of fr.greenns.BungeeGuard.PubSub
+ * Date: 30/08/2014
+ * Time: 15:50
+ * May be open-source & be sold (by PunKeel, of course !)
+ */
+public class UnBanHandler implements PubSubBase {
+    @Override
+    public void handle(String channel, String message, String[] args) {
+        UUID muteUUID = Util.getUUID(args[0]);
+        Ban ban = BungeeGuardUtils.getBan(muteUUID);
+        if (ban == null)
+            return;
+        ban.remove();
+    }
+}
