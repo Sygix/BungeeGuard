@@ -246,8 +246,6 @@ public class BungeeGuard extends Plugin {
                 updateLobbysStatus();
             }
         }, 0, 3, TimeUnit.SECONDS);
-        final List<Lobby> new_lobbys = new ArrayList<Lobby>();
-        new_lobbys.add(Lobby);
     }
 
 }

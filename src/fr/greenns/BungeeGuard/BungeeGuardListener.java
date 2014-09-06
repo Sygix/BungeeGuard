@@ -1,9 +1,3 @@
-		if (e.getTarget().getName().equalsIgnoreCase("hub"))
-		{
-            System.out.println("Recuperation du meilleur lobby pour " + e.getPlayer().getName());
-			Lobby l = plugin.lobbyUtils.bestLobbyTarget();
-            System.out.println("Lobby selectionné: " + l.getName());
-			if(l != null)
 package fr.greenns.BungeeGuard;
 
 import com.imaginarycode.minecraft.redisbungee.events.PubSubMessageEvent;
@@ -89,7 +83,9 @@ public class BungeeGuardListener implements Listener {
         }
 
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
+            System.out.println("Recuperation du meilleur lobby pour " + e.getPlayer().getName());
             Lobby l = plugin.lobbyUtils.bestLobbyTarget();
+            System.out.println("Lobby selectionné: " + l.getName());
 
             if (l != null) {
                 e.setTarget(l.getServerInfo());
