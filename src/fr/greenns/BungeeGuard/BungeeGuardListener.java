@@ -85,10 +85,11 @@ public class BungeeGuardListener implements Listener {
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
             System.out.println("Recuperation du meilleur lobby pour " + e.getPlayer().getName());
             Lobby l = plugin.lobbyUtils.bestLobbyTarget();
-            System.out.println("Lobby selectionné: " + l.getName());
 
             if (l != null) {
                 e.setTarget(l.getServerInfo());
+                System.out.println("Lobby selectionné: " + l.getName());
+
             } else {
                 if (BungeeCord.getInstance().getServerInfo("limbo").getPlayers().size() < 70) {
                     e.setTarget(BungeeCord.getInstance().getServerInfo("limbo"));
