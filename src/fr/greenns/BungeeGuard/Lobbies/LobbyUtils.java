@@ -26,7 +26,7 @@ public class LobbyUtils {
 	public Lobby bestLobbyTarget() {
 		for (int maxPlayers = 0; maxPlayers < 60; maxPlayers += 15) {
 			for (Lobby Lobby : BungeeGuard.lobbys) {
-				if (Lobby.isOnline() && Lobby.getTps() >= 12 && Lobby.getNbrPlayers() < maxPlayers) {
+                if (Lobby != null && Lobby.isOnline() && Lobby.getTps() >= 12 && Lobby.getNbrPlayers() <= maxPlayers) {
 					return Lobby;
 				}
 			}
