@@ -1,5 +1,6 @@
 package fr.greenns.BungeeGuard.commands;
 
+import com.google.common.base.Joiner;
 import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
@@ -22,7 +23,6 @@ public class CommandBCast extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-
         if (args.length == 0) {
             plugin.utils.msgPluginCommand(sender);
             return;
@@ -48,6 +48,7 @@ public class CommandBCast extends Command {
             }
 
             BungeeGuardUtils.getMB().broadcastServers(serversList, msg);
+            BungeeGuardUtils.getMB().notifyStaff("[" + BungeeGuardUtils.getMB().getServerId() + "] " + sender.getName() + ": /bcast " + Joiner.on(",").join(serversList) + " " + msg);
         }
     }
 }

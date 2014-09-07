@@ -289,7 +289,7 @@ public class BungeeGuardListener implements Listener {
             case "unban":
                 handler = new UnBanHandler();
                 break;
-            case "staffchat":
+            case "staffChat":
                 handler = new StaffChatHandler();
                 break;
             case "reloadConf":

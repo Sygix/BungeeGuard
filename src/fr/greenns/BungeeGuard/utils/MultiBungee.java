@@ -71,8 +71,7 @@ public class MultiBungee {
      *
      * @return a Set with all players found
      */
-    public final Set<UUID> getPlayersOnline()
-    {
+    public final Set<UUID> getPlayersOnline() {
         return api.getPlayersOnline();
     }
 

@@ -31,9 +31,8 @@ public class CommandSilence extends Command {
                 plugin.serv.add(p.getServer().getInfo().getName());
                 String servName = p.getServer().getInfo().getName();
                 for (ProxiedPlayer playerdwa : BungeeCord.getInstance().getPlayers()) {
-                    if (playerdwa.getServer().getInfo().getName()
-                            .equalsIgnoreCase(servName)
-                            && playerdwa.hasPermission("bungeeguard.notify")) {
+                    if (playerdwa.getServer().getInfo().getName().equalsIgnoreCase(servName) &&
+                            playerdwa.hasPermission("bungeeguard.notify")) {
                         playerdwa.sendMessage(new ComponentBuilder(plugin.utils.staffBroadcast + "Le chat du serveur ").color(ChatColor.GRAY)
                                 .append(servName).color(ChatColor.AQUA).append(" a été ").color(ChatColor.GRAY)
                                 .append("désactivé ").color(ChatColor.RED).append("!").color(ChatColor.GRAY).create());

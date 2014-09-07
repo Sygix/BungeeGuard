@@ -22,6 +22,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     private final Yaml yaml;
     private Map config;
     private BungeeGuard plugin;
+    private String localBinding;
 
     public MysqlConfigAdapter(BungeeGuard plugin) {
         this.plugin = plugin;
@@ -180,6 +181,10 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
 
         Collection<ListenerInfo> ret = new HashSet<>();
         ret.add(info);
+        if (localBinding != null && !localBinding.isEmpty()) {
+            info = new ListenerInfo(Util.getAddr(localBinding), motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
+            ret.add(info);
+        }
         return ret;
     }
 
@@ -195,13 +200,14 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         options.put(OPTIONS.MOTD, ChatColor.translateAlternateColorCodes('&', res.getString("motd")));
         plugin.setMotd(String.valueOf(options.get(OPTIONS.MOTD)));
 
-        PreparedStatement q = plugin.sql.prepare("SELECT bind_address FROM bungee_instances WHERE server_id = ? LIMIT 0,1;");
+        PreparedStatement q = plugin.sql.prepare("SELECT bind_address, localBinding FROM bungee_instances WHERE server_id = ? LIMIT 0,1;");
         String server_id = BungeeGuardUtils.getServerID();
         q.setString(1, server_id);
         res = q.executeQuery();
         res.next();
 
         options.put(OPTIONS.BIND_ADDRESS, res.getString("bind_address"));
+        localBinding = res.getString("localBinding");
 
         return options;
     }

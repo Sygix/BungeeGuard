@@ -9,7 +9,10 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
 /**
- * Created by mguerreiro on 07/09/2014.
+ * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
+ * Date: 07/09/2014
+ * Time: 22:02
+ * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class CommandReloadConf extends Command {
     /* reloadConf */
@@ -26,7 +29,7 @@ public class CommandReloadConf extends Command {
     public void execute(CommandSender sender, String[] args) {
 
         if (args.length != 0) {
-            sender.sendMessage(ComponentManager.generate(ChatColor.GREEN + "Usage: /b:rl " + ChatColor.RED + "/!\\ Expérimental - DANGER"));
+            sender.sendMessage(ComponentManager.generate(ChatColor.GREEN + "Usage: /b:rl "));
             return;
         }
         new ReloadConfHandler(plugin).handle();

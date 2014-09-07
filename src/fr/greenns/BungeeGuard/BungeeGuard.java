@@ -243,6 +243,7 @@ public class BungeeGuard extends Plugin {
         commandes.add(CommandBCast.class);
         commandes.add(CommandGtp.class);
         commandes.add(CommandIgnore.class);
+        commandes.add(CommandBLoad.class);
 
         for (Class<? extends Command> commande : commandes) {
             try {

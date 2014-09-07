@@ -1,5 +1,6 @@
 package fr.greenns.BungeeGuard.PubSub;
 
+import fr.greenns.BungeeGuard.utils.ComponentManager;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -32,7 +33,7 @@ public class BroadcastHandler extends PubSubBase {
                 return;
             for (ProxiedPlayer p : SI.getPlayers()) {
                 p.sendMessage(new ComponentBuilder(" ").create());
-                p.sendMessage(new ComponentBuilder(ChatColor.AQUA + "[" + ChatColor.GOLD + "***" + ChatColor.AQUA + "]" + ChatColor.GRAY + " " + args[1]).create());
+                p.sendMessage(ComponentManager.generate(ChatColor.AQUA + "[" + ChatColor.GOLD + "***" + ChatColor.AQUA + "]" + ChatColor.GRAY + " " + ChatColor.translateAlternateColorCodes('&', args[1])));
                 p.sendMessage(new ComponentBuilder(" ").create());
             }
         }
