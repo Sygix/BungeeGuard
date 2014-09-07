@@ -48,7 +48,7 @@ public class BungeeGuard extends Plugin {
     public String motd;
     public Long time;
     public HashMap<UUID, List<UUID>> ignore = new HashMap<>();
-    public HashMap<UUID, UUID> gtp = new HashMap<>();
+    public HashMap<UUID, String> gtp = new HashMap<>();
     MultiBungee MB;
 
     public MultiBungee getMB() {

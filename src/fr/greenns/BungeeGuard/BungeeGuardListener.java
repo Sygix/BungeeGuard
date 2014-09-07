@@ -24,6 +24,7 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class BungeeGuardListener implements Listener {
 
@@ -101,28 +102,18 @@ public class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onServerConnected(ServerConnectedEvent event) {
-        ProxiedPlayer p = event.getPlayer();
+        final ProxiedPlayer p = event.getPlayer();
         if (event.getServer().getInfo().getName().equalsIgnoreCase("loginserver")) {
             event.getPlayer().sendMessage(new ComponentBuilder("Bienvenue sur UHCGames !").color(ChatColor.AQUA).create());
             event.getPlayer().sendMessage(new ComponentBuilder("Veuillez saisir votre code d'authentification dans le chat pour vous connecter.").color(ChatColor.RED).create());
         } else if (plugin.gtp.containsKey(p.getUniqueId())) {
-            ProxiedPlayer teleportToPlayer = plugin.getProxy().getPlayer(plugin.gtp.get(p.getUniqueId()));
-            if (teleportToPlayer == null) {
-                p.sendMessage(ComponentManager.generate(ChatColor.RED + "Erreur de téléportation: Le joueur s'est déconnecté."));
-            } else {
-                if (teleportToPlayer.getServer().equals(p.getServer())) {
-                    /** Marche pas ?
-                     * p.chat("/tp " + teleportToPlayer.getName());
-                     *
-                     *	p.chat("test " + teleportToPlayer.getName());
-                     **/
-                    plugin.getProxy().getPluginManager().dispatchCommand(p, "tp " + teleportToPlayer.getName());
-                } else {
-                    p.sendMessage(ComponentManager.generate(ChatColor.GREEN + "Téléportation vers " + ChatColor.BLUE + teleportToPlayer.getName() + ChatColor.GREEN + " dans le monde " + ChatColor.GOLD + teleportToPlayer.getServer().getInfo().getName() + ChatColor.GREEN + "..."));
-                    p.connect(teleportToPlayer.getServer().getInfo());
+            BungeeCord.getInstance().getScheduler().schedule(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    p.chat("/tp " + plugin.gtp.get(p.getUniqueId()));
+                    plugin.gtp.remove(p.getUniqueId());
                 }
-            }
-            plugin.gtp.remove(p.getUniqueId());
+            }, 10, TimeUnit.MILLISECONDS);
         }
     }
 

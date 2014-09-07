@@ -33,8 +33,12 @@ public class CommandGtp extends Command {
         if (MB.isPlayerOnline(args[0])) {
             ServerInfo server = MB.getServerFor(args[0]);
             sender.sendMessage(ComponentManager.generate(ChatColor.GREEN + "Téléportation vers " + ChatColor.BLUE + args[0] + ChatColor.GREEN + " dans le monde " + ChatColor.GOLD + server.getName() + ChatColor.GREEN + "..."));
-            plugin.gtp.put(p.getUniqueId(), MB.getUuidFromName(args[0]));
-            p.connect(server);
+            if (server.getName().equalsIgnoreCase(((ProxiedPlayer) sender).getServer().getInfo().getName())) {
+                p.chat("/tp " + args[0]);
+            } else {
+                plugin.gtp.put(p.getUniqueId(), args[0]);
+                p.connect(server);
+            }
         } else {
             sender.sendMessage(ComponentManager.generate(ChatColor.RED + "Erreur: Ce joueur n'est pas en ligne"));
         }
