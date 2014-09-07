@@ -192,8 +192,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         res.next();
 
         options.put(OPTIONS.MAX_PLAYERS, res.getInt("max_players"));
-        options.put(OPTIONS.MOTD, res.getString("motd"));
-        System.out.println("MOTD: " + res.getString("motd"));
+        options.put(OPTIONS.MOTD, ChatColor.translateAlternateColorCodes('&', res.getString("motd")));
         plugin.setMotd(String.valueOf(options.get(OPTIONS.MOTD)));
 
         PreparedStatement q = plugin.sql.prepare("SELECT bind_address FROM bungee_instances WHERE server_id = ? LIMIT 0,1;");

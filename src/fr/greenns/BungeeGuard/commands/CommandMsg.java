@@ -19,7 +19,7 @@ public class CommandMsg extends Command {
     public BungeeGuard plugin;
 
     public CommandMsg(BungeeGuard plugin) {
-        super("msg", "bungeeguard.msg", "m", "w", "tell", "whisper");
+        super("msg", "bungeeguard.msg", "m", "w", "tell", "whisper", "mp");
         this.plugin = plugin;
     }
 
