@@ -2,7 +2,6 @@ package fr.greenns.BungeeGuard.PubSub;
 
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Mute.Mute;
-import net.md_5.bungee.Util;
 
 import java.util.UUID;
 
@@ -12,13 +11,19 @@ import java.util.UUID;
  * Time: 15:43
  * May be open-source & be sold (by PunKeel, of course !)
  */
-public class UnmuteHandler implements PubSubBase {
+public class UnmuteHandler extends PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
-        UUID muteUUID = Util.getUUID(args[0]);
+        UUID muteUUID = UUID.fromString(args[0]);
         Mute mute = BungeeGuardUtils.getMute(muteUUID);
         if (mute == null)
             return;
         mute.remove();
     }
+
+    @Override
+    public boolean ignoreSelfMessage() {
+        return true;
+    }
+
 }

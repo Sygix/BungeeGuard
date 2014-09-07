@@ -2,6 +2,7 @@ package fr.greenns.BungeeGuard.Ban;
 
 import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.utils.ComponentManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -35,7 +36,10 @@ public class CommandUnban extends Command {
         String bannedName = args[0];
 
         UUID bannedUUID = BungeeGuardUtils.getMB().getUuidFromName(bannedName);
-
+        if (bannedUUID == null) {
+            sender.sendMessage(ComponentManager.generate(ChatColor.RED + "Erreur: joueur inconnu."));
+            return;
+        }
         Ban Ban = BungeeGuardUtils.getBan(bannedUUID);
         if (Ban == null) {
             sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas banni.").color(ChatColor.RED).create());

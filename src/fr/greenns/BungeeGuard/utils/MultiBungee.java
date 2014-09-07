@@ -19,7 +19,8 @@ import java.util.UUID;
  * May be open-source & be sold (by PunKeel, of course !)
  */
 public class MultiBungee {
-    public static final String SEPARATOR = "|" + 0x123 + 0x00 + "|";
+    public static final String SEPARATOR = "|\uFAE3|";
+    public static final String REGEX_SEPARATOR = "\\|\uFAE3\\|";
     RedisBungeeAPI api;
 
     public MultiBungee() {
@@ -125,7 +126,9 @@ public class MultiBungee {
      * @return if the player is online
      */
     public final boolean isPlayerOnline(String player) {
-        return api.isPlayerOnline(getUuidFromName(player));
+
+        UUID u = getUuidFromName(player);
+        return u != null && api.isPlayerOnline(u);
     }
 
     /**
@@ -309,7 +312,7 @@ public class MultiBungee {
     }
 
     public final void notifyStaff(String message) {
-        sendChannelMessage("notify", message);
+        sendChannelMessage("notifyStaff", message);
     }
 
     public void sendPlayerMessage(String player, String message) {
@@ -325,7 +328,7 @@ public class MultiBungee {
     }
 
     public void sendPrivateMessage(String senderName, UUID receiverUUID, String message) {
-        sendChannelMessage("privateMessage", senderName + SEPARATOR + receiverUUID + message);
+        sendChannelMessage("privateMessage", senderName + SEPARATOR + receiverUUID + SEPARATOR + message);
     }
 
     public void broadcastServers(String servers, String message) {
@@ -333,15 +336,23 @@ public class MultiBungee {
     }
 
     public void unmutePlayer(UUID muteUUID) {
-        sendChannelMessage("unmute", "" + muteUUID);
+        sendChannelMessage("unmute", api.getServerId() + SEPARATOR + muteUUID);
     }
 
     public void banPlayer(UUID bannedUUID, String bannedName, long bannedUntilTime, String reason, String adminName, String adminUUID) {
-        sendChannelMessage("ban", bannedUUID + SEPARATOR + bannedName + SEPARATOR + bannedUntilTime + SEPARATOR + reason + SEPARATOR + adminName + SEPARATOR + adminUUID);
+        sendChannelMessage("ban", api.getServerId() + SEPARATOR + bannedUUID + SEPARATOR + bannedName + SEPARATOR + bannedUntilTime + SEPARATOR + reason + SEPARATOR + adminName + SEPARATOR + adminUUID);
 
     }
 
     public void unban(UUID bannedUUID) {
-        sendChannelMessage("unban", "" + bannedUUID);
+        sendChannelMessage("unban", api.getServerId() + SEPARATOR + bannedUUID);
+    }
+
+    public void staffChat(String server, String sender, String message) {
+        sendChannelMessage("staffChat", server + SEPARATOR + sender + SEPARATOR + message);
+    }
+
+    public void summon(String player, String target, String sender) {
+        sendChannelMessage("summon", player + SEPARATOR + target + SEPARATOR + sender);
     }
 }

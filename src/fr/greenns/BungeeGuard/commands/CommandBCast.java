@@ -4,6 +4,7 @@ import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -36,7 +37,9 @@ public class CommandBCast extends Command {
             List<String> serversList = new ArrayList<>();
 
             for (Lobby server : BungeeGuard.lobbys) {
-                serversList.add(server.getServerInfo().getName());
+                ServerInfo u = server.getServerInfo();
+                if (u != null)
+                    serversList.add(u.getName());
             }
             if (sender instanceof ProxiedPlayer) {
                 String currentServer = ((ProxiedPlayer) sender).getServer().getInfo().getName();

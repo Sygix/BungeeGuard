@@ -6,6 +6,12 @@ package fr.greenns.BungeeGuard.PubSub;
  * Time: 00:13
  * May be open-source & be sold (by PunKeel, of course !)
  */
-public interface PubSubBase {
-    public void handle(String channel, String message, String[] args);
+public abstract class PubSubBase {
+    public void handle(String channel, String message, String[] args) {
+        System.out.println("[PubSub]~Unknown~ Channel:" + channel + "; message: " + message);
+    }
+
+    public boolean ignoreSelfMessage() {
+        return false;
+    }
 }

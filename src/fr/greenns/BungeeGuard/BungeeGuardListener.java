@@ -175,11 +175,7 @@ public class BungeeGuardListener implements Listener {
                 p.sendMessage(ComponentManager.generate(ChatColor.RED + "Le chat est désactivé temporairement !"));
             }
             if ((p.hasPermission("bungeeguard.staffchat")) && (e.getMessage().startsWith("!"))) {
-                for (ProxiedPlayer player : BungeeCord.getInstance().getPlayers()) {
-                    if (player.hasPermission("bungeeguard.staffchat")) {
-                        player.sendMessage(new TextComponent(ChatColor.RED + "[" + p.getServer().getInfo().getName() + "] " + p.getName() + ": " + e.getMessage()));
-                    }
-                }
+                plugin.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), e.getMessage());
                 e.setCancelled(true);
             }
         }
@@ -269,14 +265,13 @@ public class BungeeGuardListener implements Listener {
     public void onPubSubMessageEvent(PubSubMessageEvent e) {
         String message = e.getMessage();
         String channel = e.getChannel();
-        String[] args = message.split(MultiBungee.SEPARATOR);
+        String[] args = message.split(MultiBungee.REGEX_SEPARATOR);
         PubSubBase handler = new PubSubBase() {
-            @Override
-            public void handle(String channel, String message, String[] args) {
-                System.out.println("[PubSub] Unknown channel " + channel);
-            }
         };
+        System.out.println(e.getMessage());
         switch (channel) {
+            case "redisbungee-data":
+                return;
             case "notifyStaff":
                 handler = new StaffNotificationHandler(plugin);
                 break;
@@ -288,6 +283,9 @@ public class BungeeGuardListener implements Listener {
                 break;
             case "message":
                 handler = new MessageHandler();
+                break;
+            case "ban":
+                handler = new BanHandler();
                 break;
             case "broadcast":
                 handler = new BroadcastHandler();
@@ -304,7 +302,18 @@ public class BungeeGuardListener implements Listener {
             case "unban":
                 handler = new UnBanHandler();
                 break;
+            case "staffchat":
+                handler = new StaffChatHandler();
+                break;
+            case "reloadConf":
+                handler = new ReloadConfHandler(plugin);
+                break;
+            case "summon":
+                handler = new SummonHandler();
+                break;
         }
+        if (handler.ignoreSelfMessage() && args.length != 0 && args[0].equals(plugin.getMB().getServerId()))
+            return;
         handler.handle(channel, message, args);
     }
 }

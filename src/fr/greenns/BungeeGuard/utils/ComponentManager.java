@@ -28,7 +28,7 @@ public class ComponentManager {
 		ChatColor savedColor = null;
 		while (m.find()) {
 			String string = message.substring(startPos, m.start());
-			if(string != "") {
+			if(!string.equals("")) {
 				component.append(string);
 				if(savedColor != null) component = format(savedColor, component);
 			} else {

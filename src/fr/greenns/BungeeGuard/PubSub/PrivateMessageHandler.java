@@ -3,7 +3,6 @@ package fr.greenns.BungeeGuard.PubSub;
 import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import net.md_5.bungee.BungeeCord;
-import net.md_5.bungee.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -16,7 +15,7 @@ import java.util.UUID;
  * Time: 00:48
  * May be open-source & be sold (by PunKeel, of course !)
  */
-public class PrivateMessageHandler implements PubSubBase {
+public class PrivateMessageHandler extends PubSubBase {
 
     private BungeeGuard plugin;
 
@@ -27,13 +26,13 @@ public class PrivateMessageHandler implements PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
         String sender = args[0];
-        UUID receiver = Util.getUUID(args[1]);
+        UUID receiver = UUID.fromString(args[1]);
         String contenu = args[2];
 
         ProxiedPlayer p = BungeeCord.getInstance().getPlayer(receiver);
 
         if (p != null) {
-            p.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append(p.getName()).color(ChatColor.GREEN).append(" ? ").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + contenu).create());
+            p.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append(sender).color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + contenu).create());
         }
 
         plugin.reply.put(receiver, sender);

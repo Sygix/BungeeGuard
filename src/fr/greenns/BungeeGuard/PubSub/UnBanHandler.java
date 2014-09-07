@@ -2,7 +2,6 @@ package fr.greenns.BungeeGuard.PubSub;
 
 import fr.greenns.BungeeGuard.Ban.Ban;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
-import net.md_5.bungee.Util;
 
 import java.util.UUID;
 
@@ -12,13 +11,18 @@ import java.util.UUID;
  * Time: 15:50
  * May be open-source & be sold (by PunKeel, of course !)
  */
-public class UnBanHandler implements PubSubBase {
+public class UnBanHandler extends PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
-        UUID muteUUID = Util.getUUID(args[0]);
+        UUID muteUUID = UUID.fromString(args[1]);
         Ban ban = BungeeGuardUtils.getBan(muteUUID);
         if (ban == null)
             return;
         ban.remove();
+    }
+
+    @Override
+    public boolean ignoreSelfMessage() {
+        return true;
     }
 }

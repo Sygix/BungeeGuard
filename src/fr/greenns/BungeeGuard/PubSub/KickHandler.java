@@ -10,7 +10,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
  * Time: 00:13
  * May be open-source & be sold (by PunKeel, of course !)
  */
-public class KickHandler implements PubSubBase {
+public class KickHandler extends PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
         ProxiedPlayer p = BungeeCord.getInstance().getPlayer(args[0]);

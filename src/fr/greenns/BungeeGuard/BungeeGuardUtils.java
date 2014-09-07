@@ -18,64 +18,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BungeeGuardUtils {
-    public static BungeeGuard plugin;
-    public String staffBroadcast = ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + "" + ChatColor.BOLD + "STAFF" + ChatColor.GRAY + "" + ChatColor.BOLD + "]" + ChatColor.GRAY;
     private static final Pattern timePattern = Pattern
             .compile(
                     "(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?",
                     2);
+    public static BungeeGuard plugin;
+    public String staffBroadcast = ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + "" + ChatColor.BOLD + "STAFF" + ChatColor.GRAY + "" + ChatColor.BOLD + "]" + ChatColor.GRAY;
 
     public BungeeGuardUtils(BungeeGuard plugin) {
         BungeeGuardUtils.plugin = plugin;
-    }
-
-    public boolean isParsableToInt(String i) {
-        try {
-            Integer.parseInt(i);
-            return true;
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-    }
-
-    public String getDateFormat(long time) {
-        Date date = new Date(time);
-        String dateString = new SimpleDateFormat("HH:mm:ss").format(date);
-
-        return dateString;
-    }
-
-    public void refreshMotd() {
-        ResultSet res;
-        plugin.sql.open();
-
-        if (plugin.sql.getConnection() == null) {
-            System.out.println(ChatColor.RED
-                    + "[MYSQL] Connection error ... when claim a ticket !");
-            return;
-        }
-
-        try {
-            res = plugin.sql
-                    .query("SELECT `motd` FROM `BungeeGuard_Motd` WHERE id=1");
-
-            if (res.next()) {
-                String te = res.getString("motd");
-                plugin.motd = translateCodes(te);
-            }
-
-            if (!plugin.sql.getConnection().isClosed()) {
-                plugin.sql.close();
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-    }
-
-    public String translateCodes(String message) {
-        message = message.replaceAll("&([0-9a-fk-or])", "§$1");
-        // message = message.replaceAll("%timer", getDateFormat(plugin.time));
-        return message = message.replaceAll("%n", "\n");
     }
 
     public static long parseDuration(final String durationStr) throws IllegalArgumentException {
@@ -149,31 +100,6 @@ public class BungeeGuardUtils {
             c.add(Calendar.SECOND, seconds);
         }
         return c.getTimeInMillis();
-    }
-
-    @SuppressWarnings("deprecation")
-    public void msgPluginCommand(CommandSender sender) {
-        sender.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE
-                + "                            " + ChatColor.RESET
-                + "§6.: BungeeManager :." + ChatColor.RED + ""
-                + ChatColor.UNDERLINE + "                           ");
-        sender.sendMessage(ChatColor.RED + " ");
-        sender.sendMessage(ChatColor.RED
-                + " /ban <Player> [temps en minutes/0 pour définitif] [raison ...]");
-        sender.sendMessage(ChatColor.RED + " /kick <Player> [raison ...]");
-        sender.sendMessage(ChatColor.RED + " /unban <Player> [raison ...]");
-        sender.sendMessage(ChatColor.RED + " /check <Player>");
-        sender.sendMessage(ChatColor.RED + " /mute <Player>");
-        sender.sendMessage(ChatColor.RED + " /unmute <Player>");
-        sender.sendMessage(ChatColor.RED + " /silence (on/off)");
-        sender.sendMessage(ChatColor.RED + " /say [message]");
-        sender.sendMessage(ChatColor.RED + " /msg <Player> [message]");
-        sender.sendMessage(ChatColor.RED + " /spychat (toggle)");
-        sender.sendMessage(ChatColor.RED + " /motd (refresh)");
-        sender.sendMessage(ChatColor.RED
-                + ""
-                + ChatColor.UNDERLINE
-                + "                                                                               ");
     }
 
     public static String getDuration(final long futureTimestamp) {
@@ -265,17 +191,21 @@ public class BungeeGuardUtils {
         return null;
     }
 
-    public static Ban getBan(UUID UUID) {
+    public static Ban getBan(UUID u) {
+        if (u == null)
+            return null;
         for (Ban Ban : BungeeGuard.bans) {
-            if (Ban.getUUID().equals(UUID))
+            if (Ban.getUUID().equals(u))
                 return Ban;
         }
         return null;
     }
 
-    public static Mute getMute(UUID UUID) {
+    public static Mute getMute(UUID u) {
+        if (u == null)
+            return null;
         for (Mute Ban : BungeeGuard.mutes) {
-            if (Ban.getUUID().equals(UUID))
+            if (Ban.getUUID().equals(u))
                 return Ban;
         }
         return null;
@@ -290,6 +220,83 @@ public class BungeeGuardUtils {
     }
 
     public static MultiBungee getMB() {
+        if (plugin.getMB() == null) {
+            return null;
+        }
         return plugin.getMB();
+    }
+
+    public boolean isParsableToInt(String i) {
+        try {
+            Integer.parseInt(i);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
+    public String getDateFormat(long time) {
+        Date date = new Date(time);
+        String dateString = new SimpleDateFormat("HH:mm:ss").format(date);
+
+        return dateString;
+    }
+
+    public void refreshMotd() {
+        ResultSet res;
+        plugin.sql.open();
+
+        if (plugin.sql.getConnection() == null) {
+            System.out.println(ChatColor.RED
+                    + "[MYSQL] Connection error ... when claim a ticket !");
+            return;
+        }
+
+        try {
+            res = plugin.sql
+                    .query("SELECT `motd` FROM `BungeeGuard_Motd` WHERE id=1");
+
+            if (res.next()) {
+                String te = res.getString("motd");
+                plugin.motd = translateCodes(te);
+            }
+
+            if (!plugin.sql.getConnection().isClosed()) {
+                plugin.sql.close();
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    public String translateCodes(String message) {
+        message = message.replaceAll("&([0-9a-fk-or])", "§$1");
+        // message = message.replaceAll("%timer", getDateFormat(plugin.time));
+        return message = message.replaceAll("%n", "\n");
+    }
+
+    @SuppressWarnings("deprecation")
+    public void msgPluginCommand(CommandSender sender) {
+        sender.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE
+                + "                            " + ChatColor.RESET
+                + "§6.: BungeeManager :." + ChatColor.RED + ""
+                + ChatColor.UNDERLINE + "                           ");
+        sender.sendMessage(ChatColor.RED + " ");
+        sender.sendMessage(ChatColor.RED
+                + " /ban <Player> [temps en minutes/0 pour définitif] [raison ...]");
+        sender.sendMessage(ChatColor.RED + " /kick <Player> [raison ...]");
+        sender.sendMessage(ChatColor.RED + " /unban <Player> [raison ...]");
+        sender.sendMessage(ChatColor.RED + " /check <Player>");
+        sender.sendMessage(ChatColor.RED + " /mute <Player>");
+        sender.sendMessage(ChatColor.RED + " /unmute <Player>");
+        sender.sendMessage(ChatColor.RED + " /silence (on/off)");
+        sender.sendMessage(ChatColor.RED + " /say [message]");
+        sender.sendMessage(ChatColor.RED + " /msg <Player> [message]");
+        sender.sendMessage(ChatColor.RED + " /spychat (toggle)");
+        sender.sendMessage(ChatColor.RED + " /motd (refresh)");
+        sender.sendMessage(ChatColor.RED
+                + ""
+                + ChatColor.UNDERLINE
+                + "                                                                               ");
     }
 }

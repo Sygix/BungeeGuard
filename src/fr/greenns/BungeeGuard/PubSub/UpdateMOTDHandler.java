@@ -8,7 +8,7 @@ import fr.greenns.BungeeGuard.BungeeGuard;
  * Time: 00:36
  * May be open-source & be sold (by PunKeel, of course !)
  */
-public class UpdateMOTDHandler implements PubSubBase {
+public class UpdateMOTDHandler extends PubSubBase {
 
 
     private BungeeGuard plugin;

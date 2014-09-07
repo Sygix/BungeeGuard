@@ -47,28 +47,28 @@ public class Ban {
         this.adminUUID = adminUUID;
     }
 
-    public void setUUID(UUID uUID) {
-        UUID = uUID;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
     public UUID getUUID() {
         return UUID;
+    }
+
+    public void setUUID(UUID uUID) {
+        UUID = uUID;
     }
 
     public long getTime() {
         return time;
     }
 
+    public void setTime(long time) {
+        this.time = time;
+    }
+
     public String getReason() {
         return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public boolean isDefBanned() {

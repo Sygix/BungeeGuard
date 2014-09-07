@@ -16,14 +16,14 @@ import java.util.Set;
  * Time: 00:24
  * May be open-source & be sold (by PunKeel, of course !)
  */
-public class BroadcastHandler implements PubSubBase {
+public class BroadcastHandler extends PubSubBase {
     @Override
-    public void handle(String channel, String message, String[] args) {
+    public void handle(String channel, String msg, String[] args) {
         Set<String> servers;
         if (args[0].equalsIgnoreCase("*")) {
             servers = BungeeCord.getInstance().getServers().keySet();
         } else {
-            servers = new HashSet<String>(Arrays.asList(args[0].split(";")));
+            servers = new HashSet<>(Arrays.asList(args[0].split(";")));
         }
         ServerInfo SI;
         for (String server : servers) {
@@ -32,7 +32,7 @@ public class BroadcastHandler implements PubSubBase {
                 return;
             for (ProxiedPlayer p : SI.getPlayers()) {
                 p.sendMessage(new ComponentBuilder(" ").create());
-                p.sendMessage(new ComponentBuilder(ChatColor.AQUA + "[" + ChatColor.GOLD + "***" + ChatColor.AQUA + "]" + ChatColor.GRAY + " " + message).create());
+                p.sendMessage(new ComponentBuilder(ChatColor.AQUA + "[" + ChatColor.GOLD + "***" + ChatColor.AQUA + "]" + ChatColor.GRAY + " " + args[1]).create());
                 p.sendMessage(new ComponentBuilder(" ").create());
             }
         }

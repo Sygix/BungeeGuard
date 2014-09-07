@@ -10,7 +10,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
  * Time: 00:16
  * May be open-source & be sold (by PunKeel, of course !)
  */
-public class StaffNotificationHandler implements PubSubBase {
+public class StaffNotificationHandler extends PubSubBase {
 
 
     private BungeeGuard plugin;
