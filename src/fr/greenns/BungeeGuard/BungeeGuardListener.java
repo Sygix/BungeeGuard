@@ -176,8 +176,7 @@ public class BungeeGuardListener implements Listener {
     public void onProxyPing(ProxyPingEvent e) {
         ServerPing sp = e.getResponse();
         sp.getPlayers().setOnline(BungeeGuardUtils.getMB().getPlayerCount());
-
-        sp.setDescription(plugin.motd);
+        sp.setDescription(plugin.getMotd());
 
         List<String> lines = new ArrayList<>();
 
@@ -280,9 +279,6 @@ public class BungeeGuardListener implements Listener {
                 break;
             case "broadcast":
                 handler = new BroadcastHandler();
-                break;
-            case "refreshMOTD":
-                handler = new UpdateMOTDHandler(plugin);
                 break;
             case "privateMessage":
                 handler = new PrivateMessageHandler(plugin);

@@ -37,6 +37,7 @@ public class BungeeGuard extends Plugin {
     public static List<Ban> bans = new ArrayList<>();
     public static List<Mute> mutes = new ArrayList<>();
     public static List<Lobby> lobbys = new ArrayList<>();
+    public String motd;
     public MySQL sql;
     public Configuration config;
     public BungeeGuardUtils utils;
@@ -45,11 +46,18 @@ public class BungeeGuard extends Plugin {
     public List<UUID> spy = new ArrayList<>();
     public List<String> serv = new ArrayList<>();
     public BungeeGuardListener BGListener;
-    public String motd;
     public Long time;
     public HashMap<UUID, List<UUID>> ignore = new HashMap<>();
     public HashMap<UUID, String> gtp = new HashMap<>();
     MultiBungee MB;
+
+    public String getMotd() {
+        return motd;
+    }
+
+    public void setMotd(String motd) {
+        this.motd = motd;
+    }
 
     public MultiBungee getMB() {
         return MB;
@@ -89,7 +97,7 @@ public class BungeeGuard extends Plugin {
     public void onEnable() {
         MB = new MultiBungee();
         System.out.println("Bonjour, je suis MultiBungee. A votre service!");
-        MB.registerPubSubChannels("summon", "reloadConf", "staffChat", "notifyStaff", "ban", "kick", "mute", "message", "broadcast", "refreshMOTD", "privateMessage", "unmute", "unban");
+        MB.registerPubSubChannels("summon", "reloadConf", "staffChat", "notifyStaff", "ban", "kick", "mute", "message", "broadcast", "privateMessage", "unmute", "unban");
 
         if (sql.checkTable("BungeeGuard_Ban")) {
             System.out.println("BungeeGuard - Table BungeeGuard_Ban trouvée !");
@@ -207,16 +215,6 @@ public class BungeeGuard extends Plugin {
 
             System.out.println("BungeeGuard - Table BungeeGuard_AdminAuth créé !");
         }
-        if (sql.checkTable("BungeeGuard_Motd")) {
-            System.out.println("BungeeGuard - Table BungeeGuard_Motd trouvÃ©e !");
-        } else {
-            System.out.println("BungeeGuard - Table BungeeGuard_Motd inÃ©xistante, creation en cours ...");
-            sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Motd` (" +
-                    "  `id` int(11) NOT NULL," +
-                    "  `motd` varchar(255) NOT NULL," +
-                    "  PRIMARY KEY (`id`))");
-            System.out.println("BungeeGuard - Table BungeeGuard_Motd créé !");
-        }
 
 
         BGListener = new BungeeGuardListener(this);
@@ -238,7 +236,6 @@ public class BungeeGuard extends Plugin {
         commandes.add(CommandMute.class);
         commandes.add(CommandUnmute.class);
         commandes.add(CommandSilence.class);
-        commandes.add(CommandMotd.class);
         commandes.add(CommandSay.class);
         commandes.add(CommandMsg.class);
         commandes.add(CommandReply.class);
@@ -255,9 +252,6 @@ public class BungeeGuard extends Plugin {
                 e.printStackTrace();
             }
         }
-
-
-        utils.refreshMotd();
 
         getProxy().getScheduler().schedule(this, new Runnable() {
             @Override

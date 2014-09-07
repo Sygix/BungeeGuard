@@ -13,7 +13,7 @@ public class Permissions {
     public static boolean hasPerm(String player, String permission) {
         for (String group : BungeeCord.getInstance().getConfigurationAdapter().getGroups(player)) {
             for (String p : BungeeCord.getInstance().getConfigurationAdapter().getPermissions(group)) {
-                if (permission.equalsIgnoreCase(p))
+                if (permission.equalsIgnoreCase(p) || permission.equalsIgnoreCase("*"))
                     return true;
             }
         }

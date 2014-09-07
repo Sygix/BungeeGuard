@@ -2,7 +2,6 @@ package fr.greenns.BungeeGuard.Config;
 
 import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
-import fr.greenns.BungeeGuard.utils.MultiBungee;
 import net.md_5.bungee.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -13,11 +12,7 @@ import net.md_5.bungee.util.CaseInsensitiveMap;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,20 +39,10 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         if (plugin.sql.getConnection() == null) {
             System.out.println("[b:rl] Erreur, checkConnection");
         } else {
-
-            PreparedStatement query = plugin.sql.prepare("SELECT bungeeConf FROM BungeeGuard_Config " +
-                    "WHERE server_id IN ('', ?) " +
-                    "ORDER BY LENGTH(server_id) DESC " +
-                    "LIMIT 0,1");
+            ResultSet res = plugin.sql.query("SELECT permissions FROM bungee_config LIMIT 0,1");
             try {
-                String server_id = "";
-                MultiBungee MB = BungeeGuardUtils.getMB();
-                if (MB != null)
-                    server_id = MB.getServerId();
-                query.setString(1, server_id);
-                ResultSet result = query.executeQuery();
-                result.next();
-                dbConfig = result.getString("bungeeConf");
+                res.next();
+                dbConfig = res.getString("permissions");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -71,6 +56,13 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         } else {
             config = new CaseInsensitiveMap(config);
         }
+        config.put("timeout", 900000);
+        config.put("uuid", "0-0-0-0");
+        config.put("onlineMode", true);
+        config.put("player_limit", -1);
+        config.put("connection_throttle", -1);
+        config.put("ip_forward", true);
+
 
         Map<String, Object> permissions = get("permissions", new HashMap<String, Object>());
         if (permissions.isEmpty()) {
@@ -112,7 +104,6 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     }
 
     private void save() {
-        System.out.println("[MysqlConfig] Method unsupported: save");
     }
 
     @Override
@@ -133,18 +124,24 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     @Override
     @SuppressWarnings("unchecked")
     public Map<String, ServerInfo> getServers() {
-        Map<String, Map<String, Object>> base = get("servers", (Map) Collections.singletonMap("lobby", new HashMap<>()));
-        Map<String, ServerInfo> ret = new HashMap<>();
+        if (plugin.sql.getConnection() == null) {
+            plugin.sql.open();
+        }
 
-        for (Map.Entry<String, Map<String, Object>> entry : base.entrySet()) {
-            Map<String, Object> val = entry.getValue();
-            String name = entry.getKey();
-            String addr = get("address", "localhost:25565", val);
-            String motd = ChatColor.translateAlternateColorCodes('&', get("motd", "&1Just another BungeeCord - Forced Host", val));
-            boolean restricted = get("restricted", false, val);
-            InetSocketAddress address = Util.getAddr(addr);
-            ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, motd, restricted);
-            ret.put(name, info);
+        ResultSet res = plugin.sql.query("SELECT name, address FROM bungee_servers;");
+        Map<String, ServerInfo> ret = new HashMap<>();
+        try {
+            while (res.next()) {
+                String name = res.getString("name");
+                String addr = res.getString("address");
+                String motd = "Serveur UHCGames"; // Should <not> be displayed.
+                boolean restricted = false;
+                InetSocketAddress address = Util.getAddr(addr);
+                ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, motd, restricted);
+                ret.put(name, info);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return ret;
@@ -153,49 +150,61 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     @Override
     @SuppressWarnings("unchecked")
     public Collection<ListenerInfo> getListeners() {
-        Collection<Map<String, Object>> base = get("listeners", (Collection) Arrays.asList(new HashMap()));
-        Map<String, String> forcedDef = new HashMap<>();
-        forcedDef.put("pvp.md-5.net", "pvp");
+        Map<OPTIONS, Object> options = new HashMap<>();
+        Map<String, String> forced = new HashMap<>();
+
+        try {
+            options = getOptions();
+            forced = getForcedHosts();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String motd = ChatColor.translateAlternateColorCodes('&', String.valueOf(options.get(OPTIONS.MOTD)));
+
+        int maxPlayers = (int) options.get(OPTIONS.MAX_PLAYERS);
+        String host = (String) options.get(OPTIONS.BIND_ADDRESS);
+        InetSocketAddress address = Util.getAddr(host);
+
+        String defaultServer = "hub";
+        String fallbackServer = "limbo";
+        boolean forceDefault = true;
+        int tabListSize = 60;
+        DefaultTabList value = DefaultTabList.SERVER;
+        boolean setLocalAddress = true;
+        boolean pingPassthrough = false;
+        boolean query = false;
+        int queryPort = 25577;
+
+        ListenerInfo info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
+
 
         Collection<ListenerInfo> ret = new HashSet<>();
-
-        for (Map<String, Object> val : base) {
-            String motd = get("motd", "&1Another Bungee server", val);
-            motd = ChatColor.translateAlternateColorCodes('&', motd);
-
-            int maxPlayers = get("max_players", 1, val);
-            String defaultServer = get("default_server", "lobby", val);
-            String fallbackServer = get("fallback_server", defaultServer, val);
-            boolean forceDefault = get("force_default_server", false, val);
-            String host = get("host", getHost(), val);
-            int tabListSize = get("tab_size", 60, val);
-            InetSocketAddress address = Util.getAddr(host);
-            Map<String, String> forced = new CaseInsensitiveMap<>(get("forced_hosts", forcedDef, val));
-            String tabListName = get("tab_list", "SERVER", val);
-            DefaultTabList value = DefaultTabList.valueOf(tabListName.toUpperCase());
-            if (value == null) {
-                value = DefaultTabList.SERVER;
-            }
-            boolean setLocalAddress = get("bind_local_address", true, val);
-            boolean pingPassthrough = get("ping_passthrough", false, val);
-
-            boolean query = get("query_enabled", false, val);
-            int queryPort = get("query_port", 25577, val);
-
-            ListenerInfo info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
-            ret.add(info);
-        }
-
+        ret.add(info);
         return ret;
     }
 
-    private String getHost() {
-        try {
-            return Files.readAllLines(Paths.get("HOST"), StandardCharsets.UTF_8).get(0).trim();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private Map<OPTIONS, Object> getOptions() throws SQLException {
+        if (plugin.sql.getConnection() == null) {
+            plugin.sql.open();
         }
-        return "0.0.0.0:25565";
+        Map<OPTIONS, Object> options = new HashMap<>();
+        ResultSet res = plugin.sql.query("SELECT motd, max_players FROM bungee_config LIMIT 0,1;");
+        res.next();
+
+        options.put(OPTIONS.MAX_PLAYERS, res.getInt("max_players"));
+        options.put(OPTIONS.MOTD, res.getString("motd"));
+        System.out.println("MOTD: " + res.getString("motd"));
+        plugin.setMotd(String.valueOf(options.get(OPTIONS.MOTD)));
+
+        PreparedStatement q = plugin.sql.prepare("SELECT bind_address FROM bungee_instances WHERE server_id = ? LIMIT 0,1;");
+        String server_id = BungeeGuardUtils.getServerID();
+        q.setString(1, server_id);
+        res = q.executeQuery();
+        res.next();
+
+        options.put(OPTIONS.BIND_ADDRESS, res.getString("bind_address"));
+
+        return options;
     }
 
     @Override
@@ -218,11 +227,28 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         return get("permissions." + group, Collections.EMPTY_LIST);
     }
 
+    public Map<String, String> getForcedHosts() throws SQLException {
+
+        if (plugin.sql.getConnection() == null) {
+            plugin.sql.open();
+        }
+        Map<String, String> forced_hosts = new HashMap<>();
+        ResultSet res = plugin.sql.query("SELECT ip, to_server FROM bungee_forced_host");
+        while (res.next()) {
+            forced_hosts.put(res.getString("ip"), res.getString("to_server"));
+        }
+        return forced_hosts;
+    }
+
     /**
      * The default tab list options available for picking.
      */
     private enum DefaultTabList {
 
-        GLOBAL(), GLOBAL_PING(), SERVER();
+        GLOBAL(), GLOBAL_PING(), SERVER()
+    }
+
+    private enum OPTIONS {
+        MAX_PLAYERS, MOTD, BIND_ADDRESS
     }
 }

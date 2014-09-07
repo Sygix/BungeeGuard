@@ -9,9 +9,12 @@ import fr.greenns.BungeeGuard.utils.AuthPlayer;
 import fr.greenns.BungeeGuard.utils.MultiBungee;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -23,6 +26,7 @@ public class BungeeGuardUtils {
                     "(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?",
                     2);
     public static BungeeGuard plugin;
+    private static String server_id;
     public String staffBroadcast = ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + "" + ChatColor.BOLD + "STAFF" + ChatColor.GRAY + "" + ChatColor.BOLD + "]" + ChatColor.GRAY;
 
     public BungeeGuardUtils(BungeeGuard plugin) {
@@ -226,6 +230,20 @@ public class BungeeGuardUtils {
         return plugin.getMB();
     }
 
+    public static String getServerID() {
+        if (server_id != null)
+            return server_id;
+        Configuration config = null;
+        try {
+            config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(plugin.getDataFolder().getParent(), "RedisBungee/config.yml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(config);
+        server_id = String.valueOf(config.getString("server-id", "bungeeX"));
+        return server_id;
+    }
+
     public boolean isParsableToInt(String i) {
         try {
             Integer.parseInt(i);
@@ -240,33 +258,6 @@ public class BungeeGuardUtils {
         String dateString = new SimpleDateFormat("HH:mm:ss").format(date);
 
         return dateString;
-    }
-
-    public void refreshMotd() {
-        ResultSet res;
-        plugin.sql.open();
-
-        if (plugin.sql.getConnection() == null) {
-            System.out.println(ChatColor.RED
-                    + "[MYSQL] Connection error ... when claim a ticket !");
-            return;
-        }
-
-        try {
-            res = plugin.sql
-                    .query("SELECT `motd` FROM `BungeeGuard_Motd` WHERE id=1");
-
-            if (res.next()) {
-                String te = res.getString("motd");
-                plugin.motd = translateCodes(te);
-            }
-
-            if (!plugin.sql.getConnection().isClosed()) {
-                plugin.sql.close();
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
     }
 
     public String translateCodes(String message) {
