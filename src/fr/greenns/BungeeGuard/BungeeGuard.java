@@ -271,7 +271,7 @@ public class BungeeGuard extends Plugin {
             public void run() {
                 new ReloadConfHandler(plugin).handle();
             }
-        }, 0, 1, TimeUnit.MINUTES);
+        }, 0, 5 * 60, TimeUnit.SECONDS);
     }
 
     public void updateLobbysStatus() {
