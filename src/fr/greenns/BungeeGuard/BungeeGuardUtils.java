@@ -260,7 +260,7 @@ public class BungeeGuardUtils {
         return dateString;
     }
 
-    public String translateCodes(String message) {
+    public static String translateCodes(String message) {
         message = message.replaceAll("&([0-9a-fk-or])", "§$1");
         // message = message.replaceAll("%timer", getDateFormat(plugin.time));
         return message = message.replaceAll("%n", "\n");

@@ -1,6 +1,6 @@
 package fr.greenns.BungeeGuard.PubSub;
 
-import fr.greenns.BungeeGuard.utils.ComponentManager;
+import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -19,7 +19,7 @@ import java.util.Set;
  */
 public class BroadcastHandler extends PubSubBase {
     @Override
-    public void handle(String channel, String msg, String[] args) {
+    public void handle(String channel, String _, String[] args) {
         Set<String> servers;
         if (args[0].equalsIgnoreCase("*")) {
             servers = BungeeCord.getInstance().getServers().keySet();
@@ -27,13 +27,14 @@ public class BroadcastHandler extends PubSubBase {
             servers = new HashSet<>(Arrays.asList(args[0].split(";")));
         }
         ServerInfo SI;
+        String msg = BungeeGuardUtils.translateCodes(args[0]);
         for (String server : servers) {
             SI = BungeeCord.getInstance().getServerInfo(server);
             if (SI == null)
                 return;
             for (ProxiedPlayer p : SI.getPlayers()) {
                 p.sendMessage(new ComponentBuilder(" ").create());
-                p.sendMessage(ComponentManager.generate(ChatColor.AQUA + "[" + ChatColor.GOLD + "***" + ChatColor.AQUA + "]" + ChatColor.GRAY + " " + ChatColor.translateAlternateColorCodes('&', args[1])));
+                p.sendMessage(new ComponentBuilder(ChatColor.AQUA + "[" + ChatColor.GREEN + "***" + ChatColor.AQUA + "]" + ChatColor.GRAY + " " + msg).create());
                 p.sendMessage(new ComponentBuilder(" ").create());
             }
         }
