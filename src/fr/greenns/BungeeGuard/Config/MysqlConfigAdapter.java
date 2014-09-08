@@ -22,7 +22,8 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     private final Yaml yaml;
     private Map config;
     private BungeeGuard plugin;
-    private String localBinding;
+    private Collection<ListenerInfo> listeners;
+    private String host;
 
     public MysqlConfigAdapter(BungeeGuard plugin) {
         this.plugin = plugin;
@@ -160,32 +161,30 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        String motd = ChatColor.translateAlternateColorCodes('&', String.valueOf(options.get(OPTIONS.MOTD)));
+        String motd = String.valueOf(options.get(OPTIONS.MOTD));
 
         int maxPlayers = (int) options.get(OPTIONS.MAX_PLAYERS);
-        String host = (String) options.get(OPTIONS.BIND_ADDRESS);
-        InetSocketAddress address = Util.getAddr(host);
+        // Bungee n'apprécie pas trop qu'on change d'ip:port d'écoute quand il tourne, donc on attend reboot :)
+        host = (host == null) ? (String) options.get(OPTIONS.BIND_ADDRESS) : host;
 
         String defaultServer = "hub";
         String fallbackServer = "limbo";
         boolean forceDefault = true;
         int tabListSize = 60;
         DefaultTabList value = DefaultTabList.SERVER;
-        boolean setLocalAddress = true;
+        boolean setLocalAddress = false; // On laisse debian s'en occuper :}
         boolean pingPassthrough = false;
         boolean query = false;
         int queryPort = 25577;
 
-        ListenerInfo info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
+        ListenerInfo info;
 
+        listeners = new HashSet<>();
+        InetSocketAddress address = Util.getAddr(host);
+        info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
+        listeners.add(info);
 
-        Collection<ListenerInfo> ret = new HashSet<>();
-        ret.add(info);
-        if (localBinding != null && !localBinding.isEmpty()) {
-            info = new ListenerInfo(Util.getAddr(localBinding), motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
-            ret.add(info);
-        }
-        return ret;
+        return listeners;
     }
 
     private Map<OPTIONS, Object> getOptions() throws SQLException {
@@ -200,15 +199,13 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         options.put(OPTIONS.MOTD, ChatColor.translateAlternateColorCodes('&', res.getString("motd")));
         plugin.setMotd(String.valueOf(options.get(OPTIONS.MOTD)));
 
-        PreparedStatement q = plugin.sql.prepare("SELECT bind_address, localBinding FROM bungee_instances WHERE server_id = ? LIMIT 0,1;");
+        PreparedStatement q = plugin.sql.prepare("SELECT bind_address FROM bungee_instances WHERE server_id = ? LIMIT 0,1;");
         String server_id = BungeeGuardUtils.getServerID();
         q.setString(1, server_id);
         res = q.executeQuery();
         res.next();
 
         options.put(OPTIONS.BIND_ADDRESS, res.getString("bind_address"));
-        localBinding = res.getString("localBinding");
-
         return options;
     }
 

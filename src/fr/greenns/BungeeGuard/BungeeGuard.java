@@ -66,7 +66,7 @@ public class BungeeGuard extends Plugin {
     @Override
     public void onLoad() {
         utils = new BungeeGuardUtils(this);
-        System.out.println("OnLoad, I am caulled.");
+        System.out.println("Welcome to MultiBungee");
         sql = new MySQL(getLogger(), "", "vm-db-01.uhcwork.net", "3306", "plugin", "minecraft", "tn8E6VhU9P3m");
 
         sql.open();
@@ -96,7 +96,6 @@ public class BungeeGuard extends Plugin {
     @Override
     public void onEnable() {
         MB = new MultiBungee();
-        System.out.println("Bonjour, je suis MultiBungee. A votre service!");
         MB.registerPubSubChannels("summon", "reloadConf", "staffChat", "notifyStaff", "ban", "kick", "mute", "message", "broadcast", "privateMessage", "unmute", "unban");
 
         if (sql.checkTable("BungeeGuard_Ban")) {
@@ -123,7 +122,7 @@ public class BungeeGuard extends Plugin {
                 System.out.println("SQL problem (exception) when gettings banned players from BDD : " + ex);
             }
         } else {
-            System.out.println("BungeeGuard - Table BungeeGuard_Ban inÃ©xistante, creation en cours ...");
+            System.out.println("BungeeGuard - Table BungeeGuard_Ban inexistante, creation en cours ...");
 
             sql.createTable("CREATE TABLE IF NOT EXISTS `BungeeGuard_Ban` (" +
                     "  `id` int(11) NOT NULL AUTO_INCREMENT," +
