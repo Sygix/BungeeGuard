@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import fr.greenns.BungeeGuard.Ban.Ban;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import fr.greenns.BungeeGuard.Mute.Mute;
-import fr.greenns.BungeeGuard.utils.AuthPlayer;
 import fr.greenns.BungeeGuard.utils.MultiBungee;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -25,11 +24,11 @@ public class BungeeGuardUtils {
             .compile(
                     "(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?",
                     2);
-    public static BungeeGuard plugin;
+    public static Main plugin;
     private static String server_id;
     public String staffBroadcast = ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + "" + ChatColor.BOLD + "STAFF" + ChatColor.GRAY + "" + ChatColor.BOLD + "]" + ChatColor.GRAY;
 
-    public BungeeGuardUtils(BungeeGuard plugin) {
+    public BungeeGuardUtils(Main plugin) {
         BungeeGuardUtils.plugin = plugin;
     }
 
@@ -188,7 +187,7 @@ public class BungeeGuardUtils {
     }
 
     public static Lobby getLobby(String name) {
-        for (Lobby Lobby : BungeeGuard.lobbys) {
+        for (Lobby Lobby : Main.lobbys) {
             if (Lobby.getName().equals(name))
                 return Lobby;
         }
@@ -198,7 +197,7 @@ public class BungeeGuardUtils {
     public static Ban getBan(UUID u) {
         if (u == null)
             return null;
-        for (Ban Ban : BungeeGuard.bans) {
+        for (Ban Ban : Main.bans) {
             if (Ban.getUUID().equals(u))
                 return Ban;
         }
@@ -208,17 +207,9 @@ public class BungeeGuardUtils {
     public static Mute getMute(UUID u) {
         if (u == null)
             return null;
-        for (Mute Ban : BungeeGuard.mutes) {
+        for (Mute Ban : Main.mutes) {
             if (Ban.getUUID().equals(u))
                 return Ban;
-        }
-        return null;
-    }
-
-    public static AuthPlayer getUnloggedAuthPlayer(UUID UUID) {
-        for (AuthPlayer AuthPlayer : BungeeGuard.authplayers) {
-            if (AuthPlayer.getUUID().equals(UUID) && !AuthPlayer.isLogged())
-                return AuthPlayer;
         }
         return null;
     }
@@ -244,6 +235,12 @@ public class BungeeGuardUtils {
         return server_id;
     }
 
+    public static String translateCodes(String message) {
+        message = ChatColor.translateAlternateColorCodes('&', message).replaceAll("%n", "\n");
+        // message = message.replaceAll("%timer", getDateFormat(plugin.time));
+        return message;
+    }
+
     public boolean isParsableToInt(String i) {
         try {
             Integer.parseInt(i);
@@ -258,12 +255,6 @@ public class BungeeGuardUtils {
         String dateString = new SimpleDateFormat("HH:mm:ss").format(date);
 
         return dateString;
-    }
-
-    public static String translateCodes(String message) {
-        message = message.replaceAll("&([0-9a-fk-or])", "§$1");
-        // message = message.replaceAll("%timer", getDateFormat(plugin.time));
-        return message = message.replaceAll("%n", "\n");
     }
 
     @SuppressWarnings("deprecation")

@@ -1,9 +1,9 @@
 package fr.greenns.BungeeGuard.commands;
 
 import com.google.common.base.Joiner;
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -14,9 +14,9 @@ import java.util.List;
 
 public class CommandBCast extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandBCast(BungeeGuard plugin) {
+    public CommandBCast(Main plugin) {
         super("bcast", "bungeeguard.bcast");
         this.plugin = plugin;
     }
@@ -33,10 +33,10 @@ public class CommandBCast extends Command {
             for (String m : args)
                 msg += m + " ";
 
-            msg = plugin.utils.translateCodes(msg);
+            msg = BungeeGuardUtils.translateCodes(msg);
             List<String> serversList = new ArrayList<>();
 
-            for (Lobby server : BungeeGuard.lobbys) {
+            for (Lobby server : Main.lobbys) {
                 ServerInfo u = server.getServerInfo();
                 if (u != null)
                     serversList.add(u.getName());

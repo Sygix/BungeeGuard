@@ -6,7 +6,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 /**
- * Created by mguerreiro on 07/09/2014.
+ * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
+ * Date: 07/09/2014
+ * Time: 18:46
+ * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class StaffChatHandler extends PubSubBase {
 

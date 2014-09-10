@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.PubSub;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -17,9 +17,9 @@ import java.util.UUID;
  */
 public class PrivateMessageHandler extends PubSubBase {
 
-    private BungeeGuard plugin;
+    private Main plugin;
 
-    public PrivateMessageHandler(BungeeGuard plugin) {
+    public PrivateMessageHandler(Main plugin) {
         this.plugin = plugin;
     }
 

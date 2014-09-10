@@ -1,20 +1,23 @@
 package fr.greenns.BungeeGuard.commands;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.plugin.Command;
 
 /**
- * Created by Greenns on 15/07/14.
+ * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
+ * Date: 15/07/14
+ * Time: 18:46
+ * May be open-source & be sold (by Greenns, of course !)
  */
 public class CommandList extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandList(BungeeGuard plugin) {
+    public CommandList(Main plugin) {
         super("list", "", "who", "ls", "playerlist", "online", "plist");
         this.plugin = plugin;
     }

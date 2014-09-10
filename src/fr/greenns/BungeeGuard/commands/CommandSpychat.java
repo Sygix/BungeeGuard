@@ -1,6 +1,6 @@
 package fr.greenns.BungeeGuard.commands;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -8,13 +8,16 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 /**
- * Created by Greenns on 07/07/14.
+ * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
+ * Date: 07/07/14
+ * Time: 18:46
+ * May be open-source & be sold (by Greenns, of course !)
  */
 public class CommandSpychat extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandSpychat(BungeeGuard plugin) {
+    public CommandSpychat(Main plugin) {
         super("spychat", "bungeeguard.spychat", "sc");
         this.plugin = plugin;
     }

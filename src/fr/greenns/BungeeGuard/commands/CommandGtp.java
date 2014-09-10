@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.commands;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.utils.ComponentManager;
 import fr.greenns.BungeeGuard.utils.MultiBungee;
 import net.md_5.bungee.api.ChatColor;
@@ -11,9 +11,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 public class CommandGtp extends Command {
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandGtp(BungeeGuard plugin) {
+    public CommandGtp(Main plugin) {
         super("gtp", "bungeeguard.gtp");
         this.plugin = plugin;
     }

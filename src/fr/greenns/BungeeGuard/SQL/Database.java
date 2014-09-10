@@ -88,6 +88,6 @@ public abstract class Database {
 	abstract boolean wipeTable(String paramString);
 
 	protected static enum Statements {
-		SELECT, INSERT, UPDATE, DELETE, DO, REPLACE, LOAD, HANDLER, CALL, CREATE, ALTER, DROP, TRUNCATE, RENAME;
-	}
+		SELECT, INSERT, UPDATE, DELETE, DO, REPLACE, LOAD, HANDLER, CALL, CREATE, ALTER, DROP, TRUNCATE, RENAME
+    }
 }

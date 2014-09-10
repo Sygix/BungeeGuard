@@ -1,5 +1,6 @@
 package fr.greenns.BungeeGuard.PubSub;
 
+import fr.greenns.BungeeGuard.utils.ComponentManager;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -7,7 +8,10 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 /**
- * Created by mguerreiro on 07/09/2014.
+ * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
+ * Date: 07/09/2014
+ * Time: 18:46
+ * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class SummonHandler extends PubSubBase {
     @Override
@@ -40,7 +44,7 @@ public class SummonHandler extends PubSubBase {
     private void summon(ProxiedPlayer player, ServerInfo target, String senderName) {
         if (player.getServer() != null && !player.getServer().getInfo().equals(target)) {
             player.connect(target);
-            player.sendMessage(ChatColor.GOLD + "Summoned to " + target.getName() + " by " + senderName);
+            player.sendMessage(ComponentManager.generate(ChatColor.GOLD + "Summoned to " + target.getName() + " by " + senderName));
         }
     }
 }

@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.commands;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.PubSub.ReloadConfHandler;
 import fr.greenns.BungeeGuard.utils.ComponentManager;
 import net.md_5.bungee.api.ChatColor;
@@ -18,9 +18,9 @@ public class CommandReloadConf extends Command {
     /* reloadConf */
 
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandReloadConf(BungeeGuard plugin) {
+    public CommandReloadConf(Main plugin) {
         super("b:rl", "bungeeguard.brl");
         this.plugin = plugin;
     }

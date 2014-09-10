@@ -1,5 +1,7 @@
 package fr.greenns.BungeeGuard;
 
+import com.google.common.collect.Iterables;
+import com.google.gson.Gson;
 import fr.greenns.BungeeGuard.Ban.Ban;
 import fr.greenns.BungeeGuard.Ban.CommandBan;
 import fr.greenns.BungeeGuard.Ban.CommandUnban;
@@ -10,10 +12,10 @@ import fr.greenns.BungeeGuard.Lobbies.LobbyUtils;
 import fr.greenns.BungeeGuard.Mute.CommandMute;
 import fr.greenns.BungeeGuard.Mute.CommandUnmute;
 import fr.greenns.BungeeGuard.Mute.Mute;
+import fr.greenns.BungeeGuard.Party.PartyManager;
 import fr.greenns.BungeeGuard.PubSub.ReloadConfHandler;
 import fr.greenns.BungeeGuard.SQL.MySQL;
 import fr.greenns.BungeeGuard.commands.*;
-import fr.greenns.BungeeGuard.utils.AuthPlayer;
 import fr.greenns.BungeeGuard.utils.MultiBungee;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.Callback;
@@ -30,10 +32,9 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class BungeeGuard extends Plugin {
+public class Main extends Plugin {
 
-    public static BungeeGuard plugin;
-    public static List<AuthPlayer> authplayers = new ArrayList<>();
+    public static Main plugin;
     public static List<Ban> bans = new ArrayList<>();
     public static List<Mute> mutes = new ArrayList<>();
     public static List<Lobby> lobbys = new ArrayList<>();
@@ -49,7 +50,9 @@ public class BungeeGuard extends Plugin {
     public Long time;
     public HashMap<UUID, List<UUID>> ignore = new HashMap<>();
     public HashMap<UUID, String> gtp = new HashMap<>();
+    public Gson gson = new Gson();
     MultiBungee MB;
+    private PartyManager PM;
 
     public String getMotd() {
         return motd;
@@ -93,30 +96,52 @@ public class BungeeGuard extends Plugin {
         BungeeCord.getInstance().setConfigurationAdapter(new MysqlConfigAdapter(this));
     }
 
+    private void fetchParties() {
+        MultiBungee MB = BungeeGuardUtils.getMB();
+        String server = Iterables.getFirst(MB.getAllServers(), "");
+        if (server == null || server.isEmpty()) {
+            return;
+        }
+        MB.requestParties(server);
+    }
+
     @Override
     public void onEnable() {
         MB = new MultiBungee();
-        MB.registerPubSubChannels("summon", "reloadConf", "staffChat", "notifyStaff", "ban", "kick", "mute", "message", "broadcast", "privateMessage", "unmute", "unban");
 
+        MB.registerPubSubChannels("ban", "unban");
+        MB.registerPubSubChannels("kick");
+        MB.registerPubSubChannels("mute", "unmute");
+        MB.registerPubSubChannels("staffChat", "notifyStaff");
+        MB.registerPubSubChannels("message", "privateMessage", "ignore", "broadcast");
+        MB.registerPubSubChannels("reloadConf", "summon");
+
+        MB.registerPubSubChannels("setPartyPublique", "inviteParty", "playerLeaveParty", "setPartyChat",
+                "setPartyOwner", "kickFromParty", "summonParty", "partyChat");
+        MB.registerPubSubChannels("@" + MB.getServerId() + "partyRequest");
+        MB.registerPubSubChannels("@" + MB.getServerId() + "partyReply");
+
+        fetchParties();
         if (sql.checkTable("BungeeGuard_Ban")) {
             System.out.println("BungeeGuard - Table BungeeGuard_Ban trouvée !");
 
             System.out.println("BungeeGuard - Chargement des bannis ...");
             try {
-                if (BungeeGuard.plugin.sql.getConnection().isClosed()) {
-                    BungeeGuard.plugin.sql.open();
+                if (Main.plugin.sql.getConnection().isClosed()) {
+                    Main.plugin.sql.open();
                 }
 
-                if (BungeeGuard.plugin.sql.getConnection() == null) {
+                if (Main.plugin.sql.getConnection() == null) {
                     System.out.println("[MYSQL] Connection error ...");
                 }
-                ResultSet res = sql.query("SELECT * FROM BungeeGuard_Ban WHERE status = 1");
-                UUID u;
+                ResultSet res = sql.query("SELECT uuidBanned, uuidAdmin, nameBanned, unban, reason, nameAdmin FROM BungeeGuard_Ban WHERE status = 1");
+                UUID u, adminUUID;
                 while (res.next()) {
                     u = UUID.fromString(res.getString("uuidBanned"));
+                    adminUUID = UUID.fromString(res.getString("uuidAdmin"));
                     if (u == null)
                         continue;
-                    new Ban(u, res.getString("nameBanned"), res.getLong("unban"), res.getString("reason"), res.getString("nameAdmin"), res.getString("uuidAdmin"));
+                    new Ban(u, res.getString("nameBanned"), res.getLong("unban"), res.getString("reason"), res.getString("nameAdmin"), adminUUID);
                 }
             } catch (final SQLException ex) {
                 System.out.println("SQL problem (exception) when gettings banned players from BDD : " + ex);
@@ -147,11 +172,11 @@ public class BungeeGuard extends Plugin {
 
             System.out.println("BungeeGuard - Chargement des mutes ...");
             try {
-                if (BungeeGuard.plugin.sql.getConnection().isClosed()) {
-                    BungeeGuard.plugin.sql.open();
+                if (Main.plugin.sql.getConnection().isClosed()) {
+                    Main.plugin.sql.open();
                 }
 
-                if (BungeeGuard.plugin.sql.getConnection() == null) {
+                if (Main.plugin.sql.getConnection() == null) {
                     System.out.println("[MYSQL] Connection error ...");
                 }
                 ResultSet res = sql.query("SELECT * FROM BungeeGuard_Mute WHERE status = 1");
@@ -182,39 +207,6 @@ public class BungeeGuard extends Plugin {
 
             System.out.println("BungeeGuard - Table BungeeGuard_Mute créé !");
         }
-        if (sql.checkTable("BungeeGuard_AdminAuth")) {
-            System.out.println("BungeeGuard - Table BungeeGuard_AdminAuth trouvée !");
-
-            System.out.println("BungeeGuard - Chargement des adminAuth ...");
-            try {
-                if (BungeeGuard.plugin.sql.getConnection().isClosed()) {
-                    BungeeGuard.plugin.sql.open();
-                }
-
-                if (BungeeGuard.plugin.sql.getConnection() == null) {
-                    System.out.println("[MYSQL] Connection error ...");
-                }
-                ResultSet res = sql.query("SELECT * FROM BungeeGuard_AdminAuth");
-
-                while (res.next()) {
-                    new AuthPlayer(UUID.fromString(res.getString("UUID")), res.getString("AuthKey"));
-                }
-            } catch (final SQLException ex) {
-                System.out.println("SQL problem (exception) when getting adminAuth players from BDD : " + ex);
-            }
-        } else {
-            System.out.println("BungeeGuard - Table BungeeGuard_AdminAuth inéxistante, création en cours ...");
-
-            sql.createTable("CREATE TABLE `BungeeGuard_AdminAuth` (" +
-                    "`UUID` varchar(255) NOT NULL," +
-                    "`Pseudo` varchar(45) NOT NULL," +
-                    "`AuthKey` varchar(255) NOT NULL," +
-                    "PRIMARY KEY (`UUID`)" +
-                    ") ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-            System.out.println("BungeeGuard - Table BungeeGuard_AdminAuth créé !");
-        }
-
 
         BGListener = new BungeeGuardListener(this);
         lobbyUtils = new LobbyUtils(this);
@@ -297,5 +289,9 @@ public class BungeeGuard extends Plugin {
     public void onDisable() {
         sql.close();
         BungeeCord.getInstance().getScheduler().cancel(this);
+    }
+
+    public PartyManager getPM() {
+        return PM;
     }
 }

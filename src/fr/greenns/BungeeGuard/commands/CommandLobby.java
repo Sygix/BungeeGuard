@@ -1,6 +1,6 @@
 package fr.greenns.BungeeGuard.commands;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -9,13 +9,16 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 /**
- * Created by Greenns on 07/07/14.
+ * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
+ * Date: 07/07/14
+ * Time: 18:45
+ * May be open-source & be sold (by Greenns, of course !)
  */
 public class CommandLobby extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandLobby(BungeeGuard plugin) {
+    public CommandLobby(Main plugin) {
         super("lobby", "", "leave", "hub", "quit", "spawn");
         this.plugin = plugin;
     }

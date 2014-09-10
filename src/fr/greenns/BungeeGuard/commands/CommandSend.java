@@ -1,8 +1,8 @@
 package fr.greenns.BungeeGuard.commands;
 
 import com.google.common.collect.ImmutableSet;
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -21,9 +21,9 @@ import java.util.UUID;
 
 public class CommandSend extends Command implements TabExecutor {
 
-    private final BungeeGuard plugin;
+    private final Main plugin;
 
-    public CommandSend(BungeeGuard plugin) {
+    public CommandSend(Main plugin) {
         super("send", "bungeecord.command.send");
         this.plugin = plugin;
     }

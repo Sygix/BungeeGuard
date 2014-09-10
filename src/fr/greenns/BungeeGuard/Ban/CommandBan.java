@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.Ban;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -14,10 +14,10 @@ import java.util.regex.Pattern;
 
 public class CommandBan extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
     Pattern timePattern = Pattern.compile("([0-9]+)(mo|[ywdhms])");
 
-    public CommandBan(BungeeGuard plugin) {
+    public CommandBan(Main plugin) {
         super("ban", "bungeeguard.ban");
         this.plugin = plugin;
     }
@@ -26,7 +26,7 @@ public class CommandBan extends Command {
     public void execute(CommandSender sender, String[] args) {
         long startTime = System.currentTimeMillis();
         String adminName = (sender instanceof ProxiedPlayer) ? sender.getName() : "UHConsole";
-        String adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId().toString() : "UHConsole";
+        UUID adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : UUID.fromString("UHConsole");
 
         if (args.length == 0) {
             sender.sendMessage(new ComponentBuilder("Usage: /ban <pseudo> [duration] [reason]").color(ChatColor.RED).create());
@@ -80,7 +80,7 @@ public class CommandBan extends Command {
                     reason += " " + args[i];
                 }
             }
-            if (reason == "") reason = null;
+            if (reason.equals("")) reason = null;
             if (reason != null) reason = ChatColor.translateAlternateColorCodes('&', reason);
 
             BanType BanTypeVar;
@@ -101,7 +101,7 @@ public class CommandBan extends Command {
 
             Ban alreadyBan = BungeeGuardUtils.getBan(bannedUUID);
             if (alreadyBan != null)
-                BungeeGuard.bans.remove(alreadyBan);
+                Main.bans.remove(alreadyBan);
 
             Ban Ban = new Ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
             Ban.addToBdd();

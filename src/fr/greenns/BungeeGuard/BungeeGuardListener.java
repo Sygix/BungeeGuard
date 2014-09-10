@@ -1,14 +1,13 @@
 package fr.greenns.BungeeGuard;
 
 import com.imaginarycode.minecraft.redisbungee.events.PubSubMessageEvent;
-import fr.greenns.BungeeGuard.Authenticator.Authenticator;
 import fr.greenns.BungeeGuard.Ban.Ban;
 import fr.greenns.BungeeGuard.Ban.BanType;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.Mute.MuteType;
+import fr.greenns.BungeeGuard.Party.*;
 import fr.greenns.BungeeGuard.PubSub.*;
-import fr.greenns.BungeeGuard.utils.AuthPlayer;
 import fr.greenns.BungeeGuard.utils.ComponentManager;
 import fr.greenns.BungeeGuard.utils.MultiBungee;
 import net.md_5.bungee.BungeeCord;
@@ -28,9 +27,9 @@ import java.util.concurrent.TimeUnit;
 
 public class BungeeGuardListener implements Listener {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public BungeeGuardListener(BungeeGuard plugin) {
+    public BungeeGuardListener(Main plugin) {
         this.plugin = plugin;
     }
 
@@ -55,7 +54,7 @@ public class BungeeGuardListener implements Listener {
             } else if (BannedUser.isBanned()) {
                 event.setCancelled(true);
 
-                String durationStr = BungeeGuardUtils.getDuration(BannedUser.getTime());
+                String durationStr = BungeeGuardUtils.getDuration(BannedUser.getUntilTimestamp());
                 BanType BanType = (BannedUser.getReason() != null) ? fr.greenns.BungeeGuard.Ban.BanType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.Ban.BanType.NON_PERMANENT;
                 String CancelMsg = BanType.kickFormat(durationStr, BannedUser.getReason());
 
@@ -77,14 +76,9 @@ public class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onServerConnect(ServerConnectEvent e) {
-        AuthPlayer AuthPlayer = BungeeGuardUtils.getUnloggedAuthPlayer(e.getPlayer().getUniqueId());
-        if (AuthPlayer != null) {
-            e.setTarget(BungeeCord.getInstance().getServerInfo("loginserver"));
-            return;
-        }
-
+        ProxiedPlayer p = e.getPlayer();
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
-            System.out.println("Recuperation du meilleur lobby pour " + e.getPlayer().getName());
+            System.out.println("Recuperation du meilleur lobby pour " + p.getName());
             Lobby l = plugin.lobbyUtils.bestLobbyTarget();
 
             if (l != null) {
@@ -97,16 +91,18 @@ public class BungeeGuardListener implements Listener {
                 }
                 e.getPlayer().disconnect(new ComponentBuilder(ChatColor.RED + "Nos services sont momentanément indisponibles" + '\n' + ChatColor.RED + "Veuillez réessayer dans quelques instants").create());
             }
+        } else {
+            Party party = plugin.getPM().getPartyByPlayer(p);
+            if (party != null) {
+                plugin.getMB().summonParty(party.getName(), e.getTarget().getName());
+            }
         }
     }
 
     @EventHandler
     public void onServerConnected(ServerConnectedEvent event) {
         final ProxiedPlayer p = event.getPlayer();
-        if (event.getServer().getInfo().getName().equalsIgnoreCase("loginserver")) {
-            event.getPlayer().sendMessage(new ComponentBuilder("Bienvenue sur UHCGames !").color(ChatColor.AQUA).create());
-            event.getPlayer().sendMessage(new ComponentBuilder("Veuillez saisir votre code d'authentification dans le chat pour vous connecter.").color(ChatColor.RED).create());
-        } else if (plugin.gtp.containsKey(p.getUniqueId())) {
+        if (plugin.gtp.containsKey(p.getUniqueId())) {
             BungeeCord.getInstance().getScheduler().schedule(plugin, new Runnable() {
                 @Override
                 public void run() {
@@ -120,25 +116,6 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onChat(ChatEvent e) {
         ProxiedPlayer p = (ProxiedPlayer) e.getSender();
-        AuthPlayer AuthPlayer = BungeeGuardUtils.getUnloggedAuthPlayer(p.getUniqueId());
-        if (AuthPlayer != null) {
-            if (e.isCommand()) {
-                p.sendMessage(new ComponentBuilder("Veuillez saisir votre code d'authentification dans le chat pour vous connecter.").color(ChatColor.RED).create());
-            } else {
-                String code = e.getMessage();
-                String secretKey = AuthPlayer.getSecretKey();
-                if (Authenticator.valid_code(code, secretKey)) {
-                    p.sendMessage(new ComponentBuilder("Code validé ! Vous êtes maintenant connecté !").color(ChatColor.GREEN).create());
-                    AuthPlayer.setLogged();
-                    p.connect(BungeeCord.getInstance().getServerInfo("hub"));
-                } else {
-                    p.disconnect(new ComponentBuilder("Code Invalide ! Vous avez été déconnecté !").color(ChatColor.RED).create());
-                }
-            }
-
-            e.setCancelled(true);
-            return;
-        }
 
         if (!e.getMessage().startsWith("/") && (e.getSender() instanceof ProxiedPlayer)) {
 
@@ -147,7 +124,6 @@ public class BungeeGuardListener implements Listener {
             }
             Mute MuteUser = BungeeGuardUtils.getMute(p.getUniqueId());
             if (MuteUser != null) {
-
                 if (MuteUser.isMute()) {
                     MuteType MuteType = (MuteUser.getReason() != null) ? fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT;
                     String muteDurationStr = BungeeGuardUtils.getDuration(MuteUser.getTime());
@@ -167,6 +143,11 @@ public class BungeeGuardListener implements Listener {
             }
             if ((p.hasPermission("bungeeguard.staffchat")) && (e.getMessage().startsWith("!"))) {
                 plugin.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), e.getMessage());
+                e.setCancelled(true);
+            }
+            Party party = plugin.getPM().getPartyByPlayer(p);
+            if (party != null && party.isPartyChat(p)) {
+                plugin.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage());
                 e.setCancelled(true);
             }
         }
@@ -236,6 +217,9 @@ public class BungeeGuardListener implements Listener {
                 event.setCancelServer(server);
             }
         } else {
+            if (plugin.getPM().inParty(event.getPlayer())) {
+                plugin.getMB().playerLeaveParty(plugin.getPM().getPartyByPlayer(event.getPlayer()), event.getPlayer());
+            }
             event.getPlayer().disconnect(new ComponentBuilder(event.getKickReason()).create());
             return;
         }
@@ -258,7 +242,10 @@ public class BungeeGuardListener implements Listener {
         String[] args = message.split(MultiBungee.REGEX_SEPARATOR);
         PubSubBase handler = new PubSubBase() {
         };
-        System.out.println(e.getMessage());
+        if (channel.startsWith("@" + plugin.getMB().getServerId() + "/")) {
+            // Si channel ressemble à @serveur/commande, on retire le préfixe :]
+            channel = channel.replace("@" + plugin.getMB().getServerId() + "/", "@");
+        }
         switch (channel) {
             case "redisbungee-data":
                 return;
@@ -297,6 +284,40 @@ public class BungeeGuardListener implements Listener {
                 break;
             case "summon":
                 handler = new SummonHandler();
+                break;
+            case "ignore":
+                handler = new IgnoreHandler(plugin);
+                break;
+            case "inviteParty":
+                handler = new PartyInviteHandler(plugin);
+                break;
+            case "setPartyPublique":
+                handler = new PartyPubliqueHandler(plugin);
+                break;
+            case "playerLeaveParty":
+                handler = new PartyPlayerLeaveHandler(plugin);
+                break;
+            case "setPartyChat":
+                handler = new PartyChatSetHandler(plugin);
+                break;
+            case "setPartyOwner":
+                handler = new PartyOwnerSetHandler(plugin);
+                break;
+            case "kickFromParty":
+                handler = new PartyKickHandler(plugin);
+                break;
+            case "partyChat":
+                handler = new PartyChatHandler(plugin);
+                break;
+            case "summonParty":
+                handler = new PartySummonHandler(plugin);
+                break;
+
+            case "@partyRequest":
+                handler = new PartyRequestHandler(plugin);
+                break;
+            case "@partyReply":
+                handler = new PartyReplyHandler(plugin);
                 break;
         }
         if (handler.ignoreSelfMessage() && args.length != 0 && args[0].equals(plugin.getMB().getServerId()))

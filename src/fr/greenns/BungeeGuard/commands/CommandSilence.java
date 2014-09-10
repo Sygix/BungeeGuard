@@ -1,6 +1,6 @@
 package fr.greenns.BungeeGuard.commands;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -10,9 +10,9 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class CommandSilence extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandSilence(BungeeGuard plugin) {
+    public CommandSilence(Main plugin) {
         super("silence", "bungeeguard.silence");
         this.plugin = plugin;
     }

@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.Ban;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.utils.ComponentManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -13,9 +13,9 @@ import java.util.UUID;
 
 public class CommandUnban extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandUnban(BungeeGuard plugin) {
+    public CommandUnban(Main plugin) {
         super("unban", "bungeeguard.ban");
         this.plugin = plugin;
     }

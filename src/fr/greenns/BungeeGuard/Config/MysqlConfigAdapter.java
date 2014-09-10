@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.Config;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -21,11 +21,11 @@ import java.util.*;
 public class MysqlConfigAdapter implements ConfigurationAdapter {
     private final Yaml yaml;
     private Map config;
-    private BungeeGuard plugin;
+    private Main plugin;
     private Collection<ListenerInfo> listeners;
     private String host;
 
-    public MysqlConfigAdapter(BungeeGuard plugin) {
+    public MysqlConfigAdapter(Main plugin) {
         this.plugin = plugin;
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);

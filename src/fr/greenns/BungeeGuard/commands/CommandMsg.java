@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.commands;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.Mute.MuteType;
 import fr.greenns.BungeeGuard.utils.ComponentManager;
@@ -16,9 +16,9 @@ import java.util.UUID;
 
 public class CommandMsg extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandMsg(BungeeGuard plugin) {
+    public CommandMsg(Main plugin) {
         super("msg", "bungeeguard.msg", "m", "w", "tell", "whisper", "mp");
         this.plugin = plugin;
     }
@@ -70,7 +70,7 @@ public class CommandMsg extends Command {
                 return;
             }
             UUID receiverUUID = BungeeGuardUtils.getMB().getUuidFromName(args[0]);
-            boolean isReply = !plugin.reply.containsKey(p.getUniqueId()) || !plugin.reply.get(p.getUniqueId()).equals(receiverUUID);
+            boolean isReply = !plugin.reply.containsKey(p.getUniqueId()) || !plugin.reply.get(p.getUniqueId()).equals(receiverUUID.toString());
             if (Permissions.hasPerm(args[0], "bungeeguard.moremsg") && !p.hasPermission("bungeeguard.moremsg") && !isReply) {
                 p.sendMessage(new ComponentBuilder("Vous n'avez pas la permission de parler à ce joueur !").color(ChatColor.RED).create());
                 return;

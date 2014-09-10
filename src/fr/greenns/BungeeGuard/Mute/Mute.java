@@ -1,7 +1,6 @@
 package fr.greenns.BungeeGuard.Mute;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
-import net.md_5.bungee.Util;
+import fr.greenns.BungeeGuard.Main;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -21,7 +20,7 @@ public class Mute {
         this.reason = reason;
         this.adminName = adminName;
         this.adminUUID = adminUUID;
-        BungeeGuard.mutes.add(this);
+        Main.mutes.add(this);
     }
 
     public String getPseudo() {
@@ -48,28 +47,28 @@ public class Mute {
         this.adminUUID = adminUUID;
     }
 
-    public void setUUID(UUID uUID) {
-        UUID = uUID;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
     public UUID getUUID() {
         return UUID;
+    }
+
+    public void setUUID(UUID uUID) {
+        UUID = uUID;
     }
 
     public long getTime() {
         return time;
     }
 
+    public void setTime(long time) {
+        this.time = time;
+    }
+
     public String getReason() {
         return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public boolean isMute() {
@@ -83,28 +82,28 @@ public class Mute {
 
     public void addToBdd() {
         try {
-            if (BungeeGuard.plugin.sql.getConnection().isClosed()) {
-                BungeeGuard.plugin.sql.open();
+            if (Main.plugin.sql.getConnection().isClosed()) {
+                Main.plugin.sql.open();
             }
 
-            if (BungeeGuard.plugin.sql.getConnection() == null) {
+            if (Main.plugin.sql.getConnection() == null) {
                 System.out.println("[MYSQL] Connection error ...");
             }
 
-            BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Mute` SET status='0', unmuteReason='ReMute-By-" + getAdminName() + "', unmute='" + System.currentTimeMillis() + "' WHERE uuidMute='" + getUUID() + "' AND status='1'");
+            Main.plugin.sql.query("UPDATE `BungeeGuard_Mute` SET status='0', unmuteReason='ReMute-By-" + getAdminName() + "', unmute='" + System.currentTimeMillis() + "' WHERE uuidMute='" + getUUID() + "' AND status='1'");
 
-            BungeeGuard.plugin.sql.query("INSERT INTO `BungeeGuard_Mute` "
+            Main.plugin.sql.query("INSERT INTO `BungeeGuard_Mute` "
                     + "(`id`, `nameMute`, `nameAdmin` , `uuidMute` , `uuidAdmin` , `mute`, `unmute`, `reason`, `unmuteReason`, `unmuteName`, `status`) VALUES "
                     + "(NULL, '" + getPseudo() + "', '" + getAdminName() + "', '" + getUUID() + "', '" + getAdminUUID() + "' , '" + System.currentTimeMillis() + "', '" + getTime() + "', '" + getReason() + "', '', '', '1');");
         } catch (final SQLException ex) {
             System.out.println("SQL problem (exception) when add mute player to BDD : " + ex);
         } finally {
             try {
-                if (!BungeeGuard.plugin.sql.getConnection().isClosed()) {
-                    BungeeGuard.plugin.sql.close();
+                if (!Main.plugin.sql.getConnection().isClosed()) {
+                    Main.plugin.sql.close();
                 }
             } catch (SQLException ex) {
-                System.out.println(ex);
+                ex.printStackTrace();
             }
         }
 
@@ -112,30 +111,30 @@ public class Mute {
 
     public void removeFromBDD(String unbanReason, String unbanName) {
         try {
-            if (BungeeGuard.plugin.sql.getConnection().isClosed()) {
-                BungeeGuard.plugin.sql.open();
+            if (Main.plugin.sql.getConnection().isClosed()) {
+                Main.plugin.sql.open();
             }
 
-            if (BungeeGuard.plugin.sql.getConnection() == null) {
+            if (Main.plugin.sql.getConnection() == null) {
                 System.out.println("[MYSQL] Connection error ...");
             }
 
-            BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Mute` SET status='0', unmuteReason='" + unbanReason + "', unmuteName='" + unbanName + "' WHERE uuidMute='" + getUUID() + "' AND status='1'");
+            Main.plugin.sql.query("UPDATE `BungeeGuard_Mute` SET status='0', unmuteReason='" + unbanReason + "', unmuteName='" + unbanName + "' WHERE uuidMute='" + getUUID() + "' AND status='1'");
             remove();
         } catch (final SQLException ex) {
             System.out.println("SQL problem (exception) when remove mute player to BDD : " + ex);
         } finally {
             try {
-                if (!BungeeGuard.plugin.sql.getConnection().isClosed()) {
-                    BungeeGuard.plugin.sql.close();
+                if (!Main.plugin.sql.getConnection().isClosed()) {
+                    Main.plugin.sql.close();
                 }
             } catch (SQLException ex) {
-                System.out.println(ex);
+                ex.printStackTrace();
             }
         }
     }
 
     public void remove() {
-        BungeeGuard.mutes.remove(this);
+        Main.mutes.remove(this);
     }
 }

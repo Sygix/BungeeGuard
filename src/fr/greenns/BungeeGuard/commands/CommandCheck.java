@@ -1,8 +1,8 @@
 package fr.greenns.BungeeGuard.commands;
 
 import fr.greenns.BungeeGuard.Ban.Ban;
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -12,9 +12,9 @@ import java.util.UUID;
 
 public class CommandCheck extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandCheck(BungeeGuard plugin) {
+    public CommandCheck(Main plugin) {
         super("check", "bungeeguard.check");
         this.plugin = plugin;
     }
@@ -32,10 +32,10 @@ public class CommandCheck extends Command {
                 sender.sendMessage(new ComponentBuilder("Le joueur ").color(ChatColor.YELLOW).append(args[0]).color(ChatColor.AQUA).append(" n'est pas banni.").color(ChatColor.YELLOW).create());
             } else {
                 sender.sendMessage(new ComponentBuilder("Le joueur ").color(ChatColor.YELLOW).append(args[0]).color(ChatColor.AQUA).append(" est banni.").color(ChatColor.YELLOW).create());
-                if (ban.getReason().equals(null))
+                if (ban.getReason() == null)
                     sender.sendMessage(new ComponentBuilder("Raison:  ").color(ChatColor.YELLOW).append(ban.getReason()).color(ChatColor.AQUA).create());
-                if (ban.getTime() != -1)
-                    sender.sendMessage(new ComponentBuilder("Pendant:  ").color(ChatColor.YELLOW).append(BungeeGuardUtils.getDuration(ban.getTime())).color(ChatColor.AQUA).create());
+                if (ban.getUntilTimestamp() != -1)
+                    sender.sendMessage(new ComponentBuilder("Pendant:  ").color(ChatColor.YELLOW).append(BungeeGuardUtils.getDuration(ban.getUntilTimestamp())).color(ChatColor.AQUA).create());
                 sender.sendMessage(new ComponentBuilder("Par:  ").color(ChatColor.YELLOW).append(ban.getAdminName()).color(ChatColor.AQUA).create());
             }
         }

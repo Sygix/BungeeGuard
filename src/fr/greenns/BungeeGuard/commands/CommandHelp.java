@@ -1,17 +1,17 @@
 package fr.greenns.BungeeGuard.commands;
 
+import fr.greenns.BungeeGuard.Main;
+import fr.greenns.BungeeGuard.utils.ComponentManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.plugin.Command;
-import fr.greenns.BungeeGuard.BungeeGuard;
-import fr.greenns.BungeeGuard.utils.ComponentManager;
 
 public class CommandHelp extends Command {
 
-	public BungeeGuard plugin;
+	public Main plugin;
 
-	public CommandHelp(BungeeGuard plugin) {
+	public CommandHelp(Main plugin) {
 		super("help", "bungeeguard.help");
 		this.plugin = plugin;
 	}

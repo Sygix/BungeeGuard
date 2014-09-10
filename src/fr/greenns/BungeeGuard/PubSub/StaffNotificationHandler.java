@@ -1,6 +1,6 @@
 package fr.greenns.BungeeGuard.PubSub;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.utils.ComponentManager;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -13,9 +13,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 public class StaffNotificationHandler extends PubSubBase {
 
 
-    private BungeeGuard plugin;
+    private Main plugin;
 
-    public StaffNotificationHandler(BungeeGuard plugin) {
+    public StaffNotificationHandler(Main plugin) {
         this.plugin = plugin;
     }
 

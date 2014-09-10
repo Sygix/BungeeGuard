@@ -1,6 +1,6 @@
 package fr.greenns.BungeeGuard.PubSub;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.Main;
 import gnu.trove.map.TMap;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -15,9 +15,9 @@ import java.util.Map;
  * Created by mguerreiro on 07/09/2014.
  */
 public class ReloadConfHandler extends PubSubBase {
-    BungeeGuard plugin;
+    Main plugin;
 
-    public ReloadConfHandler(BungeeGuard plugin) {
+    public ReloadConfHandler(Main plugin) {
         this.plugin = plugin;
     }
 

@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.Mute;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -12,9 +12,9 @@ import java.util.UUID;
 
 public class CommandUnmute extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandUnmute(BungeeGuard plugin) {
+    public CommandUnmute(Main plugin) {
         super("unmute", "bungeeguard.mute");
         this.plugin = plugin;
     }

@@ -1,34 +1,34 @@
 package fr.greenns.BungeeGuard.Ban;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
+import fr.greenns.BungeeGuard.Main;
 
 import java.sql.SQLException;
 import java.util.UUID;
 
 public class Ban {
     UUID UUID;
-    String Pseudo;
-    long time;
+    String joueur;
+    long untilTimestamp;
     String reason;
     String adminName;
-    String adminUUID;
+    UUID adminUUID;
 
-    public Ban(UUID UUID, String Pseudo, long time, String reason, String adminName, String adminUUID) {
+    public Ban(UUID UUID, String joueur, long untilTimestamp, String reason, String adminName, UUID adminUUID) {
         this.UUID = UUID;
-        this.Pseudo = Pseudo;
-        this.time = time;
+        this.joueur = joueur;
+        this.untilTimestamp = untilTimestamp;
         this.reason = reason;
         this.adminName = adminName;
         this.adminUUID = adminUUID;
-        BungeeGuard.bans.add(this);
+        Main.bans.add(this);
     }
 
-    public String getPseudo() {
-        return Pseudo;
+    public String getJoueur() {
+        return joueur;
     }
 
-    public void setPseudo(String pseudo) {
-        Pseudo = pseudo;
+    public void setJoueur(String joueur) {
+        this.joueur = joueur;
     }
 
     public String getAdminName() {
@@ -39,11 +39,11 @@ public class Ban {
         this.adminName = adminName;
     }
 
-    public String getAdminUUID() {
+    public UUID getAdminUUID() {
         return adminUUID;
     }
 
-    public void setAdminUUID(String adminUUID) {
+    public void setAdminUUID(UUID adminUUID) {
         this.adminUUID = adminUUID;
     }
 
@@ -55,12 +55,12 @@ public class Ban {
         UUID = uUID;
     }
 
-    public long getTime() {
-        return time;
+    public long getUntilTimestamp() {
+        return untilTimestamp;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setUntilTimestamp(long untilTimestamp) {
+        this.untilTimestamp = untilTimestamp;
     }
 
     public String getReason() {
@@ -72,11 +72,11 @@ public class Ban {
     }
 
     public boolean isDefBanned() {
-        return (time == -1);
+        return (untilTimestamp == -1);
     }
 
     public boolean isBanned() {
-        return (System.currentTimeMillis() <= time);
+        return (System.currentTimeMillis() <= untilTimestamp);
     }
 
     /**
@@ -86,25 +86,25 @@ public class Ban {
 
     public void addToBdd() {
         try {
-            if (BungeeGuard.plugin.sql.getConnection().isClosed()) {
-                BungeeGuard.plugin.sql.open();
+            if (Main.plugin.sql.getConnection().isClosed()) {
+                Main.plugin.sql.open();
             }
 
-            if (BungeeGuard.plugin.sql.getConnection() == null) {
+            if (Main.plugin.sql.getConnection() == null) {
                 System.out.println("[MYSQL] Connection error ...");
             }
 
-            BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='ReBan-By-" + getAdminName() + "', unban='" + System.currentTimeMillis() + "' WHERE uuidBanned='" + getUUID() + "' AND status='1'");
+            Main.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='ReBan-By-" + getAdminName() + "', unban='" + System.currentTimeMillis() + "' WHERE uuidBanned='" + getUUID() + "' AND status='1'");
 
-            BungeeGuard.plugin.sql.query("INSERT INTO `BungeeGuard_Ban` "
+            Main.plugin.sql.query("INSERT INTO `BungeeGuard_Ban` "
                     + "(`id`, `nameBanned`, `nameAdmin` , `uuidBanned` , `uuidAdmin` , `ban`, `unban`, `reason`, `unbanReason`, `unbanName`, `status`) VALUES "
-                    + "(NULL, '" + getPseudo() + "', '" + getAdminName() + "', '" + getUUID() + "', '" + getAdminUUID() + "' , '" + System.currentTimeMillis() + "', '" + getTime() + "', '" + getReason() + "', '', '', '1');");
+                    + "(NULL, '" + getJoueur() + "', '" + getAdminName() + "', '" + getUUID() + "', '" + getAdminUUID() + "' , '" + System.currentTimeMillis() + "', '" + getUntilTimestamp() + "', '" + getReason() + "', '', '', '1');");
         } catch (final SQLException ex) {
             System.out.println("SQL problem (exception) when add banned player to BDD : " + ex);
         } finally {
             try {
-                if (!BungeeGuard.plugin.sql.getConnection().isClosed()) {
-                    BungeeGuard.plugin.sql.close();
+                if (!Main.plugin.sql.getConnection().isClosed()) {
+                    Main.plugin.sql.close();
                 }
             } catch (SQLException ex) {
                 System.out.println(ex);
@@ -115,22 +115,22 @@ public class Ban {
 
     public void removeFromBDD(String unbanReason, String unbanName) {
         try {
-            if (BungeeGuard.plugin.sql.getConnection().isClosed()) {
-                BungeeGuard.plugin.sql.open();
+            if (Main.plugin.sql.getConnection().isClosed()) {
+                Main.plugin.sql.open();
             }
 
-            if (BungeeGuard.plugin.sql.getConnection() == null) {
+            if (Main.plugin.sql.getConnection() == null) {
                 System.out.println("[MYSQL] Connection error ...");
             }
 
-            BungeeGuard.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='" + unbanReason + "', unbanName='" + unbanName + "' WHERE uuidBanned='" + getUUID() + "' AND status='1'");
+            Main.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='" + unbanReason + "', unbanName='" + unbanName + "' WHERE uuidBanned='" + getUUID() + "' AND status='1'");
             remove();
         } catch (final SQLException ex) {
             System.out.println("SQL problem (exception) when remove banned player to BDD : " + ex);
         } finally {
             try {
-                if (!BungeeGuard.plugin.sql.getConnection().isClosed()) {
-                    BungeeGuard.plugin.sql.close();
+                if (!Main.plugin.sql.getConnection().isClosed()) {
+                    Main.plugin.sql.close();
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
@@ -139,6 +139,6 @@ public class Ban {
     }
 
     public void remove() {
-        BungeeGuard.bans.remove(this);
+        Main.bans.remove(this);
     }
 }

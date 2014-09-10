@@ -1,15 +1,15 @@
 package fr.greenns.BungeeGuard.commands;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
 public class CommandSay extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandSay(BungeeGuard plugin) {
+    public CommandSay(Main plugin) {
         super("say", "bungeeguard.say");
         this.plugin = plugin;
     }

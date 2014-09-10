@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.commands;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.Mute.MuteType;
 import net.md_5.bungee.api.ChatColor;
@@ -14,9 +14,9 @@ import java.util.UUID;
 
 public class CommandReply extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
 
-    public CommandReply(BungeeGuard plugin) {
+    public CommandReply(Main plugin) {
         super("r", "bungeeguard.reply");
         this.plugin = plugin;
     }

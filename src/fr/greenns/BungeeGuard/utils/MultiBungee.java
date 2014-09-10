@@ -4,7 +4,9 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Multimap;
 import com.imaginarycode.minecraft.redisbungee.RedisBungee;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
+import fr.greenns.BungeeGuard.Party.Party;
 import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.net.InetAddress;
 import java.util.Collection;
@@ -200,6 +202,10 @@ public class MultiBungee {
         api.sendChannelMessage(channel, message);
     }
 
+    public final void sendChannelMessage(String channel, String... message) {
+        sendChannelMessage(channel, Joiner.on(SEPARATOR).join(message));
+    }
+
     /**
      * Get the current BungeeCord server ID for this server.
      *
@@ -315,12 +321,12 @@ public class MultiBungee {
         sendChannelMessage("notifyStaff", message);
     }
 
-    public void sendPlayerMessage(String player, String message) {
-        sendChannelMessage("message", player + SEPARATOR + message);
+    public void sendPlayerMessage(UUID player, String message) {
+        sendChannelMessage("message", "" + player, message);
     }
 
     public void kickPlayer(String player, String reason) {
-        sendChannelMessage("kick", player + SEPARATOR + reason);
+        sendChannelMessage("kick", player, reason);
     }
 
     public void broadcastServers(List<String> serversList, String message) {
@@ -328,31 +334,87 @@ public class MultiBungee {
     }
 
     public void sendPrivateMessage(String senderName, UUID receiverUUID, String message) {
-        sendChannelMessage("privateMessage", senderName + SEPARATOR + receiverUUID + SEPARATOR + message);
+        sendChannelMessage("privateMessage", senderName, "" + receiverUUID, message);
     }
 
     public void broadcastServers(String servers, String message) {
-        sendChannelMessage("broadcast", servers + SEPARATOR + message);
+        sendChannelMessage("broadcast", servers, message);
     }
 
     public void unmutePlayer(UUID muteUUID) {
-        sendChannelMessage("unmute", api.getServerId() + SEPARATOR + muteUUID);
+        sendChannelMessage("unmute", api.getServerId(), "" + muteUUID);
     }
 
-    public void banPlayer(UUID bannedUUID, String bannedName, long bannedUntilTime, String reason, String adminName, String adminUUID) {
-        sendChannelMessage("ban", api.getServerId() + SEPARATOR + bannedUUID + SEPARATOR + bannedName + SEPARATOR + bannedUntilTime + SEPARATOR + reason + SEPARATOR + adminName + SEPARATOR + adminUUID);
+    public void banPlayer(UUID bannedUUID, String bannedName, long bannedUntilTime, String reason, String adminName, UUID adminUUID) {
+        sendChannelMessage("ban", api.getServerId(), "" + bannedUUID, bannedName, "" + bannedUntilTime, reason, adminName, "" + adminUUID);
 
     }
 
     public void unban(UUID bannedUUID) {
-        sendChannelMessage("unban", api.getServerId() + SEPARATOR + bannedUUID);
+        sendChannelMessage("unban", api.getServerId(), "" + bannedUUID);
     }
 
     public void staffChat(String server, String sender, String message) {
-        sendChannelMessage("staffChat", server + SEPARATOR + sender + SEPARATOR + message);
+        sendChannelMessage("staffChat", server, sender, message);
     }
 
     public void summon(String player, String target, String sender) {
-        sendChannelMessage("summon", player + SEPARATOR + target + SEPARATOR + sender);
+        sendChannelMessage("summon", player, target, sender);
+    }
+
+    public void ignorePlayer(UUID uniqueId, char c, UUID toIgnore) {
+        sendChannelMessage("ignore", "" + uniqueId, "" + c, "" + toIgnore);
+    }
+
+    public void requestParties(String server) {
+        sendChannelMessage("@" + server + "/partyRequest", getServerId());
+    }
+
+    public void replyParties(String server, String data) {
+        sendChannelMessage("@" + server + "/partyReply", data);
+    }
+
+    public void inviteParty(Party party, UUID joueur) {
+        sendChannelMessage("inviteParty", party.getName(), "" + joueur);
+    }
+
+    public void addPlayerToParty(Party party, ProxiedPlayer player) {
+        addPlayerToParty(party, player.getUniqueId());
+    }
+
+    private void addPlayerToParty(Party party, UUID uniqueId) {
+        sendChannelMessage("addPartyMember", party.getName(), "" + uniqueId);
+    }
+
+    public void setPartyPublique(Party p, boolean publique) {
+        sendChannelMessage("setPartyPublique", p.getName(), "" + publique);
+    }
+
+    public void playerLeaveParty(Party p, ProxiedPlayer sender) {
+        playerLeaveParty(p, sender.getUniqueId());
+    }
+
+    private void playerLeaveParty(Party p, UUID uniqueId) {
+        sendChannelMessage("playerLeaveParty", p.getName(), "" + uniqueId);
+    }
+
+    public void setPartyChat(Party p, UUID uniqueId, boolean isPartyChat) {
+        sendChannelMessage("setPartyChat", p.getName(), "" + uniqueId, "" + isPartyChat);
+    }
+
+    public void setPartyOwner(Party p, UUID u) {
+        sendChannelMessage("setPartyOwner", p.getName(), "" + u);
+    }
+
+    public void kickFromParty(Party p, UUID u) {
+        sendChannelMessage("kickFromParty", p.getName(), "" + u);
+    }
+
+    public void partyChat(String party, UUID uniqueId, String message) {
+        sendChannelMessage("partyChat", party, "" + uniqueId, message);
+    }
+
+    public void summonParty(String party, String server) {
+        sendChannelMessage("summonParty", party, server);
     }
 }

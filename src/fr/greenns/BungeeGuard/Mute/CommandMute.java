@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.Mute;
 
-import fr.greenns.BungeeGuard.BungeeGuard;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.utils.MultiBungee;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
 
 public class CommandMute extends Command {
 
-    public BungeeGuard plugin;
+    public Main plugin;
     Pattern timePattern = Pattern.compile("([0-9]+)([wdhms])");
 
-    public CommandMute(BungeeGuard plugin) {
+    public CommandMute(Main plugin) {
         super("mute", "bungeeguard.mute");
         this.plugin = plugin;
     }
@@ -94,7 +94,7 @@ public class CommandMute extends Command {
 
             Mute alreadyMute = BungeeGuardUtils.getMute(muteUUID);
             if (alreadyMute != null)
-                BungeeGuard.mutes.remove(alreadyMute);
+                Main.mutes.remove(alreadyMute);
 
             Mute Mute = new Mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
             Mute.addToBdd();
