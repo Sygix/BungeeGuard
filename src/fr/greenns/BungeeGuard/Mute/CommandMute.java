@@ -90,7 +90,7 @@ public class CommandMute extends Command {
             String muteDurationStr = BungeeGuardUtils.getDuration(muteUntilTime);
             String muteMessage = MuteTypeVar.playerFormat(muteDurationStr, reason);
 
-            BungeeGuardUtils.getMB().sendPlayerMessage(muteName, muteMessage);
+            BungeeGuardUtils.getMB().sendPlayerMessage(muteUUID, muteMessage);
 
             Mute alreadyMute = BungeeGuardUtils.getMute(muteUUID);
             if (alreadyMute != null)
