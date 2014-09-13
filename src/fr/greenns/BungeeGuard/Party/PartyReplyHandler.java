@@ -27,8 +27,5 @@ public class PartyReplyHandler extends PubSubBase {
         }.getType();
 
         plugin.getPM().setParties(plugin.gson.<Map<String, Party>>fromJson(data, type));
-        // @TODO: remove testing code.
-        System.out.println("-- DEBUG PARTIES -- ");
-        System.out.println(plugin.getPM().getParties());
     }
 }

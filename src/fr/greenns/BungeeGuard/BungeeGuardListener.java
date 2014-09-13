@@ -146,6 +146,7 @@ public class BungeeGuardListener implements Listener {
             if ((p.hasPermission("bungeeguard.staffchat")) && (e.getMessage().startsWith("!"))) {
                 plugin.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), e.getMessage());
                 e.setCancelled(true);
+                return;
             }
             Party party = plugin.getPM().getPartyByPlayer(p);
             if (party != null && party.isPartyChat(p)) {
@@ -158,7 +159,6 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onDisconnect(PlayerDisconnectEvent e) {
         ProxiedPlayer p = e.getPlayer();
-        System.out.println("Disconnected: " + p.getName());
         if (plugin.getPM().inParty(p)) {
             plugin.getMB().playerLeaveParty(plugin.getPM().getPartyByPlayer(p), p);
         }
@@ -260,7 +260,6 @@ public class BungeeGuardListener implements Listener {
             // Si channel ressemble à @serveur/commande, on retire le préfixe :]
             channel = channel.replace("@" + plugin.getMB().getServerId() + "/", "@");
         }
-        System.out.println("[RB] " + channel);
         switch (channel) {
             case "redisbungee-data":
                 return;
@@ -335,11 +334,9 @@ public class BungeeGuardListener implements Listener {
                 break;
 
             case "@partyRequest":
-                System.out.println("@partyrequest");
                 handler = new PartyRequestHandler(plugin);
                 break;
             case "@partyReply":
-                System.out.println("@partyReply");
                 handler = new PartyReplyHandler(plugin);
                 break;
         }

@@ -52,7 +52,7 @@ public class CommandMsg extends Command {
 
         if (args.length == 0) {
             p.sendMessage(new ComponentBuilder("Exemple :").color(ChatColor.RED).create());
-            p.sendMessage(new ComponentBuilder("/msg NomDeMonAmi Hey sa te dit de jouer avec moi ?").color(ChatColor.RED).create());
+            p.sendMessage(new ComponentBuilder("/msg NomDeMonAmi Hey ça te dit de jouer avec moi ?").color(ChatColor.RED).create());
             return;
         }
 

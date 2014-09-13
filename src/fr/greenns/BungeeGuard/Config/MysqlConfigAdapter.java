@@ -41,7 +41,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         if (plugin.sql.getConnection() == null) {
             System.out.println("[b:rl] Erreur, checkConnection");
         } else {
-            ResultSet res = plugin.sql.query("SELECT permissions FROM bungee_config LIMIT 0,1");
+            ResultSet res = plugin.sql.query("SELECT permissions FROM bungee_config WHERE id_inutile = 1 LIMIT 0,1");
             try {
                 res.next();
                 dbConfig = res.getString("permissions");
