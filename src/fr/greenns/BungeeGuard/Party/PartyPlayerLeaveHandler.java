@@ -25,6 +25,7 @@ public class PartyPlayerLeaveHandler extends PubSubBase {
 
     @Override
     public void handle(String channel, String message, String[] args) {
+        System.out.println("Leave:" + message);
         String partyName = args[0];
         UUID u = UUID.fromString(args[1]);
         Party p = plugin.getPM().getParty(partyName);
@@ -40,7 +41,7 @@ public class PartyPlayerLeaveHandler extends PubSubBase {
                 pp = BungeeCord.getInstance().getPlayer(uuid);
                 if (pp == null)
                     continue;
-                pp.sendMessage(ChatColor.RED + "- " + playerName + " a quitté de la Party");
+                pp.sendMessage(ChatColor.RED + "- " + playerName + " a quitté la Party");
             }
         }
     }

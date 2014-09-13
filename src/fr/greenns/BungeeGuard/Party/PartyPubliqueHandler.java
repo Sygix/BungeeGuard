@@ -3,8 +3,6 @@ package fr.greenns.BungeeGuard.Party;
 import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.PubSub.PubSubBase;
 
-import java.util.UUID;
-
 /**
  * Part of fr.greenns.BungeeGuard.Party (bungeeguard)
  * Date: 10/09/2014
@@ -23,8 +21,7 @@ public class PartyPubliqueHandler extends PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
         String partyName = args[0];
-        UUID uuid = UUID.fromString(args[1]);
-        boolean isPublique = Boolean.parseBoolean(args[2]);
+        boolean isPublique = Boolean.parseBoolean(args[1]);
         plugin.getPM().getParty(partyName).setPublique(isPublique);
     }
 }

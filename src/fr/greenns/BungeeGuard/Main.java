@@ -1,6 +1,5 @@
 package fr.greenns.BungeeGuard;
 
-import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import fr.greenns.BungeeGuard.Ban.Ban;
 import fr.greenns.BungeeGuard.Ban.CommandBan;
@@ -99,12 +98,16 @@ public class Main extends Plugin {
 
     private void fetchParties() {
         MultiBungee MB = BungeeGuardUtils.getMB();
-        String server = Iterables.getFirst(MB.getAllServers(), "");
-        if (server == null || server.isEmpty()) {
-            return;
-        }
+        List<String> server = MB.getAllServers();
         PM = new PartyManager();
-        MB.requestParties(server);
+        for (String s : server) {
+            if (!s.equals(MB.getServerId())) {
+                System.out.println("RequestParties: " + s);
+                MB.requestParties(s);
+                return;
+            }
+        }
+
     }
 
     @Override
@@ -118,12 +121,10 @@ public class Main extends Plugin {
         MB.registerPubSubChannels("message", "privateMessage", "ignore", "broadcast");
         MB.registerPubSubChannels("reloadConf", "summon");
 
-        MB.registerPubSubChannels("setPartyPublique", "inviteParty", "playerLeaveParty", "setPartyChat",
-                "setPartyOwner", "kickFromParty", "summonParty", "partyChat");
-        MB.registerPubSubChannels("@" + MB.getServerId() + "partyRequest");
-        MB.registerPubSubChannels("@" + MB.getServerId() + "partyReply");
+        MB.registerPubSubChannels("setPartyPublique", "inviteParty", "addPartyMember", "playerLeaveParty", "setPartyChat",
+                "setPartyOwner", "kickFromParty", "summonParty", "partyChat", "createParty");
+        MB.registerPubSubChannels("@" + MB.getServerId() + "/partyRequest", "@" + MB.getServerId() + "/partyReply");
 
-        fetchParties();
         if (sql.checkTable("BungeeGuard_Ban")) {
             System.out.println("BungeeGuard - Table BungeeGuard_Ban trouvée !");
 
@@ -216,6 +217,7 @@ public class Main extends Plugin {
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, BGListener);
 
+        fetchParties();
         Set<Class<? extends Command>> commandes = new HashSet<>();
         commandes.add(CommandKick.class);
         commandes.add(CommandLobby.class);
@@ -237,6 +239,7 @@ public class Main extends Plugin {
         commandes.add(CommandGtp.class);
         commandes.add(CommandIgnore.class);
         commandes.add(CommandBLoad.class);
+        commandes.add(CommandParty.class);
 
         for (Class<? extends Command> commande : commandes) {
             try {

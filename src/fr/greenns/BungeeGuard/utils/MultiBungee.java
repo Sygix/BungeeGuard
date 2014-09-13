@@ -199,6 +199,8 @@ public class MultiBungee {
      * @since 0.3.3
      */
     public final void sendChannelMessage(String channel, String message) {
+
+        System.out.println(">> " + channel + " :: " + message);
         api.sendChannelMessage(channel, message);
     }
 
@@ -371,6 +373,9 @@ public class MultiBungee {
     }
 
     public void replyParties(String server, String data) {
+
+        System.out.println("@" + server + "/partyReply");
+        System.out.println(data);
         sendChannelMessage("@" + server + "/partyReply", data);
     }
 
@@ -416,5 +421,9 @@ public class MultiBungee {
 
     public void summonParty(String party, String server) {
         sendChannelMessage("summonParty", party, server);
+    }
+
+    public void createParty(String nom, ProxiedPlayer owner) {
+        sendChannelMessage("createParty", nom, "" + owner.getUniqueId());
     }
 }

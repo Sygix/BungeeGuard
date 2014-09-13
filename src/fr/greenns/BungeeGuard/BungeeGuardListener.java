@@ -14,6 +14,7 @@ import fr.greenns.BungeeGuard.utils.Permissions;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -76,8 +77,8 @@ public class BungeeGuardListener implements Listener {
     }
 
     @EventHandler
-    public void onServerConnect(ServerConnectEvent e) {
-        ProxiedPlayer p = e.getPlayer();
+    public void onServerConnect(final ServerConnectEvent e) {
+        final ProxiedPlayer p = e.getPlayer();
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
             System.out.println("Recuperation du meilleur lobby pour " + p.getName());
             Lobby l = plugin.lobbyUtils.bestLobbyTarget();
@@ -93,8 +94,8 @@ public class BungeeGuardListener implements Listener {
                 e.getPlayer().disconnect(new ComponentBuilder(ChatColor.RED + "Nos services sont momentanément indisponibles" + '\n' + ChatColor.RED + "Veuillez réessayer dans quelques instants").create());
             }
         } else {
-            Party party = plugin.getPM().getPartyByPlayer(p);
-            if (party != null) {
+            final Party party = plugin.getPM().getPartyByPlayer(p);
+            if (party != null && party.isOwner(p)) {
                 plugin.getMB().summonParty(party.getName(), e.getTarget().getName());
             }
         }
@@ -155,6 +156,15 @@ public class BungeeGuardListener implements Listener {
     }
 
     @EventHandler
+    public void onDisconnect(PlayerDisconnectEvent e) {
+        ProxiedPlayer p = e.getPlayer();
+        System.out.println("Disconnected: " + p.getName());
+        if (plugin.getPM().inParty(p)) {
+            plugin.getMB().playerLeaveParty(plugin.getPM().getPartyByPlayer(p), p);
+        }
+    }
+
+    @EventHandler
     public void onProxyPing(ProxyPingEvent e) {
         ServerPing sp = e.getResponse();
         sp.getPlayers().setOnline(BungeeGuardUtils.getMB().getPlayerCount());
@@ -187,14 +197,22 @@ public class BungeeGuardListener implements Listener {
     @SuppressWarnings({"deprecation"})
     @EventHandler
     public void onServerTurnOff(final ServerKickEvent event) {
-        if (!(event.getKickReason().contains("ban") || event.getKickReason().contains("plein") ||
-                event.getKickReason().contains("Full") || event.getKickReason().contains("fly") ||
-                event.getKickReason().contains("Nos services") || event.getKickReason().contains("kické") ||
-                event.getKickReason().contains("bannis") || event.getKickReason().contains("maintenance") ||
-                event.getKickReason().contains("kick") || event.getKickReason().contains("VIP"))) {
+        ProxiedPlayer p = event.getPlayer();
+        String reason = "";
+        ServerInfo kickedFrom = event.getKickedFrom();
 
-            if (event.getKickReason().contains("closed")) {
-                ServerInfo kickedFrom = event.getKickedFrom();
+        for (BaseComponent b : event.getKickReasonComponent()) {
+            reason += b.toPlainText() + "\n";
+        }
+        reason = reason.trim();
+
+        if (!(reason.contains("ban") || reason.contains("plein") ||
+                reason.contains("Full") || reason.contains("fly") ||
+                reason.contains("Nos services") || reason.contains("kické") ||
+                reason.contains("bannis") || reason.contains("maintenance") ||
+                reason.contains("kick") || reason.contains("VIP"))) {
+
+            if (reason.contains("closed")) {
                 if (kickedFrom.getName().contains("lobby")) {
                     Lobby Lobby = plugin.lobbyUtils.getLobby(kickedFrom.getName());
                     Lobby.setOffline();
@@ -207,22 +225,17 @@ public class BungeeGuardListener implements Listener {
                 server = l.getServerInfo();
             }
 
-            BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + event.getPlayer().getName() + " a perdu la connection (" + event.getState().toString() + " - " + event.getKickReason() + ")"));
+            BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + event.getState().toString() + " - " + reason + ")"));
             if (server.getName().equals("limbo") && BungeeCord.getInstance().getServerInfo("limbo").getPlayers().size() > 70) {
-                BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + event.getPlayer().getName() + " déconnecté "));
-                return;
+                BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " déconnecté "));
             } else {
-                BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + event.getPlayer().getName() + " Redirigé vers " + server.getName().toUpperCase()));
-                event.getPlayer().setReconnectServer(server);
+                BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " Redirigé vers " + server.getName().toUpperCase()));
+                p.setReconnectServer(server);
                 event.setCancelled(true);
                 event.setCancelServer(server);
             }
         } else {
-            if (plugin.getPM().inParty(event.getPlayer())) {
-                plugin.getMB().playerLeaveParty(plugin.getPM().getPartyByPlayer(event.getPlayer()), event.getPlayer());
-            }
-            event.getPlayer().disconnect(new ComponentBuilder(event.getKickReason()).create());
-            return;
+            p.disconnect(event.getKickReasonComponent());
         }
     }
 
@@ -247,6 +260,7 @@ public class BungeeGuardListener implements Listener {
             // Si channel ressemble à @serveur/commande, on retire le préfixe :]
             channel = channel.replace("@" + plugin.getMB().getServerId() + "/", "@");
         }
+        System.out.println("[RB] " + channel);
         switch (channel) {
             case "redisbungee-data":
                 return;
@@ -301,6 +315,9 @@ public class BungeeGuardListener implements Listener {
             case "setPartyChat":
                 handler = new PartyChatSetHandler(plugin);
                 break;
+            case "addPartyMember":
+                handler = new PartyAddMemberHandler(plugin);
+                break;
             case "setPartyOwner":
                 handler = new PartyOwnerSetHandler(plugin);
                 break;
@@ -313,11 +330,16 @@ public class BungeeGuardListener implements Listener {
             case "summonParty":
                 handler = new PartySummonHandler(plugin);
                 break;
+            case "createParty":
+                handler = new PartyCreateHandler(plugin);
+                break;
 
             case "@partyRequest":
+                System.out.println("@partyrequest");
                 handler = new PartyRequestHandler(plugin);
                 break;
             case "@partyReply":
+                System.out.println("@partyReply");
                 handler = new PartyReplyHandler(plugin);
                 break;
         }

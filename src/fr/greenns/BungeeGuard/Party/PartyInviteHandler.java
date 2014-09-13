@@ -37,7 +37,7 @@ public class PartyInviteHandler extends PubSubBase {
         p.sendMessage(new ComponentBuilder("Ceci est une invitation à rejoindre la Party ").color(ChatColor.GRAY)
                 .append(p.getName()).bold(true)
                 .append(" : ")
-                .append("Accepter").underlined(true).color(ChatColor.GREEN).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party join " + p.getName()))
+                .append("Accepter").color(ChatColor.GREEN).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party join " + partyName))
                 .create());
     }
 }

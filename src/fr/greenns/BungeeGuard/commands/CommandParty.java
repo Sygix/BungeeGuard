@@ -9,10 +9,8 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.UUID;
 
@@ -48,6 +46,15 @@ public class CommandParty extends Command {
         this.MB = plugin.getMB();
     }
 
+    public static boolean isAlphanumeric(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c < 0x30 || (c >= 0x3a && c <= 0x40) || (c > 0x5a && c <= 0x60) || c > 0x7a)
+                return false;
+        }
+        return true;
+    }
+
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length == 0 || !(sender instanceof ProxiedPlayer)) {
@@ -63,6 +70,7 @@ public class CommandParty extends Command {
                 create(p, args);
                 break;
             case "list":
+            case "ls":
                 list(p, args);
                 break;
             case "invite":
@@ -107,7 +115,7 @@ public class CommandParty extends Command {
             sender.sendMessage(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite.");
             return;
         }
-        if (args.length == 2) {
+        if (args.length != 2) {
             sender.sendMessage(ChatColor.GREEN + "Usage: /party kick <joueur>");
             return;
         }
@@ -204,10 +212,17 @@ public class CommandParty extends Command {
         }
         String party = args[1];
         Party p = PM.getParty(party);
-        if (p.canJoin(sender)) {
-            MB.addPlayerToParty(p, sender);
-            sender.sendMessage(ChatColor.GREEN + "Tu es désormais dans la Party " + ChatColor.BOLD + p.getName());
+        if (p == null) {
+            sender.sendMessage(ChatColor.RED + "Party " + party + " inconnue.");
+            return;
         }
+        if (!p.canJoin(sender)) {
+            sender.sendMessage(ChatColor.RED + "Il vous est impossible de rejoindre cette Party.");
+            return;
+        }
+
+        MB.addPlayerToParty(p, sender);
+        sender.sendMessage(ChatColor.GREEN + "Tu es désormais dans la Party " + ChatColor.BOLD + p.getName());
     }
 
     private void invite(ProxiedPlayer sender, String[] args) {
@@ -220,7 +235,7 @@ public class CommandParty extends Command {
             sender.sendMessage(ChatColor.RED + "Vous ne pouvez lancer cette commande sans être dans une Party");
             return;
         }
-        String joueur = args[2];
+        String joueur = args[1];
         UUID u = plugin.getMB().getUuidFromName(joueur);
         if (u == null || !plugin.getMB().isPlayerOnline(u)) {
             sender.sendMessage(ChatColor.RED + "Ce joueur n'est pas en ligne");
@@ -236,10 +251,15 @@ public class CommandParty extends Command {
     }
 
     private void list(ProxiedPlayer sender, String[] args) {
+        if (PM.getParties().values().size() == 0) {
+            sender.sendMessage(ChatColor.RED + "Il n'y a aucune Party.");
+            sender.sendMessage(ChatColor.RED + "Vous pouvez en créer une: " + ChatColor.GREEN + "/party create <nom>");
+            return;
+        }
         sender.sendMessage(ChatColor.GREEN + "Liste des Party");
         for (Party p : PM.getParties().values()) {
             String membres = "";
-            membres += ChatColor.BOLD + plugin.getMB().getNameFromUuid(p.getOwner());
+            membres += "" + ChatColor.RESET + ChatColor.BOLD + plugin.getMB().getNameFromUuid(p.getOwner()) + ChatColor.RESET;
             for (UUID m : p.getMembers()) {
                 if (p.getOwner().equals(m))
                     continue;
@@ -264,7 +284,7 @@ public class CommandParty extends Command {
             return;
         }
         String nom = args[1];
-        if (!StringUtils.isAlphanumeric(nom)) {
+        if (!isAlphanumeric(nom)) {
             sender.sendMessage(ChatColor.GREEN + "Usage: /party create <nom>");
             sender.sendMessage(ChatColor.GREEN + "Le nom de votre Party ne peut contenir que des chiffres ou des lettres");
             return;
@@ -276,66 +296,17 @@ public class CommandParty extends Command {
         sender.sendMessage(MSG_CREATION);
         sender.sendMessage(MSG_CREATION2);
         sender.sendMessage(MSG_CREATION3);
-        PM.createParty(nom, sender);
+        MB.createParty(nom, sender);
     }
 
     private void help(CommandSender sender) {
-        sender.sendMessage(new TextComponent("Bientôt de retour :]"));
+        sender.sendMessage(ChatColor.GREEN + "Party: Usage");
+        sender.sendMessage(ChatColor.GREEN + "/party create <nom>");
+        sender.sendMessage(ChatColor.GREEN + "/party public");
+        sender.sendMessage(ChatColor.GREEN + "/party chat");
+        sender.sendMessage(ChatColor.GREEN + "/party invite <joueur>");
+        sender.sendMessage(ChatColor.GREEN + "/party leave");
+        sender.sendMessage(ChatColor.GREEN + "/party owner [joueur]");
+        sender.sendMessage(ChatColor.GREEN + "/party kick <joueur>");
     }
-
-    /*
-    Party:
-        nom (String)
-        owner (uuid)
-        members: List<UUID>
-        partyChat = List<UUID>
-
-        Actions:
-            create(String nom, UUID owner)
-            setOwner(UUID newOwner)
-            addPlayer(UUID joueur, boolean notification_joueur, boolean notification_party)
-            removePlayer(UUID joueur, boolean notification_joueur, boolean notification_party)
-            delete(PartyDeleteReason raison)
-            invitePlayer(UUID joueur)
-            chat(UUID sender, String message)
-
-            isMember(UUID joueur) -> boolean
-            canJoin(UUID joueur) -> boolean
-
-
-    PartyManager:
-        Party: Map<String name, Party p>
-
-        Actions:
-            getParty(UUID joueur)
-            addToParty(UUID joueur, String partyName)
-            togglePartyChat(UUID joueur)
-            canJoin(UUID joueur
-     */
-
-    /*
-    Processus:
-    Création de team : /party create <nom>
-    Affichage de l'aide rapide, TEAM LIMITEE A 10 JOUEURS
-
-    Si quite serveur,
-                     - si team vide: suppression, libération du nom
-                     - sinon, annonce à la team + si owner quitte, prochain joueur owner
-
-    Owner peut rendre la party publique avec /p public
-        Si publique: tout membre peut rejoindre avec /p join
-        Sinon, un membre de la team doit inviter d'autres joueurs à rejoindre:
-            /p invite <pseudo>
-            > <sender> vous a invité à rejoindre sa team <Nom>: [/p join <Nom>](Accepter) ?
-            Ou acceptation manuelle : /p join ou /p join <Nom>
-
-    Owner peut /p kick un joueur,
-    Joueur peut à tout moment /p leave
-
-    Si Owner rejoint un serveur de jeu (= non lobby), les autres rejoignent aussi.
-
-    Joueur peut /p chat, qui (dés)active le chat en team
-
-    Events: NewMember, RemovedMember, JoinServer : message aux membres de la team
-     */
 }

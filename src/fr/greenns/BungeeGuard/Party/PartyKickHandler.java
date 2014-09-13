@@ -31,8 +31,7 @@ public class PartyKickHandler extends PubSubBase {
         String playerName = plugin.getMB().getNameFromUuid(u);
         if (p == null)
             return;
-        p.removeMember(u);
-        if (p.getSize() == 0)
+        if (p.getSize() == 1)
             plugin.getPM().removeParty(p);
         else {
             ProxiedPlayer pp;
@@ -43,5 +42,6 @@ public class PartyKickHandler extends PubSubBase {
                 pp.sendMessage(ChatColor.RED + "- " + playerName + " a été kické de la Party");
             }
         }
+        p.removeMember(u);
     }
 }

@@ -3,23 +3,25 @@ package fr.greenns.BungeeGuard.Party;
 import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.PubSub.PubSubBase;
 
+import java.util.UUID;
+
 /**
  * Part of fr.greenns.BungeeGuard.Party (bungeeguard)
- * Date: 10/09/2014
- * Time: 18:22
+ * Date: 13/09/2014
+ * Time: 16:49
  * May be open-source & be sold (by mguerreiro, of course !)
  */
-public class PartyRequestHandler extends PubSubBase {
+public class PartyAddMemberHandler extends PubSubBase {
     private final Main plugin;
 
-    public PartyRequestHandler(Main plugin) {
+    public PartyAddMemberHandler(Main plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public void handle(String channel, String message, String[] args) {
-        String serveur = args[0];
-        System.out.println("Hello! " + serveur);
-        plugin.getMB().replyParties(serveur, plugin.gson.toJson(plugin.getPM().getParties()));
+        String partyName = args[0];
+        UUID u = UUID.fromString(args[1]);
+        plugin.getPM().getParty(partyName).addMember(u);
     }
 }

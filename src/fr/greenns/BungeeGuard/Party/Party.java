@@ -2,11 +2,10 @@ package fr.greenns.BungeeGuard.Party;
 
 import com.google.common.collect.Iterables;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,15 +18,20 @@ public class Party implements Serializable {
     private static final long serialVersionUID = 7009960713031110863L;
     String name = "";
     UUID owner = UUID.randomUUID();
-    Set<UUID> chatMembers = new HashSet<>();
-    Set<UUID> members = new HashSet<>();
-    Set<UUID> invitations = new HashSet<>();
+    List<UUID> chatMembers = new ArrayList<>();
+    List<UUID> members = new ArrayList<>();
+    List<UUID> invitations = new ArrayList<>();
     boolean publique = false;
 
     public Party(String nom, UUID owner) {
         this.name = nom;
         this.owner = owner;
-        this.members.add(owner);
+        addMember(owner);
+    }
+
+    public void addMember(UUID player) {
+        members.add(player);
+        invitations.remove(player);
     }
 
     public boolean isPublique() {
@@ -38,33 +42,8 @@ public class Party implements Serializable {
         this.publique = publique;
     }
 
-    public Set<UUID> getInvitations() {
-        return invitations;
-    }
-
-    public void setInvitations(Set<UUID> invitations) {
-        this.invitations = invitations;
-    }
-
-    public Set<UUID> getMembers() {
+    public List<UUID> getMembers() {
         return members;
-    }
-
-    public void setMembers(Set<UUID> members) {
-        this.members = members;
-    }
-
-    public Set<UUID> getChatMembers() {
-        return chatMembers;
-    }
-
-    public void setChatMembers(Set<UUID> chatMembers) {
-        this.chatMembers = chatMembers;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 
     public UUID getOwner() {
@@ -92,7 +71,7 @@ public class Party implements Serializable {
     }
 
     private boolean canJoin(UUID uniqueId) {
-        if (members.size() < 10) {
+        if (getSize() < 10) {
             if (isPublique() || isInvited(uniqueId)) {
                 invitations.remove(uniqueId);
                 return true;
@@ -110,13 +89,9 @@ public class Party implements Serializable {
     }
 
     private boolean isOwner(UUID uniqueId) {
-        return owner == uniqueId;
+        return owner.equals(uniqueId);
     }
 
-    public boolean togglePublique() {
-        setPublique(!publique);
-        return publique;
-    }
 
     public boolean isPartyChat(ProxiedPlayer sender) {
         return isPartyChat(sender.getUniqueId());
@@ -140,7 +115,7 @@ public class Party implements Serializable {
     public void removeMember(UUID u) {
         members.remove(u);
         chatMembers.remove(u);
-        if (owner == u) {
+        if (owner.equals(u)) {
             owner = Iterables.getFirst(members, null);
         }
     }

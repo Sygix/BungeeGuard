@@ -38,6 +38,8 @@ public class PartySummonHandler extends PubSubBase {
             pp = BungeeCord.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
+            if (p.isOwner(pp))
+                continue;
             summon(pp, SI);
         }
     }

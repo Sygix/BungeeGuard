@@ -40,7 +40,7 @@ public class PartyManager {
         createParty(nom, owner.getUniqueId());
     }
 
-    private void createParty(String nom, UUID owner) {
+    public void createParty(String nom, UUID owner) {
         Party party = new Party(nom, owner);
         parties.put(nom, party);
     }
