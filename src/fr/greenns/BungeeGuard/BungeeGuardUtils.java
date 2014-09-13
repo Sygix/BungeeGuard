@@ -3,7 +3,6 @@ package fr.greenns.BungeeGuard;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import fr.greenns.BungeeGuard.Ban.Ban;
-import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.utils.MultiBungee;
 import net.md_5.bungee.api.ChatColor;
@@ -15,16 +14,16 @@ import net.md_5.bungee.config.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BungeeGuardUtils {
-    private static final Pattern timePattern = Pattern
-            .compile(
-                    "(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?",
-                    2);
     public static Main plugin;
+    static Pattern timePattern = Pattern.compile("([0-9]+)([wdhms])");
     private static String server_id;
     public String staffBroadcast = ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + "" + ChatColor.BOLD + "STAFF" + ChatColor.GRAY + "" + ChatColor.BOLD + "]" + ChatColor.GRAY;
 
@@ -32,77 +31,34 @@ public class BungeeGuardUtils {
         BungeeGuardUtils.plugin = plugin;
     }
 
-    public static long parseDuration(final String durationStr) throws IllegalArgumentException {
-        final Matcher m = timePattern.matcher(durationStr);
-        int years = 0;
-        int months = 0;
-        int weeks = 0;
-        int days = 0;
-        int hours = 0;
-        int minutes = 0;
-        int seconds = 0;
-        boolean found = false;
+    public static long parseDuration(final String durationStr) {
+        Matcher m = timePattern.matcher(durationStr);
+        int time = -1;
         while (m.find()) {
-            if (m.group() == null || m.group().isEmpty()) {
-                continue;
-            }
-            for (int i = 0; i < m.groupCount(); i++) {
-                if (m.group(i) != null && !m.group(i).isEmpty()) {
-                    found = true;
-                    break;
+            if (m.group() != null && !m.group().isEmpty() &&
+                    m.group(1) != null && !m.group(1).isEmpty() && m.group(2) != null && !m.group(2).isEmpty()) {
+                int number = Integer.parseInt(m.group(1));
+                String type = m.group(2);
+                switch (type) {
+                    case "w":
+                        time += number * 604800000L;
+                        break;
+                    case "d":
+                        time += number * 86400000L;
+                        break;
+                    case "h":
+                        time += number * 3600000L;
+                        break;
+                    case "m":
+                        time += number * 60000L;
+                        break;
+                    case "s":
+                        time += number * 1000L;
+                        break;
                 }
             }
-            if (found) {
-                if (m.group(1) != null && !m.group(1).isEmpty()) {
-                    years = Integer.parseInt(m.group(1));
-                }
-                if (m.group(2) != null && !m.group(2).isEmpty()) {
-                    months = Integer.parseInt(m.group(2));
-                }
-                if (m.group(3) != null && !m.group(3).isEmpty()) {
-                    weeks = Integer.parseInt(m.group(3));
-                }
-                if (m.group(4) != null && !m.group(4).isEmpty()) {
-                    days = Integer.parseInt(m.group(4));
-                }
-                if (m.group(5) != null && !m.group(5).isEmpty()) {
-                    hours = Integer.parseInt(m.group(5));
-                }
-                if (m.group(6) != null && !m.group(6).isEmpty()) {
-                    minutes = Integer.parseInt(m.group(6));
-                }
-                if (m.group(7) != null && !m.group(7).isEmpty()) {
-                    seconds = Integer.parseInt(m.group(7));
-                }
-                break;
-            }
         }
-        if (!found) {
-            throw new IllegalArgumentException(ChatColor.RED + "Invalid duration !");
-        }
-        final Calendar c = new GregorianCalendar();
-        if (years > 0) {
-            c.add(Calendar.YEAR, years);
-        }
-        if (months > 0) {
-            c.add(Calendar.MONTH, months);
-        }
-        if (weeks > 0) {
-            c.add(Calendar.WEEK_OF_YEAR, weeks);
-        }
-        if (days > 0) {
-            c.add(Calendar.DAY_OF_MONTH, days);
-        }
-        if (hours > 0) {
-            c.add(Calendar.HOUR_OF_DAY, hours);
-        }
-        if (minutes > 0) {
-            c.add(Calendar.MINUTE, minutes);
-        }
-        if (seconds > 0) {
-            c.add(Calendar.SECOND, seconds);
-        }
-        return c.getTimeInMillis();
+        return time;
     }
 
     public static String getDuration(final long futureTimestamp) {
@@ -184,14 +140,6 @@ public class BungeeGuardUtils {
         String msg = sb.toString();
         sb.setLength(0);
         return msg;
-    }
-
-    public static Lobby getLobby(String name) {
-        for (Lobby Lobby : Main.lobbys) {
-            if (Lobby.getName().equals(name))
-                return Lobby;
-        }
-        return null;
     }
 
     public static Ban getBan(UUID u) {

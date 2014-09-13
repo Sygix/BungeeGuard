@@ -10,13 +10,10 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CommandMute extends Command {
 
     public Main plugin;
-    Pattern timePattern = Pattern.compile("([0-9]+)([wdhms])");
 
     public CommandMute(Main plugin) {
         super("mute", "bungeeguard.mute");
@@ -32,42 +29,16 @@ public class CommandMute extends Command {
         if (args.length == 0) {
             sender.sendMessage(new ComponentBuilder("Usage: /mute <pseudo> [duration] [reason]").color(ChatColor.RED).create());
         } else {
-            boolean duration = false;
-            long muteUntilTime = -1;
+            boolean duration = true;
             long muteTime = 0;
             if (args.length > 1) {
-                Matcher m = timePattern.matcher(args[1]);
-                while (m.find()) {
-                    if (m.group() == null || m.group().isEmpty()) {
-                        continue;
-                    } else if (m.group(1) != null && !m.group(1).isEmpty() && m.group(2) != null && !m.group(2).isEmpty()) {
-                        int number = Integer.parseInt(m.group(1));
-                        String type = m.group(2);
-                        duration = true;
-
-                        switch (type) {
-                            case "w":
-                                muteTime += number * 604800000L;
-                                break;
-                            case "d":
-                                muteTime += number * 86400000L;
-                                break;
-                            case "h":
-                                muteTime += number * 3600000L;
-                                break;
-                            case "m":
-                                muteTime += number * 60000L;
-                                break;
-                            case "s":
-                                muteTime += number * 1000L;
-                                break;
-                        }
-                    }
-                }
+                muteTime = BungeeGuardUtils.parseDuration(args[1]);
+                if (muteTime > 0)
+                    duration = false;
             }
             if (muteTime > 604800000L) muteTime = 604800000L;
             if (!duration) muteTime = 604800000L;
-            muteUntilTime = System.currentTimeMillis() + muteTime;
+            long muteUntilTime = System.currentTimeMillis() + muteTime;
 
             int startArgForReason = (duration) ? 2 : 1;
 
