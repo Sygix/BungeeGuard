@@ -53,6 +53,7 @@ public class Main extends Plugin {
     public Gson gson = new Gson();
     MultiBungee MB;
     private PartyManager PM;
+    private boolean dieSlowly = false;
 
     public String getMotd() {
         return motd;
@@ -102,6 +103,7 @@ public class Main extends Plugin {
         if (server == null || server.isEmpty()) {
             return;
         }
+        PM = new PartyManager();
         MB.requestParties(server);
     }
 

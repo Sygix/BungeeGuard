@@ -10,6 +10,7 @@ import fr.greenns.BungeeGuard.Party.*;
 import fr.greenns.BungeeGuard.PubSub.*;
 import fr.greenns.BungeeGuard.utils.ComponentManager;
 import fr.greenns.BungeeGuard.utils.MultiBungee;
+import fr.greenns.BungeeGuard.utils.Permissions;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ServerPing;
@@ -323,5 +324,10 @@ public class BungeeGuardListener implements Listener {
         if (handler.ignoreSelfMessage() && args.length != 0 && args[0].equals(plugin.getMB().getServerId()))
             return;
         handler.handle(channel, message, args);
+    }
+
+    @EventHandler
+    public void onPermCheck(PermissionCheckEvent e) {
+        e.setHasPermission(Permissions.hasPerm(e.getSender().getName(), e.getPermission()));
     }
 }
