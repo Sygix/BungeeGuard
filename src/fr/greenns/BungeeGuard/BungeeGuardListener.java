@@ -71,7 +71,6 @@ public class BungeeGuardListener implements Listener {
         if (l != null) {
             return;
         }
-
         event.setCancelled(true);
         event.setCancelReason(ChatColor.RED + "Nos services sont momentanément indisponibles" + '\n' + ChatColor.RED + "Veuillez réessayer dans quelques instants");
     }
@@ -143,9 +142,10 @@ public class BungeeGuardListener implements Listener {
                 e.setCancelled(true);
                 p.sendMessage(ComponentManager.generate(ChatColor.RED + "Le chat est désactivé temporairement !"));
             }
-            if ((p.hasPermission("bungeeguard.staffchat")) && (e.getMessage().startsWith("!"))) {
-                plugin.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), e.getMessage());
+            if ((p.hasPermission("bungeeguard.staffchat")) && (e.getMessage().startsWith("!!"))) {
                 e.setCancelled(true);
+                plugin.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), e.getMessage().substring(2));
+                e.setMessage("");
                 return;
             }
             Party party = plugin.getPM().getPartyByPlayer(p);
@@ -260,6 +260,7 @@ public class BungeeGuardListener implements Listener {
             // Si channel ressemble à @serveur/commande, on retire le préfixe :]
             channel = channel.replace("@" + plugin.getMB().getServerId() + "/", "@");
         }
+
         switch (channel) {
             case "redisbungee-data":
                 return;

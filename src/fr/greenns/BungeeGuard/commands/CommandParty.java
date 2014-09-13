@@ -263,7 +263,7 @@ public class CommandParty extends Command {
             for (UUID m : p.getMembers()) {
                 if (p.getOwner().equals(m))
                     continue;
-                membres += " " + plugin.getMB().getNameFromUuid(m);
+                membres += "\n" + plugin.getMB().getNameFromUuid(m);
             }
             sender.sendMessage(new ComponentBuilder("- ")
                     .append(p.getName()).bold(true)
