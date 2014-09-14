@@ -101,14 +101,6 @@ public class Ban {
                     + "(NULL, '" + getJoueur() + "', '" + getAdminName() + "', '" + getUUID() + "', '" + getAdminUUID() + "' , '" + System.currentTimeMillis() + "', '" + getUntilTimestamp() + "', '" + getReason() + "', '', '', '1');");
         } catch (final SQLException ex) {
             System.out.println("SQL problem (exception) when add banned player to BDD : " + ex);
-        } finally {
-            try {
-                if (!Main.plugin.sql.getConnection().isClosed()) {
-                    Main.plugin.sql.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex);
-            }
         }
 
     }
@@ -127,14 +119,6 @@ public class Ban {
             remove();
         } catch (final SQLException ex) {
             System.out.println("SQL problem (exception) when remove banned player to BDD : " + ex);
-        } finally {
-            try {
-                if (!Main.plugin.sql.getConnection().isClosed()) {
-                    Main.plugin.sql.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         }
     }
 
