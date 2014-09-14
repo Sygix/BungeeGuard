@@ -28,7 +28,7 @@ public class BroadcastHandler extends PubSubBase {
             servers = new HashSet<>(Arrays.asList(args[0].split(";")));
         }
         ServerInfo SI;
-        String msg = BungeeGuardUtils.translateCodes(args[0]);
+        String msg = BungeeGuardUtils.translateCodes(args[1]);
         for (String server : servers) {
             SI = ProxyServer.getInstance().getServerInfo(server);
             if (SI == null)

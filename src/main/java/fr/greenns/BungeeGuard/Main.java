@@ -211,7 +211,6 @@ public class Main extends Plugin {
 
         BGListener = new BungeeGuardListener(this);
         lobbyUtils = new LobbyUtils(this);
-        sql.close();
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, BGListener);
 

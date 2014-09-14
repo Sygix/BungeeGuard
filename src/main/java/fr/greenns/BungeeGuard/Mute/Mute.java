@@ -97,16 +97,7 @@ public class Mute {
                     + "(NULL, '" + getPseudo() + "', '" + getAdminName() + "', '" + getUUID() + "', '" + getAdminUUID() + "' , '" + System.currentTimeMillis() + "', '" + getTime() + "', '" + getReason() + "', '', '', '1');");
         } catch (final SQLException ex) {
             System.out.println("SQL problem (exception) when add mute player to BDD : " + ex);
-        } finally {
-            try {
-                if (!Main.plugin.sql.getConnection().isClosed()) {
-                    Main.plugin.sql.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         }
-
     }
 
     public void removeFromBDD(String unbanReason, String unbanName) {
@@ -123,14 +114,6 @@ public class Mute {
             remove();
         } catch (final SQLException ex) {
             System.out.println("SQL problem (exception) when remove mute player to BDD : " + ex);
-        } finally {
-            try {
-                if (!Main.plugin.sql.getConnection().isClosed()) {
-                    Main.plugin.sql.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         }
     }
 
