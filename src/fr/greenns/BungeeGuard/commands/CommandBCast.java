@@ -36,7 +36,7 @@ public class CommandBCast extends Command {
             msg = BungeeGuardUtils.translateCodes(msg);
             List<String> serversList = new ArrayList<>();
 
-            for (Lobby server : Main.lobbys) {
+            for (Lobby server : plugin.lobbys) {
                 ServerInfo u = server.getServerInfo();
                 if (u != null)
                     serversList.add(u.getName());

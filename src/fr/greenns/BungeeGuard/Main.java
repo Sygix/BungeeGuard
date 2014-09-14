@@ -36,7 +36,7 @@ public class Main extends Plugin {
     public static Main plugin;
     public static List<Ban> bans = new ArrayList<>();
     public static List<Mute> mutes = new ArrayList<>();
-    public static List<Lobby> lobbys = new ArrayList<>();
+    public List<Lobby> lobbys = new ArrayList<>();
     public String motd;
     public MySQL sql;
     public Configuration config;
@@ -278,7 +278,7 @@ public class Main extends Plugin {
                         try {
                             if (error == null) tps = Double.parseDouble(result.getDescription());
                         } catch (NumberFormatException e) {
-                            tps = 20;
+                            tps = 12;
                         }
                         Lobby Lobby = new Lobby(serverInfo.getName(), players, tps, (error == null));
                         new_lobbys.add(Lobby);
