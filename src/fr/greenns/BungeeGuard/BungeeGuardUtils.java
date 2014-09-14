@@ -35,8 +35,10 @@ public class BungeeGuardUtils {
         Matcher m = timePattern.matcher(durationStr);
         int time = -1;
         while (m.find()) {
-            if (m.group() != null && !m.group().isEmpty() &&
-                    m.group(1) != null && !m.group(1).isEmpty() && m.group(2) != null && !m.group(2).isEmpty()) {
+            if (m.group() == null || m.group().isEmpty()) {
+                continue;
+            }
+            if (m.group(1) != null && !m.group(1).isEmpty() && m.group(2) != null && !m.group(2).isEmpty()) {
                 int number = Integer.parseInt(m.group(1));
                 String type = m.group(2);
                 switch (type) {

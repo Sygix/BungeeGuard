@@ -9,7 +9,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommandBan extends Command {
@@ -33,43 +32,11 @@ public class CommandBan extends Command {
         } else {
             boolean duration = false;
             long bannedUntilTime = -1;
+            long bannedTime = 0;
             if (args.length > 1) {
-                Matcher m = timePattern.matcher(args[1]);
-                long bannedTime = 0;
-                while (m.find()) {
-                    if (m.group() == null || m.group().isEmpty()) {
-                        continue;
-                    } else if (m.group(1) != null && !m.group(1).isEmpty() && m.group(2) != null && !m.group(2).isEmpty()) {
-                        int number = Integer.parseInt(m.group(1));
-                        String type = m.group(2);
-                        duration = true;
-
-                        switch (type) {
-                            case "y":
-                                bannedTime += number * 31536000000L;
-                                break;
-                            case "mo":
-                                bannedTime += number * 2592000000L;
-                                break;
-                            case "w":
-                                bannedTime += number * 604800000L;
-                                break;
-                            case "d":
-                                bannedTime += number * 86400000L;
-                                break;
-                            case "h":
-                                bannedTime += number * 3600000L;
-                                break;
-                            case "m":
-                                bannedTime += number * 60000L;
-                                break;
-                            case "s":
-                                bannedTime += number * 1000L;
-                                break;
-                        }
-                    }
-                }
-                bannedUntilTime = System.currentTimeMillis() + bannedTime;
+                bannedTime = BungeeGuardUtils.parseDuration(args[1]);
+                if (bannedTime > 0)
+                    duration = true;
             }
 
             int startArgForReason = (duration) ? 2 : 1;
@@ -86,7 +53,7 @@ public class CommandBan extends Command {
             BanType BanTypeVar;
             if (duration) {
                 BanTypeVar = (reason != null) ? BanType.NON_PERMANENT_W_REASON : BanType.NON_PERMANENT;
-                bannedUntilTime += (System.currentTimeMillis() - startTime);
+                bannedUntilTime = System.currentTimeMillis() + bannedTime + 1; // Une seconde de ban gratuite :D
             } else {
                 BanTypeVar = (reason != null) ? BanType.PERMANENT_W_REASON : BanType.PERMANENT;
                 bannedUntilTime = -1;

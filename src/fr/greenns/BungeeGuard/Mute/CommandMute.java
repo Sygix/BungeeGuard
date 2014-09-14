@@ -33,12 +33,12 @@ public class CommandMute extends Command {
             long muteTime = 0;
             if (args.length > 1) {
                 muteTime = BungeeGuardUtils.parseDuration(args[1]);
-                if (muteTime > 0)
+                if (muteTime <= 0)
                     duration = false;
             }
             if (muteTime > 604800000L) muteTime = 604800000L;
             if (!duration) muteTime = 604800000L;
-            long muteUntilTime = System.currentTimeMillis() + muteTime;
+            long muteUntilTime = System.currentTimeMillis() + muteTime + 1; // 1 seconde de mute gratuite !
 
             int startArgForReason = (duration) ? 2 : 1;
 
@@ -53,7 +53,6 @@ public class CommandMute extends Command {
             MuteType MuteTypeVar;
             MuteTypeVar = (reason != null) ? MuteType.NON_PERMANENT_W_REASON : MuteType.NON_PERMANENT;
             if (reason != null) reason = ChatColor.translateAlternateColorCodes('&', reason);
-            muteUntilTime += (System.currentTimeMillis() - startTime);
 
             String muteName = args[0];
 
