@@ -28,27 +28,17 @@ public class CommandSilence extends Command {
 
         if (args.length == 0) {
             String servName = p.getServer().getInfo().getName();
-            if (!plugin.silencedServers.contains(servName)) {
-                plugin.getMB().silenceServer(servName, true);
-                for (ProxiedPlayer playerdwa : ProxyServer.getInstance().getPlayers()) {
-                    if (playerdwa.getServer().getInfo().getName().equalsIgnoreCase(servName) &&
-                            playerdwa.hasPermission("bungeeguard.notify")) {
-                        playerdwa.sendMessage(new ComponentBuilder(plugin.utils.staffBroadcast + "Le chat du serveur ").color(ChatColor.GRAY)
-                                .append(servName).color(ChatColor.AQUA).append(" a été ").color(ChatColor.GRAY)
-                                .append("désactivé ").color(ChatColor.RED).append("!").color(ChatColor.GRAY).create());
-                    }
-                }
-            } else {
-                plugin.getMB().silenceServer(servName, false);
-                for (ProxiedPlayer playerdwa : ProxyServer.getInstance().getPlayers()) {
-                    if (playerdwa.getServer().getInfo().getName().equalsIgnoreCase(servName)
-                            && playerdwa.hasPermission("bungeeguard.notify")) {
-                        playerdwa.sendMessage(new ComponentBuilder(plugin.utils.staffBroadcast + "Le chat du serveur ").color(ChatColor.GRAY)
-                                .append(servName).color(ChatColor.AQUA).append(" a été ").color(ChatColor.GRAY)
-                                .append("réactivé ").color(ChatColor.GREEN).append("!").color(ChatColor.GRAY).create());
-                    }
+            boolean silenced = !plugin.silencedServers.contains(servName);
+            plugin.getMB().silenceServer(servName, silenced);
+            for (ProxiedPlayer playerdwa : ProxyServer.getInstance().getPlayers()) {
+                if (playerdwa.getServer().getInfo().getName().equalsIgnoreCase(servName) &&
+                        playerdwa.hasPermission("bungeeguard.notify")) {
+                    playerdwa.sendMessage(new ComponentBuilder(plugin.utils.staffBroadcast + "Le chat du serveur ").color(ChatColor.GRAY)
+                            .append(servName).color(ChatColor.AQUA).append(" a été ").color(ChatColor.GRAY)
+                            .append(silenced ? "désactivé " : "activé").color(silenced ? ChatColor.RED : ChatColor.GREEN).append("!").color(ChatColor.GRAY).create());
                 }
             }
+
         } else {
             plugin.utils.msgPluginCommand(sender);
         }
