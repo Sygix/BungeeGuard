@@ -1,11 +1,11 @@
-package fr.greenns.BungeeGuard.PubSub;
+package fr.greenns.BungeeGuard.MultiBungee.PubSub;
 
 import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 /**
- * Part of fr.greenns.BungeeGuard.PubSub
+ * Part of fr.greenns.BungeeGuard.MultiBungee.PubSub
  * Date: 30/08/2014
  * Time: 00:16
  * May be open-source & be sold (by PunKeel, of course !)

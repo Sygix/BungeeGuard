@@ -1,9 +1,9 @@
 package fr.greenns.BungeeGuard.commands;
 
 import fr.greenns.BungeeGuard.Main;
+import fr.greenns.BungeeGuard.MultiBungee.MultiBungee;
 import fr.greenns.BungeeGuard.Party.Party;
 import fr.greenns.BungeeGuard.Party.PartyManager;
-import fr.greenns.BungeeGuard.utils.MultiBungee;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;

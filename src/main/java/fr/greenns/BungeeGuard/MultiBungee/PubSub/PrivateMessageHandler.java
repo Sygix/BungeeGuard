@@ -1,4 +1,4 @@
-package fr.greenns.BungeeGuard.PubSub;
+package fr.greenns.BungeeGuard.MultiBungee.PubSub;
 
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;

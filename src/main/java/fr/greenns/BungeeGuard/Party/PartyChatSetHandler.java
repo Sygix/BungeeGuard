@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.Party;
 
 import fr.greenns.BungeeGuard.Main;
-import fr.greenns.BungeeGuard.PubSub.PubSubBase;
+import fr.greenns.BungeeGuard.MultiBungee.PubSub.PubSubBase;
 
 import java.util.UUID;
 

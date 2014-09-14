@@ -1,4 +1,4 @@
-package fr.greenns.BungeeGuard.PubSub;
+package fr.greenns.BungeeGuard.MultiBungee.PubSub;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
