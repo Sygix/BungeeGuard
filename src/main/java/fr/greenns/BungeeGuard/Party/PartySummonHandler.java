@@ -45,7 +45,9 @@ public class PartySummonHandler extends PubSubBase {
     }
 
     private void summon(ProxiedPlayer player, ServerInfo target) {
-        if (player.getServer() != null && !player.getServer().getInfo().equals(target)) {
+        if (player.getServer() != null
+                && !player.getServer().getInfo().equals(target)
+                && player.getServer().getInfo().getName().startsWith("lobby")) {
             player.connect(target);
             player.sendMessage(new TextComponent(ChatColor.GOLD + "Envoi sur le serveur " + target.getName() + " ..."));
         }
