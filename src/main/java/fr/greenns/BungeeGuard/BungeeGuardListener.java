@@ -88,7 +88,7 @@ public class BungeeGuardListener implements Listener {
                 }
                 e.getPlayer().disconnect(new ComponentBuilder(ChatColor.RED + "Nos services sont momentanément indisponibles" + '\n' + ChatColor.RED + "Veuillez réessayer dans quelques instants").create());
             }
-        } else {
+        } else if (!e.getTarget().getName().startsWith("lobby")) {
             final Party party = plugin.getPM().getPartyByPlayer(p);
             if (party != null && party.isOwner(p)) {
                 plugin.getMB().summonParty(party.getName(), e.getTarget().getName());
