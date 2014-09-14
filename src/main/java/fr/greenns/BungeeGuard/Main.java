@@ -237,6 +237,7 @@ public class Main extends Plugin {
         commandes.add(CommandIgnore.class);
         commandes.add(CommandBLoad.class);
         commandes.add(CommandParty.class);
+        commandes.add(CommandServer.class);
 
         for (Class<? extends Command> commande : commandes) {
             try {
