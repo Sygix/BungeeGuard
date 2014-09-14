@@ -1,4 +1,4 @@
-package fr.greenns.BungeeGuard.PubSub;
+package fr.greenns.BungeeGuard.MultiBungee.PubSub;
 
 import fr.greenns.BungeeGuard.Main;
 
@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Part of fr.greenns.BungeeGuard.PubSub (bungeeguard)
+ * Part of fr.greenns.BungeeGuard.MultiBungee.PubSub (bungeeguard)
  * Date: 10/09/2014
  * Time: 17:57
  * May be open-source & be sold (by mguerreiro, of course !)

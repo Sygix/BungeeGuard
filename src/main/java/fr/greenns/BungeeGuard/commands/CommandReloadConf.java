@@ -2,7 +2,7 @@ package fr.greenns.BungeeGuard.commands;
 
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
-import fr.greenns.BungeeGuard.PubSub.ReloadConfHandler;
+import fr.greenns.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;

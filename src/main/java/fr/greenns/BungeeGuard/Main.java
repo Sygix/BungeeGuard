@@ -8,14 +8,16 @@ import fr.greenns.BungeeGuard.Config.MysqlConfigAdapter;
 import fr.greenns.BungeeGuard.Kick.CommandKick;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import fr.greenns.BungeeGuard.Lobbies.LobbyUtils;
+import fr.greenns.BungeeGuard.MultiBungee.MultiBungee;
+import fr.greenns.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
+import fr.greenns.BungeeGuard.MultiBungee.PubSubListener;
+import fr.greenns.BungeeGuard.MultiBungee.RedisBungeeListener;
 import fr.greenns.BungeeGuard.Mute.CommandMute;
 import fr.greenns.BungeeGuard.Mute.CommandUnmute;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.Party.PartyManager;
-import fr.greenns.BungeeGuard.PubSub.ReloadConfHandler;
 import fr.greenns.BungeeGuard.SQL.MySQL;
 import fr.greenns.BungeeGuard.commands.*;
-import fr.greenns.BungeeGuard.utils.MultiBungee;
 import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
@@ -213,6 +215,8 @@ public class Main extends Plugin {
         lobbyUtils = new LobbyUtils(this);
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, BGListener);
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new RedisBungeeListener());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new PubSubListener(this));
 
         fetchParties();
         Set<Class<? extends Command>> commandes = new HashSet<>();

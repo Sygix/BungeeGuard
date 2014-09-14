@@ -1,9 +1,9 @@
-package fr.greenns.BungeeGuard.PubSub;
+package fr.greenns.BungeeGuard.MultiBungee.PubSub;
 
 import fr.greenns.BungeeGuard.Main;
 
 /**
- * Part of fr.greenns.BungeeGuard.PubSub (bungeeguard)
+ * Part of fr.greenns.BungeeGuard.MultiBungee.PubSub (bungeeguard)
  * Date: 14/09/2014
  * Time: 14:26
  * May be open-source & be sold (by mguerreiro, of course !)

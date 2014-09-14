@@ -2,7 +2,7 @@ package fr.greenns.BungeeGuard.Party;
 
 import com.google.gson.reflect.TypeToken;
 import fr.greenns.BungeeGuard.Main;
-import fr.greenns.BungeeGuard.PubSub.PubSubBase;
+import fr.greenns.BungeeGuard.MultiBungee.PubSub.PubSubBase;
 
 import java.lang.reflect.Type;
 import java.util.Map;

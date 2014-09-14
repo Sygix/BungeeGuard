@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.Party;
 
 import fr.greenns.BungeeGuard.Main;
-import fr.greenns.BungeeGuard.PubSub.PubSubBase;
+import fr.greenns.BungeeGuard.MultiBungee.PubSub.PubSubBase;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;

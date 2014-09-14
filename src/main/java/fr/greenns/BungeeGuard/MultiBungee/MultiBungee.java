@@ -1,10 +1,15 @@
-package fr.greenns.BungeeGuard.utils;
+package fr.greenns.BungeeGuard.MultiBungee;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Multimap;
+import com.google.common.primitives.Ints;
 import com.imaginarycode.minecraft.redisbungee.RedisBungee;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
+import com.imaginarycode.minecraft.redisbungee.internal.jedis.Jedis;
+import com.imaginarycode.minecraft.redisbungee.internal.jedis.JedisPool;
+import com.imaginarycode.minecraft.redisbungee.internal.jedis.exceptions.JedisConnectionException;
 import fr.greenns.BungeeGuard.Party.Party;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -24,9 +29,11 @@ public class MultiBungee {
     public static final String SEPARATOR = "|\uFAE3|";
     public static final String REGEX_SEPARATOR = "\\|\uFAE3\\|";
     RedisBungeeAPI api;
+    RedisBungee redisbungee;
 
     public MultiBungee() {
         api = RedisBungee.getApi();
+        redisbungee = (RedisBungee) ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee");
     }
 
     public final int getPlayerCount() {
@@ -424,5 +431,22 @@ public class MultiBungee {
 
     public void silenceServer(String serverName, boolean state) {
         sendChannelMessage("silenceServer", serverName, "" + state);
+    }
+
+    public int getPlayersOnProxy(String serverName) {
+        JedisPool pool = redisbungee.getPool();
+        if (pool != null) {
+            Jedis rsc = pool.getResource();
+            try {
+                return Ints.checkedCast(rsc.scard("proxy:" + serverName + ":usersOnline"));
+            } catch (JedisConnectionException e) {
+                // Redis server has disappeared!
+                pool.returnBrokenResource(rsc);
+                throw new RuntimeException("Unable to get total player count", e);
+            } finally {
+                pool.returnResource(rsc);
+            }
+        }
+        return -1;
     }
 }
