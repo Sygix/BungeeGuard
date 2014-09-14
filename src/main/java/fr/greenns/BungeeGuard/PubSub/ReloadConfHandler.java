@@ -2,9 +2,9 @@ package fr.greenns.BungeeGuard.PubSub;
 
 import fr.greenns.BungeeGuard.Main;
 import gnu.trove.map.TMap;
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyConfig;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.conf.Configuration;
 import net.md_5.bungee.util.CaseInsensitiveMap;
 
 import java.net.InetSocketAddress;
@@ -24,23 +24,24 @@ public class ReloadConfHandler extends PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
         plugin.getLogger().info("Saving current configuration");
-        Configuration oldConfig = BungeeCord.getInstance().config;
+        ProxyConfig oldConfig = plugin.getProxy().getConfig();
         TMap<String, ServerInfo> oldServerInfos = new CaseInsensitiveMap<>();
         oldServerInfos.putAll(oldConfig.getServers());
 
         plugin.getLogger().info("Checking the new configuration");
-        BungeeCord.getInstance().config.getServers().clear();
+        plugin.getProxy().getConfig().getServers().clear();
         try {
-            BungeeCord.getInstance().config.load();
+            ProxyConfig c = ProxyServer.getInstance().getConfig();
+            c.getClass().getMethod("load").invoke(c);
         } catch (Throwable t) {
             t.printStackTrace();
             plugin.getLogger().info("Failed to reload this config, restoring old servers map, please fix it before reloading again");
-            BungeeCord.getInstance().config.getServers().putAll(oldServerInfos);
+            ProxyServer.getInstance().getConfig().getServers().putAll(oldServerInfos);
             return;
         }
 
-        Configuration newConfig = BungeeCord.getInstance().config;
-        TMap<String, ServerInfo> newServerInfos = newConfig.getServers();
+        ProxyConfig newConfig = ProxyServer.getInstance().getConfig();
+        Map<String, ServerInfo> newServerInfos = newConfig.getServers();
 
         plugin.getLogger().info("Loading the new configuration");
 

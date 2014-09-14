@@ -8,11 +8,10 @@ import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.Mute.MuteType;
 import fr.greenns.BungeeGuard.Party.*;
 import fr.greenns.BungeeGuard.PubSub.*;
-import fr.greenns.BungeeGuard.utils.ComponentManager;
 import fr.greenns.BungeeGuard.utils.MultiBungee;
 import fr.greenns.BungeeGuard.utils.Permissions;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -87,8 +86,8 @@ public class BungeeGuardListener implements Listener {
                 System.out.println("Lobby selectionné: " + l.getName());
 
             } else {
-                if (BungeeCord.getInstance().getServerInfo("limbo").getPlayers().size() < 70) {
-                    e.setTarget(BungeeCord.getInstance().getServerInfo("limbo"));
+                if (ProxyServer.getInstance().getServerInfo("limbo").getPlayers().size() < 70) {
+                    e.setTarget(ProxyServer.getInstance().getServerInfo("limbo"));
                 }
                 e.getPlayer().disconnect(new ComponentBuilder(ChatColor.RED + "Nos services sont momentanément indisponibles" + '\n' + ChatColor.RED + "Veuillez réessayer dans quelques instants").create());
             }
@@ -104,7 +103,7 @@ public class BungeeGuardListener implements Listener {
     public void onServerConnected(ServerConnectedEvent event) {
         final ProxiedPlayer p = event.getPlayer();
         if (plugin.gtp.containsKey(p.getUniqueId())) {
-            BungeeCord.getInstance().getScheduler().schedule(plugin, new Runnable() {
+            ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
                 @Override
                 public void run() {
                     p.chat("/tp " + plugin.gtp.get(p.getUniqueId()));
@@ -140,7 +139,7 @@ public class BungeeGuardListener implements Listener {
                     return;
                 }
                 e.setCancelled(true);
-                p.sendMessage(ComponentManager.generate(ChatColor.RED + "Le chat est désactivé temporairement !"));
+                p.sendMessage(new TextComponent(ChatColor.RED + "Le chat est désactivé temporairement !"));
             }
             if ((p.hasPermission("bungeeguard.staffchat")) && (e.getMessage().startsWith("!!"))) {
                 e.setCancelled(true);
@@ -221,16 +220,16 @@ public class BungeeGuardListener implements Listener {
             }
 
             Lobby l = plugin.lobbyUtils.bestLobbyTarget();
-            ServerInfo server = BungeeCord.getInstance().getServerInfo("limbo");
+            ServerInfo server = ProxyServer.getInstance().getServerInfo("limbo");
             if (l != null) {
                 server = l.getServerInfo();
             }
 
-            BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + event.getState().toString() + " - " + reason + ")"));
-            if (server.getName().equals("limbo") && BungeeCord.getInstance().getServerInfo("limbo").getPlayers().size() > 70) {
-                BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " déconnecté "));
+            ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + event.getState().toString() + " - " + reason + ")"));
+            if (server.getName().equals("limbo") && ProxyServer.getInstance().getServerInfo("limbo").getPlayers().size() > 70) {
+                ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " déconnecté "));
             } else {
-                BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " Redirigé vers " + server.getName().toUpperCase()));
+                ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " Redirigé vers " + server.getName().toUpperCase()));
                 p.setReconnectServer(server);
                 event.setCancelled(true);
                 event.setCancelServer(server);

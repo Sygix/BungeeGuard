@@ -1,9 +1,9 @@
 package fr.greenns.BungeeGuard.commands;
 
 import fr.greenns.BungeeGuard.Main;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -32,7 +32,7 @@ public class CommandLobby extends Command {
             if (p.getServer().getInfo().getName().equalsIgnoreCase("lobby")) {
                 p.sendMessage(new ComponentBuilder("Vous etes déjà connecté a ce serveur !").color(ChatColor.RED).create());
             } else {
-                p.connect(BungeeCord.getInstance().getServerInfo("hub"));
+                p.connect(ProxyServer.getInstance().getServerInfo("hub"));
                 p.sendMessage(new ComponentBuilder("Connexion vers le lobby . . .").color(ChatColor.GREEN).create());
             }
         }

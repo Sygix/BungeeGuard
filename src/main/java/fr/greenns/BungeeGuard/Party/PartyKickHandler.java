@@ -2,8 +2,9 @@ package fr.greenns.BungeeGuard.Party;
 
 import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.PubSub.PubSubBase;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.UUID;
@@ -36,10 +37,10 @@ public class PartyKickHandler extends PubSubBase {
         else {
             ProxiedPlayer pp;
             for (UUID uuid : p.getMembers()) {
-                pp = BungeeCord.getInstance().getPlayer(uuid);
+                pp = ProxyServer.getInstance().getPlayer(uuid);
                 if (pp == null)
                     continue;
-                pp.sendMessage(ChatColor.RED + "- " + playerName + " a été kické de la Party");
+                pp.sendMessage(new TextComponent(ChatColor.RED + "- " + playerName + " a été kické de la Party"));
             }
         }
         p.removeMember(u);

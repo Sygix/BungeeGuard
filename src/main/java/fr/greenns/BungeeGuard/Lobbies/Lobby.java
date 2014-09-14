@@ -1,6 +1,6 @@
 package fr.greenns.BungeeGuard.Lobbies;
 
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 
 public class Lobby {
@@ -42,6 +42,6 @@ public class Lobby {
     }
 
     public ServerInfo getServerInfo() {
-        return BungeeCord.getInstance().getServerInfo(this.name);
+        return ProxyServer.getInstance().getServerInfo(this.name);
     }
 }

@@ -12,8 +12,8 @@ import com.imaginarycode.minecraft.redisbungee.internal.jedis.Jedis;
 import com.imaginarycode.minecraft.redisbungee.internal.jedis.JedisPool;
 import com.imaginarycode.minecraft.redisbungee.internal.jedis.exceptions.JedisConnectionException;
 import fr.greenns.BungeeGuard.Main;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 
 public class CommandBLoad extends Command {
@@ -26,7 +26,7 @@ public class CommandBLoad extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        RedisBungee x = (RedisBungee) BungeeCord.getInstance().getPluginManager().getPlugin("RedisBungee");
+        RedisBungee x = (RedisBungee) ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee");
         JedisPool pool = x.getPool();
         long c;
         if (pool != null) {

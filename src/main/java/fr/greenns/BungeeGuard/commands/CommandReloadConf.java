@@ -3,9 +3,9 @@ package fr.greenns.BungeeGuard.commands;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.PubSub.ReloadConfHandler;
-import fr.greenns.BungeeGuard.utils.ComponentManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 
 /**
@@ -29,11 +29,11 @@ public class CommandReloadConf extends Command {
     public void execute(CommandSender sender, String[] args) {
 
         if (args.length != 0) {
-            sender.sendMessage(ComponentManager.generate(ChatColor.GREEN + "Usage: /b:rl "));
+            sender.sendMessage(new TextComponent(ChatColor.GREEN + "Usage: /b:rl "));
             return;
         }
         new ReloadConfHandler(plugin).handle();
-        sender.sendMessage(ComponentManager.generate(ChatColor.RED + "Reload : en cours …"));
+        sender.sendMessage(new TextComponent(ChatColor.RED + "Reload : en cours …"));
         BungeeGuardUtils.getMB().notifyStaff(ChatColor.DARK_RED + "/b:rl par " + sender.getName());
     }
 }

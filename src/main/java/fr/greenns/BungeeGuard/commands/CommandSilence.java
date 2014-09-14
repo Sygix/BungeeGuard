@@ -1,9 +1,9 @@
 package fr.greenns.BungeeGuard.commands;
 
 import fr.greenns.BungeeGuard.Main;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -30,7 +30,7 @@ public class CommandSilence extends Command {
             String servName = p.getServer().getInfo().getName();
             if (!plugin.silencedServers.contains(servName)) {
                 plugin.getMB().silenceServer(servName, true);
-                for (ProxiedPlayer playerdwa : BungeeCord.getInstance().getPlayers()) {
+                for (ProxiedPlayer playerdwa : ProxyServer.getInstance().getPlayers()) {
                     if (playerdwa.getServer().getInfo().getName().equalsIgnoreCase(servName) &&
                             playerdwa.hasPermission("bungeeguard.notify")) {
                         playerdwa.sendMessage(new ComponentBuilder(plugin.utils.staffBroadcast + "Le chat du serveur ").color(ChatColor.GRAY)
@@ -40,7 +40,7 @@ public class CommandSilence extends Command {
                 }
             } else {
                 plugin.getMB().silenceServer(servName, false);
-                for (ProxiedPlayer playerdwa : BungeeCord.getInstance().getPlayers()) {
+                for (ProxiedPlayer playerdwa : ProxyServer.getInstance().getPlayers()) {
                     if (playerdwa.getServer().getInfo().getName().equalsIgnoreCase(servName)
                             && playerdwa.hasPermission("bungeeguard.notify")) {
                         playerdwa.sendMessage(new ComponentBuilder(plugin.utils.staffBroadcast + "Le chat du serveur ").color(ChatColor.GRAY)

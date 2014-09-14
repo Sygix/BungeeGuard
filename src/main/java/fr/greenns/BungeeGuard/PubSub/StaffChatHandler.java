@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.PubSub;
 
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -20,7 +20,7 @@ public class StaffChatHandler extends PubSubBase {
         String senderName = args[1];
         String message = args[2];
 
-        for (ProxiedPlayer player : BungeeCord.getInstance().getPlayers()) {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (player.hasPermission("bungeeguard.staffchat")) {
                 player.sendMessage(new TextComponent(ChatColor.RED + "[" + serverName + "] " + senderName + ": " + message));
             }
