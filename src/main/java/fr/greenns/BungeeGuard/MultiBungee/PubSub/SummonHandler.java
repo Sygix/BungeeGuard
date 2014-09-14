@@ -43,7 +43,8 @@ public class SummonHandler extends PubSubBase {
     private void summon(ProxiedPlayer player, ServerInfo target, String senderName) {
         if (player.getServer() != null && !player.getServer().getInfo().equals(target)) {
             player.connect(target);
-            player.sendMessage(new TextComponent(ChatColor.GOLD + "Summoned to " + target.getName() + " by " + senderName));
+            if (!senderName.isEmpty())
+                player.sendMessage(new TextComponent(ChatColor.GOLD + "Summoned to " + target.getName() + " by " + senderName));
         }
     }
 }

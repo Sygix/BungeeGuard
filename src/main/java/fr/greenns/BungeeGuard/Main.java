@@ -88,6 +88,7 @@ public class Main extends Plugin {
             System.out.println("BungeeGuard - Table BungeeGuard_Config créée !");
         }
 
+
         if (this.sql.checkConnection()) {
             System.out.println("BungeeGuard - Connexion BDD réussie !");
         } else {
@@ -112,6 +113,7 @@ public class Main extends Plugin {
 
     @Override
     public void onEnable() {
+
         MB = new MultiBungee();
 
         MB.registerPubSubChannels("ban", "unban");
@@ -120,7 +122,6 @@ public class Main extends Plugin {
         MB.registerPubSubChannels("staffChat", "notifyStaff");
         MB.registerPubSubChannels("message", "privateMessage", "ignore", "broadcast");
         MB.registerPubSubChannels("reloadConf", "summon");
-
         MB.registerPubSubChannels("setPartyPublique", "inviteParty", "addPartyMember", "playerLeaveParty", "setPartyChat",
                 "setPartyOwner", "kickFromParty", "summonParty", "partyChat", "createParty");
         MB.registerPubSubChannels("@" + MB.getServerId() + "/partyRequest", "@" + MB.getServerId() + "/partyReply");
@@ -215,7 +216,10 @@ public class Main extends Plugin {
         lobbyUtils = new LobbyUtils(this);
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, BGListener);
+
         ProxyServer.getInstance().getPluginManager().registerListener(this, new RedisBungeeListener());
+
+        getProxy().registerChannel("UHCGames");
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PubSubListener(this));
 
         fetchParties();
