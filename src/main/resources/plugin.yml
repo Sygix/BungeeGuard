@@ -1,0 +1,5 @@
+name: BungeeGuard
+main: fr.greenns.BungeeGuard.Main
+author: Greenns,PunKeel
+version: 0.3
+depend: [RedisBungee]
