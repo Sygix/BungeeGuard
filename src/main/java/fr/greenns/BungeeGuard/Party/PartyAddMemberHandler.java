@@ -2,6 +2,10 @@ package fr.greenns.BungeeGuard.Party;
 
 import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.MultiBungee.PubSub.PubSubBase;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.UUID;
 
@@ -22,6 +26,17 @@ public class PartyAddMemberHandler extends PubSubBase {
     public void handle(String channel, String message, String[] args) {
         String partyName = args[0];
         UUID u = UUID.fromString(args[1]);
-        plugin.getPM().getParty(partyName).addMember(u);
+        Party p = plugin.getPM().getParty(partyName);
+        if (p == null)
+            return;
+        p.addMember(u);
+
+        ProxiedPlayer pp;
+        for (UUID uuid : p.getMembers()) {
+            pp = ProxyServer.getInstance().getPlayer(uuid);
+            if (pp == null)
+                continue;
+            pp.sendMessage(new TextComponent(ChatColor.GREEN + "+ " + plugin.getMB().getNameFromUuid(u) + ChatColor.RESET + " a rejoint la Party"));
+        }
     }
 }
