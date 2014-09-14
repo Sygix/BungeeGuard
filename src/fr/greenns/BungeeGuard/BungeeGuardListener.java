@@ -146,6 +146,7 @@ public class BungeeGuardListener implements Listener {
                 e.setCancelled(true);
                 plugin.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), e.getMessage().substring(2));
                 e.setMessage("");
+
                 return;
             }
             Party party = plugin.getPM().getPartyByPlayer(p);
