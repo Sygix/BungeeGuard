@@ -2,8 +2,8 @@ package fr.greenns.BungeeGuard.PubSub;
 
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -29,7 +29,7 @@ public class PrivateMessageHandler extends PubSubBase {
         UUID receiver = UUID.fromString(args[1]);
         String contenu = args[2];
 
-        ProxiedPlayer p = BungeeCord.getInstance().getPlayer(receiver);
+        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(receiver);
 
         if (p != null) {
             p.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append(sender).color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + contenu).create());
@@ -40,7 +40,7 @@ public class PrivateMessageHandler extends PubSubBase {
         ProxiedPlayer admin;
         for (UUID uuid : plugin.spy) {
             try {
-                admin = BungeeCord.getInstance().getPlayer(uuid);
+                admin = ProxyServer.getInstance().getPlayer(uuid);
                 admin.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("] ").color(ChatColor.GRAY).append(sender).append(": /msg ").append(BungeeGuardUtils.getMB().getNameFromUuid(receiver) + " " + contenu).create());
             } catch (Exception ignored) {
             }

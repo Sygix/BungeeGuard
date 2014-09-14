@@ -2,8 +2,8 @@ package fr.greenns.BungeeGuard.Party;
 
 import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.PubSub.PubSubBase;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -32,7 +32,7 @@ public class PartyInviteHandler extends PubSubBase {
         Party party = plugin.getPM().getParty(partyName);
         party.addInvitation(u);
 
-        ProxiedPlayer p = BungeeCord.getInstance().getPlayer(u);
+        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(u);
         if (p == null)
             return;
 

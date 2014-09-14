@@ -4,11 +4,11 @@ import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.Mute.MuteType;
-import fr.greenns.BungeeGuard.utils.ComponentManager;
 import fr.greenns.BungeeGuard.utils.Permissions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -66,7 +66,7 @@ public class CommandMsg extends Command {
                 return;
             }
             if (args.length <= 1) {
-                p.sendMessage(ComponentManager.generate(ChatColor.RED + "Votre message ne peut pas être vide !"));
+                p.sendMessage(new TextComponent(ChatColor.RED + "Votre message ne peut pas être vide !"));
                 return;
             }
             UUID receiverUUID = BungeeGuardUtils.getMB().getUuidFromName(args[0]);

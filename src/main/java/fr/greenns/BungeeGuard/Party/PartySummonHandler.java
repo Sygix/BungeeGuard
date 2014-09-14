@@ -2,9 +2,9 @@ package fr.greenns.BungeeGuard.Party;
 
 import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.PubSub.PubSubBase;
-import fr.greenns.BungeeGuard.utils.ComponentManager;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -27,7 +27,7 @@ public class PartySummonHandler extends PubSubBase {
     public void handle(String channel, String message, String[] args) {
         String partyName = args[0];
         String serverName = args[1];
-        ServerInfo SI = BungeeCord.getInstance().getServerInfo(serverName);
+        ServerInfo SI = ProxyServer.getInstance().getServerInfo(serverName);
         Party p = plugin.getPM().getParty(partyName);
         if (SI == null)
             return;
@@ -35,7 +35,7 @@ public class PartySummonHandler extends PubSubBase {
             return;
         ProxiedPlayer pp;
         for (UUID uuid : p.getMembers()) {
-            pp = BungeeCord.getInstance().getPlayer(uuid);
+            pp = ProxyServer.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
             if (p.isOwner(pp))
@@ -47,7 +47,7 @@ public class PartySummonHandler extends PubSubBase {
     private void summon(ProxiedPlayer player, ServerInfo target) {
         if (player.getServer() != null && !player.getServer().getInfo().equals(target)) {
             player.connect(target);
-            player.sendMessage(ComponentManager.generate(ChatColor.GOLD + "Envoi sur le serveur " + target.getName() + " ..."));
+            player.sendMessage(new TextComponent(ChatColor.GOLD + "Envoi sur le serveur " + target.getName() + " ..."));
         }
     }
 }

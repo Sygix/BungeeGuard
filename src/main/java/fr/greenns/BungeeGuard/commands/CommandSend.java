@@ -6,6 +6,7 @@ import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -31,12 +32,12 @@ public class CommandSend extends Command implements TabExecutor {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length != 2) {
-            sender.sendMessage(ChatColor.RED + "Not enough arguments, usage: /send <player|all ou *|current ou @> <target>");
+            sender.sendMessage(new TextComponent(ChatColor.RED + "Not enough arguments, usage: /send <player|all ou *|current ou @> <target>"));
             return;
         }
         ServerInfo target = ProxyServer.getInstance().getServerInfo(args[1]);
         if (target == null) {
-            sender.sendMessage(ProxyServer.getInstance().getTranslation("no_server"));
+            sender.sendMessage(new TextComponent(ProxyServer.getInstance().getTranslation("no_server")));
             return;
         }
 
@@ -44,19 +45,19 @@ public class CommandSend extends Command implements TabExecutor {
             summon("all", target.getName(), sender.getName());
         } else if (args[0].equalsIgnoreCase("current") || args[0].equalsIgnoreCase("@")) {
             if (!(sender instanceof ProxiedPlayer)) {
-                sender.sendMessage(ChatColor.RED + "Only in game players can use this command");
+                sender.sendMessage(new TextComponent(ChatColor.RED + "Only in game players can use this command"));
                 return;
             }
             summon(((ProxiedPlayer) sender).getServer().getInfo().getName(), target.getName(), sender.getName());
         } else {
             UUID u = BungeeGuardUtils.getMB().getUuidFromName(args[0]);
             if (u == null || !BungeeGuardUtils.getMB().isPlayerOnline(u)) {
-                sender.sendMessage(ChatColor.RED + "That player is not online");
+                sender.sendMessage(new TextComponent(ChatColor.RED + "That player is not online"));
                 return;
             }
             summon(args[0], target.getName(), sender.getName());
         }
-        sender.sendMessage(ChatColor.GREEN + "Successfully summoned player(s)");
+        sender.sendMessage(new TextComponent(ChatColor.GREEN + "Successfully summoned player(s)"));
     }
 
     private void summon(String player, String target, String sender) {

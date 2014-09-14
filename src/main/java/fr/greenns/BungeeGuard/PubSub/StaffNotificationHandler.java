@@ -1,7 +1,7 @@
 package fr.greenns.BungeeGuard.PubSub;
 
 import fr.greenns.BungeeGuard.Main;
-import fr.greenns.BungeeGuard.utils.ComponentManager;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 /**
@@ -23,7 +23,7 @@ public class StaffNotificationHandler extends PubSubBase {
     public void handle(String channel, String message, String[] args) {
         for (ProxiedPlayer p : plugin.getProxy().getPlayers()) {
             if (p.hasPermission("bungeeguard.notify")) {
-                p.sendMessage(ComponentManager.generate(message));
+                p.sendMessage(new TextComponent(message));
             }
         }
     }

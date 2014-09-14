@@ -16,7 +16,6 @@ import fr.greenns.BungeeGuard.PubSub.ReloadConfHandler;
 import fr.greenns.BungeeGuard.SQL.MySQL;
 import fr.greenns.BungeeGuard.commands.*;
 import fr.greenns.BungeeGuard.utils.MultiBungee;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
@@ -69,7 +68,7 @@ public class Main extends Plugin {
     public void onLoad() {
         utils = new BungeeGuardUtils(this);
         System.out.println("Welcome to MultiBungee");
-        sql = new MySQL(getLogger(), "", "vm-db-01.uhcwork.net", "3306", "plugin", "minecraft", "tn8E6VhU9P3m");
+        sql = new MySQL(getLogger(), "", "vm-db-01.uhcwork.net", "3306", "plugin", "bungeecord", "ozXsw4FUKoR8jh");
 
         sql.open();
 
@@ -92,7 +91,7 @@ public class Main extends Plugin {
         } else {
             System.out.println("BungeeGuard - Connexion BDD §cIMPOSSIBLE  §r!!!!!");
         }
-        BungeeCord.getInstance().setConfigurationAdapter(new MysqlConfigAdapter(this));
+        ProxyServer.getInstance().setConfigurationAdapter(new MysqlConfigAdapter(this));
     }
 
     private void fetchParties() {
@@ -267,7 +266,7 @@ public class Main extends Plugin {
     public void updateLobbysStatus() {
         final List<Lobby> new_lobbys = new ArrayList<>();
 
-        for (final ServerInfo serverInfo : BungeeCord.getInstance().getServers().values()) {
+        for (final ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
             if (serverInfo.getName().contains("lobby")) {
                 serverInfo.ping(new Callback<ServerPing>() {
                     @Override
@@ -292,7 +291,7 @@ public class Main extends Plugin {
     @Override
     public void onDisable() {
         sql.close();
-        BungeeCord.getInstance().getScheduler().cancel(this);
+        ProxyServer.getInstance().getScheduler().cancel(this);
     }
 
     public PartyManager getPM() {
