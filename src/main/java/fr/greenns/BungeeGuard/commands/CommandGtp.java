@@ -32,7 +32,7 @@ public class CommandGtp extends Command {
         MultiBungee MB = BungeeGuardUtils.getMB();
         if (MB.isPlayerOnline(args[0])) {
             ServerInfo server = MB.getServerFor(args[0]);
-            sender.sendMessage(new TextComponent(ChatColor.GREEN + "Téléportation vers " + ChatColor.BLUE + args[0] + ChatColor.GREEN + " dans le monde " + ChatColor.GOLD + server.getName() + ChatColor.GREEN + "..."));
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Téléportation vers " + ChatColor.BLUE + args[0] + ChatColor.GREEN + " dans le monde " + ChatColor.GOLD + server.getName() + ChatColor.GREEN + "..."));
             if (server.getName().equalsIgnoreCase(((ProxiedPlayer) sender).getServer().getInfo().getName())) {
                 p.chat("/tp " + args[0]);
             } else {
@@ -40,7 +40,7 @@ public class CommandGtp extends Command {
                 p.connect(server);
             }
         } else {
-            sender.sendMessage(new TextComponent(ChatColor.RED + "Erreur: Ce joueur n'est pas en ligne"));
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Erreur: Ce joueur n'est pas en ligne"));
         }
 	}
 }

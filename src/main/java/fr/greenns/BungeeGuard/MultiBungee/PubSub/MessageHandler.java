@@ -16,6 +16,6 @@ public class MessageHandler extends PubSubBase {
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(args[0]);
         if (p == null)
             return;
-        p.sendMessage(new TextComponent(args[1]));
+        p.sendMessage(TextComponent.fromLegacyText(args[1]));
     }
 }
