@@ -18,11 +18,10 @@ public class StaffChatHandler extends PubSubBase {
 
         String serverName = args[0];
         String senderName = args[1];
-        String message = args[2];
-
+        String message = ChatColor.translateAlternateColorCodes('&', args[2]);
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (player.hasPermission("bungeeguard.staffchat")) {
-                player.sendMessage(new TextComponent(ChatColor.RED + "[" + serverName + "] " + senderName + ": " + message));
+                player.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "[" + serverName + "] " + senderName + ": " + message));
             }
         }
     }

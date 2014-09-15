@@ -37,23 +37,23 @@ public class CommandIgnore extends Command {
         ProxiedPlayer p = (ProxiedPlayer) sender;
         MultiBungee MB = BungeeGuardUtils.getMB();
         if (args.length != 1) {
-            p.sendMessage(new TextComponent(ChatColor.RED + "Utilisation: /ignore <joueur>"));
+            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Utilisation: /ignore <joueur>"));
             return;
         }
         UUID toIgnore = MB.getUuidFromName(args[0]);
         if (MB.isPlayerOnline(toIgnore)) {
-            p.sendMessage(new TextComponent(ChatColor.RED + "Ce joueur n'est pas en ligne."));
+            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne."));
             return;
         }
         if (Permissions.hasPerm(args[0], "bungeeguard.ignore.ignore")) {
-            p.sendMessage(new TextComponent(ChatColor.RED + "Vous n'avez pas la permission d'ignorer ce joueur."));
+            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous n'avez pas la permission d'ignorer ce joueur."));
             return;
         }
         if (plugin.ignore.containsKey(p.getUniqueId()) && plugin.ignore.get(p.getUniqueId()).contains(toIgnore)) {
-            p.sendMessage(new TextComponent(ChatColor.GRAY + "Vous n'ignorez plus " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
+            p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous n'ignorez plus " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
             BungeeGuardUtils.getMB().ignorePlayer(p.getUniqueId(), '-', toIgnore);
         } else {
-            p.sendMessage(new TextComponent(ChatColor.GRAY + "Vous ignorez maintenant " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
+            p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous ignorez maintenant " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
             BungeeGuardUtils.getMB().ignorePlayer(p.getUniqueId(), '+', toIgnore);
         }
     }

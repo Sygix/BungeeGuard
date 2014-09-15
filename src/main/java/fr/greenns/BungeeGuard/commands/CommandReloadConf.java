@@ -33,7 +33,7 @@ public class CommandReloadConf extends Command {
             return;
         }
         new ReloadConfHandler(plugin).handle();
-        sender.sendMessage(new TextComponent(ChatColor.RED + "Reload : en cours …"));
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Reload : en cours …"));
         BungeeGuardUtils.getMB().notifyStaff(ChatColor.DARK_RED + "/b:rl par " + sender.getName());
     }
 }
