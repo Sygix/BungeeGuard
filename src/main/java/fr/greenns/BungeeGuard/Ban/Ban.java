@@ -106,20 +106,12 @@ public class Ban {
     }
 
     public void removeFromBDD(String unbanReason, String unbanName) {
-        try {
-            if (Main.plugin.sql.getConnection().isClosed()) {
-                Main.plugin.sql.open();
-            }
-
-            if (Main.plugin.sql.getConnection() == null) {
-                System.out.println("[MYSQL] Connection error ...");
-            }
-
-            Main.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='" + unbanReason + "', unbanName='" + unbanName + "' WHERE uuidBanned='" + getUUID() + "' AND status='1'");
-            remove();
-        } catch (final SQLException ex) {
-            System.out.println("SQL problem (exception) when remove banned player to BDD : " + ex);
+        if (Main.plugin.sql.getConnection() == null) {
+            System.out.println("[MYSQL] Connection error ...");
         }
+
+        Main.plugin.sql.query("UPDATE `BungeeGuard_Ban` SET status='0', unbanReason='" + unbanReason + "', unbanName='" + unbanName + "' WHERE uuidBanned='" + getUUID() + "' AND status='1'");
+        remove();
     }
 
     public void remove() {
