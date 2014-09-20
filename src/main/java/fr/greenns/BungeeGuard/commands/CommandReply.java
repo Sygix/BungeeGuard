@@ -1,12 +1,15 @@
 package fr.greenns.BungeeGuard.commands;
 
+import com.google.common.collect.ObjectArrays;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
 import fr.greenns.BungeeGuard.Mute.Mute;
 import fr.greenns.BungeeGuard.Mute.MuteType;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -72,10 +75,14 @@ public class CommandReply extends Command {
             return;
         }
 
-        if (p.hasPermission("bungeeguard.colormsg"))
-            message = ChatColor.translateAlternateColorCodes('&', message);
+        BaseComponent[] contenu = new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(destinataire).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" ").create();
 
-        p.sendMessage(new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(destinataire).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" " + message).create());
+        if (p.hasPermission("bungeeguard.colormsg"))
+            contenu = ObjectArrays.concat(contenu, TextComponent.fromLegacyText(message), BaseComponent.class);
+        else
+            contenu = ObjectArrays.concat(contenu, new TextComponent(message));
+
+        p.sendMessage(contenu);
         plugin.reply.put(p.getUniqueId(), destinataire);
         BungeeGuardUtils.getMB().sendPrivateMessage(p.getName(), receiverUUID, message);
     }
