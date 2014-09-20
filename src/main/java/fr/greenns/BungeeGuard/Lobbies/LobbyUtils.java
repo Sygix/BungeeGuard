@@ -19,7 +19,7 @@ public class LobbyUtils {
     };
     Function<Lobby, Double> getScoreFunction = new Function<Lobby, Double>() {
         public Double apply(Lobby lobby) {
-            double score = 20 * (lobby.getMaxPlayers() - lobby.getOnlinePlayers()) + (20 - lobby.getTps());
+            double score = (lobby.getMaxPlayers() - lobby.getOnlinePlayers()) * lobby.getTps();
             System.out.println(lobby);
             System.out.println(lobby.getName() + ": score: " + score);
             return score;
