@@ -41,7 +41,7 @@ public class CommandIgnore extends Command {
             return;
         }
         UUID toIgnore = MB.getUuidFromName(args[0]);
-        if (MB.isPlayerOnline(toIgnore)) {
+        if (!MB.isPlayerOnline(toIgnore)) {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne."));
             return;
         }
