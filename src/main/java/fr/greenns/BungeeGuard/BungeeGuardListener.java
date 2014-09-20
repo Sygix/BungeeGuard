@@ -34,8 +34,7 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onLogin(LoginEvent event) {
         String hostString = event.getConnection().getVirtualHost().getHostString();
-
-        if (event.getConnection().getListener().getForcedHosts().containsKey(hostString)) {
+        if (!event.getConnection().getListener().getForcedHosts().containsKey(hostString)) {
             event.setCancelled(true);
             event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
             return;
