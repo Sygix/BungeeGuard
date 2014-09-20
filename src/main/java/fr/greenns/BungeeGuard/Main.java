@@ -275,19 +275,19 @@ public class Main extends Plugin {
         final List<Lobby> new_lobbys = new ArrayList<>();
 
         for (final ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
-            if (serverInfo.getName().contains("lobby")) {
+            if (serverInfo.getName().startsWith("lobby")) {
                 serverInfo.ping(new Callback<ServerPing>() {
                     @Override
                     public void done(ServerPing result, Throwable error) {
-                        int players = serverInfo.getPlayers().size();
-                        double tps = 0;
-                        try {
-                            if (error == null) tps = Double.parseDouble(result.getDescription());
-                        } catch (NumberFormatException e) {
-                            tps = 12;
+                        Lobby lobby = new Lobby();
+                        lobby.setOnline(error == null);
+                        if (error == null) {
+                            lobby.setName(serverInfo.getName());
+                            lobby.setMaxPlayers(result.getPlayers().getMax());
+                            lobby.setOnlinePlayers(result.getPlayers().getOnline());
+                            lobby.setTps(Double.parseDouble(result.getDescription()));
                         }
-                        Lobby Lobby = new Lobby(serverInfo.getName(), players, tps, (error == null));
-                        new_lobbys.add(Lobby);
+                        new_lobbys.add(lobby);
                     }
                 });
             }

@@ -1,7 +1,10 @@
 package fr.greenns.BungeeGuard.Lobbies;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Ordering;
 import fr.greenns.BungeeGuard.Main;
 
 import java.util.Collection;
@@ -12,6 +15,15 @@ public class LobbyUtils {
     Predicate<Lobby> isOnline = new Predicate<Lobby>() {
         public boolean apply(Lobby lobby) {
             return lobby != null && lobby.isOnline();
+        }
+    };
+    Function<Lobby, Double> getScoreFunction = new Function<Lobby, Double>() {
+        public Double apply(Lobby lobby) {
+            double score = 20 * (lobby.getMaxPlayers() - lobby.getOnlinePlayers()) + (20 - lobby.getTps());
+            System.out.println(lobby);
+            System.out.println(lobby.getName() + ": score: " + score);
+            return score;
+            // Formule magique qui renvoie un score selon le nombre de joueurs et le tps.
         }
     };
 
@@ -29,11 +41,9 @@ public class LobbyUtils {
 
     public Lobby bestLobbyTarget() {
         Collection<Lobby> lobbies = Collections2.filter(plugin.lobbys, isOnline);
-        for (int tps = 20; tps > 0; tps -= 1)
-            for (int maxPlayers = 0; maxPlayers < 60; maxPlayers += 15)
-                for (Lobby lobby : lobbies)
-                    if (lobby.getTps() >= tps && lobby.getNbrPlayers() <= maxPlayers)
-                        return lobby;
-        return null;
+        Ordering<Lobby> scoreOrdering = Ordering.natural().onResultOf(getScoreFunction);
+        ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(scoreOrdering).addAll(lobbies).build();
+
+        return sortedLobbies.descendingSet().first();
     }
 }
