@@ -210,7 +210,7 @@ public class BungeeGuardListener implements Listener {
                 reason.contains("kick") || reason.contains("VIP"))) {
 
             if (reason.contains("closed")) {
-                if (kickedFrom.getName().contains("lobby")) {
+                if (kickedFrom.getName().startsWith("lobby")) {
                     Lobby Lobby = plugin.lobbyUtils.getLobby(kickedFrom.getName());
                     Lobby.setOffline();
                 }
