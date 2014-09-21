@@ -76,8 +76,14 @@ public class Lobby {
     }
 
     public double getScore() {
-        if (score == null)
-            score = (1 + getOnlinePlayers()) * (getMaxPlayers() / 2 - getOnlinePlayers()) * getTps();
+        if (score == null) {
+            double _score = (1 + getOnlinePlayers()) * (getMaxPlayers() / 2 - getOnlinePlayers());
+            if (_score > 0) {
+                score = _score * getTps();
+            } else {
+                score = _score * (20 - getTps());
+            }
+        }
         return score;
     }
 }
