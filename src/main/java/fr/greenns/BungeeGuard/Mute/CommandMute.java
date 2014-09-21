@@ -13,18 +13,20 @@ import java.util.UUID;
 
 public class CommandMute extends Command {
 
+    private MuteManager MM;
     public Main plugin;
 
     public CommandMute(Main plugin) {
         super("mute", "bungeeguard.mute");
         this.plugin = plugin;
+        this.MM = plugin.getMM();
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         long startTime = System.currentTimeMillis();
         String adminName = (sender instanceof ProxiedPlayer) ? sender.getName() : "UHConsole";
-        String adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId().toString() : "UHConsole";
+        UUID adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : UUID.fromString("UHConsole");
 
         if (args.length == 0) {
             sender.sendMessage(new ComponentBuilder("Usage: /mute <pseudo> [duration] [reason]").color(ChatColor.RED).create());
@@ -62,12 +64,8 @@ public class CommandMute extends Command {
 
             BungeeGuardUtils.getMB().sendPlayerMessage(muteUUID, muteMessage);
 
-            Mute alreadyMute = BungeeGuardUtils.getMute(muteUUID);
-            if (alreadyMute != null)
-                Main.mutes.remove(alreadyMute);
 
-            Mute Mute = new Mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
-            Mute.addToBdd();
+            MM.mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID, true);
 
             BungeeGuardUtils.getMB().sendChannelMessage("mute",
                     BungeeGuardUtils.getMB().getServerId() + MultiBungee.SEPARATOR + muteUUID + MultiBungee.SEPARATOR + muteName + MultiBungee.SEPARATOR + muteUntilTime + MultiBungee.SEPARATOR +

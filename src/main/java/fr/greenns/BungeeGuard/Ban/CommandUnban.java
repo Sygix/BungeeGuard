@@ -2,6 +2,7 @@ package fr.greenns.BungeeGuard.Ban;
 
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
+import fr.greenns.BungeeGuard.Models.BungeeBan;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -14,10 +15,12 @@ import java.util.UUID;
 public class CommandUnban extends Command {
 
     public Main plugin;
+    BanManager BM;
 
     public CommandUnban(Main plugin) {
         super("unban", "bungeeguard.ban");
         this.plugin = plugin;
+        this.BM = plugin.getBM();
     }
 
     @Override
@@ -40,11 +43,12 @@ public class CommandUnban extends Command {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Erreur: joueur inconnu."));
             return;
         }
-        Ban Ban = BungeeGuardUtils.getBan(bannedUUID);
-        if (Ban == null) {
+
+        BungeeBan ban = BM.findBan(bannedUUID);
+        if (ban == null) {
             sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas banni.").color(ChatColor.RED).create());
         } else {
-            Ban.removeFromBDD(unbanReason, unbanName);
+            BM.unban(ban, sender.getName(), unbanReason, true);
             BungeeGuardUtils.getMB().unban(bannedUUID);
             BanType BanTypeVar = (unbanReason.equals("")) ? BanType.UNBAN : BanType.UNBAN_W_REASON;
             if (!unbanReason.equals(""))

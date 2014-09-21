@@ -2,6 +2,7 @@ package fr.greenns.BungeeGuard.Mute;
 
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
+import fr.greenns.BungeeGuard.Models.BungeeMute;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -12,11 +13,13 @@ import java.util.UUID;
 
 public class CommandUnmute extends Command {
 
+    private MuteManager MM;
     public Main plugin;
 
     public CommandUnmute(Main plugin) {
         super("unmute", "bungeeguard.mute");
         this.plugin = plugin;
+        this.MM = plugin.getMM();
     }
 
     @Override
@@ -36,17 +39,17 @@ public class CommandUnmute extends Command {
 
             UUID muteUUID = BungeeGuardUtils.getMB().getUuidFromName(muteName);
 
-            Mute mute = BungeeGuardUtils.getMute(muteUUID);
+            BungeeMute mute = MM.findMute(muteUUID);
             if (mute == null) {
                 sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas mute.").color(ChatColor.RED).create());
             } else {
-                mute.removeFromBDD(unmuteReason, unmuteName);
+                MM.unmute(mute, sender.getName(), unmuteReason, true);
                 BungeeGuardUtils.getMB().unmutePlayer(muteUUID);
 
-                MuteType MuteTypeVar = (unmuteReason.equals("")) ? MuteType.UNMUTE : MuteType.UNMUTE_W_REASON;
+                MuteType muteType = (unmuteReason.equals("")) ? MuteType.UNMUTE : MuteType.UNMUTE_W_REASON;
                 if (!unmuteReason.equals(""))
                     unmuteReason = ChatColor.translateAlternateColorCodes('&', unmuteReason);
-                String adminFormat = MuteTypeVar.adminFormat("", unmuteReason, unmuteName, muteName);
+                String adminFormat = muteType.adminFormat("", unmuteReason, unmuteName, muteName);
                 BungeeGuardUtils.getMB().notifyStaff(adminFormat);
             }
         }

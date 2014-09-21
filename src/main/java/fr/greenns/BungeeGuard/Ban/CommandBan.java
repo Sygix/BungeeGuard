@@ -2,6 +2,7 @@ package fr.greenns.BungeeGuard.Ban;
 
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
+import fr.greenns.BungeeGuard.Models.BungeeBan;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -15,15 +16,16 @@ public class CommandBan extends Command {
 
     public Main plugin;
     Pattern timePattern = Pattern.compile("([0-9]+)(mo|[ywdhms])");
+    BanManager BM;
 
     public CommandBan(Main plugin) {
         super("ban", "bungeeguard.ban");
         this.plugin = plugin;
+        this.BM = plugin.getBM();
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        long startTime = System.currentTimeMillis();
         String adminName = (sender instanceof ProxiedPlayer) ? sender.getName() : "UHConsole";
         UUID adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : UUID.fromString("UHConsole");
 
@@ -65,13 +67,9 @@ public class CommandBan extends Command {
 
             BungeeGuardUtils.getMB().kickPlayer(bannedName, BanTypeVar.kickFormat(bannedDurationStr, reason));
 
+            BungeeBan ban = BM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, true);
+            ban.saveIt();
 
-            Ban alreadyBan = BungeeGuardUtils.getBan(bannedUUID);
-            if (alreadyBan != null)
-                Main.bans.remove(alreadyBan);
-
-            Ban Ban = new Ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
-            Ban.addToBdd();
             BungeeGuardUtils.getMB().banPlayer(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
 
             String adminFormat = BanTypeVar.adminFormat(bannedDurationStr, reason, adminName, bannedName);

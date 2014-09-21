@@ -1,9 +1,9 @@
 package fr.greenns.BungeeGuard;
 
-import fr.greenns.BungeeGuard.Ban.Ban;
 import fr.greenns.BungeeGuard.Ban.BanType;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
-import fr.greenns.BungeeGuard.Mute.Mute;
+import fr.greenns.BungeeGuard.Models.BungeeBan;
+import fr.greenns.BungeeGuard.Models.BungeeMute;
 import fr.greenns.BungeeGuard.Mute.MuteType;
 import fr.greenns.BungeeGuard.Party.Party;
 import fr.greenns.BungeeGuard.utils.Permissions;
@@ -39,36 +39,30 @@ public class BungeeGuardListener implements Listener {
             event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
             return;
         }
-        Ban BannedUser = BungeeGuardUtils.getBan(event.getConnection().getUniqueId());
-        if (BannedUser != null) {
-            if (BannedUser.isDefBanned()) {
+        BungeeBan ban = BungeeGuardUtils.getBan(event.getConnection().getUniqueId());
+        if (ban != null) {
+            if (ban.isDefBanned()) {
                 event.setCancelled(true);
 
-                BanType BanType = (BannedUser.getReason() != null) ? fr.greenns.BungeeGuard.Ban.BanType.PERMANENT_W_REASON : fr.greenns.BungeeGuard.Ban.BanType.PERMANENT;
-                String CancelMsg = BanType.kickFormat("", BannedUser.getReason());
+                BanType banType = (ban.getReason() != null) ? fr.greenns.BungeeGuard.Ban.BanType.PERMANENT_W_REASON : fr.greenns.BungeeGuard.Ban.BanType.PERMANENT;
+                String kickMessage = banType.kickFormat("", ban.getReason());
 
-                event.setCancelReason(CancelMsg);
+                event.setCancelReason(kickMessage);
                 return;
-            } else if (BannedUser.isBanned()) {
-                event.setCancelled(true);
-
-                String durationStr = BungeeGuardUtils.getDuration(BannedUser.getUntilTimestamp());
-                BanType BanType = (BannedUser.getReason() != null) ? fr.greenns.BungeeGuard.Ban.BanType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.Ban.BanType.NON_PERMANENT;
-                String CancelMsg = BanType.kickFormat(durationStr, BannedUser.getReason());
-
-                event.setCancelReason(CancelMsg);
-                return;
-            } else {
-                BannedUser.removeFromBDD("TimeEnd", "Automatique");
             }
-        }
+            if (ban.isBanned()) {
+                event.setCancelled(true);
 
-        Lobby l = plugin.lobbyUtils.bestLobbyTarget();
-        if (l != null) {
-            return;
+                String durationStr = BungeeGuardUtils.getDuration(ban.getUntilTimestamp());
+                BanType banType = (ban.getReason() != null) ? fr.greenns.BungeeGuard.Ban.BanType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.Ban.BanType.NON_PERMANENT;
+                String kickMessage = banType.kickFormat(durationStr, ban.getReason());
+
+                event.setCancelReason(kickMessage);
+                return;
+            }
+            plugin.getBM().unban(ban, "TimeEnd", "Automatique", true);
+            plugin.getMB().unban(event.getConnection().getUniqueId());
         }
-        event.setCancelled(true);
-        event.setCancelReason(ChatColor.RED + "Nos services sont momentanément indisponibles" + '\n' + ChatColor.RED + "Veuillez réessayer dans quelques instants");
     }
 
     @EventHandler
@@ -76,7 +70,7 @@ public class BungeeGuardListener implements Listener {
         final ProxiedPlayer p = e.getPlayer();
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
             System.out.println("Recuperation du meilleur lobby pour " + p.getName());
-            Lobby l = plugin.lobbyUtils.bestLobbyTarget();
+            Lobby l = plugin.getLM().getBestLobbyFor(p);
 
             if (l != null) {
                 e.setTarget(l.getServerInfo());
@@ -99,12 +93,12 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onServerConnected(ServerConnectedEvent event) {
         final ProxiedPlayer p = event.getPlayer();
-        if (plugin.gtp.containsKey(p.getUniqueId())) {
+        if (plugin.getGTP().containsKey(p.getUniqueId())) {
             ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
                 @Override
                 public void run() {
-                    p.chat("/tp " + plugin.gtp.get(p.getUniqueId()));
-                    plugin.gtp.remove(p.getUniqueId());
+                    p.chat("/tp " + plugin.getGTP().get(p.getUniqueId()));
+                    plugin.getGTP().remove(p.getUniqueId());
                 }
             }, 10, TimeUnit.MILLISECONDS);
         }
@@ -119,24 +113,18 @@ public class BungeeGuardListener implements Listener {
             if (e.isCommand()) {
                 return;
             }
-            Mute MuteUser = BungeeGuardUtils.getMute(p.getUniqueId());
-            if (MuteUser != null) {
-                if (MuteUser.isMute()) {
-                    MuteType MuteType = (MuteUser.getReason() != null) ? fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT;
-                    String muteDurationStr = BungeeGuardUtils.getDuration(MuteUser.getTime());
-                    String MuteMsg = MuteType.playerFormat(muteDurationStr, MuteUser.getReason());
+            BungeeMute mute = BungeeGuardUtils.getMute(p.getUniqueId());
+            if (mute != null) {
+                if (mute.isMute()) {
+                    MuteType MuteType = (mute.getReason() != null) ? fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT;
+                    String muteDurationStr = BungeeGuardUtils.getDuration(mute.getUntilTimestamp());
+                    String MuteMsg = MuteType.playerFormat(muteDurationStr, mute.getReason());
                     p.sendMessage(new ComponentBuilder(MuteMsg).create());
                     e.setCancelled(true);
                 } else {
-                    MuteUser.removeFromBDD("TimeEnd", "Automatique");
+                    plugin.getMM().unmute(mute, "TimeEnd", "Automatique", true);
+                    plugin.getMB().unmutePlayer(p.getUniqueId());
                 }
-            }
-            if (plugin.silencedServers.contains(p.getServer().getInfo().getName())) {
-                if (p.hasPermission("bungeeguard.bypasschat")) {
-                    return;
-                }
-                e.setCancelled(true);
-                p.sendMessage(new TextComponent(ChatColor.RED + "Le chat est désactivé temporairement !"));
             }
             if ((p.hasPermission("bungeeguard.staffchat")) && (e.getMessage().startsWith("!!"))) {
                 e.setCancelled(true);
@@ -149,6 +137,13 @@ public class BungeeGuardListener implements Listener {
             if (party != null && party.isPartyChat(p)) {
                 plugin.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage());
                 e.setCancelled(true);
+            }
+            if (plugin.isSilenced(p.getServer().getInfo().getName())) {
+                if (!p.hasPermission("bungeeguard.bypasschat")) {
+                    e.setCancelled(true);
+                    p.sendMessage(new TextComponent(ChatColor.RED + "Le chat est désactivé temporairement !"));
+                    return;
+                }
             }
         }
     }
@@ -211,12 +206,12 @@ public class BungeeGuardListener implements Listener {
 
             if (reason.contains("closed")) {
                 if (kickedFrom.getName().startsWith("lobby")) {
-                    Lobby Lobby = plugin.lobbyUtils.getLobby(kickedFrom.getName());
+                    Lobby Lobby = plugin.getLM().getLobby(kickedFrom.getName());
                     Lobby.setOffline();
                 }
             }
 
-            Lobby l = plugin.lobbyUtils.bestLobbyTarget();
+            Lobby l = plugin.getLM().getBestLobbyFor(p);
             ServerInfo server = ProxyServer.getInstance().getServerInfo("limbo");
             if (l != null) {
                 server = l.getServerInfo();
