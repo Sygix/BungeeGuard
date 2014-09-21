@@ -31,6 +31,8 @@ public class BungeeMute extends Model {
     }
 
     public void setReason(String reason) {
+        if (reason == null)
+            reason = "";
         setString("reason", reason);
     }
 
