@@ -33,11 +33,7 @@ public class LobbyManager {
     };
     Function<Lobby, Double> getScoreFunction = new Function<Lobby, Double>() {
         public Double apply(Lobby lobby) {
-            double score = (1 + lobby.getOnlinePlayers()) * (lobby.getMaxPlayers() / 2 - lobby.getOnlinePlayers()) * lobby.getTps();
-            System.out.println(lobby);
-            System.out.println(lobby.getName() + ": score: " + score);
-            return score;
-            // Formule magique qui renvoie un score selon le nombre de joueurs et le tps.
+            return lobby.getScore();
         }
     };
 
