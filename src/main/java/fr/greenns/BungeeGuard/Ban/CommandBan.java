@@ -49,8 +49,14 @@ public class CommandBan extends Command {
                     reason += " " + args[i];
                 }
             }
-            if (reason.equals("")) reason = null;
-            if (reason != null) reason = ChatColor.translateAlternateColorCodes('&', reason);
+            reason = reason.trim();
+
+            if (reason.equals(""))
+                reason = null;
+            if (plugin.isPremadeMessage(reason))
+                reason = plugin.getPremadeMessage(reason);
+            if (reason != null)
+                reason = ChatColor.translateAlternateColorCodes('&', reason);
 
             BanType BanTypeVar;
             if (duration) {

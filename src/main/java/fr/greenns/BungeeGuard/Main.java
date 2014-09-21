@@ -9,6 +9,7 @@ import fr.greenns.BungeeGuard.Ignore.IgnoreManager;
 import fr.greenns.BungeeGuard.Kick.CommandKick;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import fr.greenns.BungeeGuard.Lobbies.LobbyManager;
+import fr.greenns.BungeeGuard.Models.BungeePremadeMessage;
 import fr.greenns.BungeeGuard.MultiBungee.MultiBungee;
 import fr.greenns.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
 import fr.greenns.BungeeGuard.MultiBungee.PubSubListener;
@@ -50,6 +51,7 @@ public class Main extends Plugin {
     private LobbyManager LM;
     private IgnoreManager IM;
     private static Connection db_co;
+    private static Map<String, String> premadeMessages = new HashMap<>();
 
     public static void getDb() {
         if (Base.hasConnection()) {
@@ -82,9 +84,8 @@ public class Main extends Plugin {
     public void onLoad() {
         plugin = this;
         new BungeeGuardUtils(this);
-        System.out.println("Welcome to MultiBungee");
+        System.out.println("Welcome to MultiBungee ~ With ORM");
         getDb();
-        System.out.println("Loal.");
         ProxyServer.getInstance().setConfigurationAdapter(new MysqlConfigAdapter(this));
     }
 
@@ -108,7 +109,7 @@ public class Main extends Plugin {
         MB = new MultiBungee();
 
         MB.registerPubSubChannels("ban", "unban");
-        MB.registerPubSubChannels("kick");
+        MB.registerPubSubChannels("kick", "silenceServer");
         MB.registerPubSubChannels("mute", "unmute");
         MB.registerPubSubChannels("staffChat", "notifyStaff");
         MB.registerPubSubChannels("message", "privateMessage", "ignore", "broadcast");
@@ -251,5 +252,20 @@ public class Main extends Plugin {
 
     public HashMap<UUID, String> getGTP() {
         return gtp;
+    }
+
+    public static void setPremadeMessages(List<BungeePremadeMessage> all) {
+        premadeMessages.clear();
+        for (BungeePremadeMessage message : all) {
+            premadeMessages.put(message.getSlug(), message.getText());
+        }
+    }
+
+    public boolean isPremadeMessage(String slug) {
+        return premadeMessages.containsKey(slug);
+    }
+
+    public String getPremadeMessage(String slug) {
+        return premadeMessages.get(slug);
     }
 }

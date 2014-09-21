@@ -39,7 +39,7 @@ public class MuteManager {
     public void removeMute(BungeeMute mute) {
         if (mute == null)
             return;
-        if (muteList.contains(muteList))
+        if (muteList.contains(mute))
             muteList.remove(mute);
     }
 
@@ -60,6 +60,7 @@ public class MuteManager {
         mute.setStatus(1);
         if (saveToBdd)
             mute.saveIt();
+        muteList.add(mute);
         return mute;
     }
 
@@ -71,6 +72,7 @@ public class MuteManager {
         mute.setUnmuteReason(reason);
         mute.setUnmuteTime(System.currentTimeMillis());
         mute.setStatus(0);
+        removeMute(mute);
         if (saveToBdd)
             mute.saveIt();
     }

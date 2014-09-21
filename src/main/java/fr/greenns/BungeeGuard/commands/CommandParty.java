@@ -121,9 +121,8 @@ public class CommandParty extends Command {
             return;
         }
         String partyName = args[0];
-        Party party = PM.getParty(partyName);
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Party supprimée."));
-        MB.disbandParty(party);
+        MB.disbandParty(partyName);
     }
 
     private void kick(ProxiedPlayer sender, String[] args) {

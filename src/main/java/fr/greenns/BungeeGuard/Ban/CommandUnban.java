@@ -36,6 +36,12 @@ public class CommandUnban extends Command {
             for (int i = 1; i < args.length; i++)
                 unbanReason += " " + args[i];
         }
+        unbanReason = unbanReason.trim();
+
+        if (unbanReason.equals(""))
+            unbanReason = null;
+        if (plugin.isPremadeMessage(unbanReason))
+            unbanReason = plugin.getPremadeMessage(unbanReason);
         String bannedName = args[0];
 
         UUID bannedUUID = BungeeGuardUtils.getMB().getUuidFromName(bannedName);

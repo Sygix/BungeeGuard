@@ -30,6 +30,10 @@ public class CommandKick extends Command {
                     reason += " " + args[i];
                 }
             }
+            reason = reason.trim();
+            if (plugin.isPremadeMessage(reason))
+                reason = plugin.getPremadeMessage(reason);
+
             reason = ChatColor.translateAlternateColorCodes('&', reason);
             KickType KickTypeVar = (reason.isEmpty()) ? KickType.KICK : KickType.KICK_W_REASON;
 
