@@ -40,7 +40,7 @@ public class PrivateMessageHandler extends PubSubBase {
         }
 
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(receiver);
-        BaseComponent[] mp = new ComponentBuilder("[").color(ChatColor.GRAY).append(sender).color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).create();
+        BaseComponent[] mp = new ComponentBuilder("[").color(ChatColor.GRAY).append(sender).color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" ").create();
 
         if (p != null) {
             p.sendMessage(ObjectArrays.concat(mp, contenu, BaseComponent.class));
