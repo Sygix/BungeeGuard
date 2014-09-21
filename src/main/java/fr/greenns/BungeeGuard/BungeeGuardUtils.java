@@ -64,7 +64,10 @@ public class BungeeGuardUtils {
     }
 
     public static String getDuration(final long futureTimestamp) {
-        if (futureTimestamp == -1) return "";
+        if (futureTimestamp == -1)
+            return "";
+        if (futureTimestamp < 0)
+            return "-" + getDuration(futureTimestamp);
         int seconds = (int) ((futureTimestamp - System.currentTimeMillis()) / 1000);
         Preconditions.checkArgument(seconds > 0, "Le timestamp doit etre supérieur au current timestamp !");
 

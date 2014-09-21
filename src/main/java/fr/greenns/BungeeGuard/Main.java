@@ -114,7 +114,7 @@ public class Main extends Plugin {
         MB.registerPubSubChannels("message", "privateMessage", "ignore", "broadcast");
         MB.registerPubSubChannels("reloadConf", "summon");
         MB.registerPubSubChannels("setPartyPublique", "inviteParty", "addPartyMember", "playerLeaveParty", "setPartyChat",
-                "setPartyOwner", "kickFromParty", "summonParty", "partyChat", "createParty");
+                "setPartyOwner", "kickFromParty", "summonParty", "partyChat", "createParty", "disbandParty");
         MB.registerPubSubChannels("@" + MB.getServerId() + "/partyRequest", "@" + MB.getServerId() + "/partyReply");
 
 

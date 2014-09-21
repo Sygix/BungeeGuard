@@ -116,6 +116,9 @@ public class PubSubListener implements Listener {
             case "createParty":
                 handler = new PartyCreateHandler(plugin);
                 break;
+            case "disbandParty":
+                handler = new PartyDisbandHandler(plugin);
+                break;
 
             case "@partyRequest":
                 handler = new PartyRequestHandler(plugin);
@@ -123,6 +126,7 @@ public class PubSubListener implements Listener {
             case "@partyReply":
                 handler = new PartyReplyHandler(plugin);
                 break;
+
 
         }
         if (handler.ignoreSelfMessage() && args.length != 0 && args[0].equals(plugin.getMB().getServerId()))
