@@ -26,9 +26,9 @@ public class CommandGtp extends Command {
 		ProxiedPlayer p = (ProxiedPlayer) sender;
 		
 		if (args.length != 1) {
-			plugin.utils.msgPluginCommand(sender);
-			return;
-		}
+            BungeeGuardUtils.msgPluginCommand(sender);
+            return;
+        }
         MultiBungee MB = BungeeGuardUtils.getMB();
         if (MB.isPlayerOnline(args[0])) {
             ServerInfo server = MB.getServerFor(args[0]);
@@ -36,7 +36,7 @@ public class CommandGtp extends Command {
             if (server.getName().equalsIgnoreCase(((ProxiedPlayer) sender).getServer().getInfo().getName())) {
                 p.chat("/tp " + args[0]);
             } else {
-                plugin.gtp.put(p.getUniqueId(), args[0]);
+                plugin.addGtp(p.getUniqueId(), args[0]);
                 p.connect(server);
             }
         } else {

@@ -305,7 +305,7 @@ public class MultiBungee {
      * @since 0.3
      */
     public final UUID getUuidFromName(String name) {
-        return api.getUuidFromName(name, false);
+        return api.getUuidFromName(name, true);
     }
 
     /**

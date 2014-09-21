@@ -49,7 +49,7 @@ public class CommandIgnore extends Command {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous n'avez pas la permission d'ignorer ce joueur."));
             return;
         }
-        if (plugin.ignore.containsKey(p.getUniqueId()) && plugin.ignore.get(p.getUniqueId()).contains(toIgnore)) {
+        if (plugin.getIM().playerIgnores(p.getUniqueId(), toIgnore)) {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous n'ignorez plus " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
             BungeeGuardUtils.getMB().ignorePlayer(p.getUniqueId(), '-', toIgnore);
         } else {

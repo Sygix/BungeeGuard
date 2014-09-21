@@ -46,10 +46,10 @@ public class PrivateMessageHandler extends PubSubBase {
             p.sendMessage(ObjectArrays.concat(mp, contenu, BaseComponent.class));
         }
 
-        plugin.reply.put(receiver, sender);
+        plugin.setReply(receiver, UUID.fromString(sender));
 
         ProxiedPlayer admin;
-        for (UUID uuid : plugin.spy) {
+        for (UUID uuid : plugin.getSpies()) {
             try {
                 admin = ProxyServer.getInstance().getPlayer(uuid);
                 mp = new ComponentBuilder("[").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("] ").color(ChatColor.GRAY).append(sender).append(": /msg ").append(BungeeGuardUtils.getMB().getNameFromUuid(receiver) + " ").create();

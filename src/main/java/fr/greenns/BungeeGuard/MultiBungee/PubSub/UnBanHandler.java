@@ -1,7 +1,8 @@
 package fr.greenns.BungeeGuard.MultiBungee.PubSub;
 
-import fr.greenns.BungeeGuard.Ban.Ban;
-import fr.greenns.BungeeGuard.BungeeGuardUtils;
+import fr.greenns.BungeeGuard.Ban.BanManager;
+import fr.greenns.BungeeGuard.Main;
+import fr.greenns.BungeeGuard.Models.BungeeBan;
 
 import java.util.UUID;
 
@@ -15,10 +16,9 @@ public class UnBanHandler extends PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
         UUID muteUUID = UUID.fromString(args[1]);
-        Ban ban = BungeeGuardUtils.getBan(muteUUID);
-        if (ban == null)
-            return;
-        ban.remove();
+        BanManager BM = Main.plugin.getBM();
+        BungeeBan ban = BM.findBan(muteUUID);
+        BM.removeBan(ban);
     }
 
     @Override
