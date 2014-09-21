@@ -2,6 +2,7 @@ package fr.greenns.BungeeGuard.Config;
 
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
+import fr.greenns.BungeeGuard.Models.*;
 import net.md_5.bungee.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -13,8 +14,6 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.net.InetSocketAddress;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -22,8 +21,8 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     private final Yaml yaml;
     private Map config;
     private Main plugin;
-    private Collection<ListenerInfo> listeners;
     private String host;
+    private BungeeConfig conf;
 
     public MysqlConfigAdapter(Main plugin) {
         this.plugin = plugin;
@@ -34,21 +33,11 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
 
     @Override
     public void load() {
+        plugin.getDb();
         String dbConfig = "";
 
-        plugin.sql.open();
-
-        if (plugin.sql.getConnection() == null) {
-            System.out.println("[b:rl] Erreur, checkConnection");
-        } else {
-            ResultSet res = plugin.sql.query("SELECT permissions FROM bungee_config WHERE id_inutile = 1 LIMIT 0,1");
-            try {
-                res.next();
-                dbConfig = res.getString("permissions");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        conf = BungeeConfig.findById(1);
+        dbConfig = conf.getPermissions();
 
         config = (Map) yaml.load(dbConfig);
 
@@ -76,6 +65,9 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         if (groups.isEmpty()) {
             groups.put("md_5", Collections.singletonList("admin"));
         }
+
+        List<BungeePremadeMessage> premadeMessages = BungeePremadeMessage.findAll();
+        Main.setPremadeMessages(premadeMessages);
     }
 
     private <T> T get(String path, T def) {
@@ -126,26 +118,17 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     @Override
     @SuppressWarnings("unchecked")
     public Map<String, ServerInfo> getServers() {
-        if (plugin.sql.getConnection() == null) {
-            plugin.sql.open();
-        }
-
-        ResultSet res = plugin.sql.query("SELECT name, address FROM bungee_servers;");
         Map<String, ServerInfo> ret = new HashMap<>();
-        try {
-            while (res.next()) {
-                String name = res.getString("name");
-                String addr = res.getString("address");
-                String motd = "Serveur UHCGames"; // Should <not> be displayed.
-                boolean restricted = false;
-                InetSocketAddress address = Util.getAddr(addr);
-                ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, motd, restricted);
-                ret.put(name, info);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<BungeeServer> serveurs = BungeeServer.findAll();
+        for (BungeeServer serveur : serveurs) {
+            String name = serveur.getName();
+            String addr = serveur.getAddress();
+            String motd = "Serveur UHCGames"; // Should <not> be displayed.
+            boolean restricted = false;
+            InetSocketAddress address = Util.getAddr(addr);
+            ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, motd, restricted);
+            ret.put(name, info);
         }
-
         return ret;
     }
 
@@ -179,7 +162,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
 
         ListenerInfo info;
 
-        listeners = new HashSet<>();
+        Collection<ListenerInfo> listeners = new HashSet<ListenerInfo>();
         InetSocketAddress address = Util.getAddr(host);
         info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
         listeners.add(info);
@@ -188,24 +171,14 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     }
 
     private Map<OPTIONS, Object> getOptions() throws SQLException {
-        if (plugin.sql.getConnection() == null) {
-            plugin.sql.open();
-        }
         Map<OPTIONS, Object> options = new HashMap<>();
-        ResultSet res = plugin.sql.query("SELECT motd, max_players FROM bungee_config LIMIT 0,1;");
-        res.next();
-
-        options.put(OPTIONS.MAX_PLAYERS, res.getInt("max_players"));
-        options.put(OPTIONS.MOTD, ChatColor.translateAlternateColorCodes('&', res.getString("motd")));
+        conf = BungeeConfig.findById(1);
+        options.put(OPTIONS.MAX_PLAYERS, conf.getMaxPlayers());
+        options.put(OPTIONS.MOTD, ChatColor.translateAlternateColorCodes('&', conf.getMotd()));
         plugin.setMotd(String.valueOf(options.get(OPTIONS.MOTD)));
+        BungeeInstance instance = BungeeInstance.findFirst("server_id = ?", BungeeGuardUtils.getServerID());
 
-        PreparedStatement q = plugin.sql.prepare("SELECT bind_address FROM bungee_instances WHERE server_id = ? LIMIT 0,1;");
-        String server_id = BungeeGuardUtils.getServerID();
-        q.setString(1, server_id);
-        res = q.executeQuery();
-        res.next();
-
-        options.put(OPTIONS.BIND_ADDRESS, res.getString("bind_address"));
+        options.put(OPTIONS.BIND_ADDRESS, instance.getBindAddress());
         return options;
     }
 
@@ -230,14 +203,10 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     }
 
     public Map<String, String> getForcedHosts() throws SQLException {
-
-        if (plugin.sql.getConnection() == null) {
-            plugin.sql.open();
-        }
         Map<String, String> forced_hosts = new HashMap<>();
-        ResultSet res = plugin.sql.query("SELECT ip, to_server FROM bungee_forced_host");
-        while (res.next()) {
-            forced_hosts.put(res.getString("ip"), res.getString("to_server"));
+        List<BungeeForcedHost> bfh = BungeeForcedHost.findAll();
+        for (BungeeForcedHost bf : bfh) {
+            forced_hosts.put(bf.getIp(), bf.getServer());
         }
         return forced_hosts;
     }

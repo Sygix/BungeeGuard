@@ -18,7 +18,7 @@ public class CommandSay extends Command {
     public void execute(CommandSender sender, String[] args) {
 
         if (args.length == 0) {
-            plugin.utils.msgPluginCommand(sender);
+            BungeeGuardUtils.msgPluginCommand(sender);
             return;
         }
 

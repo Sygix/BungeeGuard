@@ -23,7 +23,7 @@ public class CommandBCast extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            plugin.utils.msgPluginCommand(sender);
+            BungeeGuardUtils.msgPluginCommand(sender);
             return;
         }
 
@@ -35,7 +35,7 @@ public class CommandBCast extends Command {
             msg = BungeeGuardUtils.translateCodes(msg);
             List<String> serversList = new ArrayList<>();
 
-            for (Lobby server : plugin.lobbys) {
+            for (Lobby server : plugin.getLM().getLobbies()) {
                 if (server == null || !server.isOnline())
                     continue;
                 serversList.add(server.getName());

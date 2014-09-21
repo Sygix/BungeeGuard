@@ -3,7 +3,7 @@ package fr.greenns.BungeeGuard.commands;
 import com.google.common.collect.ObjectArrays;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
-import fr.greenns.BungeeGuard.Mute.Mute;
+import fr.greenns.BungeeGuard.Models.BungeeMute;
 import fr.greenns.BungeeGuard.Mute.MuteType;
 import fr.greenns.BungeeGuard.utils.Permissions;
 import net.md_5.bungee.api.ChatColor;
@@ -40,14 +40,15 @@ public class CommandMsg extends Command {
 
         ProxiedPlayer p = (ProxiedPlayer) sender;
 
-        Mute MuteUser = BungeeGuardUtils.getMute(p.getUniqueId());
-        if (MuteUser != null) {
-            if (MuteUser.isMute()) {
-                MuteType MuteType = (MuteUser.getReason() != null) ? fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT;
-                String MuteMsg = MuteType.playerFormat("", MuteUser.getReason());
+        BungeeMute mute = plugin.getMM().findMute(p.getUniqueId());
+        if (mute != null) {
+            if (mute.isMute()) {
+                MuteType muteType = (mute.getReason() != null) ? fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT;
+                String MuteMsg = muteType.playerFormat("", mute.getReason());
                 p.sendMessage(new ComponentBuilder(MuteMsg).create());
             } else {
-                MuteUser.removeFromBDD("TimeEnd", "Automatique");
+                plugin.getMM().unmute(mute, "TimeEnd", "Automatique", true);
+                BungeeGuardUtils.getMB().unmutePlayer(p.getUniqueId());
             }
             return;
         }
@@ -72,16 +73,16 @@ public class CommandMsg extends Command {
                 return;
             }
             UUID receiverUUID = BungeeGuardUtils.getMB().getUuidFromName(args[0]);
-            boolean isReply = plugin.reply.containsKey(p.getUniqueId()) && plugin.reply.get(p.getUniqueId()).equals(receiverUUID.toString());
+            boolean isReply = plugin.isReply(p.getUniqueId(), receiverUUID);
             if (Permissions.hasPerm(args[0], "bungeeguard.moremsg") && !p.hasPermission("bungeeguard.moremsg") && !isReply) {
                 p.sendMessage(new ComponentBuilder("Vous n'avez pas la permission de parler à ce joueur !").color(ChatColor.RED).create());
                 return;
             }
-            if ((plugin.ignore.containsKey(receiverUUID) && plugin.ignore.get(receiverUUID).size() != 0 && plugin.ignore.get(receiverUUID).contains(p.getUniqueId())) && !Permissions.hasPerm(args[0], "bungeeguard.ignore.ignore")) {
+            if (plugin.getIM().playerIgnores(receiverUUID, p.getUniqueId()) && !Permissions.hasPerm(args[0], "bungeeguard.ignore.ignore")) {
                 p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
                 return;
             }
-            if ((plugin.ignore.containsKey(p.getUniqueId()) && plugin.ignore.get(p.getUniqueId()).size() != 0 && plugin.ignore.get(p.getUniqueId()).contains(receiverUUID)) && !p.hasPermission("bungeeguard.ignore.ignore")) {
+            if (plugin.getIM().playerIgnores(p.getUniqueId(), receiverUUID) && !p.hasPermission("bungeeguard.ignore.ignore")) {
                 p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
                 return;
             }
@@ -101,7 +102,7 @@ public class CommandMsg extends Command {
             p.sendMessage(contenu);
 
 
-            plugin.reply.put(p.getUniqueId(), args[0]);
+            plugin.setReply(receiverUUID, p.getUniqueId());
         }
     }
 }

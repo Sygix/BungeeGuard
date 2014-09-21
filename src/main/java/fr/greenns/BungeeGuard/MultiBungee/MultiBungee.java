@@ -8,6 +8,7 @@ import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.imaginarycode.minecraft.redisbungee.internal.jedis.Jedis;
 import com.imaginarycode.minecraft.redisbungee.internal.jedis.JedisPool;
 import com.imaginarycode.minecraft.redisbungee.internal.jedis.exceptions.JedisConnectionException;
+import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Party.Party;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -448,5 +449,18 @@ public class MultiBungee {
             }
         }
         return -1;
+    }
+
+    public void disbandParty(Party party) {
+        disbandParty(party.getName());
+    }
+
+    public void disbandParty(String name) {
+        sendChannelMessage("disbandParty", name);
+    }
+
+    public void mutePlayer(UUID muteUUID, String muteName, long muteUntilTime, String reason, String adminName, UUID adminUUID) {
+        sendChannelMessage("mute", BungeeGuardUtils.getMB().getServerId(), "" + muteUUID,
+                muteName, "" + muteUntilTime, reason, adminName, "" + adminUUID);
     }
 }

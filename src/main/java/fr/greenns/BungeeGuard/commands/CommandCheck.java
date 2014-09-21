@@ -1,8 +1,8 @@
 package fr.greenns.BungeeGuard.commands;
 
-import fr.greenns.BungeeGuard.Ban.Ban;
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
+import fr.greenns.BungeeGuard.Models.BungeeBan;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -26,8 +26,8 @@ public class CommandCheck extends Command {
         } else {
 
             UUID bannedUUID = BungeeGuardUtils.getMB().getUuidFromName(args[0]);
+            BungeeBan ban = plugin.getBM().findBan(bannedUUID);
 
-            Ban ban = BungeeGuardUtils.getBan(bannedUUID);
             if (ban == null) {
                 sender.sendMessage(new ComponentBuilder("Le joueur ").color(ChatColor.YELLOW).append(args[0]).color(ChatColor.AQUA).append(" n'est pas banni.").color(ChatColor.YELLOW).create());
             } else {

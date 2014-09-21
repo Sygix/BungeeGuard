@@ -2,9 +2,9 @@ package fr.greenns.BungeeGuard;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import fr.greenns.BungeeGuard.Ban.Ban;
+import fr.greenns.BungeeGuard.Models.BungeeBan;
+import fr.greenns.BungeeGuard.Models.BungeeMute;
 import fr.greenns.BungeeGuard.MultiBungee.MultiBungee;
-import fr.greenns.BungeeGuard.Mute.Mute;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.config.Configuration;
@@ -25,7 +25,7 @@ public class BungeeGuardUtils {
     public static Main plugin;
     static Pattern timePattern = Pattern.compile("([0-9]+)([wdhms])");
     private static String server_id;
-    public String staffBroadcast = ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + "" + ChatColor.BOLD + "STAFF" + ChatColor.GRAY + "" + ChatColor.BOLD + "]" + ChatColor.GRAY;
+    private static String staffBroadcastTag = ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + "" + ChatColor.BOLD + "STAFF" + ChatColor.GRAY + "" + ChatColor.BOLD + "]" + ChatColor.GRAY;
 
     public BungeeGuardUtils(Main plugin) {
         BungeeGuardUtils.plugin = plugin;
@@ -64,11 +64,14 @@ public class BungeeGuardUtils {
     }
 
     public static String getDuration(final long futureTimestamp) {
-        if (futureTimestamp == -1) return "";
+        if (futureTimestamp == -1)
+            return "";
+        if (futureTimestamp < 0)
+            return "-" + getDuration(-futureTimestamp);
         int seconds = (int) ((futureTimestamp - System.currentTimeMillis()) / 1000);
         Preconditions.checkArgument(seconds > 0, "Le timestamp doit etre supérieur au current timestamp !");
 
-        final List<String> item = new ArrayList<String>();
+        final List<String> item = new ArrayList<>();
 
         int years = 0;
         while (seconds >= 31536000) {
@@ -144,24 +147,12 @@ public class BungeeGuardUtils {
         return msg;
     }
 
-    public static Ban getBan(UUID u) {
-        if (u == null)
-            return null;
-        for (Ban Ban : Main.bans) {
-            if (Ban.getUUID().equals(u))
-                return Ban;
-        }
-        return null;
+    public static BungeeBan getBan(UUID u) {
+        return plugin.getBM().findBan(u);
     }
 
-    public static Mute getMute(UUID u) {
-        if (u == null)
-            return null;
-        for (Mute Ban : Main.mutes) {
-            if (Ban.getUUID().equals(u))
-                return Ban;
-        }
-        return null;
+    public static BungeeMute getMute(UUID u) {
+        return plugin.getMM().findMute(u);
     }
 
     public static MultiBungee getMB() {
@@ -180,8 +171,9 @@ public class BungeeGuardUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(config);
-        server_id = String.valueOf(config.getString("server-id", "bungeeX"));
+        if (config != null) {
+            server_id = String.valueOf(config.getString("server-id", "bungeeX"));
+        }
         return server_id;
     }
 
@@ -189,6 +181,10 @@ public class BungeeGuardUtils {
         message = ChatColor.translateAlternateColorCodes('&', message).replaceAll("%n", "\n");
         // message = message.replaceAll("%timer", getDateFormat(plugin.time));
         return message;
+    }
+
+    public static String getStaffBroadcastTag() {
+        return staffBroadcastTag;
     }
 
     public boolean isParsableToInt(String i) {
@@ -208,7 +204,7 @@ public class BungeeGuardUtils {
     }
 
     @SuppressWarnings("deprecation")
-    public void msgPluginCommand(CommandSender sender) {
+    public static void msgPluginCommand(CommandSender sender) {
         sender.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE
                 + "                            " + ChatColor.RESET
                 + "§6.: BungeeManager :." + ChatColor.RED + ""

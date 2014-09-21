@@ -1,5 +1,6 @@
 package fr.greenns.BungeeGuard.commands;
 
+import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -28,19 +29,19 @@ public class CommandSilence extends Command {
 
         if (args.length == 0) {
             String servName = p.getServer().getInfo().getName();
-            boolean silenced = !plugin.silencedServers.contains(servName);
+            boolean silenced = !plugin.isSilenced(servName);
             plugin.getMB().silenceServer(servName, silenced);
             for (ProxiedPlayer playerdwa : ProxyServer.getInstance().getPlayers()) {
                 if (playerdwa.getServer().getInfo().getName().equalsIgnoreCase(servName) &&
                         playerdwa.hasPermission("bungeeguard.notify")) {
-                    playerdwa.sendMessage(new ComponentBuilder(plugin.utils.staffBroadcast + "Le chat du serveur ").color(ChatColor.GRAY)
+                    playerdwa.sendMessage(new ComponentBuilder(BungeeGuardUtils.getStaffBroadcastTag() + "Le chat du serveur ").color(ChatColor.GRAY)
                             .append(servName).color(ChatColor.AQUA).append(" a été ").color(ChatColor.GRAY)
                             .append(silenced ? "désactivé " : "activé").color(silenced ? ChatColor.RED : ChatColor.GREEN).append("!").color(ChatColor.GRAY).create());
                 }
             }
 
         } else {
-            plugin.utils.msgPluginCommand(sender);
+            BungeeGuardUtils.msgPluginCommand(sender);
         }
     }
 

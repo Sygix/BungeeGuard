@@ -2,7 +2,6 @@ package fr.greenns.BungeeGuard.Mute;
 
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
-import fr.greenns.BungeeGuard.MultiBungee.MultiBungee;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -13,18 +12,20 @@ import java.util.UUID;
 
 public class CommandMute extends Command {
 
+    private MuteManager MM;
     public Main plugin;
 
     public CommandMute(Main plugin) {
         super("mute", "bungeeguard.mute");
         this.plugin = plugin;
+        this.MM = plugin.getMM();
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         long startTime = System.currentTimeMillis();
         String adminName = (sender instanceof ProxiedPlayer) ? sender.getName() : "UHConsole";
-        String adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId().toString() : "UHConsole";
+        UUID adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : UUID.fromString("UHConsole");
 
         if (args.length == 0) {
             sender.sendMessage(new ComponentBuilder("Usage: /mute <pseudo> [duration] [reason]").color(ChatColor.RED).create());
@@ -48,7 +49,14 @@ public class CommandMute extends Command {
                     reason += " " + args[i];
                 }
             }
-            if (reason.equals("")) reason = null;
+
+            reason = reason.trim();
+
+            if (reason.equals(""))
+                reason = null;
+
+            if (plugin.isPremadeMessage(reason))
+                reason = plugin.getPremadeMessage(reason);
 
             MuteType MuteTypeVar;
             MuteTypeVar = (reason != null) ? MuteType.NON_PERMANENT_W_REASON : MuteType.NON_PERMANENT;
@@ -62,16 +70,9 @@ public class CommandMute extends Command {
 
             BungeeGuardUtils.getMB().sendPlayerMessage(muteUUID, muteMessage);
 
-            Mute alreadyMute = BungeeGuardUtils.getMute(muteUUID);
-            if (alreadyMute != null)
-                Main.mutes.remove(alreadyMute);
+            MM.mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID, true);
 
-            Mute Mute = new Mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
-            Mute.addToBdd();
-
-            BungeeGuardUtils.getMB().sendChannelMessage("mute",
-                    BungeeGuardUtils.getMB().getServerId() + MultiBungee.SEPARATOR + muteUUID + MultiBungee.SEPARATOR + muteName + MultiBungee.SEPARATOR + muteUntilTime + MultiBungee.SEPARATOR +
-                            reason + MultiBungee.SEPARATOR + adminName + MultiBungee.SEPARATOR + adminUUID);
+            BungeeGuardUtils.getMB().mutePlayer(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
 
             String adminFormat = MuteTypeVar.adminFormat(muteDurationStr, reason, adminName, muteName);
             BungeeGuardUtils.getMB().notifyStaff(adminFormat);

@@ -83,8 +83,10 @@ public class CommandParty extends Command {
                 join(p, args);
                 break;
             case "leave":
-            case "disband":
                 leave(p, args);
+                break;
+            case "disband":
+                disband(p, args);
                 break;
             case "chat":
                 chat(p, args);
@@ -109,31 +111,50 @@ public class CommandParty extends Command {
 
     }
 
-    private void kick(ProxiedPlayer sender, String[] args) {
-        Party p = PM.getPartyByPlayer(sender);
-        if (p == null) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
+    private void disband(ProxiedPlayer sender, String[] args) {
+        if (!sender.hasPermission("bungee.party.disband")) {
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Permission refusée."));
             return;
         }
+        if (args.length != 2) {
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /party disband <nom de la party>"));
+            return;
+        }
+        String partyName = args[0];
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Party supprimée."));
+        MB.disbandParty(partyName);
+    }
+
+    private void kick(ProxiedPlayer sender, String[] args) {
         if (args.length != 2) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /party kick <joueur>"));
             return;
         }
-        if (!p.isOwner(sender)) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Accès refusé."));
-            return;
-        }
         String player = args[1];
         UUID u = MB.getUuidFromName(player);
+        Party party = PM.getPartyByPlayer(u);
+        if (!sender.hasPermission("bungee.party.kick")) {
+            Party p = PM.getPartyByPlayer(sender);
+            if (p == null) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
+                return;
+            }
+            if (!p.isOwner(sender)) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Accès refusé."));
+                return;
+            }
+            if (!p.isMember(u)) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ce joueur n'est pas dans ta Party."));
+                return;
+            }
+        }
+
         if (u == null || !MB.isPlayerOnline(u)) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ce joueur n'est pas connecté."));
             return;
         }
-        if (!p.isMember(u)) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ce joueur n'est pas dans ta Party."));
-            return;
-        }
-        MB.kickFromParty(p, u);
+
+        MB.kickFromParty(party, u);
     }
 
     private void owner(ProxiedPlayer sender, String[] args) {
