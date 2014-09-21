@@ -131,7 +131,7 @@ public class BungeeGuardListener implements Listener {
                     MuteType MuteType = (mute.getReason() != null) ? fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT_W_REASON : fr.greenns.BungeeGuard.Mute.MuteType.NON_PERMANENT;
                     String muteDurationStr = BungeeGuardUtils.getDuration(mute.getUntilTimestamp());
                     String MuteMsg = MuteType.playerFormat(muteDurationStr, mute.getReason());
-                    p.sendMessage(new ComponentBuilder(MuteMsg).create());
+                    p.sendMessage(TextComponent.fromLegacyText(MuteMsg));
                     e.setCancelled(true);
                 } else {
                     plugin.getMM().unmute(mute, "TimeEnd", "Automatique", true);
