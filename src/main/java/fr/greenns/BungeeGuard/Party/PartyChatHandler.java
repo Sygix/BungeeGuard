@@ -36,7 +36,7 @@ public class PartyChatHandler extends PubSubBase {
             pp = ProxyServer.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
-            pp.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "[Party:" + p.getName() + "]" + ChatColor.RESET + playerName + ": " + message));
+            pp.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "[Party:" + p.getName() + "] " + ChatColor.RESET + playerName + ": " + message));
 
         }
     }
