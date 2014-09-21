@@ -23,11 +23,7 @@ public class SummonHandler extends PubSubBase {
             return;
         }
 
-        if (playerName.equalsIgnoreCase("*")) {
-            for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
-                summon(p, target, sender);
-            }
-        } else if (ProxyServer.getInstance().getServerInfo(playerName) != null) {
+        if (ProxyServer.getInstance().getServerInfo(playerName) != null) {
             for (ProxiedPlayer p : ProxyServer.getInstance().getServerInfo(playerName).getPlayers()) {
                 summon(p, target, sender);
             }
