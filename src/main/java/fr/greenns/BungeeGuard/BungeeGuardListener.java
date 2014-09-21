@@ -108,17 +108,18 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onChat(ChatEvent e) {
         ProxiedPlayer p = (ProxiedPlayer) e.getSender();
-        plugin.getAS().onChat(e);
 
         if (!p.hasPermission("bungee.admin")) {
-            System.out.println(plugin.getForbiddenCommands());
+            plugin.getAS().onChat(e);
+
             if (Permissions.miniglob(plugin.getForbiddenCommands(), e.getMessage())) {
                 e.setMessage("");
                 e.setCancelled(true);
                 return;
             }
         }
-
+        if (e.isCancelled())
+            return;
         if (!e.getMessage().startsWith("/") && (e.getSender() instanceof ProxiedPlayer)) {
 
             if (e.isCommand()) {
