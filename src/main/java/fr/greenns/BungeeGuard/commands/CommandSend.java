@@ -41,9 +41,7 @@ public class CommandSend extends Command implements TabExecutor {
             return;
         }
 
-        if (args[0].equalsIgnoreCase("all") || args[0].equalsIgnoreCase("*")) {
-            summon("all", target.getName(), sender.getName());
-        } else if (args[0].equalsIgnoreCase("current") || args[0].equalsIgnoreCase("@")) {
+        if (args[0].equalsIgnoreCase("current") || args[0].equalsIgnoreCase("@")) {
             if (!(sender instanceof ProxiedPlayer)) {
                 sender.sendMessage(new TextComponent(ChatColor.RED + "Only in game players can use this command"));
                 return;
@@ -77,9 +75,6 @@ public class CommandSend extends Command implements TabExecutor {
                 if (player.getName().toLowerCase().startsWith(search)) {
                     matches.add(player.getName());
                 }
-            }
-            if ("all".startsWith(search)) {
-                matches.add("all");
             }
             if ("current".startsWith(search)) {
                 matches.add("current");
