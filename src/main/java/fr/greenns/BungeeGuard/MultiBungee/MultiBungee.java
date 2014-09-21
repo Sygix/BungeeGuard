@@ -449,4 +449,12 @@ public class MultiBungee {
         }
         return -1;
     }
+
+    public void disbandParty(Party party) {
+        disbandParty(party.getName());
+    }
+
+    private void disbandParty(String name) {
+        sendChannelMessage("disbandParty", name);
+    }
 }
