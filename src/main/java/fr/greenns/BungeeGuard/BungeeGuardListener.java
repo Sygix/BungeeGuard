@@ -20,7 +20,9 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class BungeeGuardListener implements Listener {
@@ -115,6 +117,19 @@ public class BungeeGuardListener implements Listener {
     public void onChat(ChatEvent e) {
         ProxiedPlayer p = (ProxiedPlayer) e.getSender();
 
+        Set<String> blockedCmds = new HashSet<>();
+        blockedCmds.add("/bukkit:");
+        blockedCmds.add("/about");
+        blockedCmds.add("/bungee");
+        blockedCmds.add("/me");
+
+        for (String blockedCmd : blockedCmds) {
+            if (e.getMessage().startsWith(blockedCmd)) {
+                e.setMessage("");
+                e.setCancelled(true);
+                return;
+            }
+        }
         if (!e.getMessage().startsWith("/") && (e.getSender() instanceof ProxiedPlayer)) {
 
             if (e.isCommand()) {
@@ -204,8 +219,7 @@ public class BungeeGuardListener implements Listener {
         }
         reason = reason.trim();
 
-        if (!(reason.contains("ban") || reason.contains("plein") ||
-                reason.contains("Full") || reason.contains("fly") ||
+        if (!(reason.contains("ban") || reason.contains("Full") || reason.contains("fly") ||
                 reason.contains("Nos services") || reason.contains("kické") ||
                 reason.contains("bannis") || reason.contains("maintenance") ||
                 reason.contains("kick") || reason.contains("VIP"))) {
