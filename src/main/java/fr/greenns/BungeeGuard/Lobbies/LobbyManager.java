@@ -55,7 +55,7 @@ public class LobbyManager {
             public void run() {
                 final List<Lobby> new_lobbys = new ArrayList<>();
                 for (final ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
-                    if (serverInfo.getName().startsWith("lobby")) {
+                    if (serverInfo.getName().startsWith("lobby") || serverInfo.getName().equalsIgnoreCase("limbo")) {
                         serverInfo.ping(new Callback<ServerPing>() {
                             @Override
                             public void done(ServerPing result, Throwable error) {
@@ -66,6 +66,8 @@ public class LobbyManager {
                                     lobby.setMaxPlayers(result.getPlayers().getMax());
                                     lobby.setOnlinePlayers(result.getPlayers().getOnline());
                                     lobby.setTps(Double.parseDouble(result.getDescription()));
+                                    if (serverInfo.getName().equalsIgnoreCase("limbo"))
+                                        lobby.setTps(-1000);
                                 }
                                 new_lobbys.add(lobby);
                             }
