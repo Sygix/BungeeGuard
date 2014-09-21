@@ -20,9 +20,9 @@ public class ServerSilenceHandler extends PubSubBase {
         String serverName = args[0];
         boolean state = Boolean.parseBoolean(args[1]);
         if (state) {
-            plugin.silencedServers.add(serverName);
+            plugin.silence(serverName);
         } else {
-            plugin.silencedServers.remove(serverName);
+            plugin.unsilence(serverName);
         }
     }
 }

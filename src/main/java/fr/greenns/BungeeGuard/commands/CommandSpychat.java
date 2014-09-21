@@ -30,11 +30,10 @@ public class CommandSpychat extends Command {
         }
         ProxiedPlayer p = (ProxiedPlayer) sender;
 
-        if (plugin.spy.contains(p.getUniqueId())) {
-            plugin.spy.remove(p.getUniqueId());
+        plugin.toggleSpy(p.getUniqueId());
+        if (!plugin.isSpying(p.getUniqueId())) {
             p.sendMessage(new ComponentBuilder("Vous avez désactivé ").color(ChatColor.GRAY).append("SpyChat").color(ChatColor.RED).create());
         } else {
-            plugin.spy.add(p.getUniqueId());
             p.sendMessage(new ComponentBuilder("Vous avez activé ").color(ChatColor.GRAY).append("SpyChat").color(ChatColor.GREEN).create());
         }
     }

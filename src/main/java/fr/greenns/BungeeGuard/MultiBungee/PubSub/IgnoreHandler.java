@@ -2,8 +2,6 @@ package fr.greenns.BungeeGuard.MultiBungee.PubSub;
 
 import fr.greenns.BungeeGuard.Main;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -24,29 +22,14 @@ public class IgnoreHandler extends PubSubBase {
         UUID joueur = UUID.fromString(args[0]);
         String action = args[0];
         UUID toIgnore = UUID.fromString(args[2]);
-        List<UUID> liste = getListe(joueur);
 
         switch (action) {
             case "+":
-                liste.add(toIgnore);
+                plugin.getIM().ignore(joueur, toIgnore);
                 break;
             case "-":
-                liste.remove(toIgnore);
-                if (liste.isEmpty()) {
-                    plugin.ignore.remove(joueur);
-                }
+                plugin.getIM().unIgnore(joueur, toIgnore);
                 break;
         }
-    }
-
-    public List<UUID> getListe(UUID joueur) {
-        List<UUID> liste;
-        if (!plugin.ignore.containsKey(joueur)) {
-            liste = new ArrayList<>();
-            plugin.ignore.put(joueur, liste);
-        } else {
-            liste = plugin.ignore.get(joueur);
-        }
-        return liste;
     }
 }

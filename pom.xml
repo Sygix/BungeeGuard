@@ -40,6 +40,11 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.javalite</groupId>
+            <artifactId>activejdbc</artifactId>
+            <version>1.4.10-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>BungeeCord</finalName>
@@ -59,7 +64,23 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <fork>true</fork>
+                    <meminitial>128m</meminitial>
+                    <maxmem>512m</maxmem>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.javalite</groupId>
+                <artifactId>activejdbc-instrumentation</artifactId>
+                <version>1.4.9</version>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>instrument</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
