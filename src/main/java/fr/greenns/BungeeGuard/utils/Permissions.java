@@ -2,6 +2,8 @@ package fr.greenns.BungeeGuard.utils;
 
 import net.md_5.bungee.api.ProxyServer;
 
+import java.util.List;
+
 /**
  * Part of fr.greenns.BungeeGuard.utils
  * Date: 30/08/2014
@@ -47,5 +49,13 @@ public class Permissions {
         // ("a.b.c", "a.b.c") -> true
         // ("a.*", "a.b.c") -> true
         return miniglob(pattern.split("\\*+", -1), line);
+    }
+
+    public static boolean miniglob(List<String> patterns, String line) {
+        for (String pattern : patterns) {
+            if (miniglob(pattern, line))
+                return true;
+        }
+        return false;
     }
 }

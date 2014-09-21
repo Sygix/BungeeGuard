@@ -20,9 +20,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class BungeeGuardListener implements Listener {
@@ -110,18 +108,13 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onChat(ChatEvent e) {
         ProxiedPlayer p = (ProxiedPlayer) e.getSender();
-        Set<String> blockedCmds = new HashSet<>();
-        blockedCmds.add("/bukkit:");
-        blockedCmds.add("/about");
-        blockedCmds.add("/bungeecord");
-        blockedCmds.add("/me");
-        if (p.hasPermission("bungee.admin")) {
-            for (String blockedCmd : blockedCmds) {
-                if (e.getMessage().startsWith(blockedCmd)) {
-                    e.setMessage("");
-                    e.setCancelled(true);
-                    return;
-                }
+        plugin.getAS().onChat(e);
+
+        if (!p.hasPermission("bungee.admin")) {
+            if (Permissions.miniglob(plugin.getForbiddenCommands(), e.getMessage())) {
+                e.setMessage("");
+                e.setCancelled(true);
+                return;
             }
         }
 

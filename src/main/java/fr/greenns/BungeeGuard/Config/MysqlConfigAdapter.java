@@ -68,6 +68,8 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
 
         List<BungeePremadeMessage> premadeMessages = BungeePremadeMessage.findAll();
         Main.setPremadeMessages(premadeMessages);
+        List<BungeeBlockedCommands> blockedCommands = BungeeBlockedCommands.findAll();
+        Main.setForbiddenCommands(blockedCommands);
     }
 
     private <T> T get(String path, T def) {

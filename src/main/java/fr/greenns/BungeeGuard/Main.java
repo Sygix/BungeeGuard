@@ -1,6 +1,7 @@
 package fr.greenns.BungeeGuard;
 
 import com.google.gson.Gson;
+import fr.greenns.BungeeGuard.AntiSpam.AntiSpamListener;
 import fr.greenns.BungeeGuard.Ban.BanManager;
 import fr.greenns.BungeeGuard.Ban.CommandBan;
 import fr.greenns.BungeeGuard.Ban.CommandUnban;
@@ -9,6 +10,7 @@ import fr.greenns.BungeeGuard.Ignore.IgnoreManager;
 import fr.greenns.BungeeGuard.Kick.CommandKick;
 import fr.greenns.BungeeGuard.Lobbies.Lobby;
 import fr.greenns.BungeeGuard.Lobbies.LobbyManager;
+import fr.greenns.BungeeGuard.Models.BungeeBlockedCommands;
 import fr.greenns.BungeeGuard.Models.BungeePremadeMessage;
 import fr.greenns.BungeeGuard.MultiBungee.MultiBungee;
 import fr.greenns.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
@@ -52,6 +54,8 @@ public class Main extends Plugin {
     private IgnoreManager IM;
     private static Connection db_co;
     private static Map<String, String> premadeMessages = new HashMap<>();
+    private AntiSpamListener AS;
+    private static List<String> forbiddenCommands = new ArrayList<>();
 
     public static void getDb() {
         if (Base.hasConnection()) {
@@ -66,6 +70,10 @@ public class Main extends Plugin {
             // Petit hack qui permet d'utiliser le même SQL dans tous les threads :]
             Base.attach(db_co);
         }
+    }
+
+    public List<String> getForbiddenCommands() {
+        return forbiddenCommands;
     }
 
     public String getMotd() {
@@ -129,6 +137,8 @@ public class Main extends Plugin {
         LM.setupPingTask();
 
         IM = new IgnoreManager(this);
+
+        AS = new AntiSpamListener(this);
 
         BGListener = new BungeeGuardListener(this);
 
@@ -261,11 +271,22 @@ public class Main extends Plugin {
         }
     }
 
+    public static void setForbiddenCommands(List<BungeeBlockedCommands> all) {
+        forbiddenCommands.clear();
+        for (BungeeBlockedCommands cmd : all) {
+            forbiddenCommands.add(cmd.getCommand());
+        }
+    }
+
     public boolean isPremadeMessage(String slug) {
         return premadeMessages.containsKey(slug);
     }
 
     public String getPremadeMessage(String slug) {
         return premadeMessages.get(slug);
+    }
+
+    public AntiSpamListener getAS() {
+        return AS;
     }
 }
