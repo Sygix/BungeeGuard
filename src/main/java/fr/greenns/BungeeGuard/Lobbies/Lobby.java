@@ -10,6 +10,7 @@ public class Lobby {
     private int maxPlayers = 10;
     private boolean isOnline = false;
     private double tps = 0;
+    private Double score;
 
     public Lobby() {
     }
@@ -72,5 +73,11 @@ public class Lobby {
 
     public void setOffline() {
         setOnline(false);
+    }
+
+    public double getScore() {
+        if (score == null)
+            score = (1 + getOnlinePlayers()) * (getMaxPlayers() / 2 - getOnlinePlayers()) * getTps();
+        return score;
     }
 }

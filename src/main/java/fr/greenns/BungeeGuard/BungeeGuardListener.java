@@ -205,12 +205,12 @@ public class BungeeGuardListener implements Listener {
 
     @SuppressWarnings({"deprecation"})
     @EventHandler
-    public void onServerTurnOff(final ServerKickEvent event) {
-        ProxiedPlayer p = event.getPlayer();
+    public void onServerTurnOff(final ServerKickEvent e) {
+        ProxiedPlayer p = e.getPlayer();
         String reason = "";
-        ServerInfo kickedFrom = event.getKickedFrom();
+        ServerInfo kickedFrom = e.getKickedFrom();
 
-        for (BaseComponent b : event.getKickReasonComponent()) {
+        for (BaseComponent b : e.getKickReasonComponent()) {
             reason += b.toPlainText() + "\n";
         }
         reason = reason.trim();
@@ -233,17 +233,22 @@ public class BungeeGuardListener implements Listener {
                 server = l.getServerInfo();
             }
 
-            ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + event.getState().toString() + " - " + reason + ")"));
+            ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + e.getState().toString() + " - " + reason + ")"));
             if (server.getName().equals("limbo") && ProxyServer.getInstance().getServerInfo("limbo").getPlayers().size() > 70) {
                 ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " déconnecté "));
             } else {
                 ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " Redirigé vers " + server.getName().toUpperCase()));
                 p.setReconnectServer(server);
-                event.setCancelled(true);
-                event.setCancelServer(server);
+                e.setCancelled(true);
+                e.setCancelServer(server);
+                return;
             }
         } else {
-            p.disconnect(event.getKickReasonComponent());
+            p.disconnect(e.getKickReasonComponent());
+        }
+
+        if (plugin.getPM().inParty(p)) {
+            plugin.getMB().playerLeaveParty(plugin.getPM().getPartyByPlayer(p), p);
         }
     }
 
