@@ -2,10 +2,7 @@ package fr.greenns.BungeeGuard.Config;
 
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
-import fr.greenns.BungeeGuard.Models.BungeeConfig;
-import fr.greenns.BungeeGuard.Models.BungeeForcedHost;
-import fr.greenns.BungeeGuard.Models.BungeeInstance;
-import fr.greenns.BungeeGuard.Models.BungeeServer;
+import fr.greenns.BungeeGuard.Models.*;
 import net.md_5.bungee.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -68,6 +65,9 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         if (groups.isEmpty()) {
             groups.put("md_5", Collections.singletonList("admin"));
         }
+
+        List<BungeePremadeMessage> premadeMessages = BungeePremadeMessage.findAll();
+        Main.setPremadeMessages(premadeMessages);
     }
 
     private <T> T get(String path, T def) {

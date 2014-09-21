@@ -203,7 +203,6 @@ public class BungeeGuardListener implements Listener {
         e.getResponse().getPlayers().setSample(players);
     }
 
-    @SuppressWarnings({"deprecation"})
     @EventHandler
     public void onServerTurnOff(final ServerKickEvent e) {
         ProxiedPlayer p = e.getPlayer();

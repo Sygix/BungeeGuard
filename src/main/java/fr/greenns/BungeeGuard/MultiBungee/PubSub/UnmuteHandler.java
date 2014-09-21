@@ -15,7 +15,7 @@ import java.util.UUID;
 public class UnmuteHandler extends PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
-        UUID muteUUID = UUID.fromString(args[0]);
+        UUID muteUUID = UUID.fromString(args[1]);
         MuteManager MM = Main.plugin.getMM();
         BungeeMute mute = MM.findMute(muteUUID);
         MM.removeMute(mute);

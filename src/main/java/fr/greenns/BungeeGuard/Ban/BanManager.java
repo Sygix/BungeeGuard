@@ -47,7 +47,6 @@ public class BanManager {
         BungeeBan ban;
         ban = findBan(bannedUUID);
         unban(ban, adminName, "ReBan", saveToBdd);
-        removeBan(ban);
 
         ban = new BungeeBan();
         ban.setBannedUUID(bannedUUID.toString());
@@ -57,6 +56,7 @@ public class BanManager {
         ban.setReason(reason);
         ban.setBannedUntil(bannedUntilTime);
         ban.setStatus(1);
+        banList.add(ban);
         if (saveToBdd)
             ban.saveIt();
         return ban;
@@ -70,6 +70,7 @@ public class BanManager {
         ban.setUnbanAdminName(adminName);
         ban.setUnbanTime(System.currentTimeMillis());
         ban.setStatus(0);
+        removeBan(ban);
         if (saveToBdd)
             ban.saveIt();
     }

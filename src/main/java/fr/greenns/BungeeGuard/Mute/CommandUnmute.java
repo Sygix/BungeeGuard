@@ -37,6 +37,10 @@ public class CommandUnmute extends Command {
             }
             String muteName = args[0];
 
+            unmuteReason = unmuteReason.trim();
+
+            if (plugin.isPremadeMessage(unmuteReason))
+                unmuteReason = plugin.getPremadeMessage(unmuteReason);
             UUID muteUUID = BungeeGuardUtils.getMB().getUuidFromName(muteName);
 
             BungeeMute mute = MM.findMute(muteUUID);

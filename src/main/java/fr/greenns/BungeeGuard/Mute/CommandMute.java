@@ -2,7 +2,6 @@ package fr.greenns.BungeeGuard.Mute;
 
 import fr.greenns.BungeeGuard.BungeeGuardUtils;
 import fr.greenns.BungeeGuard.Main;
-import fr.greenns.BungeeGuard.MultiBungee.MultiBungee;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -50,7 +49,14 @@ public class CommandMute extends Command {
                     reason += " " + args[i];
                 }
             }
-            if (reason.equals("")) reason = null;
+
+            reason = reason.trim();
+
+            if (reason.equals(""))
+                reason = null;
+
+            if (plugin.isPremadeMessage(reason))
+                reason = plugin.getPremadeMessage(reason);
 
             MuteType MuteTypeVar;
             MuteTypeVar = (reason != null) ? MuteType.NON_PERMANENT_W_REASON : MuteType.NON_PERMANENT;
@@ -64,12 +70,9 @@ public class CommandMute extends Command {
 
             BungeeGuardUtils.getMB().sendPlayerMessage(muteUUID, muteMessage);
 
-
             MM.mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID, true);
 
-            BungeeGuardUtils.getMB().sendChannelMessage("mute",
-                    BungeeGuardUtils.getMB().getServerId() + MultiBungee.SEPARATOR + muteUUID + MultiBungee.SEPARATOR + muteName + MultiBungee.SEPARATOR + muteUntilTime + MultiBungee.SEPARATOR +
-                            reason + MultiBungee.SEPARATOR + adminName + MultiBungee.SEPARATOR + adminUUID);
+            BungeeGuardUtils.getMB().mutePlayer(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
 
             String adminFormat = MuteTypeVar.adminFormat(muteDurationStr, reason, adminName, muteName);
             BungeeGuardUtils.getMB().notifyStaff(adminFormat);
