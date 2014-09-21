@@ -72,7 +72,7 @@ public class CommandMsg extends Command {
                 return;
             }
             UUID receiverUUID = BungeeGuardUtils.getMB().getUuidFromName(args[0]);
-            boolean isReply = plugin.reply.containsKey(p.getUniqueId()) || plugin.reply.get(p.getUniqueId()).equals(receiverUUID.toString());
+            boolean isReply = plugin.reply.containsKey(p.getUniqueId()) && plugin.reply.get(p.getUniqueId()).equals(receiverUUID.toString());
             if (Permissions.hasPerm(args[0], "bungeeguard.moremsg") && !p.hasPermission("bungeeguard.moremsg") && !isReply) {
                 p.sendMessage(new ComponentBuilder("Vous n'avez pas la permission de parler à ce joueur !").color(ChatColor.RED).create());
                 return;
