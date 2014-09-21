@@ -1,7 +1,6 @@
 package fr.greenns.BungeeGuard.AntiSpam;
 
 import fr.greenns.BungeeGuard.Main;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -28,19 +27,18 @@ public class AntiSpamListener implements Listener {
         if (!(e.getSender() instanceof ProxiedPlayer))
             return;
         ProxiedPlayer p = (ProxiedPlayer) e.getSender();
-        if (lastMessage.get(p.getUniqueId()).equalsIgnoreCase(e.getMessage())) {
+        if (lastMessage.containsKey(p.getUniqueId()) && lastMessage.get(p.getUniqueId()).equalsIgnoreCase(e.getMessage())) {
             if (!duplicateCount.containsKey(p.getUniqueId()))
                 duplicateCount.put(p.getUniqueId(), 0);
             duplicateCount.put(p.getUniqueId(), duplicateCount.get(p.getUniqueId()) + 1);
         } else {
-            duplicateCount.put(p.getUniqueId(), 0);
+            duplicateCount.put(p.getUniqueId(), 1);
         }
         lastMessage.put(p.getUniqueId(), e.getMessage());
 
         if (duplicateCount.get(p.getUniqueId()) > 2) {
             e.setCancelled(true);
             e.setMessage("");
-            p.sendMessage(new TextComponent(e.getMessage()));
         }
     }
 }

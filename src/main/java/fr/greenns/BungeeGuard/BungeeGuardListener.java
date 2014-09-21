@@ -111,6 +111,7 @@ public class BungeeGuardListener implements Listener {
         plugin.getAS().onChat(e);
 
         if (!p.hasPermission("bungee.admin")) {
+            System.out.println(plugin.getForbiddenCommands());
             if (Permissions.miniglob(plugin.getForbiddenCommands(), e.getMessage())) {
                 e.setMessage("");
                 e.setCancelled(true);
