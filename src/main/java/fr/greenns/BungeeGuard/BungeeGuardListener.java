@@ -20,7 +20,9 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class BungeeGuardListener implements Listener {
@@ -34,7 +36,8 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onLogin(LoginEvent event) {
         String hostString = event.getConnection().getVirtualHost().getHostString();
-        if (!event.getConnection().getListener().getForcedHosts().containsKey(hostString)) {
+        if (!Permissions.hasPerm(event.getConnection().getName(), "bungee.canBypassHost") &&
+                !event.getConnection().getListener().getForcedHosts().containsKey(hostString)) {
             event.setCancelled(true);
             event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
             return;
@@ -107,6 +110,20 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onChat(ChatEvent e) {
         ProxiedPlayer p = (ProxiedPlayer) e.getSender();
+        Set<String> blockedCmds = new HashSet<>();
+        blockedCmds.add("/bukkit:");
+        blockedCmds.add("/about");
+        blockedCmds.add("/bungeecord");
+        blockedCmds.add("/me");
+        if (p.hasPermission("bungee.admin")) {
+            for (String blockedCmd : blockedCmds) {
+                if (e.getMessage().startsWith(blockedCmd)) {
+                    e.setMessage("");
+                    e.setCancelled(true);
+                    return;
+                }
+            }
+        }
 
         if (!e.getMessage().startsWith("/") && (e.getSender() instanceof ProxiedPlayer)) {
 
@@ -198,8 +215,7 @@ public class BungeeGuardListener implements Listener {
         }
         reason = reason.trim();
 
-        if (!(reason.contains("ban") || reason.contains("plein") ||
-                reason.contains("Full") || reason.contains("fly") ||
+        if (!(reason.contains("ban") || reason.contains("Full") || reason.contains("fly") ||
                 reason.contains("Nos services") || reason.contains("kické") ||
                 reason.contains("bannis") || reason.contains("maintenance") ||
                 reason.contains("kick") || reason.contains("VIP"))) {
