@@ -53,7 +53,6 @@ public class Permissions {
 
     public static boolean miniglob(List<String> patterns, String line) {
         for (String pattern : patterns) {
-            System.out.println("P: " + pattern + ", L: " + line + miniglob(pattern, line));
             if (miniglob(pattern, line)) {
                 return true;
             }

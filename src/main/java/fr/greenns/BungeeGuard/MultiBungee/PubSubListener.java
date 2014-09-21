@@ -40,8 +40,6 @@ public class PubSubListener implements Listener {
             // Si channel ressemble à @serveur/commande, on retire le préfixe :]
             channel = channel.replace("@" + plugin.getMB().getServerId() + "/", "@");
         }
-        System.out.println(channel + ": " + message);
-        System.out.println("");
 
         switch (channel) {
             case "redisbungee-data":
