@@ -65,8 +65,15 @@ public class LobbyManager {
                                     lobby.setName(serverInfo.getName());
                                     lobby.setMaxPlayers(result.getPlayers().getMax());
                                     lobby.setOnlinePlayers(result.getPlayers().getOnline());
-                                    if (!serverInfo.getName().startsWith("limbo"))
-                                        lobby.setTps(Double.parseDouble(result.getDescription()));
+                                    if (!serverInfo.getName().startsWith("limbo")) {
+                                        double tps;
+                                        try {
+                                            tps = Double.parseDouble(result.getDescription());
+                                        } catch (NumberFormatException e) {
+                                            tps = 10;
+                                        }
+                                        lobby.setTps(tps);
+                                    }
                                 }
                                 new_lobbys.add(lobby);
                             }
