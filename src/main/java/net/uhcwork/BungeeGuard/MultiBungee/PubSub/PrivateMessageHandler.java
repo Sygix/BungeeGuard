@@ -46,7 +46,7 @@ public class PrivateMessageHandler extends PubSubBase {
             p.sendMessage(ObjectArrays.concat(mp, contenu, BaseComponent.class));
         }
 
-        plugin.setReply(receiver, UUID.fromString(sender));
+        plugin.setReply(receiver, BungeeGuardUtils.getMB().getUuidFromName(sender));
 
         ProxiedPlayer admin;
         for (UUID uuid : plugin.getSpies()) {
