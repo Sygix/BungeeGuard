@@ -201,9 +201,8 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Collection<String> getPermissions(String group) {
-        return get("permissions." + group, Collections.EMPTY_LIST);
+        return get("permissions." + group, Collections.<String>emptySet());
     }
 
     public Map<String, String> getForcedHosts() throws SQLException {
