@@ -29,7 +29,7 @@ public class PrivateMessageHandler extends PubSubBase {
 
     @Override
     public void handle(String channel, String message, String[] args) {
-        String sender = args[1];
+        String sender = args[0];
         UUID receiver = UUID.fromString(args[1]);
         BaseComponent[] contenu;
 
