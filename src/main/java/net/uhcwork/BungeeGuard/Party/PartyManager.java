@@ -1,6 +1,8 @@
 package net.uhcwork.BungeeGuard.Party;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.uhcwork.BungeeGuard.BungeeGuardUtils;
+import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,11 +18,27 @@ public class PartyManager {
     private Map<String, Party> parties = new HashMap<>();
 
     public Map<String, Party> getParties() {
+        clean();
         return parties;
     }
 
     public void setParties(Map<String, Party> parties) {
         this.parties = parties;
+    }
+
+    public void clean() {
+        MultiBungee MB = BungeeGuardUtils.getMB();
+        for (Party p : parties.values()) {
+            for (UUID u : p.getMembers()) {
+                if (!MB.isPlayerOnline(u)) {
+                    p.removeMember(u);
+                }
+            }
+            if (p.getSize() == 0) {
+                removeParty(p);
+                BungeeGuardUtils.getMB().disbandParty(p.getName());
+            }
+        }
     }
 
     public Party getParty(String nom) {

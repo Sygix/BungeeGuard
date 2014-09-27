@@ -1,20 +1,18 @@
-package net.uhcwork.BungeeGuard.Party;
+package net.uhcwork.BungeeGuard.Party.PubSub;
 
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.PubSubBase;
 
-import java.util.UUID;
-
 /**
- * Part of net.uhcwork.BungeeGuard (bungeeguard)
+ * Part of net.uhcwork.BungeeGuard.Party (bungeeguard)
  * Date: 10/09/2014
- * Time: 21:25
+ * Time: 21:23
  * May be open-source & be sold (by mguerreiro, of course !)
  */
-public class PartyOwnerSetHandler extends PubSubBase {
+public class PartyPubliqueHandler extends PubSubBase {
     Main plugin;
 
-    public PartyOwnerSetHandler(Main plugin) {
+    public PartyPubliqueHandler(Main plugin) {
         {
             this.plugin = plugin;
         }
@@ -23,10 +21,7 @@ public class PartyOwnerSetHandler extends PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
         String partyName = args[0];
-        UUID u = UUID.fromString(args[1]);
-        Party p = plugin.getPM().getParty(partyName);
-        if (p == null)
-            return;
-        p.setOwner(u);
+        boolean isPublique = Boolean.parseBoolean(args[1]);
+        plugin.getPM().getParty(partyName).setPublique(isPublique);
     }
 }
