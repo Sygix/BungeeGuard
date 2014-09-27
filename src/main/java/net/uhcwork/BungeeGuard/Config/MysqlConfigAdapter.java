@@ -68,9 +68,12 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         }
 
         List<BungeePremadeMessage> premadeMessages = BungeePremadeMessage.findAll();
-        Main.setPremadeMessages(premadeMessages);
+        plugin.setPremadeMessages(premadeMessages);
         List<BungeeBlockedCommands> blockedCommands = BungeeBlockedCommands.findAll();
-        Main.setForbiddenCommands(blockedCommands);
+        plugin.setForbiddenCommands(blockedCommands);
+        List<BungeeAnnouncements> announcements = BungeeAnnouncements.findAll();
+        plugin.getAM().setAnnouncements(announcements);
+        plugin.setBroadcastDelay(conf.getBroadcastDelay());
     }
 
     private <T> T get(String path, T def) {

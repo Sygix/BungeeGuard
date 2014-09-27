@@ -23,4 +23,8 @@ public class BungeeConfig extends Model {
     public Integer getMaxPlayers() {
         return getInteger("max_players");
     }
+
+    public int getBroadcastDelay() {
+        return getInteger("broadcast_delay");
+    }
 }
