@@ -21,31 +21,31 @@ public class CommandBUp extends Command {
         this.plugin = plugin;
     }
 
-    private static String formatUptime(Number uptime) {
-        String retval = "";
+    private static String formatUptime(Long uptime) {
+        String duration = "";
 
-        int days = (int) uptime / (60 * 60 * 24);
+        int days = uptime.intValue() / (60 * 60 * 24);
         int minutes, hours;
 
         if (days != 0)
-            retval += days + " jour" + ((days > 1) ? "s" : "") + ", ";
+            duration += days + " jour" + ((days > 1) ? "s" : "") + ", ";
 
-        minutes = (int) uptime / 60;
+        minutes = uptime.intValue() / 60;
         hours = minutes / 60;
         hours %= 24;
         minutes %= 60;
 
         if (hours != 0)
-            retval += hours + ":" + minutes;
+            duration += hours + ":" + minutes;
         else
-            retval += minutes + " min";
+            duration += minutes + " min";
 
-        return retval;
+        return duration;
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(TextComponent.fromLegacyText(":" + ChatColor.AQUA + plugin.getDescription().getName() + ChatColor.RESET + ": par " + ChatColor.RED + "\u2665 " + plugin.getDescription().getAuthor()));
+        sender.sendMessage(TextComponent.fromLegacyText(":" + ChatColor.BLUE + plugin.getDescription().getName() + ChatColor.RESET + ": par " + ChatColor.RED + "\u2665 " + plugin.getDescription().getAuthor()));
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Version: " + ChatColor.RESET + plugin.getDescription().getVersion()));
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Uptime: " + ChatColor.RESET + formatUptime(plugin.getUptime())));
     }

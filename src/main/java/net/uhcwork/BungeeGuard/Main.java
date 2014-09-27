@@ -289,6 +289,6 @@ public class Main extends Plugin {
     }
 
     public long getUptime() {
-        return System.currentTimeMillis() - startTime;
+        return (System.currentTimeMillis() - startTime) / 1000;
     }
 }
