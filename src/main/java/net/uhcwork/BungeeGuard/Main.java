@@ -39,6 +39,7 @@ public class Main extends Plugin {
     private static List<String> forbiddenCommands = new ArrayList<>();
     public Gson gson = new Gson();
     private String motd;
+    private long startTime;
     private Map<UUID, UUID> reply = new HashMap<>();
     private List<UUID> spy = new ArrayList<>();
     private List<String> silencedServers = new ArrayList<>();
@@ -100,6 +101,7 @@ public class Main extends Plugin {
     @Override
     public void onLoad() {
         plugin = this;
+        startTime = System.currentTimeMillis();
         new BungeeGuardUtils(this);
         System.out.println("Welcome to MultiBungee ~ With ORM");
         getDb();
@@ -179,6 +181,7 @@ public class Main extends Plugin {
         commandes.add(CommandBCast.class);
         commandes.add(CommandGtp.class);
         commandes.add(CommandIgnore.class);
+        commandes.add(CommandBUp.class);
         commandes.add(CommandBLoad.class);
         commandes.add(CommandParty.class);
         commandes.add(CommandServer.class);
@@ -283,5 +286,9 @@ public class Main extends Plugin {
 
     public AntiSpamListener getAS() {
         return AS;
+    }
+
+    public long getUptime() {
+        return System.currentTimeMillis() - startTime;
     }
 }
