@@ -195,6 +195,12 @@ public class PubSubListener implements Listener {
             MB.kickPlayer(playerName, reason);
         }
 
+        if (subchannel.equals("addCoins")) {
+            String playerName = in.readUTF();
+            int amount = in.readInt();
+            plugin.getWM().addToBalance(MB.getUuidFromName(playerName), amount);
+        }
+
         byte[] data = out.toByteArray();
         if (data.length != 0)
             sender.sendData("UHCGames", data);

@@ -27,6 +27,9 @@ import net.uhcwork.BungeeGuard.Mute.CommandUnmute;
 import net.uhcwork.BungeeGuard.Mute.MuteManager;
 import net.uhcwork.BungeeGuard.Party.CommandParty;
 import net.uhcwork.BungeeGuard.Party.PartyManager;
+import net.uhcwork.BungeeGuard.Wallet.CommandPoints;
+import net.uhcwork.BungeeGuard.Wallet.CommandWallet;
+import net.uhcwork.BungeeGuard.Wallet.WalletManager;
 import net.uhcwork.BungeeGuard.commands.*;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DB;
@@ -58,6 +61,8 @@ public class Main extends Plugin {
     private AntiSpamListener AS = new AntiSpamListener();
     private AnnouncementManager AM = new AnnouncementManager(this);
     private int broadcastDelay = 180;
+    private WalletManager WM = new WalletManager(this);
+
 
     public static void getDb() {
         if (Base.hasConnection()) {
@@ -131,7 +136,7 @@ public class Main extends Plugin {
 
     @Override
     public void onEnable() {
-
+        MB.init();
         MB.registerPubSubChannels("ban", "unban");
         MB.registerPubSubChannels("kick", "silenceServer");
         MB.registerPubSubChannels("mute", "unmute");
@@ -161,7 +166,8 @@ public class Main extends Plugin {
                 CommandSpychat.class, CommandSend.class, CommandBan.class, CommandUnban.class, CommandList.class,
                 CommandCheck.class, CommandMute.class, CommandUnmute.class, CommandSilence.class, CommandSay.class,
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
-                CommandIgnore.class, CommandBUp.class, CommandBLoad.class, CommandParty.class, CommandServer.class);
+                CommandIgnore.class, CommandBUp.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
+                CommandPoints.class, CommandWallet.class);
 
         for (Class<? extends Command> commande : commandes) {
             try {
@@ -281,5 +287,9 @@ public class Main extends Plugin {
 
     public AnnouncementManager getAM() {
         return AM;
+    }
+
+    public WalletManager getWM() {
+        return WM;
     }
 }
