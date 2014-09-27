@@ -34,6 +34,10 @@ public class MultiBungee {
     RedisBungee redisbungee;
 
     public MultiBungee() {
+    }
+
+    public void init() {
+        System.out.println("Getting RedisBungee [...]");
         api = RedisBungee.getApi();
         redisbungee = (RedisBungee) ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee");
     }

@@ -32,7 +32,7 @@ public class BungeeGuardListener implements Listener {
     }
 
     @EventHandler
-    public void onLogin(LoginEvent event) {
+    public void onLogin(final LoginEvent event) {
         String hostString = event.getConnection().getVirtualHost().getHostString();
         if (!Permissions.hasPerm(event.getConnection().getName(), "bungee.canBypassHost") &&
                 !event.getConnection().getListener().getForcedHosts().containsKey(hostString)) {
@@ -40,6 +40,13 @@ public class BungeeGuardListener implements Listener {
             event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
             return;
         }
+        ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
+            @Override
+            public void run() {
+                plugin.getWM().getAccount(event.getConnection().getUniqueId());
+            }
+        }, 10, TimeUnit.MILLISECONDS);
+
         BungeeBan ban = BungeeGuardUtils.getBan(event.getConnection().getUniqueId());
         if (ban != null) {
             if (ban.isDefBanned()) {
