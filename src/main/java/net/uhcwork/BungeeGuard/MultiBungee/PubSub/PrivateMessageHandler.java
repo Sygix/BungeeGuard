@@ -28,15 +28,16 @@ public class PrivateMessageHandler extends PubSubBase {
     }
 
     @Override
-    public void handle(String channel, String message, String[] args) {
+    public void handle(String channel, String _, String[] args) {
         String sender = args[0];
         UUID receiver = UUID.fromString(args[1]);
+        String message = args[2];
         BaseComponent[] contenu;
 
         if (Permissions.hasPerm(sender, "bungeeguard.colormsg")) {
-            contenu = TextComponent.fromLegacyText(args[2]);
+            contenu = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message));
         } else {
-            contenu = new BaseComponent[]{new TextComponent(args[2])};
+            contenu = new BaseComponent[]{new TextComponent(message)};
         }
 
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(receiver);

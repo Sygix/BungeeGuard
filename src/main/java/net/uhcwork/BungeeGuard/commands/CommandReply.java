@@ -79,7 +79,7 @@ public class CommandReply extends Command {
         BaseComponent[] contenu = new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(destinataireName).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" ").create();
 
         if (p.hasPermission("bungeeguard.colormsg"))
-            contenu = ObjectArrays.concat(contenu, TextComponent.fromLegacyText(message), BaseComponent.class);
+            contenu = ObjectArrays.concat(contenu, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)), BaseComponent.class);
         else
             contenu = ObjectArrays.concat(contenu, new TextComponent(message));
 

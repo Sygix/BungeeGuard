@@ -95,7 +95,8 @@ public class CommandMsg extends Command {
             BaseComponent[] contenu = new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(args[0]).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" ").create();
 
             if (p.hasPermission("bungeeguard.colormsg"))
-                contenu = ObjectArrays.concat(contenu, TextComponent.fromLegacyText(text), BaseComponent.class);
+                contenu = ObjectArrays.concat(contenu, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', text)), BaseComponent.class)
+                        ;
             else
                 contenu = ObjectArrays.concat(contenu, new TextComponent(text));
 
