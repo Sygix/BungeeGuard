@@ -56,6 +56,7 @@ public class Main extends Plugin {
             return;
         }
         System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :(");
+        System.out.println("[ORM] " + BungeeGuardUtils.getCallingMethodInfo());
         if (db_co == null) {
             DB db = new DB("default");
             db.open("com.mysql.jdbc.Driver", "jdbc:mysql://vm-db-01.uhcwork.net/plugin", "bungeecord", "ozXsw4FUKoR8jh");
