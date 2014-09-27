@@ -271,6 +271,7 @@ public class CommandParty extends Command {
     }
 
     private void list(ProxiedPlayer sender) {
+        PM.clean();
         if (PM.getParties().values().size() == 0) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Il n'y a aucune Party."));
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous pouvez en créer une: " + ChatColor.GREEN + "/party create <nom>"));

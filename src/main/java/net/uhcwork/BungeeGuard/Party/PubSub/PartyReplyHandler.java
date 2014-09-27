@@ -1,8 +1,9 @@
-package net.uhcwork.BungeeGuard.Party;
+package net.uhcwork.BungeeGuard.Party.PubSub;
 
 import com.google.gson.reflect.TypeToken;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.PubSubBase;
+import net.uhcwork.BungeeGuard.Party.Party;
 
 import java.lang.reflect.Type;
 import java.util.Map;

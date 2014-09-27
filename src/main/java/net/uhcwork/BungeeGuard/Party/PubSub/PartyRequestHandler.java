@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.Party;
+package net.uhcwork.BungeeGuard.Party.PubSub;
 
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.PubSubBase;

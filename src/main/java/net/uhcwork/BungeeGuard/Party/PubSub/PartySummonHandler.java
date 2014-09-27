@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.Party;
+package net.uhcwork.BungeeGuard.Party.PubSub;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -7,6 +7,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.PubSubBase;
+import net.uhcwork.BungeeGuard.Party.Party;
 
 import java.util.UUID;
 
