@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.uhcwork.BungeeGuard.Announces.AnnouncementManager;
+import net.uhcwork.BungeeGuard.Announces.AnnouncingTask;
 import net.uhcwork.BungeeGuard.AntiSpam.AntiSpamListener;
 import net.uhcwork.BungeeGuard.Ban.BanManager;
 import net.uhcwork.BungeeGuard.Ban.CommandBan;
@@ -51,6 +53,8 @@ public class Main extends Plugin {
     private LobbyManager LM;
     private IgnoreManager IM;
     private AntiSpamListener AS;
+    private AnnouncementManager AM = new AnnouncementManager(this);
+    private int broadcastDelay = 180;
 
     public static void getDb() {
         if (Base.hasConnection()) {
@@ -68,7 +72,7 @@ public class Main extends Plugin {
         }
     }
 
-    public static void setPremadeMessages(List<BungeePremadeMessage> all) {
+    public void setPremadeMessages(List<BungeePremadeMessage> all) {
         premadeMessages.clear();
         for (BungeePremadeMessage message : all) {
             premadeMessages.put(message.getSlug(), message.getText());
@@ -79,7 +83,7 @@ public class Main extends Plugin {
         return forbiddenCommands;
     }
 
-    public static void setForbiddenCommands(List<BungeeBlockedCommands> all) {
+    public void setForbiddenCommands(List<BungeeBlockedCommands> all) {
         forbiddenCommands.clear();
         for (BungeeBlockedCommands cmd : all) {
             forbiddenCommands.add(cmd.getCommand());
@@ -201,6 +205,8 @@ public class Main extends Plugin {
                 new ReloadConfHandler(plugin).handle();
             }
         }, 0, 3 * 60, TimeUnit.SECONDS);
+
+        getProxy().getScheduler().schedule(this, new AnnouncingTask(), 1, 1, TimeUnit.SECONDS);
     }
 
     @Override
@@ -290,5 +296,17 @@ public class Main extends Plugin {
 
     public long getUptime() {
         return (System.currentTimeMillis() - startTime) / 1000;
+    }
+
+    public int getBroadcastDelay() {
+        return broadcastDelay;
+    }
+
+    public void setBroadcastDelay(int broadcastDelay) {
+        this.broadcastDelay = broadcastDelay;
+    }
+
+    public AnnouncementManager getAM() {
+        return AM;
     }
 }
