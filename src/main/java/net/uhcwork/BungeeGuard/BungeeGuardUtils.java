@@ -33,13 +33,14 @@ public class BungeeGuardUtils {
         Matcher m = timePattern.matcher(durationStr);
         int time = -1;
         int number;
+        String type;
         while (m.find()) {
             if (m.group() == null || m.group().isEmpty()) {
                 continue;
             }
             if (m.group(1) != null && !m.group(1).isEmpty() && m.group(2) != null && !m.group(2).isEmpty()) {
                 number = Integer.parseInt(m.group(1));
-                String type = m.group(2);
+                type = m.group(2);
                 switch (type) {
                     case "w":
                         time += number * 604800000L;
@@ -196,5 +197,16 @@ public class BungeeGuardUtils {
                 + ""
                 + ChatColor.UNDERLINE
                 + "                                                                               ");
+    }
+
+    public static String getCallingMethodInfo() {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        if (stackTrace != null && stackTrace.length >= 2) {
+            StackTraceElement s = stackTrace[2];
+            if (s != null) {
+                return s.getClassName() + ".(" + s.getMethodName() + "):[" + s.getLineNumber() + "] -:";
+            }
+        }
+        return null;
     }
 }
