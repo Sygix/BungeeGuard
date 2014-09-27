@@ -5,7 +5,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.uhcwork.BungeeGuard.Announces.AnnouncementManager;
-import net.uhcwork.BungeeGuard.Announces.AnnouncingTask;
+import net.uhcwork.BungeeGuard.Announces.AnnouncementTask;
 import net.uhcwork.BungeeGuard.AntiSpam.AntiSpamListener;
 import net.uhcwork.BungeeGuard.Ban.BanManager;
 import net.uhcwork.BungeeGuard.Ban.CommandBan;
@@ -46,13 +46,13 @@ public class Main extends Plugin {
     private List<UUID> spy = new ArrayList<>();
     private List<String> silencedServers = new ArrayList<>();
     private HashMap<UUID, String> gtp = new HashMap<>();
-    private MultiBungee MB;
-    private PartyManager PM;
-    private BanManager BM;
-    private MuteManager MM;
-    private LobbyManager LM;
-    private IgnoreManager IM;
-    private AntiSpamListener AS;
+    private MultiBungee MB = new MultiBungee();
+    private PartyManager PM = new PartyManager();
+    private BanManager BM = new BanManager(this);
+    private MuteManager MM = new MuteManager();
+    private LobbyManager LM = new LobbyManager(this);
+    private IgnoreManager IM = new IgnoreManager(this);
+    private AntiSpamListener AS = new AntiSpamListener();
     private AnnouncementManager AM = new AnnouncementManager(this);
     private int broadcastDelay = 180;
 
@@ -129,8 +129,6 @@ public class Main extends Plugin {
     @Override
     public void onEnable() {
 
-        MB = new MultiBungee();
-
         MB.registerPubSubChannels("ban", "unban");
         MB.registerPubSubChannels("kick", "silenceServer");
         MB.registerPubSubChannels("mute", "unmute");
@@ -141,19 +139,9 @@ public class Main extends Plugin {
                 "setPartyOwner", "kickFromParty", "summonParty", "partyChat", "createParty", "disbandParty");
         MB.registerPubSubChannels("@" + MB.getServerId() + "/partyRequest", "@" + MB.getServerId() + "/partyReply");
 
-
-        BM = new BanManager(this);
         BM.loadBans();
-
-        MM = new MuteManager();
         MM.loadMutes();
-
-        LM = new LobbyManager(this);
         LM.setupPingTask();
-
-        IM = new IgnoreManager(this);
-
-        AS = new AntiSpamListener();
 
         BungeeGuardListener BGListener = new BungeeGuardListener(this);
 
@@ -166,29 +154,11 @@ public class Main extends Plugin {
 
         fetchParties();
         Set<Class<? extends Command>> commandes = new HashSet<>();
-        commandes.add(CommandKick.class);
-        commandes.add(CommandLobby.class);
-        commandes.add(CommandReloadConf.class);
-        commandes.add(CommandSpychat.class);
-        commandes.add(CommandSend.class);
-        commandes.add(CommandBan.class);
-        commandes.add(CommandUnban.class);
-        commandes.add(CommandList.class);
-        commandes.add(CommandCheck.class);
-        commandes.add(CommandMute.class);
-        commandes.add(CommandUnmute.class);
-        commandes.add(CommandSilence.class);
-        commandes.add(CommandSay.class);
-        commandes.add(CommandMsg.class);
-        commandes.add(CommandReply.class);
-        commandes.add(CommandHelp.class);
-        commandes.add(CommandBCast.class);
-        commandes.add(CommandGtp.class);
-        commandes.add(CommandIgnore.class);
-        commandes.add(CommandBUp.class);
-        commandes.add(CommandBLoad.class);
-        commandes.add(CommandParty.class);
-        commandes.add(CommandServer.class);
+        Collections.addAll(commandes, CommandKick.class, CommandLobby.class, CommandReloadConf.class,
+                CommandSpychat.class, CommandSend.class, CommandBan.class, CommandUnban.class, CommandList.class,
+                CommandCheck.class, CommandMute.class, CommandUnmute.class, CommandSilence.class, CommandSay.class,
+                CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
+                CommandIgnore.class, CommandBUp.class, CommandBLoad.class, CommandParty.class, CommandServer.class);
 
         for (Class<? extends Command> commande : commandes) {
             try {
@@ -206,7 +176,7 @@ public class Main extends Plugin {
             }
         }, 0, 3 * 60, TimeUnit.SECONDS);
 
-        getProxy().getScheduler().schedule(this, new AnnouncingTask(), 1, 1, TimeUnit.SECONDS);
+        getProxy().getScheduler().schedule(this, new AnnouncementTask(), 1, 1, TimeUnit.SECONDS);
     }
 
     @Override
