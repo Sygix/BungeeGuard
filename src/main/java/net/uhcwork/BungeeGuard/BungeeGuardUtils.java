@@ -201,10 +201,10 @@ public class BungeeGuardUtils {
 
     public static String getCallingMethodInfo() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        if (stackTrace != null && stackTrace.length >= 2) {
-            StackTraceElement s = stackTrace[2];
+        if (stackTrace != null && stackTrace.length >= 3) {
+            StackTraceElement s = stackTrace[3];
             if (s != null) {
-                return s.getClassName() + ".(" + s.getMethodName() + "):[" + s.getLineNumber() + "] -:";
+                return s.getClassName() + ".(" + s.getMethodName() + "):[" + s.getLineNumber() + "]";
             }
         }
         return null;
