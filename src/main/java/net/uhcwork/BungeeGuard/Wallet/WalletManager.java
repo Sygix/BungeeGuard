@@ -44,6 +44,8 @@ public class WalletManager {
     }
 
     public WalletAccountModel getAccount(UUID u) {
+        if (u == null)
+            return null;
         try {
             return walletsCache.get(u);
         } catch (ExecutionException e) {
