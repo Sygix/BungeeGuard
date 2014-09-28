@@ -26,7 +26,15 @@ import java.util.concurrent.TimeUnit;
 public class BungeeGuardListener implements Listener {
 
     public Main plugin;
-
+    BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
+            .color(ChatColor.GOLD)
+            .bold(true).create();
+    BaseComponent[] footer = new ComponentBuilder("Store")
+            .color(ChatColor.RED)
+            .bold(true)
+            .append(".UHCGames.com")
+            .bold(true)
+            .color(ChatColor.AQUA).create();
     public BungeeGuardListener(Main plugin) {
         this.plugin = plugin;
     }
@@ -40,6 +48,7 @@ public class BungeeGuardListener implements Listener {
             event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
             return;
         }
+
         ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
@@ -76,6 +85,8 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onServerConnect(final ServerConnectEvent e) {
         final ProxiedPlayer p = e.getPlayer();
+
+        p.setTabHeader(header, footer);
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
             System.out.println("Recuperation du meilleur lobby pour " + p.getName());
             Lobby l = plugin.getLM().getBestLobbyFor(p);
