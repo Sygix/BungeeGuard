@@ -1,7 +1,5 @@
 package net.uhcwork.BungeeGuard;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.config.Configuration;
@@ -10,13 +8,11 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
+import net.uhcwork.BungeeGuard.utils.HumanTime;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BungeeGuardUtils {
@@ -30,37 +26,7 @@ public class BungeeGuardUtils {
     }
 
     public static long parseDuration(final String durationStr) {
-        Matcher m = timePattern.matcher(durationStr);
-        int time = -1;
-        int number;
-        String type;
-        while (m.find()) {
-            if (m.group() == null || m.group().isEmpty()) {
-                continue;
-            }
-            if (m.group(1) != null && !m.group(1).isEmpty() && m.group(2) != null && !m.group(2).isEmpty()) {
-                number = Integer.parseInt(m.group(1));
-                type = m.group(2);
-                switch (type) {
-                    case "w":
-                        time += number * 604800000L;
-                        break;
-                    case "d":
-                        time += number * 86400000L;
-                        break;
-                    case "h":
-                        time += number * 3600000L;
-                        break;
-                    case "m":
-                        time += number * 60000L;
-                        break;
-                    case "s":
-                        time += number * 1000L;
-                        break;
-                }
-            }
-        }
-        return time;
+        return HumanTime.eval(durationStr).getDelta();
     }
 
     public static String getDuration(final long futureTimestamp) {
@@ -68,70 +34,9 @@ public class BungeeGuardUtils {
             return "";
         if (futureTimestamp < 0)
             return "-" + getDuration(-futureTimestamp);
-        int seconds = (int) ((futureTimestamp - System.currentTimeMillis()) / 1000);
-        Preconditions.checkArgument(seconds > 0, "Le timestamp doit etre supérieur au current timestamp !");
-
-        final List<String> item = new ArrayList<>();
-
-        int years = 0;
-        while (seconds >= 31536000) {
-            years++;
-            seconds -= 31536000;
-        }
-        if (years > 0) {
-            item.add(years + " an" + ((years != 1) ? "s" : ""));
-        }
-
-        int months = 0;
-        while (seconds >= 2592000) {
-            months++;
-            seconds -= 2592000;
-        }
-        if (months > 0) {
-            item.add(months + " mois");
-        }
-
-        int weeks = 0;
-        while (seconds >= 604800) {
-            weeks++;
-            seconds -= 604800;
-        }
-        if (weeks > 0) {
-            item.add(weeks + " semaine" + ((weeks != 1) ? "s" : ""));
-        }
-
-        int days = 0;
-        while (seconds >= 86400) {
-            days++;
-            seconds -= 86400;
-        }
-        if (days > 0) {
-            item.add(days + " jour" + ((days != 1) ? "s" : ""));
-        }
-
-        int hours = 0;
-        while (seconds >= 3600) {
-            hours++;
-            seconds -= 3600;
-        }
-        if (hours > 0) {
-            item.add(hours + " heure" + ((hours != 1) ? "s" : ""));
-        }
-
-        int mins = 0;
-        while (seconds >= 60) {
-            mins++;
-            seconds -= 60;
-        }
-        if (mins > 0) {
-            item.add(mins + " minute" + ((mins != 1) ? "s" : ""));
-        }
-
-        if (seconds > 0) {
-            item.add(seconds + " seconde" + ((seconds != 1) ? "s" : ""));
-        }
-
-        return Joiner.on(", ").join(item);
+        if (futureTimestamp > System.currentTimeMillis())
+            return getDuration((futureTimestamp - System.currentTimeMillis()) / 1000);
+        return HumanTime.exactly(futureTimestamp);
     }
 
     public static BungeeBan getBan(UUID u) {
@@ -182,7 +87,7 @@ public class BungeeGuardUtils {
                 + ChatColor.UNDERLINE + "                           ");
         sender.sendMessage(ChatColor.RED + " ");
         sender.sendMessage(ChatColor.RED
-                + " /ban <Player> [temps en minutes/0 pour définitif] [raison ...]");
+                + " /ban <Player> [temps/0 pour définitif] [raison ...]");
         sender.sendMessage(ChatColor.RED + " /kick <Player> [raison ...]");
         sender.sendMessage(ChatColor.RED + " /unban <Player> [raison ...]");
         sender.sendMessage(ChatColor.RED + " /check <Player>");
