@@ -78,9 +78,9 @@ public class Lobby {
     public double getScore() {
         if (score == null) {
             if (getName().startsWith("limbo")) {
-                score = -Double.MIN_VALUE;
+                score = -Double.MAX_VALUE;
             } else {
-                double _score = (1 + getOnlinePlayers()) * (getMaxPlayers() / 3 - getOnlinePlayers());
+                double _score = (1 + getOnlinePlayers()) * (getMaxPlayers() / 2 - getOnlinePlayers());
                 if (_score > 0) {
                     score = _score * getTps();
                 } else {
