@@ -35,7 +35,7 @@ public class CommandCheck extends Command {
                 if (ban.getReason() == null)
                     sender.sendMessage(new ComponentBuilder("Raison:  ").color(ChatColor.YELLOW).append(ban.getReason()).color(ChatColor.AQUA).create());
                 if (ban.getUntilTimestamp() != -1)
-                    sender.sendMessage(new ComponentBuilder("Pendant:  ").color(ChatColor.YELLOW).append(BungeeGuardUtils.getDuration(ban.getUntilTimestamp())).color(ChatColor.AQUA).create());
+                    sender.sendMessage(new ComponentBuilder("Pendant:  ").color(ChatColor.YELLOW).append(BungeeGuardUtils.getDuration(System.currentTimeMillis() - ban.getUntilTimestamp())).color(ChatColor.AQUA).create());
                 sender.sendMessage(new ComponentBuilder("Par:  ").color(ChatColor.YELLOW).append(ban.getAdminName()).color(ChatColor.AQUA).create());
             }
         }
