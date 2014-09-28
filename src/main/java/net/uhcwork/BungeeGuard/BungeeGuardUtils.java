@@ -8,7 +8,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
-import net.uhcwork.BungeeGuard.utils.HumanTime;
+import net.uhcwork.BungeeGuard.utils.DateUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class BungeeGuardUtils {
     }
 
     public static long parseDuration(final String durationStr) {
-        return HumanTime.eval(durationStr).getDelta() * 1000;
+        return DateUtil.parseDateDiff(durationStr, true);
     }
 
     public static String getDuration(final long futureTimestamp) {
@@ -32,9 +32,7 @@ public class BungeeGuardUtils {
             return "";
         if (futureTimestamp < 0)
             return "-" + getDuration(-futureTimestamp);
-        if (futureTimestamp > System.currentTimeMillis())
-            return getDuration((futureTimestamp - System.currentTimeMillis()) / 1000);
-        return HumanTime.approximately(futureTimestamp);
+        return DateUtil.formatDateDiff(futureTimestamp);
     }
 
     public static BungeeBan getBan(UUID u) {
