@@ -24,7 +24,7 @@ public class BungeeGuardUtils {
     }
 
     public static long parseDuration(final String durationStr) {
-        return DateUtil.parseDateDiff(durationStr, true);
+        return DateUtil.parseDateDiff(durationStr, true) - System.currentTimeMillis();
     }
 
     public static String getDuration(final long futureTimestamp) {
