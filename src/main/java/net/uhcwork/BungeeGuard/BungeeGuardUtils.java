@@ -13,11 +13,9 @@ import net.uhcwork.BungeeGuard.utils.HumanTime;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 public class BungeeGuardUtils {
     public static Main plugin;
-    static Pattern timePattern = Pattern.compile("([0-9]+)([wdhms])");
     private static String server_id;
     private static String staffBroadcastTag = ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + "" + ChatColor.BOLD + "STAFF" + ChatColor.GRAY + "" + ChatColor.BOLD + "]" + ChatColor.GRAY;
 
@@ -26,6 +24,7 @@ public class BungeeGuardUtils {
     }
 
     public static long parseDuration(final String durationStr) {
+        System.out.println("Duree: " + durationStr + "->" + HumanTime.eval(durationStr).getDelta());
         return HumanTime.eval(durationStr).getDelta() * 1000;
     }
 
@@ -36,6 +35,7 @@ public class BungeeGuardUtils {
             return "-" + getDuration(-futureTimestamp);
         if (futureTimestamp > System.currentTimeMillis())
             return getDuration((futureTimestamp - System.currentTimeMillis()) / 1000);
+        System.out.println("Duree: " + futureTimestamp + "->" + HumanTime.exactly(futureTimestamp));
         return HumanTime.exactly(futureTimestamp);
     }
 

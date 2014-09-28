@@ -30,16 +30,23 @@ import java.util.UUID;
 public class MultiBungee {
     public static final String SEPARATOR = "|\uFAE3|";
     public static final String REGEX_SEPARATOR = "\\|\uFAE3\\|";
-    RedisBungeeAPI api;
-    RedisBungee redisbungee;
+
+    static RedisBungeeAPI api;
+    static RedisBungee redisbungee;
 
     public MultiBungee() {
     }
 
     public void init() {
         System.out.println("Getting RedisBungee [...]");
-        api = RedisBungee.getApi();
         redisbungee = (RedisBungee) ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee");
+        api = RedisBungee.getApi();
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("RedisBungee API: OK.");
     }
 
     public final int getPlayerCount() {
