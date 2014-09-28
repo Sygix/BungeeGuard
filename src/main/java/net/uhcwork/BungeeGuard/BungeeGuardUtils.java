@@ -24,7 +24,6 @@ public class BungeeGuardUtils {
     }
 
     public static long parseDuration(final String durationStr) {
-        System.out.println("Duree: " + durationStr + "->" + HumanTime.eval(durationStr).getDelta());
         return HumanTime.eval(durationStr).getDelta() * 1000;
     }
 
@@ -35,8 +34,7 @@ public class BungeeGuardUtils {
             return "-" + getDuration(-futureTimestamp);
         if (futureTimestamp > System.currentTimeMillis())
             return getDuration((futureTimestamp - System.currentTimeMillis()) / 1000);
-        System.out.println("Duree: " + futureTimestamp + "->" + HumanTime.exactly(futureTimestamp));
-        return HumanTime.exactly(futureTimestamp);
+        return HumanTime.approximately(futureTimestamp);
     }
 
     public static BungeeBan getBan(UUID u) {
