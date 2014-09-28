@@ -26,7 +26,7 @@ public class BungeeGuardUtils {
     }
 
     public static long parseDuration(final String durationStr) {
-        return HumanTime.eval(durationStr).getDelta();
+        return HumanTime.eval(durationStr).getDelta() * 1000;
     }
 
     public static String getDuration(final long futureTimestamp) {

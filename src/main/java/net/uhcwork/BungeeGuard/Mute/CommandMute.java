@@ -51,9 +51,6 @@ public class CommandMute extends Command {
 
             reason = reason.trim();
 
-            if (reason.equals(""))
-                reason = null;
-
             if (plugin.isPremadeMessage(reason))
                 reason = plugin.getPremadeMessage(reason);
 

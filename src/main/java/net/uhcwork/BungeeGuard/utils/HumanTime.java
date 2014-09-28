@@ -533,15 +533,13 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 
             if (mod >= upperCeiling(YEAR)) {
                 a.append(ceil(d, YEAR));
-                a.append(' ');
-                a.append('y');
+                a.append("an(s)");
                 ++parts;
                 rounded = true;
                 prependBlank = true;
             } else if (d >= YEAR) {
                 a.append(floor(d, YEAR));
-                a.append(' ');
-                a.append('y');
+                a.append("an(s)");
                 ++parts;
                 rounded = mod <= lowerCeiling(YEAR);
                 prependBlank = true;
@@ -556,8 +554,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
                         a.append(' ');
                     }
                     a.append(ceil(d, DAY));
-                    a.append(' ');
-                    a.append('d');
+                    a.append("jour(s)");
                     ++parts;
                     rounded = true;
                     prependBlank = true;
@@ -566,8 +563,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
                         a.append(' ');
                     }
                     a.append(floor(d, DAY));
-                    a.append(' ');
-                    a.append('d');
+                    a.append("jour(s)");
                     ++parts;
                     rounded = mod <= lowerCeiling(DAY);
                     prependBlank = true;
@@ -582,8 +578,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
                             a.append(' ');
                         }
                         a.append(ceil(d, HOUR));
-                        a.append(' ');
-                        a.append('h');
+                        a.append("heure(s)");
                         ++parts;
                         rounded = true;
                         prependBlank = true;
@@ -592,8 +587,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
                             a.append(' ');
                         }
                         a.append(floor(d, HOUR));
-                        a.append(' ');
-                        a.append('h');
+                        a.append("heure(s)");
                         ++parts;
                         rounded = mod <= lowerCeiling(HOUR);
                         prependBlank = true;
@@ -608,8 +602,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
                                 a.append(' ');
                             }
                             a.append(ceil(d, MINUTE));
-                            a.append(' ');
-                            a.append('m');
+                            a.append("minute(s)");
                             ++parts;
                             rounded = true;
                             prependBlank = true;
@@ -618,8 +611,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
                                 a.append(' ');
                             }
                             a.append(floor(d, MINUTE));
-                            a.append(' ');
-                            a.append('m');
+                            a.append("minute(s)");
                             ++parts;
                             rounded = mod <= lowerCeiling(MINUTE);
                             prependBlank = true;
@@ -634,8 +626,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
                                     a.append(' ');
                                 }
                                 a.append(ceil(d, SECOND));
-                                a.append(' ');
-                                a.append('s');
+                                a.append("seconde(s)");
                                 ++parts;
                                 rounded = true;
                                 prependBlank = true;
@@ -644,8 +635,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
                                     a.append(' ');
                                 }
                                 a.append(floor(d, SECOND));
-                                a.append(' ');
-                                a.append('s');
+                                a.append("seconde(s)");
                                 ++parts;
                                 rounded = mod <= lowerCeiling(SECOND);
                                 prependBlank = true;
@@ -659,9 +649,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
                                         a.append(' ');
                                     }
                                     a.append(Integer.toString((int) d));
-                                    a.append(' ');
-                                    a.append('m');
-                                    a.append('s');
+                                    a.append("ms");
                                 }
                             }
 
