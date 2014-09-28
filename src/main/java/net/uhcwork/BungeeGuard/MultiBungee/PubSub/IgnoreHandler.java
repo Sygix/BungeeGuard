@@ -20,7 +20,7 @@ public class IgnoreHandler extends PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
         UUID joueur = UUID.fromString(args[0]);
-        String action = args[0];
+        String action = args[1];
         UUID toIgnore = UUID.fromString(args[2]);
 
         switch (action) {
