@@ -83,7 +83,7 @@ public class Main extends Plugin {
     public void setPremadeMessages(List<BungeePremadeMessage> all) {
         premadeMessages.clear();
         for (BungeePremadeMessage message : all) {
-            premadeMessages.put(message.getSlug(), message.getText());
+            premadeMessages.put(message.getSlug().toLowerCase(), message.getText());
         }
     }
 
@@ -262,11 +262,11 @@ public class Main extends Plugin {
     }
 
     public boolean isPremadeMessage(String slug) {
-        return premadeMessages.containsKey(slug);
+        return premadeMessages.containsKey(slug.toLowerCase());
     }
 
     public String getPremadeMessage(String slug) {
-        return premadeMessages.get(slug);
+        return premadeMessages.get(slug.toLowerCase());
     }
 
     public AntiSpamListener getAS() {

@@ -35,13 +35,14 @@ public class BungeeGuardListener implements Listener {
             .append(".UHCGames.com")
             .bold(true)
             .color(ChatColor.AQUA).create();
+
     public BungeeGuardListener(Main plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler
     public void onLogin(final LoginEvent event) {
-        String hostString = event.getConnection().getVirtualHost().getHostString();
+        String hostString = event.getConnection().getVirtualHost().getHostString().toLowerCase();
         if (!Permissions.hasPerm(event.getConnection().getName(), "bungee.canBypassHost") &&
                 !event.getConnection().getListener().getForcedHosts().containsKey(hostString)) {
             event.setCancelled(true);

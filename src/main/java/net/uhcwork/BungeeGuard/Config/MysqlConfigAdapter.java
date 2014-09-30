@@ -14,7 +14,6 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.net.InetSocketAddress;
-import java.sql.SQLException;
 import java.util.*;
 
 public class MysqlConfigAdapter implements ConfigurationAdapter {
@@ -141,15 +140,8 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     @Override
     @SuppressWarnings("unchecked")
     public Collection<ListenerInfo> getListeners() {
-        Map<OPTIONS, Object> options = new HashMap<>();
-        Map<String, String> forced = new HashMap<>();
-
-        try {
-            options = getOptions();
-            forced = getForcedHosts();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Map<OPTIONS, Object> options = getOptions();
+        Map<String, String> forced = getForcedHosts();
         String motd = String.valueOf(options.get(OPTIONS.MOTD));
 
         int maxPlayers = (int) options.get(OPTIONS.MAX_PLAYERS);
@@ -177,7 +169,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         return listeners;
     }
 
-    private Map<OPTIONS, Object> getOptions() throws SQLException {
+    private Map<OPTIONS, Object> getOptions() {
         Map<OPTIONS, Object> options = new HashMap<>();
         conf = BungeeConfig.findById(1);
         options.put(OPTIONS.MAX_PLAYERS, conf.getMaxPlayers());
@@ -208,11 +200,11 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         return get("permissions." + group, Collections.<String>emptySet());
     }
 
-    public Map<String, String> getForcedHosts() throws SQLException {
+    public Map<String, String> getForcedHosts() {
         Map<String, String> forced_hosts = new HashMap<>();
         List<BungeeForcedHost> bfh = BungeeForcedHost.findAll();
         for (BungeeForcedHost bf : bfh) {
-            forced_hosts.put(bf.getIp(), bf.getServer());
+            forced_hosts.put(bf.getIp().toLowerCase(), bf.getServer());
         }
         return forced_hosts;
     }
