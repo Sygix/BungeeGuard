@@ -32,11 +32,10 @@ public class CommandBan extends Command {
         } else {
             boolean duration = false;
             long bannedUntilTime;
-            long bannedTime = 0;
+            Long bannedTime = 0l;
             if (args.length > 1) {
                 bannedTime = BungeeGuardUtils.parseDuration(args[1]);
-                if (bannedTime > 0)
-                    duration = true;
+                duration = (bannedTime != null && bannedTime > 0);
             }
 
             int startArgForReason = (duration) ? 2 : 1;

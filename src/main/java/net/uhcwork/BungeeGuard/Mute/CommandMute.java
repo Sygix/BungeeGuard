@@ -30,14 +30,14 @@ public class CommandMute extends Command {
             sender.sendMessage(new ComponentBuilder("Usage: /mute <pseudo> [duration] [reason]").color(ChatColor.RED).create());
         } else {
             boolean duration = true;
-            long muteTime = 0;
+            Long muteTime = 0l;
             if (args.length > 1) {
                 muteTime = BungeeGuardUtils.parseDuration(args[1]);
-                if (muteTime <= 0)
-                    duration = false;
+                duration = (muteTime != null && muteTime > 0);
             }
-            if (muteTime > 604800000L) muteTime = 604800000L;
-            if (!duration) muteTime = 604800000L;
+            if (!duration || muteTime > 604800000L)
+                muteTime = 604800000L;
+
             long muteUntilTime = System.currentTimeMillis() + muteTime + 1; // 1 seconde de mute gratuite !
 
             int startArgForReason = (duration) ? 2 : 1;

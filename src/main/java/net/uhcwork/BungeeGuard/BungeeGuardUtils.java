@@ -23,7 +23,7 @@ public class BungeeGuardUtils {
         BungeeGuardUtils.plugin = plugin;
     }
 
-    public static long parseDuration(final String durationStr) {
+    public static Long parseDuration(final String durationStr) {
         return DateUtil.parseDateDiff(durationStr, true) - System.currentTimeMillis();
     }
 
