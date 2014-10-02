@@ -28,7 +28,8 @@ public class PartyManager {
 
     public void clean() {
         MultiBungee MB = BungeeGuardUtils.getMB();
-        for (Party p : parties.values()) {
+        for (String partyName : parties.keySet()) {
+            Party p = parties.get(partyName);
             for (UUID u : p.getMembers()) {
                 if (!MB.isPlayerOnline(u)) {
                     p.removeMember(u);
