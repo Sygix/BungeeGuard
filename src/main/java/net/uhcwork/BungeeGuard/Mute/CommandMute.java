@@ -24,7 +24,7 @@ public class CommandMute extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         String adminName = (sender instanceof ProxiedPlayer) ? sender.getName() : "UHConsole";
-        UUID adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : UUID.fromString("UHConsole");
+        UUID adminUUID = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : UUID.fromString("00000000-0000-0000-0000-000000000000");
 
         if (args.length == 0) {
             sender.sendMessage(new ComponentBuilder("Usage: /mute <pseudo> [duration] [reason]").color(ChatColor.RED).create());
