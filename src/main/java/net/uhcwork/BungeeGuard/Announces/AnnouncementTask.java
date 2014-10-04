@@ -12,7 +12,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.utils.GreennsJunkComponent;
+import net.uhcwork.BungeeGuard.utils.PrettyLinkComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,7 +72,7 @@ public class AnnouncementTask implements Runnable {
             if (line.startsWith("{")) {
                 try {
                     BaseComponent[] components2 = ComponentSerializer.parse(line);
-                    BaseComponent[] prefixComp = GreennsJunkComponent.fromLegacyText(prefix);
+                    BaseComponent[] prefixComp = PrettyLinkComponent.fromLegacyText(prefix);
 
                     if (prefixComp.length != 0)
                         prefixComp[prefixComp.length - 1].setExtra(Arrays.asList(components2));
@@ -81,10 +81,10 @@ public class AnnouncementTask implements Runnable {
 
                     components.add(prefixComp);
                 } catch (Exception ignored) {
-                    components.add(GreennsJunkComponent.fromLegacyText(prefix + ChatColor.translateAlternateColorCodes('&', line)));
+                    components.add(PrettyLinkComponent.fromLegacyText(prefix + ChatColor.translateAlternateColorCodes('&', line)));
                 }
             } else {
-                components.add(GreennsJunkComponent.fromLegacyText(prefix + ChatColor.translateAlternateColorCodes('&', line)));
+                components.add(PrettyLinkComponent.fromLegacyText(prefix + ChatColor.translateAlternateColorCodes('&', line)));
             }
 
 

@@ -4,7 +4,6 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +13,7 @@ import java.util.regex.Pattern;
  * Time: 20:08
  * May be open-source & be sold (by mguerreiro, of course !)
  */
-public class GreennsJunkComponent extends TextComponent {
+public class PrettyLinkComponent extends TextComponent {
     private static final Pattern url = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 
     public static BaseComponent[] fromLegacyText(String message) {
@@ -85,8 +84,13 @@ public class GreennsJunkComponent extends TextComponent {
                 component = new TextComponent(old);
                 String urlString = message.substring(i, pos);
                 component.setText(urlString);
-                if (new Random().nextBoolean())
-                    component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Cliquez moi!").create()));
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("> ")
+                        .color(ChatColor.YELLOW)
+                        .append("Clique moi")
+                        .color(ChatColor.AQUA)
+                        .append(" <")
+                        .color(ChatColor.YELLOW)
+                        .create()));
                 component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
                         urlString.startsWith("http") ? urlString : "http://" + urlString));
                 components.add(component);

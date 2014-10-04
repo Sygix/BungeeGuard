@@ -3,7 +3,7 @@ package net.uhcwork.BungeeGuard.MultiBungee.PubSub;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.uhcwork.BungeeGuard.utils.GreennsJunkComponent;
+import net.uhcwork.BungeeGuard.utils.PrettyLinkComponent;
 
 /**
  * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
@@ -21,7 +21,7 @@ public class StaffChatHandler extends PubSubBase {
         String message = ChatColor.translateAlternateColorCodes('&', args[2]);
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (player.hasPermission("bungeeguard.staffchat")) {
-                player.sendMessage(GreennsJunkComponent.fromLegacyText(ChatColor.RED + "[" + serverName + "] " + senderName + ": " + message));
+                player.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.RED + "[" + serverName + "] " + senderName + ": " + message));
             }
         }
     }
