@@ -2,7 +2,7 @@ package net.uhcwork.BungeeGuard.MultiBungee.PubSub;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.uhcwork.BungeeGuard.utils.GreennsJunkComponent;
+import net.uhcwork.BungeeGuard.utils.PrettyLinkComponent;
 
 /**
  * Part of net.uhcwork.BungeeGuard.MultiBungee.PubSub
@@ -16,6 +16,6 @@ public class MessageHandler extends PubSubBase {
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(args[0]);
         if (p == null)
             return;
-        p.sendMessage(GreennsJunkComponent.fromLegacyText(args[1]));
+        p.sendMessage(PrettyLinkComponent.fromLegacyText(args[1]));
     }
 }

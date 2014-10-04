@@ -9,8 +9,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.utils.GreennsJunkComponent;
 import net.uhcwork.BungeeGuard.utils.Permissions;
+import net.uhcwork.BungeeGuard.utils.PrettyLinkComponent;
 
 import java.util.UUID;
 
@@ -36,7 +36,7 @@ public class PrivateMessageHandler extends PubSubBase {
         BaseComponent[] contenu;
 
         if (Permissions.hasPerm(sender, "bungeeguard.colormsg")) {
-            contenu = GreennsJunkComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message));
+            contenu = PrettyLinkComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message));
         } else {
             contenu = new BaseComponent[]{new TextComponent(message)};
         }

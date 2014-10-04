@@ -12,6 +12,7 @@ import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Mute.MuteType;
+import net.uhcwork.BungeeGuard.utils.PrettyLinkComponent;
 
 import java.util.UUID;
 
@@ -79,7 +80,7 @@ public class CommandReply extends Command {
         BaseComponent[] contenu = new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(destinataireName).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" ").create();
 
         if (p.hasPermission("bungeeguard.colormsg"))
-            contenu = ObjectArrays.concat(contenu, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)), BaseComponent.class);
+            contenu = ObjectArrays.concat(contenu, PrettyLinkComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)), BaseComponent.class);
         else
             contenu = ObjectArrays.concat(contenu, new TextComponent(message));
 
