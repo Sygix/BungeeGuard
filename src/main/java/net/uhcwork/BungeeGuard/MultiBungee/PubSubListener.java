@@ -36,6 +36,9 @@ public class PubSubListener implements Listener {
         String[] args = message.split(MultiBungee.REGEX_SEPARATOR);
         PubSubBase handler = new PubSubBase() {
         };
+        if (MB.getServerId().contains("test")) {
+            System.out.println("< " + channel + ": " + message);
+        }
         if (channel.startsWith("@" + plugin.getMB().getServerId() + "/")) {
             // Si channel ressemble à @serveur/commande, on retire le préfixe :]
             channel = channel.replace("@" + plugin.getMB().getServerId() + "/", "@");

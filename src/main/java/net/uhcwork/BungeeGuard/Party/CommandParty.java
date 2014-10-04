@@ -117,7 +117,7 @@ public class CommandParty extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /party disband <nom de la party>"));
             return;
         }
-        String partyName = args[0];
+        String partyName = args[1];
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Party supprimée."));
         MB.disbandParty(partyName);
     }
