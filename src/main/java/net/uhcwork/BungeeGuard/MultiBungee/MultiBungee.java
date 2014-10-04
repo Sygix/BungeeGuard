@@ -72,6 +72,8 @@ public class MultiBungee {
      * @return a {@link net.md_5.bungee.api.config.ServerInfo} for the server the player is on.
      */
     public final ServerInfo getServerFor(UUID player) {
+        if (player == null)
+            return null;
         return api.getServerFor(player);
     }
 
