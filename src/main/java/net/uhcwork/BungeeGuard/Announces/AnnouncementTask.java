@@ -8,11 +8,11 @@ import com.google.common.collect.Maps;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.utils.GreennsJunkComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,7 +72,7 @@ public class AnnouncementTask implements Runnable {
             if (line.startsWith("{")) {
                 try {
                     BaseComponent[] components2 = ComponentSerializer.parse(line);
-                    BaseComponent[] prefixComp = TextComponent.fromLegacyText(prefix);
+                    BaseComponent[] prefixComp = GreennsJunkComponent.fromLegacyText(prefix);
 
                     if (prefixComp.length != 0)
                         prefixComp[prefixComp.length - 1].setExtra(Arrays.asList(components2));
@@ -81,10 +81,10 @@ public class AnnouncementTask implements Runnable {
 
                     components.add(prefixComp);
                 } catch (Exception ignored) {
-                    components.add(TextComponent.fromLegacyText(prefix + ChatColor.translateAlternateColorCodes('&', line)));
+                    components.add(GreennsJunkComponent.fromLegacyText(prefix + ChatColor.translateAlternateColorCodes('&', line)));
                 }
             } else {
-                components.add(TextComponent.fromLegacyText(prefix + ChatColor.translateAlternateColorCodes('&', line)));
+                components.add(GreennsJunkComponent.fromLegacyText(prefix + ChatColor.translateAlternateColorCodes('&', line)));
             }
 
 
