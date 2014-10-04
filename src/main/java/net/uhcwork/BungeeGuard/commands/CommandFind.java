@@ -24,9 +24,9 @@ public class CommandFind extends PlayerCommand {
             String proxy = plugin.getMB().getProxy(args[0]);
             if (SI == null) {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "That user is not online"));
-            } else {
-                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "[" + ChatColor.AQUA + proxy + ChatColor.GRAY + "] " + ChatColor.GREEN + args[0] + ChatColor.GRAY + " est sur " + ChatColor.YELLOW + SI.getName()));
+                return;
             }
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "[" + ChatColor.AQUA + proxy + ChatColor.GRAY + "] " + ChatColor.GREEN + args[0] + ChatColor.GRAY + " est sur " + ChatColor.YELLOW + SI.getName()));
         }
     }
 }
