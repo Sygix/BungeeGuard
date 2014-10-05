@@ -6,7 +6,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
+import net.uhcwork.BungeeGuard.Main;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -126,11 +126,11 @@ public class Party implements Serializable {
     }
 
     public TextComponent getDisplay() {
-        String membres = "" + ChatColor.RESET + ChatColor.BOLD + BungeeGuardUtils.getMB().getNameFromUuid(getOwner()) + ChatColor.RESET;
+        String membres = "" + ChatColor.RESET + ChatColor.BOLD + Main.getMB().getNameFromUuid(getOwner()) + ChatColor.RESET;
         for (UUID m : getMembers()) {
             if (getOwner().equals(m))
                 continue;
-            membres += "\n" + BungeeGuardUtils.getMB().getNameFromUuid(m);
+            membres += "\n" + Main.getMB().getNameFromUuid(m);
         }
         TextComponent result = new TextComponent(getName());
         result.setColor(ChatColor.BLUE);

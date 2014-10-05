@@ -11,7 +11,7 @@ import com.imaginarycode.minecraft.redisbungee.internal.jedis.exceptions.JedisCo
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
+import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Party.Party;
 
 import java.net.InetAddress;
@@ -470,7 +470,7 @@ public class MultiBungee {
     }
 
     public void mutePlayer(UUID muteUUID, String muteName, long muteUntilTime, String reason, String adminName, UUID adminUUID) {
-        sendChannelMessage("mute", BungeeGuardUtils.getMB().getServerId(), "" + muteUUID,
+        sendChannelMessage("mute", Main.getMB().getServerId(), "" + muteUUID,
                 muteName, "" + muteUntilTime, reason, adminName, "" + adminUUID);
     }
 }

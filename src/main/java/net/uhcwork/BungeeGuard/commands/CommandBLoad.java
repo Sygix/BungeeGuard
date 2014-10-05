@@ -23,8 +23,8 @@ public class CommandBLoad extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        for (String proxy : plugin.getMB().getAllServers()) {
-            sender.sendMessage(new TextComponent(ChatColor.BLUE + proxy + ChatColor.RESET + ": " + ChatColor.GREEN + plugin.getMB().getPlayersOnProxy(proxy) + ChatColor.RESET + " joueur(s)"));
+        for (String proxy : Main.getMB().getAllServers()) {
+            sender.sendMessage(new TextComponent(ChatColor.BLUE + proxy + ChatColor.RESET + ": " + ChatColor.GREEN + Main.getMB().getPlayersOnProxy(proxy) + ChatColor.RESET + " joueur(s)"));
         }
     }
 }

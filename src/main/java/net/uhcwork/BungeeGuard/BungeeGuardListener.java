@@ -79,7 +79,7 @@ public class BungeeGuardListener implements Listener {
                 return;
             }
             plugin.getBM().unban(ban, "TimeEnd", "Automatique", true);
-            plugin.getMB().unban(event.getConnection().getUniqueId());
+            Main.getMB().unban(event.getConnection().getUniqueId());
         }
     }
 
@@ -95,7 +95,6 @@ public class BungeeGuardListener implements Listener {
             if (l != null) {
                 e.setTarget(l.getServerInfo());
                 System.out.println("Lobby selectionné: " + l.getName());
-
             } else {
                 if (ProxyServer.getInstance().getServerInfo("limbo").getPlayers().size() < 70) {
                     e.setTarget(ProxyServer.getInstance().getServerInfo("limbo"));
@@ -105,7 +104,7 @@ public class BungeeGuardListener implements Listener {
         } else if (!e.getTarget().getName().startsWith("lobby")) {
             final Party party = plugin.getPM().getPartyByPlayer(p);
             if (party != null && party.isOwner(p)) {
-                plugin.getMB().summonParty(party.getName(), e.getTarget().getName());
+                Main.getMB().summonParty(party.getName(), e.getTarget().getName());
             }
         }
     }
@@ -154,19 +153,19 @@ public class BungeeGuardListener implements Listener {
                     e.setCancelled(true);
                 } else {
                     plugin.getMM().unmute(mute, "TimeEnd", "Automatique", true);
-                    plugin.getMB().unmutePlayer(p.getUniqueId());
+                    Main.getMB().unmutePlayer(p.getUniqueId());
                 }
             }
             if ((p.hasPermission("bungeeguard.staffchat")) && (e.getMessage().startsWith("!!"))) {
                 e.setCancelled(true);
-                plugin.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), e.getMessage().substring(2));
+                Main.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), e.getMessage().substring(2));
                 e.setMessage("");
 
                 return;
             }
             Party party = plugin.getPM().getPartyByPlayer(p);
             if (party != null && party.isPartyChat(p)) {
-                plugin.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage());
+                Main.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage());
                 e.setCancelled(true);
             }
             if (plugin.isSilenced(p.getServer().getInfo().getName())) {
@@ -182,15 +181,15 @@ public class BungeeGuardListener implements Listener {
     public void onDisconnect(PlayerDisconnectEvent e) {
         ProxiedPlayer p = e.getPlayer();
         if (plugin.getPM().inParty(p)) {
-            plugin.getMB().playerLeaveParty(plugin.getPM().getPartyByPlayer(p), p);
+            Main.getMB().playerLeaveParty(plugin.getPM().getPartyByPlayer(p), p);
         }
     }
 
     @EventHandler
     public void onProxyPing(ProxyPingEvent e) {
         ServerPing sp = e.getResponse();
-        sp.getPlayers().setOnline(BungeeGuardUtils.getMB().getPlayerCount());
-        sp.setDescription(plugin.getMotd());
+        sp.getPlayers().setOnline(Main.getMB().getPlayerCount());
+        sp.setDescription(Main.getMotd());
 
         List<String> lines = new ArrayList<>();
 
@@ -240,16 +239,14 @@ public class BungeeGuardListener implements Listener {
             }
 
             Lobby l = plugin.getLM().getBestLobbyFor(p);
-            ServerInfo server = ProxyServer.getInstance().getServerInfo("limbo");
-            if (l != null) {
-                server = l.getServerInfo();
-            }
+            ServerInfo server = l.getServerInfo();
+
 
             ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + e.getState().toString() + " - " + reason + ")"));
-            if (server.getName().equals("limbo") && ProxyServer.getInstance().getServerInfo("limbo").getPlayers().size() > 70) {
+            if (server.getName().startsWith("limbo") && server.getPlayers().size() > 70) {
                 ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " déconnecté "));
             } else {
-                ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " Redirigé vers " + server.getName().toUpperCase()));
+                ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " Redirigé vers " + Main.getPrettyServerName(server.getName())));
                 p.setReconnectServer(server);
                 e.setCancelled(true);
                 e.setCancelServer(server);
@@ -260,7 +257,7 @@ public class BungeeGuardListener implements Listener {
         }
 
         if (plugin.getPM().inParty(p)) {
-            plugin.getMB().playerLeaveParty(plugin.getPM().getPartyByPlayer(p), p);
+            Main.getMB().playerLeaveParty(plugin.getPM().getPartyByPlayer(p), p);
         }
     }
 
@@ -268,7 +265,7 @@ public class BungeeGuardListener implements Listener {
     public void onTabCompleteEvent(TabCompleteEvent e) {
         String[] Message = e.getCursor().split("\\s+");
         String DebutDePseudo = Message[Message.length - 1].toLowerCase();
-        for (String p : plugin.getMB().getHumanPlayersOnline()) {
+        for (String p : Main.getMB().getHumanPlayersOnline()) {
             if (p.toLowerCase().startsWith(DebutDePseudo) && !e.getSuggestions().contains(p))
                 e.getSuggestions().add(p);
         }

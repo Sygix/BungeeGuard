@@ -4,7 +4,6 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
 
@@ -34,6 +33,6 @@ public class CommandReloadConf extends Command {
         }
         new ReloadConfHandler(plugin).handle();
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Reload : en cours …"));
-        BungeeGuardUtils.getMB().notifyStaff(ChatColor.DARK_RED + "/b:rl par " + sender.getName());
+        Main.getMB().notifyStaff(ChatColor.DARK_RED + "/b:rl par " + sender.getName());
     }
 }

@@ -2,7 +2,6 @@ package net.uhcwork.BungeeGuard.commands;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -31,15 +30,11 @@ public class CommandSilence extends Command {
             String servName = p.getServer().getInfo().getName();
             boolean silenced = !plugin.isSilenced(servName);
             plugin.getMB().silenceServer(servName, silenced);
-            for (ProxiedPlayer playerdwa : ProxyServer.getInstance().getPlayers()) {
-                if (playerdwa.getServer().getInfo().getName().equalsIgnoreCase(servName) &&
-                        playerdwa.hasPermission("bungeeguard.notify")) {
-                    playerdwa.sendMessage(new ComponentBuilder(BungeeGuardUtils.getStaffBroadcastTag() + "Le chat du serveur ").color(ChatColor.GRAY)
-                            .append(servName).color(ChatColor.AQUA).append(" a été ").color(ChatColor.GRAY)
-                            .append(silenced ? "désactivé " : "activé").color(silenced ? ChatColor.RED : ChatColor.GREEN).append("!").color(ChatColor.GRAY).create());
-                }
-            }
-
+            plugin.getMB().notifyStaff(BungeeGuardUtils.getStaffBroadcastTag() + ChatColor.GRAY + "Le chat du serveur "
+                    + ChatColor.AQUA + servName + ChatColor.GRAY +
+                    " a été " +
+                    (silenced ? ChatColor.RED + "désactivé " : ChatColor.GREEN + "activé")
+                    + ChatColor.GRAY + "!");
         } else {
             BungeeGuardUtils.msgPluginCommand(sender);
         }

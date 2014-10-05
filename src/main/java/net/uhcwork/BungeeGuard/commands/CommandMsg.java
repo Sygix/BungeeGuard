@@ -8,7 +8,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Mute.MuteType;
@@ -30,7 +29,6 @@ public class CommandMsg extends Command {
     public void execute(CommandSender sender, String[] args) {
         if (sender instanceof ProxiedPlayer) {
             ProxiedPlayer p = (ProxiedPlayer) sender;
-
             if (!p.hasPermission("bungeeguard.msg")) {
                 return;
             }
@@ -49,7 +47,7 @@ public class CommandMsg extends Command {
                 p.sendMessage(new ComponentBuilder(MuteMsg).create());
             } else {
                 plugin.getMM().unmute(mute, "TimeEnd", "Automatique", true);
-                BungeeGuardUtils.getMB().unmutePlayer(p.getUniqueId());
+                Main.getMB().unmutePlayer(p.getUniqueId());
             }
             return;
         }
@@ -65,7 +63,7 @@ public class CommandMsg extends Command {
                 p.sendMessage(new ComponentBuilder("Vous ne pouvez pas envoyer un message à vous-même !").color(ChatColor.RED).create());
                 return;
             }
-            if (!BungeeGuardUtils.getMB().isPlayerOnline(args[0])) {
+            if (!Main.getMB().isPlayerOnline(args[0])) {
                 p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());
                 return;
             }
@@ -73,7 +71,7 @@ public class CommandMsg extends Command {
                 p.sendMessage(new TextComponent(ChatColor.RED + "Votre message ne peut pas être vide !"));
                 return;
             }
-            UUID receiverUUID = BungeeGuardUtils.getMB().getUuidFromName(args[0]);
+            UUID receiverUUID = Main.getMB().getUuidFromName(args[0]);
             boolean isReply = plugin.isReply(p.getUniqueId(), receiverUUID);
             if (Permissions.hasPerm(args[0], "bungeeguard.moremsg") && !p.hasPermission("bungeeguard.moremsg") && !isReply) {
                 p.sendMessage(new ComponentBuilder("Vous n'avez pas la permission de parler à ce joueur !").color(ChatColor.RED).create());
@@ -91,7 +89,7 @@ public class CommandMsg extends Command {
             for (int i = 1; i < args.length; i++)
                 text += args[i] + " ";
 
-            BungeeGuardUtils.getMB().sendPrivateMessage(p.getName(), receiverUUID, text);
+            Main.getMB().sendPrivateMessage(p.getName(), receiverUUID, text);
 
             BaseComponent[] contenu = new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(args[0]).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" ").create();
 

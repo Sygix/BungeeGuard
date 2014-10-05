@@ -37,7 +37,7 @@ public class PartyAddMemberHandler extends PubSubBase {
             pp = ProxyServer.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
-            pp.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "+ " + plugin.getMB().getNameFromUuid(u) + ChatColor.RESET + " a rejoint la Party"));
+            pp.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "+ " + Main.getMB().getNameFromUuid(u) + ChatColor.RESET + " a rejoint la Party"));
         }
     }
 }

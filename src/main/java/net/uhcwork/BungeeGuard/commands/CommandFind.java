@@ -20,13 +20,13 @@ public class CommandFind extends PlayerCommand {
         if (args.length != 1) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Please follow this command by a user name"));
         } else {
-            ServerInfo SI = plugin.getMB().getServerFor(args[0]);
-            String proxy = plugin.getMB().getProxy(args[0]);
+            ServerInfo SI = Main.getMB().getServerFor(args[0]);
+            String proxy = Main.getMB().getProxy(args[0]);
             if (SI == null) {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "That user is not online"));
                 return;
             }
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "[" + ChatColor.AQUA + proxy + ChatColor.GRAY + "] " + ChatColor.GREEN + args[0] + ChatColor.GRAY + " est sur " + ChatColor.YELLOW + SI.getName()));
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "[" + ChatColor.AQUA + proxy + ChatColor.GRAY + "] " + ChatColor.GREEN + args[0] + ChatColor.GRAY + " est sur " + Main.getPrettyServerName(SI.getName()) + " (" + ChatColor.YELLOW + SI.getName() + ChatColor.RESET + ChatColor.GRAY + ")"));
         }
     }
 }

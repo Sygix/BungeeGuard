@@ -6,7 +6,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 
@@ -42,7 +41,7 @@ public class CommandUnban extends Command {
             unbanReason = plugin.getPremadeMessage(unbanReason);
         String bannedName = args[0];
 
-        UUID bannedUUID = BungeeGuardUtils.getMB().getUuidFromName(bannedName);
+        UUID bannedUUID = Main.getMB().getUuidFromName(bannedName);
         if (bannedUUID == null) {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Erreur: joueur inconnu."));
             return;
@@ -53,13 +52,13 @@ public class CommandUnban extends Command {
             sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas banni.").color(ChatColor.RED).create());
         } else {
             BM.unban(ban, sender.getName(), unbanReason, true);
-            BungeeGuardUtils.getMB().unban(bannedUUID);
+            Main.getMB().unban(bannedUUID);
             BanType banType = (unbanReason.equals("")) ? BanType.UNBAN : BanType.UNBAN_W_REASON;
             if (!unbanReason.isEmpty())
                 unbanReason = ChatColor.translateAlternateColorCodes('&', unbanReason);
 
             String adminFormat = banType.adminFormat("", unbanReason, unbanName, bannedName);
-            BungeeGuardUtils.getMB().notifyStaff(adminFormat);
+            Main.getMB().notifyStaff(adminFormat);
         }
 
     }

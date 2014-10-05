@@ -24,7 +24,7 @@ public class CommandCheck extends Command {
         if (args.length != 1) {
             sender.sendMessage(new ComponentBuilder("Usage: /check <player>").color(ChatColor.RED).create());
         } else {
-            UUID bannedUUID = BungeeGuardUtils.getMB().getUuidFromName(args[0]);
+            UUID bannedUUID = Main.getMB().getUuidFromName(args[0]);
             BungeeBan ban = plugin.getBM().findBan(bannedUUID);
 
             if (ban == null) {

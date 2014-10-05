@@ -5,6 +5,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.uhcwork.BungeeGuard.Main;
 
 /**
  * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
@@ -40,7 +41,7 @@ public class SummonHandler extends PubSubBase {
         if (player.getServer() != null && !player.getServer().getInfo().equals(target)) {
             player.connect(target);
             if (!senderName.isEmpty())
-                player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Summoned to " + target.getName() + " by " + senderName));
+                player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Summoned to " + Main.getPrettyServerName(target.getName()) + " by " + senderName));
         }
     }
 }

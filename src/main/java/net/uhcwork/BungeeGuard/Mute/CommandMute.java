@@ -60,18 +60,18 @@ public class CommandMute extends Command {
 
             String muteName = args[0];
 
-            UUID muteUUID = BungeeGuardUtils.getMB().getUuidFromName(muteName);
+            UUID muteUUID = Main.getMB().getUuidFromName(muteName);
             String muteDurationStr = BungeeGuardUtils.getDuration(muteUntilTime);
             String muteMessage = MuteTypeVar.playerFormat(muteDurationStr, reason);
 
-            BungeeGuardUtils.getMB().sendPlayerMessage(muteUUID, muteMessage);
+            Main.getMB().sendPlayerMessage(muteUUID, muteMessage);
 
             MM.mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID, true);
 
-            BungeeGuardUtils.getMB().mutePlayer(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
+            Main.getMB().mutePlayer(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
 
             String adminFormat = MuteTypeVar.adminFormat(muteDurationStr, reason, adminName, muteName);
-            BungeeGuardUtils.getMB().notifyStaff(adminFormat);
+            Main.getMB().notifyStaff(adminFormat);
         }
     }
 }

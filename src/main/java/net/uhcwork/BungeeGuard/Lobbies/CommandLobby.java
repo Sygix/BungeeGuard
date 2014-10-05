@@ -33,7 +33,7 @@ public class CommandLobby extends Command {
                 p.sendMessage(new ComponentBuilder("Vous etes déjà connecté a ce serveur !").color(ChatColor.RED).create());
             } else {
                 p.connect(ProxyServer.getInstance().getServerInfo("hub"));
-                p.sendMessage(new ComponentBuilder("Connexion vers le lobby . . .").color(ChatColor.GREEN).create());
+                p.sendMessage(new ComponentBuilder("Connexion vers le lobby ...").color(ChatColor.GREEN).create());
             }
         }
 
