@@ -4,6 +4,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -28,9 +29,13 @@ public class PartyManager {
 
     public void clean() {
         MultiBungee MB = BungeeGuardUtils.getMB();
+        Iterator<UUID> joueurs;
+        UUID u;
         for (String partyName : parties.keySet()) {
             Party p = parties.get(partyName);
-            for (UUID u : p.getMembers()) {
+            joueurs = p.getMembers().iterator();
+            while (joueurs.hasNext()) {
+                u = joueurs.next();
                 if (!MB.isPlayerOnline(u)) {
                     p.removeMember(u);
                 }
@@ -40,6 +45,7 @@ public class PartyManager {
                 BungeeGuardUtils.getMB().disbandParty(p.getName());
             }
         }
+
     }
 
     public Party getParty(String nom) {
