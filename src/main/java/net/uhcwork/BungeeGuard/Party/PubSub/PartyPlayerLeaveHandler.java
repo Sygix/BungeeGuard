@@ -30,7 +30,7 @@ public class PartyPlayerLeaveHandler extends PubSubBase {
         String partyName = args[0];
         UUID u = UUID.fromString(args[1]);
         Party p = plugin.getPM().getParty(partyName);
-        String playerName = plugin.getMB().getNameFromUuid(u);
+        String playerName = Main.getMB().getNameFromUuid(u);
         if (p == null)
             return;
         p.removeMember(u);

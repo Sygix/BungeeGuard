@@ -8,7 +8,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Mute.MuteType;
@@ -45,7 +44,7 @@ public class CommandReply extends Command {
                 p.sendMessage(new ComponentBuilder(MuteMsg).create());
             } else {
                 plugin.getMM().unmute(mute, "TimeEnd", "Automatique", true);
-                BungeeGuardUtils.getMB().unmutePlayer(p.getUniqueId());
+                Main.getMB().unmutePlayer(p.getUniqueId());
             }
             return;
         }
@@ -60,11 +59,11 @@ public class CommandReply extends Command {
             p.sendMessage(new ComponentBuilder("Vous n'avez personne à qui répondre !").color(ChatColor.RED).create());
             return;
         }
-        String destinataireName = BungeeGuardUtils.getMB().getNameFromUuid(destinataire);
+        String destinataireName = Main.getMB().getNameFromUuid(destinataire);
         String message = "";
         for (String arg : args) message += arg + " ";
 
-        if (!BungeeGuardUtils.getMB().isPlayerOnline(destinataire)) {
+        if (!Main.getMB().isPlayerOnline(destinataire)) {
             p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());
             return;
         }
@@ -86,6 +85,6 @@ public class CommandReply extends Command {
 
         p.sendMessage(contenu);
         plugin.setReply(p.getUniqueId(), destinataire);
-        BungeeGuardUtils.getMB().sendPrivateMessage(p.getName(), destinataire, message);
+        Main.getMB().sendPrivateMessage(p.getName(), destinataire, message);
     }
 }

@@ -27,6 +27,6 @@ public class PartyReplyHandler extends PubSubBase {
         Type type = new TypeToken<Map<String, Party>>() {
         }.getType();
 
-        plugin.getPM().setParties(plugin.gson.<Map<String, Party>>fromJson(data, type));
+        plugin.getPM().setParties(Main.getGson().<Map<String, Party>>fromJson(data, type));
     }
 }

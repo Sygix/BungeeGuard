@@ -26,7 +26,7 @@ public class PubSubListener implements Listener {
 
     public PubSubListener(Main plugin) {
         this.plugin = plugin;
-        this.MB = plugin.getMB();
+        this.MB = Main.getMB();
     }
 
     @EventHandler
@@ -39,9 +39,9 @@ public class PubSubListener implements Listener {
         if (MB.getServerId().contains("test")) {
             System.out.println("< " + channel + ": " + message);
         }
-        if (channel.startsWith("@" + plugin.getMB().getServerId() + "/")) {
+        if (channel.startsWith("@" + MB.getServerId() + "/")) {
             // Si channel ressemble à @serveur/commande, on retire le préfixe :]
-            channel = channel.replace("@" + plugin.getMB().getServerId() + "/", "@");
+            channel = channel.replace("@" + MB.getServerId() + "/", "@");
         }
 
         switch (channel) {
@@ -132,7 +132,7 @@ public class PubSubListener implements Listener {
 
 
         }
-        if (handler.ignoreSelfMessage() && args.length != 0 && args[0].equals(plugin.getMB().getServerId()))
+        if (handler.ignoreSelfMessage() && args.length != 0 && args[0].equals(MB.getServerId()))
             return;
         handler.handle(channel, message, args);
     }
@@ -152,7 +152,7 @@ public class PubSubListener implements Listener {
         if (subchannel.equals("ConnectOther")) {
             String playerName = in.readUTF();
             String serverName = in.readUTF();
-            plugin.getMB().summon(playerName, serverName, "");
+            MB.summon(playerName, serverName, "");
         }
 
         if (subchannel.equals("PlayerCount")) {

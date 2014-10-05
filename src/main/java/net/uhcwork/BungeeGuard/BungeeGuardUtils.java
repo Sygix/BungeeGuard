@@ -7,7 +7,6 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
-import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.utils.DateUtil;
 
 import java.io.File;
@@ -46,12 +45,6 @@ public class BungeeGuardUtils {
         return plugin.getMM().findMute(u);
     }
 
-    public static MultiBungee getMB() {
-        if (plugin.getMB() == null) {
-            return null;
-        }
-        return plugin.getMB();
-    }
 
     public static String getServerID() {
         if (server_id != null)

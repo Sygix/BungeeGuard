@@ -19,6 +19,6 @@ public class PartyRequestHandler extends PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
         String serveur = args[0];
-        plugin.getMB().replyParties(serveur, plugin.gson.toJson(plugin.getPM().getParties()));
+        Main.getMB().replyParties(serveur, Main.getGson().toJson(plugin.getPM().getParties()));
     }
 }

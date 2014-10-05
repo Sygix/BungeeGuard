@@ -6,7 +6,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.utils.Permissions;
@@ -35,7 +34,7 @@ public class CommandIgnore extends Command {
             return;
         }
         ProxiedPlayer p = (ProxiedPlayer) sender;
-        MultiBungee MB = BungeeGuardUtils.getMB();
+        MultiBungee MB = Main.getMB();
         if (args.length != 1) {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Utilisation: /ignore <joueur>"));
             return;
@@ -51,10 +50,10 @@ public class CommandIgnore extends Command {
         }
         if (plugin.getIM().playerIgnores(p.getUniqueId(), toIgnore)) {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous n'ignorez plus " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
-            BungeeGuardUtils.getMB().ignorePlayer(p.getUniqueId(), '-', toIgnore);
+            MB.ignorePlayer(p.getUniqueId(), '-', toIgnore);
         } else {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous ignorez maintenant " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
-            BungeeGuardUtils.getMB().ignorePlayer(p.getUniqueId(), '+', toIgnore);
+            MB.ignorePlayer(p.getUniqueId(), '+', toIgnore);
         }
     }
 }

@@ -9,7 +9,6 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 
 import java.util.HashSet;
@@ -48,8 +47,8 @@ public class CommandSend extends Command implements TabExecutor {
             }
             summon(((ProxiedPlayer) sender).getServer().getInfo().getName(), target.getName(), sender.getName());
         } else {
-            UUID u = BungeeGuardUtils.getMB().getUuidFromName(args[0]);
-            if (u == null || !BungeeGuardUtils.getMB().isPlayerOnline(u)) {
+            UUID u = Main.getMB().getUuidFromName(args[0]);
+            if (u == null || !Main.getMB().isPlayerOnline(u)) {
                 sender.sendMessage(new TextComponent(ChatColor.RED + "That player is not online"));
                 return;
             }
@@ -59,7 +58,7 @@ public class CommandSend extends Command implements TabExecutor {
     }
 
     private void summon(String player, String target, String sender) {
-        BungeeGuardUtils.getMB().summon(player, target, sender);
+        Main.getMB().summon(player, target, sender);
     }
 
     @Override

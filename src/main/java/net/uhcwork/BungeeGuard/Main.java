@@ -1,6 +1,8 @@
 package net.uhcwork.BungeeGuard;
 
 import com.google.gson.Gson;
+import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -11,6 +13,7 @@ import net.uhcwork.BungeeGuard.Ban.BanManager;
 import net.uhcwork.BungeeGuard.Ban.CommandBan;
 import net.uhcwork.BungeeGuard.Ban.CommandUnban;
 import net.uhcwork.BungeeGuard.Config.MysqlConfigAdapter;
+import net.uhcwork.BungeeGuard.HTTPApi.HttpApi;
 import net.uhcwork.BungeeGuard.Ignore.CommandIgnore;
 import net.uhcwork.BungeeGuard.Ignore.IgnoreManager;
 import net.uhcwork.BungeeGuard.Kick.CommandKick;
@@ -42,27 +45,40 @@ import java.util.concurrent.TimeUnit;
 public class Main extends Plugin {
 
     public static Main plugin;
+    @Getter
+    public static Gson gson = new Gson();
     private static Connection db_co;
     private static Map<String, String> premadeMessages = new HashMap<>();
     private static List<String> forbiddenCommands = new ArrayList<>();
-    public Gson gson = new Gson();
-    private String motd;
+    @Getter
+    @Setter
+    private static String motd;
+    @Getter
+    private static MultiBungee MB = new MultiBungee();
+    private static HttpApi httpApi = new HttpApi();
+    private static Map<UUID, UUID> reply = new HashMap<>();
+    private static List<UUID> spy = new ArrayList<>();
+    private static Map<String, String> prettyServerNames = new HashMap<>();
     private long startTime;
-    private Map<UUID, UUID> reply = new HashMap<>();
-    private List<UUID> spy = new ArrayList<>();
     private List<String> silencedServers = new ArrayList<>();
     private HashMap<UUID, String> gtp = new HashMap<>();
-    private MultiBungee MB = new MultiBungee();
+    @Getter
     private PartyManager PM = new PartyManager();
+    @Getter
     private BanManager BM = new BanManager(this);
+    @Getter
     private MuteManager MM = new MuteManager();
+    @Getter
     private LobbyManager LM = new LobbyManager(this);
+    @Getter
     private IgnoreManager IM = new IgnoreManager(this);
+    @Getter
     private AntiSpamListener AS = new AntiSpamListener();
+    @Getter
     private AnnouncementManager AM = new AnnouncementManager(this);
     private int broadcastDelay = 180;
+    @Getter
     private WalletManager WM = new WalletManager(this);
-
 
     public static void getDb() {
         if (Base.hasConnection()) {
@@ -78,6 +94,10 @@ public class Main extends Plugin {
             // Petit hack qui permet d'utiliser le même SQL dans tous les threads :]
             Base.attach(db_co);
         }
+    }
+
+    public static String getPrettyServerName(String name) {
+        return prettyServerNames.containsKey(name) ? prettyServerNames.get(name) : name;
     }
 
     public void setPremadeMessages(List<BungeePremadeMessage> all) {
@@ -98,22 +118,15 @@ public class Main extends Plugin {
         }
     }
 
-    public String getMotd() {
-        return motd;
-    }
-
     public void setMotd(String motd) {
         this.motd = motd;
-    }
-
-    public MultiBungee getMB() {
-        return MB;
     }
 
     @Override
     public void onLoad() {
         plugin = this;
         startTime = System.currentTimeMillis();
+        httpApi.onLoad(this);
         new BungeeGuardUtils(this);
         System.out.println("Welcome to MultiBungee ~ With ORM");
         getDb();
@@ -136,6 +149,7 @@ public class Main extends Plugin {
 
     @Override
     public void onEnable() {
+        httpApi.onEnable();
         MB.init();
         MB.registerPubSubChannels("ban", "unban");
         MB.registerPubSubChannels("kick", "silenceServer");
@@ -190,27 +204,8 @@ public class Main extends Plugin {
 
     @Override
     public void onDisable() {
+        httpApi.onDisable();
         ProxyServer.getInstance().getScheduler().cancel(this);
-    }
-
-    public PartyManager getPM() {
-        return PM;
-    }
-
-    public BanManager getBM() {
-        return BM;
-    }
-
-    public MuteManager getMM() {
-        return MM;
-    }
-
-    public IgnoreManager getIM() {
-        return IM;
-    }
-
-    public LobbyManager getLM() {
-        return LM;
     }
 
     public void addGtp(UUID uuid, String playerName) {
@@ -269,10 +264,6 @@ public class Main extends Plugin {
         return premadeMessages.get(slug.toLowerCase());
     }
 
-    public AntiSpamListener getAS() {
-        return AS;
-    }
-
     public long getUptime() {
         return (System.currentTimeMillis() - startTime) / 1000;
     }
@@ -285,11 +276,11 @@ public class Main extends Plugin {
         this.broadcastDelay = broadcastDelay;
     }
 
-    public AnnouncementManager getAM() {
-        return AM;
+    public void resetPrettyServerNames() {
+        prettyServerNames.clear();
     }
 
-    public WalletManager getWM() {
-        return WM;
+    public void addPrettyServerName(String name, String prettyName) {
+        prettyServerNames.put(name, prettyName);
     }
 }

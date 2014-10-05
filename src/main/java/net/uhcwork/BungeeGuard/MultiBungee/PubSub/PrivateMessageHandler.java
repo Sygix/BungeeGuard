@@ -7,7 +7,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.utils.Permissions;
 import net.uhcwork.BungeeGuard.utils.PrettyLinkComponent;
@@ -48,13 +47,13 @@ public class PrivateMessageHandler extends PubSubBase {
             p.sendMessage(ObjectArrays.concat(mp, contenu, BaseComponent.class));
         }
 
-        plugin.setReply(receiver, BungeeGuardUtils.getMB().getUuidFromName(sender));
+        plugin.setReply(receiver, Main.getMB().getUuidFromName(sender));
 
         ProxiedPlayer admin;
         for (UUID uuid : plugin.getSpies()) {
             try {
                 admin = ProxyServer.getInstance().getPlayer(uuid);
-                mp = new ComponentBuilder("[").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("] ").color(ChatColor.GRAY).append(sender).append(": /msg ").append(BungeeGuardUtils.getMB().getNameFromUuid(receiver) + " ").create();
+                mp = new ComponentBuilder("[").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("] ").color(ChatColor.GRAY).append(sender).append(": /msg ").append(Main.getMB().getNameFromUuid(receiver) + " ").create();
                 admin.sendMessage(ObjectArrays.concat(mp, contenu, BaseComponent.class));
             } catch (Exception ignored) {
             }

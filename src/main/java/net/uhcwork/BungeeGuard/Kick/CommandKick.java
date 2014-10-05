@@ -5,7 +5,6 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 
 public class CommandKick extends Command {
@@ -38,15 +37,15 @@ public class CommandKick extends Command {
             KickType KickTypeVar = (reason.isEmpty()) ? KickType.KICK : KickType.KICK_W_REASON;
 
             String bannedName = args[0];
-            if (!BungeeGuardUtils.getMB().isPlayerOnline(bannedName)) {
+            if (!Main.getMB().isPlayerOnline(bannedName)) {
                 sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas en ligne.").color(ChatColor.RED).create());
                 return;
             } else {
-                BungeeGuardUtils.getMB().kickPlayer(bannedName, KickTypeVar.kickFormat(reason));
+                Main.getMB().kickPlayer(bannedName, KickTypeVar.kickFormat(reason));
             }
 
             String adminFormat = KickTypeVar.adminFormat(reason, adminName, bannedName);
-            BungeeGuardUtils.getMB().notifyStaff(adminFormat);
+            Main.getMB().notifyStaff(adminFormat);
         }
     }
 }

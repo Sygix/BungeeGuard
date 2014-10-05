@@ -63,18 +63,18 @@ public class CommandBan extends Command {
             }
 
             String bannedName = args[0];
-            UUID bannedUUID = BungeeGuardUtils.getMB().getUuidFromName(bannedName);
+            UUID bannedUUID = Main.getMB().getUuidFromName(bannedName);
             String bannedDurationStr = BungeeGuardUtils.getDuration(bannedUntilTime);
 
-            BungeeGuardUtils.getMB().kickPlayer(bannedName, BanTypeVar.kickFormat(bannedDurationStr, reason));
+            Main.getMB().kickPlayer(bannedName, BanTypeVar.kickFormat(bannedDurationStr, reason));
 
             BungeeBan ban = BM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, true);
             ban.saveIt();
 
-            BungeeGuardUtils.getMB().banPlayer(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
+            Main.getMB().banPlayer(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
 
             String adminFormat = BanTypeVar.adminFormat(bannedDurationStr, reason, adminName, bannedName);
-            BungeeGuardUtils.getMB().notifyStaff(adminFormat);
+            Main.getMB().notifyStaff(adminFormat);
         }
     }
 }

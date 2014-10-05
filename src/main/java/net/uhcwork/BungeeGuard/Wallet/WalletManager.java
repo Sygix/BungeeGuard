@@ -38,7 +38,7 @@ public class WalletManager {
             });
 
     public WalletManager(Main main) {
-        MB = main.getMB();
+        MB = Main.getMB();
 
         this.plugin = main;
     }

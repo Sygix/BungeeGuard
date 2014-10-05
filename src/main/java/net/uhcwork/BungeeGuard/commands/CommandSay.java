@@ -26,8 +26,8 @@ public class CommandSay extends Command {
             String msg = "";
             for (String m : args)
                 msg += m + " ";
-            BungeeGuardUtils.getMB().broadcastServers("*", msg);
-            BungeeGuardUtils.getMB().notifyStaff("[" + BungeeGuardUtils.getMB().getServerId() + "] " + sender.getName() + ": /say " + msg);
+            Main.getMB().broadcastServers("*", msg);
+            Main.getMB().notifyStaff("[" + Main.getMB().getServerId() + "] " + sender.getName() + ": /say " + msg);
         }
     }
 }

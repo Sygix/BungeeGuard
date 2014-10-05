@@ -124,12 +124,15 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     @SuppressWarnings("unchecked")
     public Map<String, ServerInfo> getServers() {
         Map<String, ServerInfo> ret = new HashMap<>();
+        plugin.resetPrettyServerNames();
         List<BungeeServer> serveurs = BungeeServer.findAll();
         for (BungeeServer serveur : serveurs) {
             String name = serveur.getName();
             String addr = serveur.getAddress();
+            String prettyName = serveur.getPrettyName();
             String motd = "Serveur UHCGames"; // Should <not> be displayed.
             boolean restricted = false;
+            plugin.addPrettyServerName(name, prettyName);
             InetSocketAddress address = Util.getAddr(addr);
             ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, motd, restricted);
             ret.put(name, info);

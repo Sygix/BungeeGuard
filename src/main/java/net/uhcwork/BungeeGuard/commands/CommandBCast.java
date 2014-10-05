@@ -46,8 +46,8 @@ public class CommandBCast extends Command {
                     serversList.add(currentServer);
             }
 
-            BungeeGuardUtils.getMB().broadcastServers(serversList, msg);
-            BungeeGuardUtils.getMB().notifyStaff("[" + BungeeGuardUtils.getMB().getServerId() + "] " + sender.getName() + ": /bcast " + Joiner.on(",").join(serversList) + " " + msg);
+            Main.getMB().broadcastServers(serversList, msg);
+            Main.getMB().notifyStaff("[" + Main.getMB().getServerId() + "] " + sender.getName() + ": /bcast " + Joiner.on(",").join(serversList) + " " + msg);
         }
     }
 }
