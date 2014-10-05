@@ -123,7 +123,7 @@ public class Main extends Plugin {
         startTime = System.currentTimeMillis();
         //httpApi.onLoad(this);
         new BungeeGuardUtils(this);
-        System.out.println("Welcome to MultiBungee ~ With ORM");
+        System.out.println("Welcome to MultiBungee ~ With ORM and love.");
         getDb();
         ProxyServer.getInstance().setConfigurationAdapter(new MysqlConfigAdapter(this));
     }
