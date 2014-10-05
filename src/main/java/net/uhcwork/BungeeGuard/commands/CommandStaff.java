@@ -28,7 +28,7 @@ public class CommandStaff extends Command {
     public CommandStaff(Main plugin) {
         super("staff");
         this.plugin = plugin;
-        MB = plugin.getMB();
+        MB = Main.getMB();
         groupes.put("admin", ChatColor.RED);
         groupes.put("modo", ChatColor.BLUE);
         groupes.put("yt", ChatColor.GOLD);
@@ -63,7 +63,7 @@ public class CommandStaff extends Command {
                 for (String playerName : staff.get(groupeName)) {
                     ComponentBuilder TC = new ComponentBuilder(playerName)
                             .color(groupes.get(groupeName));
-                    if (sender.hasPermission("bungeeguard.admin")) {
+                    if (sender.hasPermission("bungeeguard.staff.see")) {
                         TC.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 new ComponentBuilder("Serveur: ")
                                         .append(Main.getPrettyServerName(MB.getServerFor(playerName).getName())

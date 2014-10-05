@@ -13,7 +13,6 @@ import net.uhcwork.BungeeGuard.Ban.BanManager;
 import net.uhcwork.BungeeGuard.Ban.CommandBan;
 import net.uhcwork.BungeeGuard.Ban.CommandUnban;
 import net.uhcwork.BungeeGuard.Config.MysqlConfigAdapter;
-import net.uhcwork.BungeeGuard.HTTPApi.HttpApi;
 import net.uhcwork.BungeeGuard.Ignore.CommandIgnore;
 import net.uhcwork.BungeeGuard.Ignore.IgnoreManager;
 import net.uhcwork.BungeeGuard.Kick.CommandKick;
@@ -55,7 +54,7 @@ public class Main extends Plugin {
     private static String motd;
     @Getter
     private static MultiBungee MB = new MultiBungee();
-    private static HttpApi httpApi = new HttpApi();
+    //private static HttpApi httpApi = new HttpApi();
     private static Map<UUID, UUID> reply = new HashMap<>();
     private static List<UUID> spy = new ArrayList<>();
     private static Map<String, String> prettyServerNames = new HashMap<>();
@@ -118,15 +117,11 @@ public class Main extends Plugin {
         }
     }
 
-    public void setMotd(String motd) {
-        this.motd = motd;
-    }
-
     @Override
     public void onLoad() {
         plugin = this;
         startTime = System.currentTimeMillis();
-        httpApi.onLoad(this);
+        //httpApi.onLoad(this);
         new BungeeGuardUtils(this);
         System.out.println("Welcome to MultiBungee ~ With ORM");
         getDb();
@@ -134,7 +129,6 @@ public class Main extends Plugin {
     }
 
     private void fetchParties() {
-        MultiBungee MB = BungeeGuardUtils.getMB();
         List<String> server = MB.getAllServers();
         PM = new PartyManager();
         for (String s : server) {
@@ -149,7 +143,7 @@ public class Main extends Plugin {
 
     @Override
     public void onEnable() {
-        httpApi.onEnable();
+        //httpApi.onEnable();
         MB.init();
         MB.registerPubSubChannels("ban", "unban");
         MB.registerPubSubChannels("kick", "silenceServer");
@@ -204,7 +198,7 @@ public class Main extends Plugin {
 
     @Override
     public void onDisable() {
-        httpApi.onDisable();
+        //httpApi.onDisable();
         ProxyServer.getInstance().getScheduler().cancel(this);
     }
 
