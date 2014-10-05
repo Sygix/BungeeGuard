@@ -45,7 +45,7 @@ public class CommandBUp extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(TextComponent.fromLegacyText(":" + ChatColor.BLUE + plugin.getDescription().getName() + ChatColor.RESET + ": par " + ChatColor.RED + "\u2665 " + plugin.getDescription().getAuthor()));
+        sender.sendMessage(TextComponent.fromLegacyText(":" + ChatColor.BLUE + plugin.getDescription().getName() + ChatColor.RESET + ": par " + ChatColor.RED + "\u2764 " + plugin.getDescription().getAuthor()));
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Version: " + ChatColor.RESET + plugin.getDescription().getVersion()));
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Uptime: " + ChatColor.RESET + formatUptime(plugin.getUptime())));
     }
