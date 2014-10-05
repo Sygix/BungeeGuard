@@ -4,8 +4,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 
 /**
@@ -15,7 +15,7 @@ import java.util.UUID;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class PartyManager {
-    private Map<String, Party> parties = new HashMap<>();
+    Map<String, Party> parties = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public Map<String, Party> getParties() {
         clean();
