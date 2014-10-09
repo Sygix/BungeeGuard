@@ -2,6 +2,7 @@ package net.uhcwork.BungeeGuard.Party.PubSub;
 
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.PubSubBase;
+import net.uhcwork.BungeeGuard.Party.Party;
 
 import java.util.UUID;
 
@@ -23,6 +24,9 @@ public class PartyChatSetHandler extends PubSubBase {
         String partyName = args[0];
         UUID uuid = UUID.fromString(args[1]);
         boolean isPartyChat = Boolean.parseBoolean(args[2]);
-        plugin.getPM().getParty(partyName).setPartyChat(uuid, isPartyChat);
+        Party p = plugin.getPM().getParty(partyName);
+        if (p == null)
+            return;
+        p.setPartyChat(uuid, isPartyChat);
     }
 }
