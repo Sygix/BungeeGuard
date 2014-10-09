@@ -1,9 +1,14 @@
 package net.uhcwork.BungeeGuard.MultiBungee;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.md_5.bungee.Util;
+import net.md_5.bungee.api.Callback;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -13,6 +18,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSub.*;
 import net.uhcwork.BungeeGuard.Party.PubSub.*;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Part of net.uhcwork.BungeeGuard.MultiBungee (bungeeguard)
@@ -23,6 +29,7 @@ import java.util.UUID;
 public class PubSubListener implements Listener {
     Main plugin;
     MultiBungee MB;
+    Cache<String, byte[]> serversCache = CacheBuilder.newBuilder().maximumSize(100).expireAfterWrite(3, TimeUnit.SECONDS).build();
 
     public PubSubListener(Main plugin) {
         this.plugin = plugin;
@@ -167,6 +174,11 @@ public class PubSubListener implements Listener {
             }
         }
 
+
+        if (subchannel.equals("PingServers")) {
+            sendServersPing(sender);
+        }
+
         if (subchannel.equals("PlayerList")) {
             String target = in.readUTF();
             out.writeUTF("PlayerList");
@@ -208,5 +220,37 @@ public class PubSubListener implements Listener {
         if (data.length != 0)
             sender.sendData("UHCGames", data);
 
+    }
+
+    private void sendServersPing(final Server sender) {
+        Callback<ServerPing> pingBack;
+        for (final String serverName : ProxyServer.getInstance().getServers().keySet()) {
+            pingBack = new Callback<ServerPing>() {
+                @Override
+                public void done(ServerPing serverPing, Throwable throwable) {
+                    byte[] data;
+                    data = serversCache.getIfPresent(serverName);
+                    if (data == null) {
+                        ByteArrayDataOutput out;
+                        out = ByteStreams.newDataOutput();
+                        out.writeUTF(serverName);
+                        out.writeUTF(Main.getPrettyServerName(serverName));
+                        out.writeUTF(Main.getShortServerName(serverName));
+                        if (throwable != null) {
+                            out.writeInt(-1);
+                        } else {
+                            out.writeInt(serverPing.getPlayers().getOnline());
+                            out.writeInt(serverPing.getPlayers().getMax());
+                            out.writeUTF(serverPing.getDescription());
+                        }
+                        data = out.toByteArray();
+                        serversCache.put(serverName, data);
+                    }
+                    if (data.length != 0)
+                        sender.sendData("UHCGames", data);
+                }
+            };
+            ProxyServer.getInstance().getServerInfo(serverName).ping(pingBack);
+        }
     }
 }

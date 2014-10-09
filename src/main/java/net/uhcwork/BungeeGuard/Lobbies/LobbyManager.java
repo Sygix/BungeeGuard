@@ -5,6 +5,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Ordering;
+import lombok.Getter;
 import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
@@ -35,6 +36,8 @@ public class LobbyManager {
         }
     };
     private Main plugin;
+
+    @Getter
     private List<Lobby> lobbies = new ArrayList<>();
 
     public LobbyManager(Main plugin) {
@@ -83,10 +86,6 @@ public class LobbyManager {
                 lobbies = new_lobbys;
             }
         }, 1, 3, TimeUnit.SECONDS);
-    }
-
-    public List<Lobby> getLobbies() {
-        return lobbies;
     }
 
     @SuppressWarnings("UnusedParameters")

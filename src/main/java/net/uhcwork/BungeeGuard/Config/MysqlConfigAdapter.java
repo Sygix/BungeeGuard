@@ -125,14 +125,17 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     public Map<String, ServerInfo> getServers() {
         Map<String, ServerInfo> ret = new HashMap<>();
         plugin.resetPrettyServerNames();
+        plugin.resetShortServerNames();
         List<BungeeServer> serveurs = BungeeServer.findAll();
         for (BungeeServer serveur : serveurs) {
             String name = serveur.getName();
             String addr = serveur.getAddress();
-            String prettyName = serveur.getPrettyName();
+            String prettyName = ChatColor.translateAlternateColorCodes('&', serveur.getPrettyName());
+            String shortName = ChatColor.translateAlternateColorCodes('&', serveur.getShortName());
             String motd = "Serveur UHCGames"; // Should <not> be displayed.
             boolean restricted = false;
             plugin.addPrettyServerName(name, prettyName);
+            plugin.addShortServerName(name, shortName);
             InetSocketAddress address = Util.getAddr(addr);
             ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, motd, restricted);
             ret.put(name, info);
@@ -177,7 +180,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         conf = BungeeConfig.findById(1);
         options.put(OPTIONS.MAX_PLAYERS, conf.getMaxPlayers());
         options.put(OPTIONS.MOTD, ChatColor.translateAlternateColorCodes('&', conf.getMotd()));
-        plugin.setMotd(String.valueOf(options.get(OPTIONS.MOTD)));
+        Main.setMotd(String.valueOf(options.get(OPTIONS.MOTD)));
         BungeeInstance instance = BungeeInstance.findFirst("server_id = ?", BungeeGuardUtils.getServerID());
 
         options.put(OPTIONS.BIND_ADDRESS, instance.getBindAddress());

@@ -1,5 +1,6 @@
 package net.uhcwork.BungeeGuard.Announces;
 
+import lombok.Getter;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeAnnouncements;
 
@@ -14,15 +15,13 @@ import java.util.List;
  */
 public class AnnouncementManager {
     Main plugin;
+    @Getter
     private List<Announcement> announcements = new ArrayList<>();
 
     public AnnouncementManager(Main main) {
         this.plugin = main;
     }
 
-    public List<Announcement> getAnnouncements() {
-        return announcements;
-    }
 
     public void setAnnouncements(List<BungeeAnnouncements> _announcements) {
         announcements.clear();

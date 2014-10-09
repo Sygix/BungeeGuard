@@ -41,7 +41,7 @@ public class SummonHandler extends PubSubBase {
         if (player.getServer() != null && !player.getServer().getInfo().equals(target)) {
             player.connect(target);
             if (!senderName.isEmpty())
-                player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Summoned to " + Main.getPrettyServerName(target.getName()) + " by " + senderName));
+                player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Summoned to " + Main.getPrettyServerName(target.getName()) + ChatColor.RESET + ChatColor.GOLD + " by " + senderName));
         }
     }
 }

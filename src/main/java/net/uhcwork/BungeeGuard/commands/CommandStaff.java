@@ -66,7 +66,7 @@ public class CommandStaff extends Command {
                     if (sender.hasPermission("bungeeguard.staff.see")) {
                         TC.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 new ComponentBuilder("Serveur: ")
-                                        .append(Main.getPrettyServerName(MB.getServerFor(playerName).getName())
+                                        .append(Main.getPrettyServerName(MB.getServerFor(playerName).getName() + ChatColor.RESET)
                                                 + " (" + MB.getServerFor(playerName).getName() + ")")
                                         .color(ChatColor.BLUE)
                                         .append("\nProxy: ")

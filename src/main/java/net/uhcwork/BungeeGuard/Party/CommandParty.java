@@ -40,7 +40,7 @@ public class CommandParty extends Command {
         super("party", "party.use", "p", "g", "group", "groupe");
         this.plugin = plugin;
         this.PM = plugin.getPM();
-        this.MB = plugin.getMB();
+        this.MB = Main.getMB();
     }
 
     public static boolean isAlphanumeric(String str) {
@@ -254,8 +254,8 @@ public class CommandParty extends Command {
             return;
         }
         String joueur = args[1];
-        UUID u = plugin.getMB().getUuidFromName(joueur);
-        if (u == null || !plugin.getMB().isPlayerOnline(u)) {
+        UUID u = Main.getMB().getUuidFromName(joueur);
+        if (u == null || !Main.getMB().isPlayerOnline(u)) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne"));
             return;
         }
@@ -264,7 +264,7 @@ public class CommandParty extends Command {
             sender.sendMessage(TextComponent.fromLegacyText("Ce joueur est déjà dans une Party."));
             return;
         }
-        plugin.getMB().inviteParty(p, u);
+        Main.getMB().inviteParty(p, u);
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Joueur invité!"));
     }
 

@@ -50,7 +50,7 @@ public class PartySummonHandler extends PubSubBase {
                 && !player.getServer().getInfo().equals(target)
                 && player.getServer().getInfo().getName().startsWith("lobby")) {
             player.connect(target);
-            player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Envoi sur le serveur " + Main.getPrettyServerName(target.getName()) + " ..."));
+            player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Envoi sur le serveur " + Main.getPrettyServerName(target.getName()) + ChatColor.RESET + ChatColor.GOLD + " ..."));
         }
     }
 }

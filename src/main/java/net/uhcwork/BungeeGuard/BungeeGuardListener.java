@@ -242,11 +242,11 @@ public class BungeeGuardListener implements Listener {
             ServerInfo server = l.getServerInfo();
 
 
-            ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + e.getState().toString() + " - " + reason + ")"));
+            ProxyServer.getInstance().getConsole().sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + e.getState().toString() + " - " + reason + ")"));
             if (server.getName().startsWith("limbo") && server.getPlayers().size() > 70) {
-                ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " déconnecté "));
+                ProxyServer.getInstance().getConsole().sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "[BungeeGuard] " + p.getName() + " déconnecté "));
             } else {
-                ProxyServer.getInstance().getConsole().sendMessage(new TextComponent(ChatColor.RED + "[BungeeGuard] " + p.getName() + " Redirigé vers " + Main.getPrettyServerName(server.getName())));
+                ProxyServer.getInstance().getConsole().sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "[BungeeGuard] " + p.getName() + " Redirigé vers " + Main.getPrettyServerName(server.getName())));
                 p.setReconnectServer(server);
                 e.setCancelled(true);
                 e.setCancelServer(server);
