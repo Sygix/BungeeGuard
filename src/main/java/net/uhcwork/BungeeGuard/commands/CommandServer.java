@@ -52,7 +52,7 @@ public class CommandServer extends Command implements TabExecutor {
             boolean first = true;
             for (ServerInfo server : servers.values()) {
                 if (server.canAccess(player)) {
-                    TextComponent serverTextComponent = new TextComponent(first ? Main.getPrettyServerName(server.getName()) : ", " + Main.getPrettyServerName(server.getName()));
+                    TextComponent serverTextComponent = new TextComponent(TextComponent.fromLegacyText((first ? "" : ", ") + Main.getPrettyServerName(server.getName()) + ChatColor.RESET));
                     int count = Main.getMB().getPlayersOnServer(server.getName()).size();
                     serverTextComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                             new ComponentBuilder(count + (count == 1 ? " player" : " players") + "\n")

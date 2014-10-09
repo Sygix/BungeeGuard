@@ -46,6 +46,7 @@ public class Main extends Plugin {
     public static Main plugin;
     @Getter
     public static Gson gson = new Gson();
+    static Map<String, String> shortServerNames = new HashMap<>();
     private static Connection db_co;
     private static Map<String, String> premadeMessages = new HashMap<>();
     private static List<String> forbiddenCommands = new ArrayList<>();
@@ -97,6 +98,10 @@ public class Main extends Plugin {
 
     public static String getPrettyServerName(String name) {
         return prettyServerNames.containsKey(name) ? prettyServerNames.get(name) : name;
+    }
+
+    public static String getShortServerName(String serverName) {
+        return shortServerNames.containsKey(serverName) ? shortServerNames.get(serverName) : serverName;
     }
 
     public void setPremadeMessages(List<BungeePremadeMessage> all) {
@@ -277,4 +282,13 @@ public class Main extends Plugin {
     public void addPrettyServerName(String name, String prettyName) {
         prettyServerNames.put(name, prettyName);
     }
+
+    public void resetShortServerNames() {
+        shortServerNames.clear();
+    }
+
+    public void addShortServerName(String name, String shortName) {
+        shortServerNames.put(name, shortName);
+    }
+
 }

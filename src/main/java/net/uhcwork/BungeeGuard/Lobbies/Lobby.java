@@ -1,15 +1,26 @@
 package net.uhcwork.BungeeGuard.Lobbies;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 
 public class Lobby {
-
+    @Getter
+    @Setter
     private String name = "";
+    @Getter
+    @Setter
     private int onlinePlayers = 0;
+    @Getter
+    @Setter
     private int maxPlayers = 10;
+    @Getter
     private boolean isOnline = false;
+    @Getter
+    @Setter
     private double tps = 0;
+    @Setter
     private Double score;
 
     public Lobby() {
@@ -26,45 +37,8 @@ public class Lobby {
                 '}';
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-
-        this.name = name;
-    }
-
-    public double getTps() {
-        return tps;
-    }
-
-    public void setTps(double tps) {
-        this.tps = tps;
-    }
-
     public ServerInfo getServerInfo() {
         return ProxyServer.getInstance().getServerInfo(this.name);
-    }
-
-    public int getOnlinePlayers() {
-        return onlinePlayers;
-    }
-
-    public void setOnlinePlayers(int onlinePlayers) {
-        this.onlinePlayers = onlinePlayers;
-    }
-
-    public int getMaxPlayers() {
-        return maxPlayers;
-    }
-
-    public void setMaxPlayers(int maxPlayers) {
-        this.maxPlayers = maxPlayers;
-    }
-
-    public boolean isOnline() {
-        return isOnline;
     }
 
     public void setOnline(boolean isOnline) {

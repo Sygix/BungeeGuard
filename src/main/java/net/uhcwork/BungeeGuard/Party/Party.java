@@ -1,6 +1,8 @@
 package net.uhcwork.BungeeGuard.Party;
 
 import com.google.common.collect.Iterables;
+import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -21,11 +23,20 @@ import java.util.UUID;
  */
 public class Party implements Serializable {
     private static final long serialVersionUID = 7009960713031110863L;
+    @Getter
+    @Setter
     String name = "";
+    @Getter
+    @Setter
     UUID owner = UUID.randomUUID();
     List<UUID> chatMembers = new ArrayList<>();
+    @Getter
+    @Setter
     List<UUID> members = new ArrayList<>();
     List<UUID> invitations = new ArrayList<>();
+
+    @Getter
+    @Setter
     boolean publique = false;
 
     public Party(String nom, UUID owner) {
@@ -37,30 +48,6 @@ public class Party implements Serializable {
     public void addMember(UUID player) {
         members.add(player);
         invitations.remove(player);
-    }
-
-    public boolean isPublique() {
-        return publique;
-    }
-
-    public void setPublique(boolean publique) {
-        this.publique = publique;
-    }
-
-    public List<UUID> getMembers() {
-        return members;
-    }
-
-    public UUID getOwner() {
-        return owner;
-    }
-
-    public void setOwner(UUID owner) {
-        this.owner = owner;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public boolean isMember(UUID joueur) {

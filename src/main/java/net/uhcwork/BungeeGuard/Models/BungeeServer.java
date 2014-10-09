@@ -23,4 +23,8 @@ public class BungeeServer extends Model {
     public String getPrettyName() {
         return getString("pretty_name");
     }
+
+    public String getShortName() {
+        return getString("short_name");
+    }
 }

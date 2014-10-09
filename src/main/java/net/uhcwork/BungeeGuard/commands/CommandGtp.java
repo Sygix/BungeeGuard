@@ -32,7 +32,7 @@ public class CommandGtp extends Command {
         MultiBungee MB = Main.getMB();
         if (MB.isPlayerOnline(args[0])) {
             ServerInfo server = MB.getServerFor(args[0]);
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Téléportation vers " + ChatColor.BLUE + args[0] + ChatColor.GREEN + " dans le monde " + ChatColor.GOLD + Main.getPrettyServerName(server.getName()) + "(" + server.getName() + ")" + ChatColor.GREEN + "..."));
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Téléportation vers " + ChatColor.BLUE + args[0] + ChatColor.GREEN + " dans le monde " + ChatColor.GOLD + Main.getPrettyServerName(server.getName()) + ChatColor.RESET + ChatColor.GOLD + "(" + server.getName() + ")" + ChatColor.GREEN + "..."));
             if (server.getName().equalsIgnoreCase(((ProxiedPlayer) sender).getServer().getInfo().getName())) {
                 p.chat("/tp " + args[0]);
             } else {
