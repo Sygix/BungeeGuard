@@ -179,7 +179,7 @@ public class Main extends Plugin {
                 CommandSpychat.class, CommandSend.class, CommandBan.class, CommandUnban.class, CommandList.class,
                 CommandCheck.class, CommandMute.class, CommandUnmute.class, CommandSilence.class, CommandSay.class,
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
-                CommandIgnore.class, CommandBUp.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
+                CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
                 CommandPoints.class, CommandWallet.class, CommandFind.class, CommandStaff.class);
 
         for (Class<? extends Command> commande : commandes) {
