@@ -233,6 +233,7 @@ public class PubSubListener implements Listener {
                     if (data == null) {
                         ByteArrayDataOutput out;
                         out = ByteStreams.newDataOutput();
+                        out.writeUTF("PingServers");
                         out.writeUTF(serverName);
                         out.writeUTF(Main.getPrettyServerName(serverName));
                         out.writeUTF(Main.getShortServerName(serverName));
