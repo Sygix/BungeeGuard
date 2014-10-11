@@ -34,7 +34,7 @@ public class PartyDisbandHandler extends PubSubBase {
             pp = ProxyServer.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
-            pp.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "[Party:" + p.getName() + "]" + ChatColor.RED + "Party dissoute."));
+            pp.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "[Party:" + p.getName() + "] " + ChatColor.RED + "Party dissoute."));
         }
         plugin.getPM().removeParty(p);
     }
