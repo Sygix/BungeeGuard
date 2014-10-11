@@ -22,7 +22,7 @@ public class StaffChatHandler extends PubSubBase {
         String message = ChatColor.translateAlternateColorCodes('&', args[2]);
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (player.hasPermission("bungeeguard.staffchat")) {
-                player.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.RED + "[" + Main.getPrettyServerName(serverName) + ChatColor.RESET + "] " + senderName + ": " + message));
+                player.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.RED + "[" + Main.getPrettyServerName(serverName) + ChatColor.RESET + ChatColor.RED + "] " + senderName + ": " + message));
             }
         }
     }
