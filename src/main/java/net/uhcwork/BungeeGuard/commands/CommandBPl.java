@@ -54,7 +54,7 @@ public class CommandBPl extends Command {
             sender.sendMessage(new TextComponent(" "));
             PluginDescription d = p.getDescription();
             String coeur = d.getAuthor().equalsIgnoreCase("PunKeel") ? ChatColor.RED + "\u2764 " : ChatColor.GRAY + " ";
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + d.getName() + ChatColor.RESET + " par " + coeur + d.getAuthor()));
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + d.getName() + ChatColor.RESET + " par" + coeur + d.getAuthor()));
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Version: " + ChatColor.RESET + d.getVersion()));
         }
 
