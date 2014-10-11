@@ -1,10 +1,11 @@
-package net.uhcwork.BungeeGuard.Kick;
+package net.uhcwork.BungeeGuard.Commands;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.uhcwork.BungeeGuard.Kick.KickType;
 import net.uhcwork.BungeeGuard.Main;
 
 public class CommandKick extends Command {

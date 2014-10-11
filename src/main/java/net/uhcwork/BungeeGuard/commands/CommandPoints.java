@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.Wallet;
+package net.uhcwork.BungeeGuard.Commands;
 
 /**
  * Part of net.uhcwork.BungeeGuard.Wallet (bungeeguard)
@@ -13,7 +13,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.utils.PrettyLinkComponent;
+import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
+import net.uhcwork.BungeeGuard.Wallet.WalletManager;
 
 public class CommandPoints extends Command {
     public Main plugin;

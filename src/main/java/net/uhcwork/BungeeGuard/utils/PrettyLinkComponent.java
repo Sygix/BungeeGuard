@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.utils;
+package net.uhcwork.BungeeGuard.Utils;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;

@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.commands;
+package net.uhcwork.BungeeGuard.Commands;
 
 /**
  * Part of ${PACKAGE_NAME} (${PROJECT_NAME})

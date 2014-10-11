@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.Ignore;
+package net.uhcwork.BungeeGuard.Commands;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -8,7 +8,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
-import net.uhcwork.BungeeGuard.utils.Permissions;
+import net.uhcwork.BungeeGuard.Utils.Permissions;
 
 import java.util.UUID;
 

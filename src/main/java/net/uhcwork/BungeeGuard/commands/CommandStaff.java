@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.commands;
+package net.uhcwork.BungeeGuard.Commands;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ArrayListMultimap;

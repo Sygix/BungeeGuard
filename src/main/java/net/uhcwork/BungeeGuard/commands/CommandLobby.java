@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.Lobbies;
+package net.uhcwork.BungeeGuard.Commands;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
