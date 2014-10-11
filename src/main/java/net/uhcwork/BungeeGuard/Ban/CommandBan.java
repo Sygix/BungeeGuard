@@ -3,6 +3,7 @@ package net.uhcwork.BungeeGuard.Ban;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
@@ -64,6 +65,10 @@ public class CommandBan extends Command {
 
             String bannedName = args[0];
             UUID bannedUUID = Main.getMB().getUuidFromName(bannedName);
+            if (bannedUUID == null) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inexistant."));
+                return;
+            }
             String bannedDurationStr = BungeeGuardUtils.getDuration(bannedUntilTime);
 
             Main.getMB().kickPlayer(bannedName, BanTypeVar.kickFormat(bannedDurationStr, reason));
