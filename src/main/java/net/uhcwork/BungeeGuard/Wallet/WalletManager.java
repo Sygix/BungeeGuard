@@ -69,11 +69,11 @@ public class WalletManager {
         return getBalance(p.getUniqueId());
     }
 
-    int getBalance(UUID uniqueId) {
+    public int getBalance(UUID uniqueId) {
         return getAccount(uniqueId).getMoney();
     }
 
-    void setBalance(UUID uuid, int balance) {
+    public void setBalance(UUID uuid, int balance) {
         WalletAccountModel WAM = getAccount(uuid);
         WAM.setMoney(balance);
         WAM.saveIt();
