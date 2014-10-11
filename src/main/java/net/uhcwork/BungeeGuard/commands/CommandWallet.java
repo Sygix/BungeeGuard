@@ -28,7 +28,7 @@ public class CommandWallet extends Command {
         super("wallet", "wallet.admin");
         this.plugin = plugin;
         this.WM = plugin.getWM();
-        this.MB = plugin.getMB();
+        this.MB = Main.getMB();
     }
 
     public void execute(CommandSender sender, String[] args) {

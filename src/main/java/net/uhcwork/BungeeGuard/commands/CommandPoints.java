@@ -34,7 +34,7 @@ public class CommandPoints extends Command {
                 p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Votre compte est desactivé !"));
                 return;
             }
-            p.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Vous avez " + ChatColor.GOLD + WM.getBalance(p) + ChatColor.AQUA + " UHCoins !"));
+            p.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Vous avez " + ChatColor.GOLD + WM.getBalance(p.getUniqueId()) + ChatColor.AQUA + " UHCoins !"));
             p.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.GRAY + "Vous n'avez pas de multiplicateur ! " + ChatColor.AQUA + "(" + ChatColor.RED + " http://UHCSHOP.com/ " + ChatColor.AQUA + ")"));
         } else {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous n'etes pas un joueur !"));
