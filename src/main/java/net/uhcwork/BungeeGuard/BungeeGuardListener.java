@@ -17,7 +17,7 @@ import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Mute.MuteType;
 import net.uhcwork.BungeeGuard.Party.Party;
-import net.uhcwork.BungeeGuard.utils.Permissions;
+import net.uhcwork.BungeeGuard.Utils.Permissions;
 
 import java.util.ArrayList;
 import java.util.List;

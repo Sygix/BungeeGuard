@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.commands;
+package net.uhcwork.BungeeGuard.Commands;
 
 import com.google.common.collect.ObjectArrays;
 import net.md_5.bungee.api.ChatColor;
@@ -11,7 +11,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Mute.MuteType;
-import net.uhcwork.BungeeGuard.utils.PrettyLinkComponent;
+import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
 import java.util.UUID;
 

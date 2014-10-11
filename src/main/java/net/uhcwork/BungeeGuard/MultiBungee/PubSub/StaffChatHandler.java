@@ -4,7 +4,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.utils.PrettyLinkComponent;
+import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
 /**
  * Part of ${PACKAGE_NAME} (${PROJECT_NAME})

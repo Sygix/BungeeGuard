@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.utils;
+package net.uhcwork.BungeeGuard.Utils;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

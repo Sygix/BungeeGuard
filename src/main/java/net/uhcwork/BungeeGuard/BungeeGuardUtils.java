@@ -7,7 +7,7 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
-import net.uhcwork.BungeeGuard.utils.DateUtil;
+import net.uhcwork.BungeeGuard.Utils.DateUtil;
 
 import java.io.File;
 import java.io.IOException;

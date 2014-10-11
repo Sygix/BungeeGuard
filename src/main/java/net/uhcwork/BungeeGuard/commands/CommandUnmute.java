@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.Mute;
+package net.uhcwork.BungeeGuard.Commands;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -7,6 +7,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
+import net.uhcwork.BungeeGuard.Mute.MuteManager;
+import net.uhcwork.BungeeGuard.Mute.MuteType;
 
 import java.util.UUID;
 

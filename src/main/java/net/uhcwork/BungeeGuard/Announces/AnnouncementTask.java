@@ -12,7 +12,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.utils.PrettyLinkComponent;
+import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
