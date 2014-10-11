@@ -22,6 +22,7 @@ public class CommandReply extends Command {
     public CommandReply(Main plugin) {
         super("r", "bungeeguard.reply");
         this.plugin = plugin;
+        // @TODO: sometimes bug
     }
 
     @Override
