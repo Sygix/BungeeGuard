@@ -28,6 +28,7 @@ import org.javalite.activejdbc.DB;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -70,18 +71,22 @@ public class Main extends Plugin {
     private WalletManager WM = new WalletManager(this);
 
     public static void getDb() {
-        if (Base.hasConnection()) {
-            return;
-        }
-        System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :(");
-        System.out.println("[ORM] " + BungeeGuardUtils.getCallingMethodInfo());
-        if (db_co == null) {
-            DB db = new DB("default");
-            db.open("com.mysql.jdbc.Driver", "jdbc:mysql://vm-db-01.uhcwork.net/plugin", "bungeecord", "ozXsw4FUKoR8jh");
-            db_co = db.connection();
-        } else {
-            // Petit hack qui permet d'utiliser le même SQL dans tous les threads :]
-            Base.attach(db_co);
+        try {
+            if (Base.hasConnection() && !Base.connection().isClosed()) {
+                return;
+            }
+            System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :(");
+            System.out.println("[ORM] " + BungeeGuardUtils.getCallingMethodInfo());
+            if (db_co == null || Base.connection().isClosed()) {
+                DB db = new DB("default");
+                db.open("com.mysql.jdbc.Driver", "jdbc:mysql://vm-db-01.uhcwork.net/plugin", "bungeecord", "ozXsw4FUKoR8jh");
+                db_co = db.connection();
+            } else {
+                // Petit hack qui permet d'utiliser le même SQL dans tous les threads :]
+                Base.attach(db_co);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
