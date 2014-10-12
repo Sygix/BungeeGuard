@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ServerManager {
     @Getter
-    Cache<String, ServerPing> serversCache = CacheBuilder.newBuilder().maximumSize(100).expireAfterWrite(2, TimeUnit.SECONDS).build();
+    Cache<String, ServerPing> serversCache = CacheBuilder.newBuilder().maximumSize(100).expireAfterWrite(1, TimeUnit.SECONDS).build();
     Main plugin;
 
     public ServerManager(Main main) {
