@@ -79,7 +79,15 @@ public class Main extends Plugin {
             System.out.println("[ORM] " + BungeeGuardUtils.getCallingMethodInfo());
             if (db_co == null || Base.connection().isClosed()) {
                 DB db = new DB("default");
-                db.open("com.mysql.jdbc.Driver", "jdbc:mysql://vm-db-01.uhcwork.net/plugin", "bungeecord", "ozXsw4FUKoR8jh");
+                String host = System.getenv("MYSQL_HOST");
+                String database = System.getenv("MYSQL_DATABASE");
+                String user = System.getenv("MYSQL_USER");
+                String pass = System.getenv("MYSQL_PASS");
+                if (host.isEmpty() || database.isEmpty() || user.isEmpty() || pass.isEmpty()) {
+                    ProxyServer.getInstance().stop();
+                    throw new RuntimeException("La configuration est mauvaise, chef.");
+                }
+                db.open("com.mysql.jdbc.Driver", "jdbc:mysql://" + host + "/" + database, user, pass);
                 db_co = db.connection();
             } else {
                 // Petit hack qui permet d'utiliser le même SQL dans tous les threads :]
