@@ -16,7 +16,6 @@ public class StaffChatHandler extends PubSubBase {
 
     @Override
     public void handle(String channel, String _, String[] args) {
-
         String serverName = args[0];
         String senderName = args[1];
         String message = ChatColor.translateAlternateColorCodes('&', args[2]);

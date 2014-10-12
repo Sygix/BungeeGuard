@@ -56,10 +56,10 @@ public class LobbyManager {
         ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                final List<Lobby> new_lobbys = new ArrayList<>();
+                final List<Lobby> new_lobbies = new ArrayList<>();
                 for (final ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
                     if (serverInfo.getName().startsWith("lobby") || serverInfo.getName().startsWith("limbo")) {
-                        serverInfo.ping(new Callback<ServerPing>() {
+                        Callback<ServerPing> pingBack = new Callback<ServerPing>() {
                             @Override
                             public void done(ServerPing result, Throwable error) {
                                 Lobby lobby = new Lobby();
@@ -78,12 +78,13 @@ public class LobbyManager {
                                         lobby.setTps(tps);
                                     }
                                 }
-                                new_lobbys.add(lobby);
+                                new_lobbies.add(lobby);
                             }
-                        });
+                        };
+                        plugin.getServerManager().ping(serverInfo.getName(), pingBack);
                     }
                 }
-                lobbies = new_lobbys;
+                lobbies = new_lobbies;
             }
         }, 1, 3, TimeUnit.SECONDS);
     }

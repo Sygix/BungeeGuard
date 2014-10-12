@@ -14,6 +14,7 @@ import net.uhcwork.BungeeGuard.Commands.*;
 import net.uhcwork.BungeeGuard.Config.MysqlConfigAdapter;
 import net.uhcwork.BungeeGuard.Ignore.IgnoreManager;
 import net.uhcwork.BungeeGuard.Lobbies.LobbyManager;
+import net.uhcwork.BungeeGuard.Lobbies.ServerManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBlockedCommands;
 import net.uhcwork.BungeeGuard.Models.BungeePremadeMessage;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
@@ -51,6 +52,8 @@ public class Main extends Plugin {
     private static Map<UUID, UUID> reply = new HashMap<>();
     private static List<UUID> spy = new ArrayList<>();
     private static Map<String, String> prettyServerNames = new HashMap<>();
+    @Getter
+    ServerManager serverManager = new ServerManager(this);
     private long startTime;
     private List<String> silencedServers = new ArrayList<>();
     private HashMap<UUID, String> gtp = new HashMap<>();
