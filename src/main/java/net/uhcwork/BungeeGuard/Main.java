@@ -77,12 +77,12 @@ public class Main extends Plugin {
             }
             System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :(");
             System.out.println("[ORM] " + BungeeGuardUtils.getCallingMethodInfo());
-            if (db_co == null || Base.connection().isClosed()) {
+            if (db_co == null || (Base.hasConnection() && Base.connection().isClosed())) {
                 DB db = new DB("default");
-                String host = System.getenv("MYSQL_HOST");
-                String database = System.getenv("MYSQL_DATABASE");
-                String user = System.getenv("MYSQL_USER");
-                String pass = System.getenv("MYSQL_PASS");
+                String host = getEnv("MYSQL_HOST");
+                String database = getEnv("MYSQL_DATABASE");
+                String user = getEnv("MYSQL_USER");
+                String pass = getEnv("MYSQL_PASS");
                 if (host.isEmpty() || database.isEmpty() || user.isEmpty() || pass.isEmpty()) {
                     ProxyServer.getInstance().stop();
                     throw new RuntimeException("La configuration est mauvaise, chef.");
@@ -96,6 +96,11 @@ public class Main extends Plugin {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String getEnv(String name) {
+        String _ = System.getenv(name);
+        return _ == null ? "" : _;
     }
 
     public static String getPrettyServerName(String name) {
