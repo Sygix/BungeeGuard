@@ -55,11 +55,14 @@ public class WalletManager {
     }
 
     WalletAccountModel createAccount(UUID u) {
+        String userName = MB.getNameFromUuid(u);
+        if (userName == null)
+            userName = "unknown";
         WalletAccountModel WAM = new WalletAccountModel();
         WAM.setUUID(u);
         WAM.setMoney(0);
         WAM.setActive(true);
-        WAM.setPlayerName(MB.getNameFromUuid(u));
+        WAM.setPlayerName(userName);
         WAM.saveIt();
         walletsCache.put(u, WAM);
         return WAM;

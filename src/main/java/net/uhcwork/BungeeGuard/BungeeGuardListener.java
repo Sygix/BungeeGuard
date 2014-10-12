@@ -263,11 +263,20 @@ public class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onTabCompleteEvent(TabCompleteEvent e) {
-        String[] Message = e.getCursor().split("\\s+");
-        String DebutDePseudo = Message[Message.length - 1].toLowerCase();
-        for (String p : Main.getMB().getHumanPlayersOnline()) {
-            if (p.toLowerCase().startsWith(DebutDePseudo) && !e.getSuggestions().contains(p))
-                e.getSuggestions().add(p);
+        if (!(e.getSender() instanceof ProxiedPlayer)) {
+            return;
+        }
+        ProxiedPlayer p = (ProxiedPlayer) e.getSender();
+
+        String message = e.getCursor();
+        String[] words = message.split("\\s+");
+        String to_complete = words[words.length - 1].toLowerCase();
+        if (to_complete.startsWith("!!") && p.hasPermission("bungeeguard.staffchat")) {
+            to_complete = to_complete.substring(1);
+        }
+        for (String name : Main.getMB().getHumanPlayersOnline()) {
+            if (name.toLowerCase().startsWith(to_complete) && !e.getSuggestions().contains(name))
+                e.getSuggestions().add(name);
         }
     }
 
