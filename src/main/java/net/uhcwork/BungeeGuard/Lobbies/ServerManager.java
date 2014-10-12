@@ -26,11 +26,16 @@ public class ServerManager {
     }
 
     public void ping(final String serverName, final Callback<ServerPing> pingBack) {
+        if (serverName == null || serverName.isEmpty())
+            return;
         final ServerPing SP = getServersCache().getIfPresent(serverName);
+
         if (SP == null) {
             Callback<ServerPing> pingCallback = new Callback<ServerPing>() {
                 @Override
                 public void done(ServerPing serverPing, Throwable throwable) {
+                    if (serverPing == null)
+                        return;
                     getServersCache().put(serverName, serverPing);
                     pingBack.done(serverPing, throwable);
                 }

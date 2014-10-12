@@ -83,10 +83,6 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-                    <fork>true</fork>
-                    <meminitial>128m</meminitial>
-                    <maxmem>2048m</maxmem>
-                    <fork>true</fork>
                 </configuration>
             </plugin>
             <plugin>
