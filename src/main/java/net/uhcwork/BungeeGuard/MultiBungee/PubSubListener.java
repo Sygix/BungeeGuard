@@ -12,6 +12,7 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Models.BungeeCheat;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.*;
 import net.uhcwork.BungeeGuard.Party.PubSub.*;
 
@@ -210,6 +211,19 @@ public class PubSubListener implements Listener {
             String playerName = in.readUTF();
             int amount = in.readInt();
             plugin.getWM().addToBalance(MB.getUuidFromName(playerName), amount);
+        }
+        if (subchannel.equals("cheat")) {
+            String playerName = in.readUTF();
+            String cheatName = in.readUTF();
+            double score = in.readDouble();
+            Main.getDb();
+            BungeeCheat BC = new BungeeCheat();
+            BC.setPlayerName(playerName);
+            BC.setServerName(sender.getInfo().getName());
+            BC.setPlayerUUID(MB.getUuidFromName(playerName));
+            BC.setCheatType(cheatName);
+            BC.setCheatScore(score);
+            BC.saveIt();
         }
 
         byte[] data = out.toByteArray();
