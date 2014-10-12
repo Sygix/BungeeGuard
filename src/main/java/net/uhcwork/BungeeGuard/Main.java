@@ -26,6 +26,8 @@ import net.uhcwork.BungeeGuard.Wallet.WalletManager;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DB;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -100,6 +102,15 @@ public class Main extends Plugin {
 
     private static String getEnv(String name) {
         String _ = System.getenv(name);
+        if (_ == null) {
+            Properties prop = new Properties();
+            try {
+                prop.load(new FileInputStream("config.properties"));
+                _ = prop.getProperty(name, "");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return _ == null ? "" : _;
     }
 
