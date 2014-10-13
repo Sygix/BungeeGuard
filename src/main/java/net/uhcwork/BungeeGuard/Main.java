@@ -77,12 +77,12 @@ public class Main extends Plugin {
 
     public static void getDb() {
         try {
-            if (Base.hasConnection() && !Base.connection().isClosed()) {
+            if (Base.hasConnection() && Base.connection().isValid(0)) {
                 return;
             }
             System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :(");
             System.out.println("[ORM] " + BungeeGuardUtils.getCallingMethodInfo());
-            if (db_co == null || (Base.hasConnection() && Base.connection().isClosed())) {
+            if (db_co == null || (Base.hasConnection() && !Base.connection().isValid(0))) {
                 DB db = new DB("default");
                 String host = getEnv("MYSQL_HOST");
                 String database = getEnv("MYSQL_DATABASE");
