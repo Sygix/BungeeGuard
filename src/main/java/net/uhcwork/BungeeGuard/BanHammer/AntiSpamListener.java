@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.AntiSpam;
+package net.uhcwork.BungeeGuard.BanHammer;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;

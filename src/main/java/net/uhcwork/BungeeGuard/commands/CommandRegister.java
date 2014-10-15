@@ -53,7 +53,7 @@ public class CommandRegister extends Command {
             return;
         }
         Map<String, String> valeurs = new HashMap<>();
-        valeurs.put("token", "");
+        valeurs.put("token", "m82A6FZ56pd5tZmT");
         valeurs.put("pseudo", p.getName());
         valeurs.put("uuid", p.getUniqueId().toString().replace("-", ""));
         valeurs.put("email", args[0]);

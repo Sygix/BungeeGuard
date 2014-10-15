@@ -11,6 +11,7 @@ import net.uhcwork.BungeeGuard.Ban.BanType;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
+import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
 import java.util.UUID;
 
@@ -76,7 +77,7 @@ public class CommandBan extends Command {
             Main.getMB().kickPlayer(bannedName, BanTypeVar.kickFormat(bannedDurationStr, reason));
 
             BungeeBan ban = BM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, true);
-            ban.saveIt();
+            plugin.executePersistenceRunnable(new SaveRunner(ban));
 
             Main.getMB().banPlayer(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
 

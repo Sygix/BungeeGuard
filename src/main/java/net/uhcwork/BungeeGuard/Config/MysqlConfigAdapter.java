@@ -10,11 +10,15 @@ import net.md_5.bungee.util.CaseInsensitiveMap;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.*;
+import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
+import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.net.InetSocketAddress;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class MysqlConfigAdapter implements ConfigurationAdapter {
     private final Yaml yaml;
@@ -33,46 +37,53 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     @SuppressWarnings("unchecked")
     @Override
     public void load() {
-        Main.getDb();
-        String dbConfig;
+        Future<Void> x = plugin.executePersistenceRunnable(new VoidRunner() {
+            @Override
+            protected void run() {
+                conf = BungeeConfig.findById(1);
+                String dbConfig = conf.getPermissions();
 
-        conf = BungeeConfig.findById(1);
-        dbConfig = conf.getPermissions();
-
-        config = (Map) yaml.load(dbConfig);
+                config = (Map) yaml.load(dbConfig);
 
 
-        if (config == null) {
-            config = new CaseInsensitiveMap();
-        } else {
-            config = new CaseInsensitiveMap(config);
+                if (config == null) {
+                    config = new CaseInsensitiveMap();
+                } else {
+                    config = new CaseInsensitiveMap(config);
+                }
+                config.put("timeout", 900000);
+                config.put("uuid", "0-0-0-0");
+                config.put("onlineMode", true);
+                config.put("player_limit", -1);
+                config.put("connection_throttle", -1);
+                config.put("ip_forward", true);
+
+
+                Map<String, Object> permissions = get("permissions", new HashMap<String, Object>());
+                if (permissions.isEmpty()) {
+                    permissions.put("default", Arrays.asList("bungeecord.command.server", "bungeecord.command.list"));
+                    permissions.put("admin", Arrays.asList("bungeecord.command.alert", "bungeecord.command.end", "bungeecord.command.ip", "bungeecord.command.reload"));
+                }
+
+                Map<String, Object> groups = get("groups", new HashMap<String, Object>());
+                if (groups.isEmpty()) {
+                    groups.put("md_5", Collections.singletonList("admin"));
+                }
+
+                List<BungeePremadeMessage> premadeMessages = BungeePremadeMessage.findAll();
+                plugin.setPremadeMessages(premadeMessages);
+                List<BungeeBlockedCommands> blockedCommands = BungeeBlockedCommands.findAll();
+                plugin.setForbiddenCommands(blockedCommands);
+                List<BungeeAnnouncements> announcements = BungeeAnnouncements.findAll();
+                plugin.getAM().setAnnouncements(announcements);
+                plugin.setBroadcastDelay(conf.getBroadcastDelay());
+            }
+        });
+        try {
+            x.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
-        config.put("timeout", 900000);
-        config.put("uuid", "0-0-0-0");
-        config.put("onlineMode", true);
-        config.put("player_limit", -1);
-        config.put("connection_throttle", -1);
-        config.put("ip_forward", true);
-
-
-        Map<String, Object> permissions = get("permissions", new HashMap<String, Object>());
-        if (permissions.isEmpty()) {
-            permissions.put("default", Arrays.asList("bungeecord.command.server", "bungeecord.command.list"));
-            permissions.put("admin", Arrays.asList("bungeecord.command.alert", "bungeecord.command.end", "bungeecord.command.ip", "bungeecord.command.reload"));
-        }
-
-        Map<String, Object> groups = get("groups", new HashMap<String, Object>());
-        if (groups.isEmpty()) {
-            groups.put("md_5", Collections.singletonList("admin"));
-        }
-
-        List<BungeePremadeMessage> premadeMessages = BungeePremadeMessage.findAll();
-        plugin.setPremadeMessages(premadeMessages);
-        List<BungeeBlockedCommands> blockedCommands = BungeeBlockedCommands.findAll();
-        plugin.setForbiddenCommands(blockedCommands);
-        List<BungeeAnnouncements> announcements = BungeeAnnouncements.findAll();
-        plugin.getAM().setAnnouncements(announcements);
-        plugin.setBroadcastDelay(conf.getBroadcastDelay());
     }
 
     private <T> T get(String path, T def) {
@@ -123,56 +134,79 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     @Override
     @SuppressWarnings("unchecked")
     public Map<String, ServerInfo> getServers() {
-        Map<String, ServerInfo> ret = new HashMap<>();
-        plugin.resetPrettyServerNames();
-        plugin.resetShortServerNames();
-        List<BungeeServer> serveurs = BungeeServer.findAll();
-        for (BungeeServer serveur : serveurs) {
-            String name = serveur.getName();
-            String addr = serveur.getAddress();
-            String prettyName = ChatColor.translateAlternateColorCodes('&', serveur.getPrettyName());
-            String shortName = ChatColor.translateAlternateColorCodes('&', serveur.getShortName());
-            String motd = "Serveur UHCGames"; // Should <not> be displayed.
-            boolean restricted = false;
-            plugin.addPrettyServerName(name, prettyName);
-            plugin.addShortServerName(name, shortName);
-            InetSocketAddress address = Util.getAddr(addr);
-            ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, motd, restricted);
-            ret.put(name, info);
+
+        Future<Map<String, ServerInfo>> x = plugin.executePersistenceRunnable(new PersistenceRunnable<Map<String, ServerInfo>>() {
+            @Override
+            public Map<String, ServerInfo> call() {
+                Map<String, ServerInfo> ret = new HashMap<>();
+                plugin.resetPrettyServerNames();
+                plugin.resetShortServerNames();
+                List<BungeeServer> serveurs = BungeeServer.findAll();
+                for (BungeeServer serveur : serveurs) {
+                    String name = serveur.getName();
+                    String addr = serveur.getAddress();
+                    String prettyName = ChatColor.translateAlternateColorCodes('&', serveur.getPrettyName());
+                    String shortName = ChatColor.translateAlternateColorCodes('&', serveur.getShortName());
+                    String motd = "Serveur UHCGames"; // Should <not> be displayed.
+                    boolean restricted = false;
+                    plugin.addPrettyServerName(name, prettyName);
+                    plugin.addShortServerName(name, shortName);
+                    InetSocketAddress address = Util.getAddr(addr);
+                    ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, motd, restricted);
+                    ret.put(name, info);
+                }
+                return ret;
+            }
+        });
+        try {
+            return x.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return null;
         }
-        return ret;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Collection<ListenerInfo> getListeners() {
-        Map<OPTIONS, Object> options = getOptions();
-        Map<String, String> forced = getForcedHosts();
-        String motd = String.valueOf(options.get(OPTIONS.MOTD));
+        Future<Collection<ListenerInfo>> x = plugin.executePersistenceRunnable(new PersistenceRunnable<Collection<ListenerInfo>>() {
+            public Collection<ListenerInfo> call() {
 
-        int maxPlayers = (int) options.get(OPTIONS.MAX_PLAYERS);
-        // Bungee n'apprécie pas trop qu'on change d'ip:port d'écoute quand il tourne, donc on attend reboot :)
-        host = (host == null) ? (String) options.get(OPTIONS.BIND_ADDRESS) : host;
+                Map<OPTIONS, Object> options = getOptions();
+                Map<String, String> forced = getForcedHosts();
+                String motd = String.valueOf(options.get(OPTIONS.MOTD));
 
-        String defaultServer = "hub";
-        String fallbackServer = "limbo";
-        boolean forceDefault = true;
-        int tabListSize = 60;
-        DefaultTabList value = DefaultTabList.SERVER;
-        boolean setLocalAddress = false; // On laisse debian s'en occuper :}
-        boolean pingPassthrough = false;
-        boolean query = false;
-        int queryPort = 25577;
+                int maxPlayers = (int) options.get(OPTIONS.MAX_PLAYERS);
+                // Bungee n'apprécie pas trop qu'on change d'ip:port d'écoute quand il tourne, donc on attend reboot :)
+                host = (host == null) ? (String) options.get(OPTIONS.BIND_ADDRESS) : host;
 
-        ListenerInfo info;
+                String defaultServer = "hub";
+                String fallbackServer = "limbo";
+                boolean forceDefault = true;
+                int tabListSize = 60;
+                DefaultTabList value = DefaultTabList.SERVER;
+                boolean setLocalAddress = false; // On laisse debian s'en occuper :}
+                boolean pingPassthrough = false;
+                boolean query = false;
+                int queryPort = 25577;
 
-        Collection<ListenerInfo> listeners = new HashSet<>();
-        InetSocketAddress address = Util.getAddr(host);
-        //noinspection ConstantConditions
-        info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
-        listeners.add(info);
+                ListenerInfo info;
 
-        return listeners;
+                Collection<ListenerInfo> listeners = new HashSet<>();
+                InetSocketAddress address = Util.getAddr(host);
+                //noinspection ConstantConditions
+                info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
+                listeners.add(info);
+
+                return listeners;
+            }
+        });
+        try {
+            return x.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private Map<OPTIONS, Object> getOptions() {

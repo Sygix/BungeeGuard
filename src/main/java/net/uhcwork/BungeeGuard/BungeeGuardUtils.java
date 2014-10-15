@@ -96,14 +96,16 @@ public class BungeeGuardUtils {
                 + "                                                                               ");
     }
 
+    @Deprecated
     public static String getCallingMethodInfo() {
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        return "";
+        /*StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         if (stackTrace != null && stackTrace.length >= 3) {
             StackTraceElement s = stackTrace[3];
             if (s != null) {
                 return s.getClassName() + ".(" + s.getMethodName() + "):[" + s.getLineNumber() + "]";
             }
         }
-        return null;
+        return null;*/
     }
 }

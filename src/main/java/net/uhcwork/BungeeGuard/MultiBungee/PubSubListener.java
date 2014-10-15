@@ -15,6 +15,7 @@ import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeCheat;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.*;
 import net.uhcwork.BungeeGuard.Party.PubSub.*;
+import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
 import java.util.UUID;
 
@@ -216,14 +217,13 @@ public class PubSubListener implements Listener {
             String playerName = in.readUTF();
             String cheatName = in.readUTF();
             double score = in.readDouble();
-            Main.getDb();
             BungeeCheat BC = new BungeeCheat();
             BC.setPlayerName(playerName);
             BC.setServerName(sender.getInfo().getName());
             BC.setPlayerUUID(MB.getUuidFromName(playerName));
             BC.setCheatType(cheatName);
             BC.setCheatScore(score);
-            BC.saveIt();
+            plugin.executePersistenceRunnable(new SaveRunner(BC));
         }
 
         byte[] data = out.toByteArray();
