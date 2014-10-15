@@ -11,6 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
     </properties>
 
     <scm>
@@ -101,6 +102,7 @@
                     <doCheck>false</doCheck>
                     <doUpdate>false</doUpdate>
                     <shortRevisionLength>6</shortRevisionLength>
+                    <timestampFormat>{0, date,yyyyMMdd_HHmm}</timestampFormat>
                 </configuration>
             </plugin>
             <plugin>

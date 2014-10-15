@@ -1,15 +1,16 @@
 package net.uhcwork.BungeeGuard;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.scheduler.GroupedThreadFactory;
 import net.uhcwork.BungeeGuard.Announces.AnnouncementManager;
 import net.uhcwork.BungeeGuard.Announces.AnnouncementTask;
-import net.uhcwork.BungeeGuard.AntiSpam.AntiSpamListener;
 import net.uhcwork.BungeeGuard.Ban.BanManager;
+import net.uhcwork.BungeeGuard.BanHammer.AntiSpamListener;
 import net.uhcwork.BungeeGuard.Commands.*;
 import net.uhcwork.BungeeGuard.Config.MysqlConfigAdapter;
 import net.uhcwork.BungeeGuard.Ignore.IgnoreManager;
@@ -23,17 +24,13 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubListener;
 import net.uhcwork.BungeeGuard.MultiBungee.RedisBungeeListener;
 import net.uhcwork.BungeeGuard.Mute.MuteManager;
 import net.uhcwork.BungeeGuard.Party.PartyManager;
+import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
+import net.uhcwork.BungeeGuard.Persistence.PersistenceThread;
 import net.uhcwork.BungeeGuard.Wallet.WalletManager;
-import org.javalite.activejdbc.Base;
-import org.javalite.activejdbc.DB;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class Main extends Plugin {
 
@@ -41,7 +38,6 @@ public class Main extends Plugin {
     @Getter
     public static Gson gson = new Gson();
     static Map<String, String> shortServerNames = new HashMap<>();
-    private static Connection db_co;
     private static Map<String, String> premadeMessages = new HashMap<>();
     private static List<String> forbiddenCommands = new ArrayList<>();
     @Getter
@@ -62,7 +58,7 @@ public class Main extends Plugin {
     @Getter
     private BanManager BM = new BanManager(this);
     @Getter
-    private MuteManager MM = new MuteManager();
+    private MuteManager MM = new MuteManager(this);
     @Getter
     private LobbyManager LM = new LobbyManager(this);
     @Getter
@@ -74,48 +70,9 @@ public class Main extends Plugin {
     private int broadcastDelay = 180;
     @Getter
     private WalletManager WM = new WalletManager(this);
+    @Getter
+    private ExecutorService executorService;
 
-    public static void getDb() {
-        try {
-            if (Base.hasConnection() && Base.connection().isValid(0)) {
-                return;
-            }
-            System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :(");
-            System.out.println("[ORM] " + BungeeGuardUtils.getCallingMethodInfo());
-            if (db_co == null || (Base.hasConnection() && !Base.connection().isValid(0))) {
-                DB db = new DB("default");
-                String host = getEnv("MYSQL_HOST");
-                String database = getEnv("MYSQL_DATABASE");
-                String user = getEnv("MYSQL_USER");
-                String pass = getEnv("MYSQL_PASS");
-                if (host.isEmpty() || database.isEmpty() || user.isEmpty() || pass.isEmpty()) {
-                    ProxyServer.getInstance().stop();
-                    throw new RuntimeException("La configuration est mauvaise, chef.");
-                }
-                db.open("com.mysql.jdbc.Driver", "jdbc:mysql://" + host + "/" + database, user, pass);
-                db_co = db.connection();
-            } else {
-                // Petit hack qui permet d'utiliser le même SQL dans tous les threads :]
-                Base.attach(db_co);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static String getEnv(String name) {
-        String _ = System.getenv(name);
-        if (_ == null) {
-            Properties prop = new Properties();
-            try {
-                prop.load(new FileInputStream("config.properties"));
-                _ = prop.getProperty(name, "");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return _ == null ? "" : _;
-    }
 
     public static String getPrettyServerName(String name) {
         return prettyServerNames.containsKey(name) ? prettyServerNames.get(name) : name;
@@ -143,14 +100,31 @@ public class Main extends Plugin {
         }
     }
 
+    public <T> Future<T> executePersistenceRunnable(PersistenceRunnable<T> runnable) {
+        if (executorService == null) {
+            FutureTask<T> F = new FutureTask<>(runnable);
+            getProxy().getScheduler().runAsync(this, F);
+            return F;
+        }
+        return executorService.submit(runnable);
+    }
+
     @Override
     public void onLoad() {
         plugin = this;
         startTime = System.currentTimeMillis();
         new BungeeGuardUtils(this);
         System.out.println("Welcome to MultiBungee ~ With ORM and love.");
-        getDb();
-        ProxyServer.getInstance().setConfigurationAdapter(new MysqlConfigAdapter(this));
+        executorService = Executors.newFixedThreadPool(4, new ThreadFactoryBuilder()
+                .setNameFormat("BungeeGuard Pool Thread #%1$d")
+                .setThreadFactory(new GroupedThreadFactory(this) {
+                    public Thread newThread(Runnable runnable) {
+                        return new PersistenceThread(this.getGroup(), runnable);
+                    }
+                }).build());
+
+        getProxy().setConfigurationAdapter(new MysqlConfigAdapter(this));
+
     }
 
     private void fetchParties() {
@@ -168,6 +142,8 @@ public class Main extends Plugin {
 
     @Override
     public void onEnable() {
+        // executorService = getProxy().getScheduler().unsafe().getExecutorService(this);
+
         MB.init();
         MB.registerPubSubChannels("ban", "unban");
         MB.registerPubSubChannels("kick", "silenceServer");
@@ -185,12 +161,12 @@ public class Main extends Plugin {
 
         BungeeGuardListener BGListener = new BungeeGuardListener(this);
 
-        ProxyServer.getInstance().getPluginManager().registerListener(this, BGListener);
+        getProxy().getPluginManager().registerListener(this, BGListener);
 
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new RedisBungeeListener());
+        getProxy().getPluginManager().registerListener(this, new RedisBungeeListener());
 
         getProxy().registerChannel("UHCGames");
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new PubSubListener(this));
+        getProxy().getPluginManager().registerListener(this, new PubSubListener(this));
 
         fetchParties();
         Set<Class<? extends Command>> commandes = new HashSet<>();
@@ -204,7 +180,7 @@ public class Main extends Plugin {
         for (Class<? extends Command> commande : commandes) {
             try {
                 Command cmd = commande.getDeclaredConstructor(getClass()).newInstance(this);
-                ProxyServer.getInstance().getPluginManager().registerCommand(this, cmd);
+                getProxy().getPluginManager().registerCommand(this, cmd);
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();
             }
@@ -222,7 +198,8 @@ public class Main extends Plugin {
 
     @Override
     public void onDisable() {
-        ProxyServer.getInstance().getScheduler().cancel(this);
+        getProxy().getScheduler().cancel(this);
+        executorService.shutdown();
     }
 
     public void addGtp(UUID uuid, String playerName) {

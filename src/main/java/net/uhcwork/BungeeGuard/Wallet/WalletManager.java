@@ -7,9 +7,12 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.WalletAccountModel;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
+import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
+import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,13 +30,17 @@ public class WalletManager {
             .expireAfterWrite(60, TimeUnit.SECONDS)
             .build(new CacheLoader<UUID, WalletAccountModel>() {
                 @Override
-                public WalletAccountModel load(UUID u) throws Exception {
-                    Main.getDb();
-                    System.out.println("" + u);
-                    WalletAccountModel WAM = WalletAccountModel.findFirst("uuid = ?", "" + u);
-                    if (WAM == null)
-                        return createAccount(u);
-                    return WAM;
+                public WalletAccountModel load(final UUID u) throws Exception {
+                    Future<WalletAccountModel> x = plugin.executePersistenceRunnable(new PersistenceRunnable<WalletAccountModel>() {
+                        @Override
+                        public WalletAccountModel call() {
+                            WalletAccountModel WAM = WalletAccountModel.findFirst("uuid = ?", "" + u);
+                            if (WAM == null)
+                                return createAccount(u);
+                            return WAM;
+                        }
+                    });
+                    return x.get();
                 }
             });
 
@@ -63,7 +70,7 @@ public class WalletManager {
         WAM.setMoney(0);
         WAM.setActive(true);
         WAM.setPlayerName(userName);
-        WAM.saveIt();
+        plugin.executePersistenceRunnable(new SaveRunner(WAM));
         walletsCache.put(u, WAM);
         return WAM;
     }
@@ -79,13 +86,13 @@ public class WalletManager {
     public void setBalance(UUID uuid, int balance) {
         WalletAccountModel WAM = getAccount(uuid);
         WAM.setMoney(balance);
-        WAM.saveIt();
+        plugin.executePersistenceRunnable(new SaveRunner(WAM));
     }
 
     public void addToBalance(UUID uuid, int amount) {
         WalletAccountModel WAM = getAccount(uuid);
         WAM.setMoney(WAM.getMoney() + amount);
-        WAM.saveIt();
+        plugin.executePersistenceRunnable(new SaveRunner(WAM));
     }
 
     public boolean isActive(UUID uuid) {
@@ -101,8 +108,8 @@ public class WalletManager {
     }
 
     public void setActive(UUID uuid, boolean active) {
-        WalletAccountModel WAM = getAccount(uuid);
+        final WalletAccountModel WAM = getAccount(uuid);
         WAM.setActive(active);
-        WAM.saveIt();
+        plugin.executePersistenceRunnable(new SaveRunner(WAM));
     }
 }

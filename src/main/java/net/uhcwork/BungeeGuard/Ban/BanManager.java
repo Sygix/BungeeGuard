@@ -2,6 +2,8 @@ package net.uhcwork.BungeeGuard.Ban;
 
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
+import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
+import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import org.javalite.activejdbc.LazyList;
 
 import java.util.ArrayList;
@@ -17,13 +19,20 @@ import java.util.UUID;
  */
 public class BanManager {
     public List<BungeeBan> banList = new ArrayList<>();
+    Main plugin;
 
     public BanManager(Main plugin) {
+        this.plugin = plugin;
     }
 
     public void loadBans() {
-        LazyList<BungeeBan> bans = BungeeBan.where("status = 1");
-        banList.addAll(Arrays.asList(bans.toArray(new BungeeBan[bans.size()])));
+        plugin.executePersistenceRunnable(new VoidRunner() {
+            @Override
+            protected void run() {
+                LazyList<BungeeBan> bans = BungeeBan.where("status = 1");
+                banList.addAll(Arrays.asList(bans.toArray(new BungeeBan[bans.size()])));
+            }
+        });
     }
 
     public BungeeBan findBan(UUID uuid) {
@@ -43,7 +52,6 @@ public class BanManager {
     }
 
     public BungeeBan ban(UUID bannedUUID, String bannedName, long bannedUntilTime, String reason, String adminName, UUID adminUUID, boolean saveToBdd) {
-        Main.getDb();
         BungeeBan ban;
         ban = findBan(bannedUUID);
         unban(ban, adminName, "ReBan", saveToBdd);
@@ -58,12 +66,11 @@ public class BanManager {
         ban.setStatus(1);
         banList.add(ban);
         if (saveToBdd)
-            ban.saveIt();
+            plugin.executePersistenceRunnable(new SaveRunner(ban));
         return ban;
     }
 
     public void unban(BungeeBan ban, String adminName, String reason, boolean saveToBdd) {
-        Main.getDb();
         if (ban == null)
             return;
         ban.setUnbanReason(reason);
@@ -72,6 +79,6 @@ public class BanManager {
         ban.setStatus(0);
         removeBan(ban);
         if (saveToBdd)
-            ban.saveIt();
+            plugin.executePersistenceRunnable(new SaveRunner(ban));
     }
 }
