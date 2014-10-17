@@ -1,27 +1,19 @@
 package net.uhcwork.BungeeGuard.Lobbies;
 
+import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 
+@Data
 public class Lobby {
-    @Getter
-    @Setter
     private String name = "";
-    @Getter
-    @Setter
     private int onlinePlayers = 0;
-    @Getter
-    @Setter
     private int maxPlayers = 10;
-    @Getter
     private boolean isOnline = false;
-    @Getter
-    @Setter
     private double tps = 0;
-    @Setter
-    private Double score;
+    @Getter(lazy = true)
+    private final Double score = score();
 
     public Lobby() {
     }
@@ -49,19 +41,14 @@ public class Lobby {
         setOnline(false);
     }
 
-    public double getScore() {
-        if (score == null) {
-            if (getName().startsWith("limbo")) {
-                score = -Double.MAX_VALUE;
-            } else {
-                double _score = (1 + getOnlinePlayers()) * (getMaxPlayers() / 2 - getOnlinePlayers());
-                if (_score > 0) {
-                    score = _score * getTps();
-                } else {
-                    score = _score * (20 - getTps());
-                }
-            }
+    public double score() {
+        if (getName().startsWith("limbo")) {
+            return -Double.MAX_VALUE;
         }
-        return score;
+        double _score = (1 + getOnlinePlayers()) * (getMaxPlayers() / 2 - getOnlinePlayers());
+        if (_score > 0)
+            return _score * getTps();
+        else
+            return _score * (20 - getTps());
     }
 }
