@@ -4,10 +4,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Part of net.uhcwork.BungeeGuard.Party (bungeeguard)
@@ -31,6 +28,7 @@ public class PartyManager {
         MultiBungee MB = Main.getMB();
         Iterator<UUID> joueurs;
         UUID u;
+        Set<Party> to_remove = new HashSet<>();
         for (String partyName : parties.keySet()) {
             Party p = parties.get(partyName);
             joueurs = p.getMembers().iterator();
@@ -41,9 +39,12 @@ public class PartyManager {
                 }
             }
             if (p.getSize() == 0) {
-                removeParty(p);
-                Main.getMB().disbandParty(p.getName());
+                to_remove.add(p);
             }
+        }
+        for (Party p : to_remove) {
+            removeParty(p);
+            Main.getMB().disbandParty(p.getName());
         }
 
     }

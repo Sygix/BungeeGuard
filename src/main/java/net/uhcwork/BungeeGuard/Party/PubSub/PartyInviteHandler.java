@@ -31,6 +31,8 @@ public class PartyInviteHandler extends PubSubBase {
         String partyName = args[0];
         UUID u = UUID.fromString(args[1]);
         Party party = plugin.getPM().getParty(partyName);
+        if (party == null)
+            return;
         party.addInvitation(u);
 
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(u);
