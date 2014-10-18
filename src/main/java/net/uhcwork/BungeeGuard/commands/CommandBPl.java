@@ -33,13 +33,21 @@ public class CommandBPl extends Command {
         int minutes = (uptime.intValue() / 60) % 60;
 
         if (days != 0)
-            duration += days + " jour" + ((days > 1) ? "s" : "") + ", ";
+            duration += days + " jour" + s(days) + ", ";
         if (hours != 0)
-            duration += hours + "heure" + ((hours > 1) ? "s" : "") + ", ";
+            duration += hours + " heure" + s(hours) + ", ";
         if (minutes != 0)
-            duration += minutes + "minute" + ((minutes > 1) ? "s" : "");
+            duration += minutes + " minute" + s(minutes);
 
         return duration;
+    }
+
+    static String s(int n, String s, String none) {
+        return (n > 1) ? s : none;
+    }
+
+    static String s(int n) {
+        return s(n, "s", "");
     }
 
     @Override

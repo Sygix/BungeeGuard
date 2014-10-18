@@ -81,8 +81,10 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         });
         try {
             x.get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (ExecutionException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            System.out.println("[Conf:MYSQL] Aborted. " + e.getMessage());
         }
     }
 
