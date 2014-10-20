@@ -1,7 +1,5 @@
 package net.uhcwork.BungeeGuard;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
@@ -15,7 +13,6 @@ import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.protocol.packet.Handshake;
-import net.md_5.bungee.protocol.packet.PluginMessage;
 import net.uhcwork.BungeeGuard.Ban.BanType;
 import net.uhcwork.BungeeGuard.Lobbies.Lobby;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
@@ -30,8 +27,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class BungeeGuardListener implements Listener {
-
-    byte[] data;
     public Main plugin;
     BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
             .color(ChatColor.GOLD)
@@ -45,9 +40,6 @@ public class BungeeGuardListener implements Listener {
 
     public BungeeGuardListener(Main plugin) {
         this.plugin = plugin;
-        ByteArrayDataOutput x = ByteStreams.newDataOutput();
-        x.writeInt(0);
-        data = x.toByteArray();
     }
 
     @EventHandler
@@ -141,7 +133,6 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onServerConnected(final ServerConnectedEvent e) {
         final ProxiedPlayer p = e.getPlayer();
-        e.getServer().unsafe().sendPacket(new PluginMessage("UHCGames", data, true));
         if (plugin.getGTP().containsKey(p.getUniqueId())) {
             ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
                 @Override
