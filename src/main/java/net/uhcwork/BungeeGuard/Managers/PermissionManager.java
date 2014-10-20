@@ -102,7 +102,6 @@ public class PermissionManager {
                     break;
             }
         }
-        System.out.println(groups + " --> " + _groupes);
         return groupOrderer.sortedCopy(_groupes);
     }
 
