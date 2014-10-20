@@ -170,7 +170,7 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerListener(this, new PubSubListener(this));
 
         permissionManager.loadGroups();
-        permissionManager.getUser(MB.getUuidFromName("punkeel"));
+
         fetchParties();
         Set<Class<? extends Command>> commandes = new HashSet<>();
         Collections.addAll(commandes, CommandKick.class, CommandLobby.class, CommandReloadConf.class,
