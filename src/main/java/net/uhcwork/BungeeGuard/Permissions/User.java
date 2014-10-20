@@ -11,7 +11,7 @@ import java.util.*;
  * Part of net.uhcwork.BungeeGuard.Permissions (BungeeGuard)
  * Date: 20/10/2014
  * Time: 01:21
- * May be open-source & be sold (by mguerreiro, of course !)
+ * Mas be open-source & be sold (by mguerreiro, of course !)
  */
 @Data
 @EqualsAndHashCode
@@ -50,7 +50,6 @@ public class User {
     public void addGroup(Group group, Long duration) {
         // duration en ms
         if (inGroup(group.getId())) {
-            System.out.println("ingrp : " + group);
             for (UserModel _um : groupes) {
                 if (_um.getGroup().equals(group.getId())) {
                     _um.setUntil(new Timestamp(_um.getUntil().getTime() + duration));
@@ -58,7 +57,6 @@ public class User {
                 }
             }
         } else {
-            System.out.println("notingrp : " + group + ":" + new Timestamp(System.currentTimeMillis() + duration));
             UserModel _um = new UserModel();
             _um.setUntil(new Timestamp(System.currentTimeMillis() + duration));
             _um.setGroup(group.getId());
@@ -69,7 +67,6 @@ public class User {
     }
 
     public void removeGroup(Group group) {
-        System.out.println("rem : " + group);
         if (inGroup(group.getId())) {
             for (UserModel _um : groupes) {
                 if (_um.getGroup().equals(group.getId())) {
