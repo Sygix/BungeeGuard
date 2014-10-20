@@ -82,16 +82,15 @@ public class CommandUser extends Command {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Groupe inexistant"));
                 return;
             }
-            String duration = "";
-            if (args.length == 4) {
-                duration = args[3];
-            }
+            final String duration = (args.length == 4) ? args[3] : "";
             if (action.equalsIgnoreCase("add")) {
-                final String finalDuration = duration;
                 plugin.executePersistenceRunnable(new VoidRunner() {
                     @Override
                     protected void run() {
-                        u.addGroup(groupe, BungeeGuardUtils.parseDuration(finalDuration));
+                        if (duration.isEmpty())
+                            u.addGroup(groupe, null);
+                        else
+                            u.addGroup(groupe, BungeeGuardUtils.parseDuration(duration));
                         PM.invalidateUser(uuid);
                     }
                 });
