@@ -7,8 +7,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
-import net.uhcwork.BungeeGuard.Mute.MuteManager;
-import net.uhcwork.BungeeGuard.Mute.MuteType;
+import net.uhcwork.BungeeGuard.Managers.MuteManager;
 
 import java.util.UUID;
 
@@ -51,11 +50,12 @@ public class CommandUnmute extends Command {
                 MM.unmute(mute, sender.getName(), unmuteReason, true);
                 Main.getMB().unmutePlayer(muteUUID);
 
-                MuteType muteType = (unmuteReason.equals("")) ? MuteType.UNMUTE : MuteType.UNMUTE_W_REASON;
-                if (!unmuteReason.equals(""))
-                    unmuteReason = ChatColor.translateAlternateColorCodes('&', unmuteReason);
-                String adminFormat = muteType.adminFormat("", unmuteReason, unmuteName, muteName);
-                Main.getMB().notifyStaff(adminFormat);
+                String adminMessage = ChatColor.AQUA + unmuteName + ChatColor.RED + " a démute " + ChatColor.GREEN + muteName + ChatColor.RED;
+
+                if (!unmuteReason.isEmpty())
+                    adminMessage += " avec la raison:" + ChatColor.AQUA + ChatColor.translateAlternateColorCodes('&', unmuteReason) + ChatColor.RED;
+
+                Main.getMB().notifyStaff(adminMessage + ".");
             }
         }
     }

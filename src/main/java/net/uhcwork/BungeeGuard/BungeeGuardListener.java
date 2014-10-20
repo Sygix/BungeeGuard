@@ -13,17 +13,17 @@ import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.protocol.packet.Handshake;
-import net.uhcwork.BungeeGuard.Ban.BanType;
-import net.uhcwork.BungeeGuard.Lobbies.Lobby;
+import net.uhcwork.BungeeGuard.Managers.LobbyManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
-import net.uhcwork.BungeeGuard.Mute.MuteType;
 import net.uhcwork.BungeeGuard.Party.Party;
 import net.uhcwork.BungeeGuard.Permissions.Permissions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class BungeeGuardListener implements Listener {
@@ -62,23 +62,9 @@ public class BungeeGuardListener implements Listener {
 
         BungeeBan ban = BungeeGuardUtils.getBan(event.getConnection().getUniqueId());
         if (ban != null) {
-            if (ban.isDefBanned()) {
-                event.setCancelled(true);
-
-                BanType banType = (ban.getReason() != null) ? net.uhcwork.BungeeGuard.Ban.BanType.PERMANENT_W_REASON : net.uhcwork.BungeeGuard.Ban.BanType.PERMANENT;
-                String kickMessage = banType.kickFormat("", ban.getReason());
-
-                event.setCancelReason(kickMessage);
-                return;
-            }
             if (ban.isBanned()) {
                 event.setCancelled(true);
-
-                String durationStr = BungeeGuardUtils.getDuration(ban.getUntilTimestamp());
-                BanType banType = (ban.getReason() != null) ? net.uhcwork.BungeeGuard.Ban.BanType.NON_PERMANENT_W_REASON : net.uhcwork.BungeeGuard.Ban.BanType.NON_PERMANENT;
-                String kickMessage = banType.kickFormat(durationStr, ban.getReason());
-
-                event.setCancelReason(kickMessage);
+                event.setCancelReason(ban.getBanMessage());
                 return;
             }
             plugin.getBM().unban(ban, "TimeEnd", "Automatique", true);
@@ -92,7 +78,9 @@ public class BungeeGuardListener implements Listener {
         if (e.getPlayer().getPendingConnection().getClass().getName().equals("net.md_5.bungee.connection.InitialHandler")) {
             try {
                 Handshake h = (Handshake) e.getPlayer().getPendingConnection().getClass().getDeclaredMethod("getHandshake").invoke(e.getPlayer().getPendingConnection());
-                h.setHost(Main.getGson().toJson(plugin.getPermissionManager().getUser(p.getUniqueId()).getGroups()));
+                Map<String, Object> data = new HashMap<>();
+                data.put("groupes", plugin.getPermissionManager().getUser(p.getUniqueId()).getGroups());
+                h.setHost(Main.getGson().toJson(data));
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
                 System.out.println("Erreur passage groupes: " + e1.getMessage());
             }
@@ -103,7 +91,7 @@ public class BungeeGuardListener implements Listener {
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
             troll(p);
             System.out.println("Recuperation du meilleur lobby pour " + p.getName());
-            Lobby l = plugin.getLM().getBestLobbyFor(p);
+            LobbyManager.Lobby l = plugin.getLM().getBestLobbyFor(p);
             if (l != null) {
                 e.setTarget(l.getServerInfo());
                 System.out.println("Lobby selectionné: " + l.getName());
@@ -125,7 +113,7 @@ public class BungeeGuardListener implements Listener {
         if (p.getName().equals("Stornitz")) {
             Title noob = ProxyServer.getInstance().createTitle();
             noob.title(new ComponentBuilder(new String(new char[100]).replace("\0", "◊ - ")).bold(true).color(ChatColor.RED).underlined(true).create());
-            noob.fadeOut(10 * 20);
+            noob.fadeOut(20);
             noob.fadeIn(3 * 20);
             noob.send(p);
         }
@@ -168,10 +156,7 @@ public class BungeeGuardListener implements Listener {
             BungeeMute mute = BungeeGuardUtils.getMute(p.getUniqueId());
             if (mute != null) {
                 if (mute.isMute()) {
-                    MuteType MuteType = (mute.getReason() != null) ? net.uhcwork.BungeeGuard.Mute.MuteType.NON_PERMANENT_W_REASON : net.uhcwork.BungeeGuard.Mute.MuteType.NON_PERMANENT;
-                    String muteDurationStr = BungeeGuardUtils.getDuration(mute.getUntilTimestamp());
-                    String MuteMsg = MuteType.playerFormat(muteDurationStr, mute.getReason());
-                    p.sendMessage(TextComponent.fromLegacyText(MuteMsg));
+                    p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
                     e.setCancelled(true);
                 } else {
                     plugin.getMM().unmute(mute, "TimeEnd", "Automatique", true);
@@ -255,12 +240,12 @@ public class BungeeGuardListener implements Listener {
 
             if (reason.contains("closed")) {
                 if (kickedFrom.getName().startsWith("lobby")) {
-                    Lobby Lobby = plugin.getLM().getLobby(kickedFrom.getName());
+                    LobbyManager.Lobby Lobby = plugin.getLM().getLobby(kickedFrom.getName());
                     Lobby.setOffline();
                 }
             }
 
-            Lobby l = plugin.getLM().getBestLobbyFor(p);
+            LobbyManager.Lobby l = plugin.getLM().getBestLobbyFor(p);
             ServerInfo server = l.getServerInfo();
 
 
@@ -292,15 +277,11 @@ public class BungeeGuardListener implements Listener {
 
         String message = e.getCursor();
         String[] words = message.split("\\s+");
-        String prefix = "";
         String to_complete = words[words.length - 1].toLowerCase();
-        if (to_complete.startsWith("!!") && p.hasPermission("bungeeguard.staffchat")) {
-            to_complete = to_complete.substring(1);
-            prefix = "!!";
-        }
+
         for (String name : Main.getMB().getHumanPlayersOnline()) {
             if (name.toLowerCase().startsWith(to_complete) && !e.getSuggestions().contains(name))
-                e.getSuggestions().add(prefix + name);
+                e.getSuggestions().add(name);
         }
     }
 

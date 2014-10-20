@@ -6,8 +6,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.Ban.BanManager;
-import net.uhcwork.BungeeGuard.Ban.BanType;
+import net.uhcwork.BungeeGuard.Managers.BanManager;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 
@@ -55,12 +54,14 @@ public class CommandUnban extends Command {
         } else {
             BM.unban(ban, sender.getName(), unbanReason, true);
             Main.getMB().unban(bannedUUID);
-            BanType banType = (unbanReason.equals("")) ? BanType.UNBAN : BanType.UNBAN_W_REASON;
             if (!unbanReason.isEmpty())
                 unbanReason = ChatColor.translateAlternateColorCodes('&', unbanReason);
 
-            String adminFormat = banType.adminFormat("", unbanReason, unbanName, bannedName);
-            Main.getMB().notifyStaff(adminFormat);
+            String adminMessage = ChatColor.AQUA + unbanName + ChatColor.RED + " a débanni " + ChatColor.GREEN + bannedName + ChatColor.RED;
+            if (!unbanReason.isEmpty()) {
+                adminMessage += " avec la raison:" + ChatColor.AQUA + unbanReason + ChatColor.RED;
+            }
+            Main.getMB().notifyStaff(adminMessage + ".");
         }
 
     }

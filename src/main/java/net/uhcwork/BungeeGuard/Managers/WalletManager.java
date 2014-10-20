@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.Wallet;
+package net.uhcwork.BungeeGuard.Managers;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

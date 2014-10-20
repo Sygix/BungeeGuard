@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.Ignore;
+package net.uhcwork.BungeeGuard.Managers;
 
 import net.uhcwork.BungeeGuard.Main;
 

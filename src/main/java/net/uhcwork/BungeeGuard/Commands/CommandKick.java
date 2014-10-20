@@ -5,7 +5,6 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.Kick.KickType;
 import net.uhcwork.BungeeGuard.Main;
 
 public class CommandKick extends Command {
@@ -35,18 +34,23 @@ public class CommandKick extends Command {
                 reason = plugin.getPremadeMessage(reason);
 
             reason = ChatColor.translateAlternateColorCodes('&', reason);
-            KickType KickTypeVar = (reason.isEmpty()) ? KickType.KICK : KickType.KICK_W_REASON;
 
-            String bannedName = args[0];
-            if (!Main.getMB().isPlayerOnline(bannedName)) {
-                sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas en ligne.").color(ChatColor.RED).create());
-                return;
-            } else {
-                Main.getMB().kickPlayer(bannedName, KickTypeVar.kickFormat(reason));
+            String kickedName = args[0];
+
+            String kickMessage = ChatColor.RED + "Vous avez été kické du serveur";
+            String adminNotification = ChatColor.AQUA + adminName + ChatColor.RED + " a kick " + ChatColor.GREEN + kickedName + ChatColor.RED;
+            if (!reason.isEmpty()) {
+                kickMessage += " pour:\n" + ChatColor.AQUA + reason + ChatColor.RED;
+                adminNotification += " pour:\n" + ChatColor.AQUA + reason + ChatColor.RED;
             }
+            kickMessage += ".";
+            adminNotification += ".";
 
-            String adminFormat = KickTypeVar.adminFormat(reason, adminName, bannedName);
-            Main.getMB().notifyStaff(adminFormat);
+            Main.getMB().kickPlayer(kickedName, kickMessage);
+
+            sender.sendMessage(new ComponentBuilder("Joueur expulsé.").color(ChatColor.RED).create());
+
+            Main.getMB().notifyStaff(adminNotification);
         }
     }
 }

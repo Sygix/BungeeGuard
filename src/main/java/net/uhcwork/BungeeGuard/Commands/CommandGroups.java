@@ -1,10 +1,13 @@
-package net.uhcwork.BungeeGuard.Permissions;
+package net.uhcwork.BungeeGuard.Commands;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Managers.PermissionManager;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
+import net.uhcwork.BungeeGuard.Permissions.Group;
 
 /**
  * Part of net.uhcwork.BungeeGuard.Permissions (bungeeguard)
@@ -29,12 +32,12 @@ public class CommandGroups extends Command {
     @Override
     public void execute(final CommandSender sender, String[] args) {
         if (args.length != 0) {
-            sender.sendMessage(ChatColor.RED + "Usage: /groups");
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Usage: /groups"));
             return;
         }
-        sender.sendMessage(ChatColor.GREEN + "Liste des groupes");
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Liste des groupes"));
         for (Group g : PM.getGroups().values()) {
-            sender.sendMessage("- " + g.getColor() + g.getName() + ChatColor.RESET + "(" + g.getId() + ")");
+            sender.sendMessage(TextComponent.fromLegacyText("- " + g.getColor() + g.getName() + ChatColor.RESET + "(" + g.getId() + ")"));
         }
 
     }

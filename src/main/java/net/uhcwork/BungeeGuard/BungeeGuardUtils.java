@@ -73,39 +73,30 @@ public class BungeeGuardUtils {
 
     @SuppressWarnings("deprecation")
     public static void msgPluginCommand(CommandSender sender) {
-        sender.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE
-                + "                            " + ChatColor.RESET
-                + "§6.: BungeeManager :." + ChatColor.RED + ""
-                + ChatColor.UNDERLINE + "                           ");
-        sender.sendMessage(ChatColor.RED + " ");
-        sender.sendMessage(ChatColor.RED
-                + " /ban <Player> [temps/0 pour définitif] [raison ...]");
-        sender.sendMessage(ChatColor.RED + " /kick <Player> [raison ...]");
+        sender.sendMessage(ChatColor.RED + ".: BungeeGuard :.");
+        sender.sendMessage(ChatColor.GRAY + "------------");
+        sender.sendMessage(ChatColor.RED + " /ban <player> [temps/0 pour définitif] [raison ...]");
         sender.sendMessage(ChatColor.RED + " /unban <Player> [raison ...]");
-        sender.sendMessage(ChatColor.RED + " /check <Player>");
+        sender.sendMessage(ChatColor.RED + " /kick <Player> [raison ...]");
         sender.sendMessage(ChatColor.RED + " /mute <Player>");
         sender.sendMessage(ChatColor.RED + " /unmute <Player>");
+        sender.sendMessage(ChatColor.RED + " /check <Player>");
+        sender.sendMessage(ChatColor.RED + " /spychat (toggle)");
         sender.sendMessage(ChatColor.RED + " /silence (on/off)");
         sender.sendMessage(ChatColor.RED + " /say [message]");
         sender.sendMessage(ChatColor.RED + " /msg <Player> [message]");
-        sender.sendMessage(ChatColor.RED + " /spychat (toggle)");
-        sender.sendMessage(ChatColor.RED + " /motd (refresh)");
-        sender.sendMessage(ChatColor.RED
-                + ""
-                + ChatColor.UNDERLINE
-                + "                                                                               ");
-    }
-
-    @Deprecated
-    public static String getCallingMethodInfo() {
-        return "";
-        /*StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        if (stackTrace != null && stackTrace.length >= 3) {
-            StackTraceElement s = stackTrace[3];
-            if (s != null) {
-                return s.getClassName() + ".(" + s.getMethodName() + "):[" + s.getLineNumber() + "]";
-            }
-        }
-        return null;*/
+        sender.sendMessage(ChatColor.RED + " /b:rl (refresh)");
+        sender.sendMessage(ChatColor.RED + " /b:load (refresh)");
+        sender.sendMessage(ChatColor.RED + " /gtp <pseudo>");
+        sender.sendMessage(ChatColor.RED + " /find <pseudo>");
+        sender.sendMessage(ChatColor.RED + " /ip <pseudo>");
+        sender.sendMessage(ChatColor.RED + " /wallet");
+        sender.sendMessage(ChatColor.RED + " /user");
+        sender.sendMessage(ChatColor.RED + " /groups");
+        sender.sendMessage(ChatColor.RED + " /staff");
+        sender.sendMessage(ChatColor.RED + " /send");
+        sender.sendMessage(ChatColor.RED + " /server");
+        sender.sendMessage(ChatColor.RED + " /party");
+        sender.sendMessage(ChatColor.GRAY + "------------");
     }
 }

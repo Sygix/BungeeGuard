@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.Permissions;
+package net.uhcwork.BungeeGuard.Managers;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -6,6 +6,7 @@ import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;
 import lombok.Getter;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Permissions.*;
 import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import org.javalite.activejdbc.LazyList;
@@ -42,7 +43,7 @@ public class PermissionManager {
             protected void run() {
                 Map<String, Group> _groupes = new HashMap<>();
                 //noinspection unchecked
-                LazyList<GroupModel> x = GroupModel.findAll();
+                LazyList<GroupModel> x = GroupModel.findAll().include(PermissionModel.class);
                 x.dump();
                 for (GroupModel GM : x) {
                     Group G = new Group(GM);

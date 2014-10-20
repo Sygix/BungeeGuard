@@ -10,7 +10,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.Party.Party;
-import net.uhcwork.BungeeGuard.Party.PartyManager;
+import net.uhcwork.BungeeGuard.Managers.PartyManager;
 
 import java.util.UUID;
 
