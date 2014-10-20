@@ -2,6 +2,9 @@ package net.uhcwork.BungeeGuard.Permissions;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Ordering;
+import com.google.common.primitives.Ints;
+import lombok.Getter;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
@@ -19,9 +22,15 @@ import java.util.concurrent.TimeUnit;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class PermissionManager {
+    static Ordering<Group> groupOrderer = new Ordering<Group>() {
+        public int compare(Group left, Group right) {
+            return Ints.compare(left.getWeight(), right.getWeight());
+        }
+    };
     Main plugin;
-    Cache<UUID, User> playersCache = CacheBuilder.newBuilder().maximumSize(500).expireAfterWrite(3, TimeUnit.MINUTES).build();
-    Map<String, Group> groupes = new HashMap<>();
+    Cache<UUID, User> playersCache = CacheBuilder.newBuilder().maximumSize(500).expireAfterWrite(1, TimeUnit.MINUTES).build();
+    @Getter
+    Map<String, Group> groups = new HashMap<>();
 
     public PermissionManager(Main plugin) {
         this.plugin = plugin;
@@ -33,16 +42,15 @@ public class PermissionManager {
             protected void run() {
                 Map<String, Group> _groupes = new HashMap<>();
                 //noinspection unchecked
-                System.out.println(GroupModel.associations());
                 LazyList<GroupModel> x = GroupModel.findAll();
                 x.dump();
                 for (GroupModel GM : x) {
                     Group G = new Group(GM);
                     _groupes.put(G.getId(), G);
                 }
-                groupes.clear();
-                groupes.putAll(_groupes);
-                System.out.println("Loaded " + groupes.size() + " groupe(s)");
+                groups.clear();
+                groups.putAll(_groupes);
+                System.out.println("Loaded " + groups.size() + " groupe(s)");
             }
         });
     }
@@ -53,10 +61,10 @@ public class PermissionManager {
             Future<User> x = plugin.executePersistenceRunnable(new PersistenceRunnable<User>() {
                 @Override
                 public User call() {
-                    List<UserModel> um = UserModel.find("uuid=?", uuid.toString());
+                    List<UserModel> um = UserModel.find("uuid=? AND (`until` IS NULL OR `until`=-1 OR `until`>CURRENT_TIMESTAMP)", uuid.toString());
                     if (um == null || um.isEmpty())
-                        return new User(null);
-                    return new User(um);
+                        return new User(uuid, null);
+                    return new User(uuid, um);
                 }
             });
             try {
@@ -70,10 +78,10 @@ public class PermissionManager {
     }
 
     public Group getGroup(String groupName) {
-        return groupes.containsKey(groupName) ? groupes.get(groupName) : null;
+        return groups.containsKey(groupName) ? groups.get(groupName) : null;
     }
 
-    public Set<Group> getGroups(Set<String> groups) {
+    public List<Group> getGroups(Set<String> groups) {
         Set<Group> _groupes = new HashSet<>();
         _groupes.add(getGroup("default"));
         Group g;
@@ -84,6 +92,8 @@ public class PermissionManager {
         }
         for (String _g : groups) {
             g = getGroup(_g);
+            if (g == null)
+                continue;
             while (g.getInherit() != null) {
                 if (!_groupes.contains(g))
                     _groupes.add(getGroup(g.getInherit()));
@@ -92,7 +102,20 @@ public class PermissionManager {
                     break;
             }
         }
-        System.out.println(groups + " -->" + _groupes);
-        return _groupes;
+        System.out.println(groups + " --> " + _groupes);
+        return groupOrderer.sortedCopy(_groupes);
+    }
+
+    public List<Group> getGroups(User u) {
+        if (u == null) {
+            List<Group> groupes = new ArrayList<>();
+            groupes.add(getGroup("default"));
+            return groupes;
+        }
+        return getGroups(u.getGroups());
+    }
+
+    public void invalidateUser(UUID u) {
+        playersCache.invalidate(u);
     }
 }

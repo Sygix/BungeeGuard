@@ -1,7 +1,7 @@
 package net.uhcwork.BungeeGuard.Permissions;
 
+import net.md_5.bungee.api.ChatColor;
 import org.javalite.activejdbc.Model;
-import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
 
 /**
@@ -11,7 +11,6 @@ import org.javalite.activejdbc.annotations.Table;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 @Table("uhgestion_groups")
-@IdName("id")
 public class GroupModel extends Model {
     public String getIdentifier() {
         return getString("id");
@@ -22,15 +21,15 @@ public class GroupModel extends Model {
     }
 
     public String getSuffix() {
-        return getString("suffix");
+        return ChatColor.translateAlternateColorCodes('&', getString("suffix"));
     }
 
     public String getPrefix() {
-        return getString("prefix");
+        return ChatColor.translateAlternateColorCodes('&', getString("prefix"));
     }
 
     public String getColor() {
-        return getString("color");
+        return ChatColor.translateAlternateColorCodes('&', getString("color"));
     }
 
     public int getWeight() {

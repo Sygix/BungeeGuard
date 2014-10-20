@@ -26,10 +26,9 @@ public class ReloadConfHandler extends PubSubBase {
 
     @Override
     public void handle(String channel, String message, String[] args) {
-        if (Main.getMB().getServerId().startsWith("bungeedev")) {
-            plugin.getLogger().info("Reloading groups & permissions");
-            plugin.getPermissionManager().loadGroups();
-        }
+        plugin.getLogger().info("Reloading groups & permissions");
+        plugin.getPermissionManager().loadGroups();
+
         plugin.getLogger().info("Saving current configuration");
         @SuppressWarnings("deprecation")
         ProxyConfig oldConfig = plugin.getProxy().getConfig();

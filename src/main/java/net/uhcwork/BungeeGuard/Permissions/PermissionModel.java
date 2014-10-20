@@ -1,6 +1,7 @@
 package net.uhcwork.BungeeGuard.Permissions;
 
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.annotations.BelongsTo;
 import org.javalite.activejdbc.annotations.Table;
 
 /**
@@ -10,8 +11,8 @@ import org.javalite.activejdbc.annotations.Table;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 @Table("uhgestion_permissions")
-//@BelongsTo(parent = GroupModel.class, foreignKeyName = "group_id")
-// Not supported \o/ ._.
+@BelongsTo(parent = GroupModel.class, foreignKeyName = "group_id")
+
 public class PermissionModel extends Model {
     public String getPermission() {
         return getString("permission");

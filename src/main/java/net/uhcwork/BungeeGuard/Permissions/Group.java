@@ -3,9 +3,9 @@ package net.uhcwork.BungeeGuard.Permissions;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.javalite.activejdbc.LazyList;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,10 +31,9 @@ public class Group {
         inherit = model.getInherit();
         weight = model.getWeight();
         permissions.clear();
-        LazyList<PermissionModel> _permissions = PermissionModel.find("group_id = ?", id);
+        List<PermissionModel> _permissions = model.get(PermissionModel.class, null);
         for (PermissionModel PM : _permissions) {
             permissions.add(PM.getPermission());
         }
-        System.out.println("Group added : " + getId());
     }
 }
