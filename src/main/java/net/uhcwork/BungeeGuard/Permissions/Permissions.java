@@ -1,5 +1,6 @@
 package net.uhcwork.BungeeGuard.Permissions;
 
+import net.md_5.bungee.api.ProxyServer;
 import net.uhcwork.BungeeGuard.Main;
 
 import java.util.List;
@@ -14,17 +15,26 @@ import java.util.UUID;
 public class Permissions {
     // Works even with offline players !
     public static boolean hasPerm(String player, String permission) {
-        PermissionManager PM = Main.plugin.getPermissionManager();
-        UUID uuid = Main.getMB().getUuidFromName(player);
-        User u = PM.getUser(uuid);
-        boolean allowed;
-        for (Group g : PM.getGroups(u.getGroups())) {
-            if (g == null)
-                continue;
-            for (String perm : g.getPermissions()) {
-                allowed = !perm.startsWith("-");
-                if (miniglob(perm.substring(allowed ? 0 : 1), permission))
-                    return allowed;
+        if (Main.getMB().getServerId().startsWith("bungeedev")) {
+            PermissionManager PM = Main.plugin.getPermissionManager();
+            UUID uuid = Main.getMB().getUuidFromName(player);
+            User u = PM.getUser(uuid);
+            boolean allowed;
+            for (Group g : PM.getGroups(u.getGroups())) {
+                if (g == null)
+                    continue;
+                for (String perm : g.getPermissions()) {
+                    allowed = !perm.startsWith("-");
+                    if (miniglob(perm.substring(allowed ? 0 : 1), permission))
+                        return allowed;
+                }
+            }
+            return false;
+        }
+        for (String group : ProxyServer.getInstance().getConfigurationAdapter().getGroups(player)) {
+            for (String p : ProxyServer.getInstance().getConfigurationAdapter().getPermissions(group)) {
+                if (miniglob(p, permission))
+                    return true;
             }
         }
         return false;

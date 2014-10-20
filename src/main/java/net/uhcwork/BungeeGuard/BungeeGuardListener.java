@@ -89,14 +89,17 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onServerConnect(final ServerConnectEvent e) {
         final ProxiedPlayer p = e.getPlayer();
-        if (e.getPlayer().getPendingConnection().getClass().getName().equals("net.md_5.bungee.connection.InitialHandler")) {
-            try {
-                Handshake h = (Handshake) e.getPlayer().getPendingConnection().getClass().getDeclaredMethod("getHandshake").invoke(e.getPlayer().getPendingConnection());
-                h.setHost(Main.getGson().toJson(plugin.getPermissionManager().getUser(p.getUniqueId()).getGroups()));
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
-                System.out.println("Erreur passage groupes: " + e1.getMessage());
+        if (Main.getMB().getServerId().startsWith("bungeedev")) {
+            if (e.getPlayer().getPendingConnection().getClass().getName().equals("net.md_5.bungee.connection.InitialHandler")) {
+                try {
+                    Handshake h = (Handshake) e.getPlayer().getPendingConnection().getClass().getDeclaredMethod("getHandshake").invoke(e.getPlayer().getPendingConnection());
+                    h.setHost(Main.getGson().toJson(plugin.getPermissionManager().getUser(p.getUniqueId()).getGroups()));
+                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
+                    System.out.println("Erreur passage groupes: " + e1.getMessage());
+                }
             }
         }
+
         p.setTabHeader(header, footer);
 
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
@@ -291,13 +294,15 @@ public class BungeeGuardListener implements Listener {
 
         String message = e.getCursor();
         String[] words = message.split("\\s+");
+        String prefix = "";
         String to_complete = words[words.length - 1].toLowerCase();
         if (to_complete.startsWith("!!") && p.hasPermission("bungeeguard.staffchat")) {
             to_complete = to_complete.substring(1);
+            prefix = "!!";
         }
         for (String name : Main.getMB().getHumanPlayersOnline()) {
             if (name.toLowerCase().startsWith(to_complete) && !e.getSuggestions().contains(name))
-                e.getSuggestions().add(name);
+                e.getSuggestions().add(prefix + name);
         }
     }
 
