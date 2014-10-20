@@ -24,6 +24,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubListener;
 import net.uhcwork.BungeeGuard.MultiBungee.RedisBungeeListener;
 import net.uhcwork.BungeeGuard.Mute.MuteManager;
 import net.uhcwork.BungeeGuard.Party.PartyManager;
+import net.uhcwork.BungeeGuard.Permissions.PermissionManager;
 import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
 import net.uhcwork.BungeeGuard.Persistence.PersistenceThread;
 import net.uhcwork.BungeeGuard.Wallet.WalletManager;
@@ -48,6 +49,8 @@ public class Main extends Plugin {
     private static Map<UUID, UUID> reply = new HashMap<>();
     private static List<UUID> spy = new ArrayList<>();
     private static Map<String, String> prettyServerNames = new HashMap<>();
+    @Getter
+    PermissionManager permissionManager = new PermissionManager(this);
     @Getter
     ServerManager serverManager = new ServerManager(this);
     private long startTime;
@@ -114,8 +117,8 @@ public class Main extends Plugin {
         plugin = this;
         startTime = System.currentTimeMillis();
         new BungeeGuardUtils(this);
-        System.out.println("Welcome to MultiBungee ~ With ORM and love.");
-        executorService = Executors.newFixedThreadPool(4, new ThreadFactoryBuilder()
+        System.out.println("Welcome to MultiBungee ~ With ORM. ~ Crafted with love, and Intellij Idea.");
+        executorService = Executors.newCachedThreadPool(new ThreadFactoryBuilder()
                 .setNameFormat("BungeeGuard Pool Thread #%1$d")
                 .setThreadFactory(new GroupedThreadFactory(this) {
                     public Thread newThread(Runnable runnable) {
@@ -142,8 +145,6 @@ public class Main extends Plugin {
 
     @Override
     public void onEnable() {
-        // executorService = getProxy().getScheduler().unsafe().getExecutorService(this);
-
         MB.init();
         MB.registerPubSubChannels("ban", "unban");
         MB.registerPubSubChannels("kick", "silenceServer");
@@ -168,6 +169,8 @@ public class Main extends Plugin {
         getProxy().registerChannel("UHCGames");
         getProxy().getPluginManager().registerListener(this, new PubSubListener(this));
 
+        permissionManager.loadGroups();
+        permissionManager.getUser(MB.getUuidFromName("punkeel"));
         fetchParties();
         Set<Class<? extends Command>> commandes = new HashSet<>();
         Collections.addAll(commandes, CommandKick.class, CommandLobby.class, CommandReloadConf.class,
@@ -285,5 +288,4 @@ public class Main extends Plugin {
     public void addShortServerName(String name, String shortName) {
         shortServerNames.put(name, shortName);
     }
-
 }
