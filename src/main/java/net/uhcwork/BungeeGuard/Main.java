@@ -9,27 +9,18 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.GroupedThreadFactory;
 import net.uhcwork.BungeeGuard.Announces.AnnouncementManager;
 import net.uhcwork.BungeeGuard.Announces.AnnouncementTask;
-import net.uhcwork.BungeeGuard.Managers.BanManager;
 import net.uhcwork.BungeeGuard.BanHammer.AntiSpamListener;
 import net.uhcwork.BungeeGuard.Commands.*;
 import net.uhcwork.BungeeGuard.Config.MysqlConfigAdapter;
-import net.uhcwork.BungeeGuard.Managers.IgnoreManager;
-import net.uhcwork.BungeeGuard.Managers.LobbyManager;
-import net.uhcwork.BungeeGuard.Managers.ServerManager;
+import net.uhcwork.BungeeGuard.Managers.*;
 import net.uhcwork.BungeeGuard.Models.BungeeBlockedCommands;
 import net.uhcwork.BungeeGuard.Models.BungeePremadeMessage;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubListener;
 import net.uhcwork.BungeeGuard.MultiBungee.RedisBungeeListener;
-import net.uhcwork.BungeeGuard.Managers.MuteManager;
-import net.uhcwork.BungeeGuard.Managers.PartyManager;
-import net.uhcwork.BungeeGuard.Commands.CommandGroups;
-import net.uhcwork.BungeeGuard.Commands.CommandUser;
-import net.uhcwork.BungeeGuard.Managers.PermissionManager;
 import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
 import net.uhcwork.BungeeGuard.Persistence.PersistenceThread;
-import net.uhcwork.BungeeGuard.Managers.WalletManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -170,8 +161,6 @@ public class Main extends Plugin {
 
         getProxy().registerChannel("UHCGames");
         getProxy().getPluginManager().registerListener(this, new PubSubListener(this));
-
-        permissionManager.loadGroups();
 
         fetchParties();
         Set<Class<? extends Command>> commandes = new HashSet<>();
