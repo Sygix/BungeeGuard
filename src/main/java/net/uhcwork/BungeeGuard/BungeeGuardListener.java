@@ -89,14 +89,12 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onServerConnect(final ServerConnectEvent e) {
         final ProxiedPlayer p = e.getPlayer();
-        if (Main.getMB().getServerId().startsWith("bungeedev")) {
-            if (e.getPlayer().getPendingConnection().getClass().getName().equals("net.md_5.bungee.connection.InitialHandler")) {
-                try {
-                    Handshake h = (Handshake) e.getPlayer().getPendingConnection().getClass().getDeclaredMethod("getHandshake").invoke(e.getPlayer().getPendingConnection());
-                    h.setHost(Main.getGson().toJson(plugin.getPermissionManager().getUser(p.getUniqueId()).getGroups()));
-                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
-                    System.out.println("Erreur passage groupes: " + e1.getMessage());
-                }
+        if (e.getPlayer().getPendingConnection().getClass().getName().equals("net.md_5.bungee.connection.InitialHandler")) {
+            try {
+                Handshake h = (Handshake) e.getPlayer().getPendingConnection().getClass().getDeclaredMethod("getHandshake").invoke(e.getPlayer().getPendingConnection());
+                h.setHost(Main.getGson().toJson(plugin.getPermissionManager().getUser(p.getUniqueId()).getGroups()));
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
+                System.out.println("Erreur passage groupes: " + e1.getMessage());
             }
         }
 

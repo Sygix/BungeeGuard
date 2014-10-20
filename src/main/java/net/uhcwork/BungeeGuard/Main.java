@@ -24,6 +24,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubListener;
 import net.uhcwork.BungeeGuard.MultiBungee.RedisBungeeListener;
 import net.uhcwork.BungeeGuard.Mute.MuteManager;
 import net.uhcwork.BungeeGuard.Party.PartyManager;
+import net.uhcwork.BungeeGuard.Permissions.CommandUser;
 import net.uhcwork.BungeeGuard.Permissions.PermissionManager;
 import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
 import net.uhcwork.BungeeGuard.Persistence.PersistenceThread;
@@ -178,7 +179,8 @@ public class Main extends Plugin {
                 CommandCheck.class, CommandMute.class, CommandUnmute.class, CommandSilence.class, CommandSay.class,
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
                 CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
-                CommandPoints.class, CommandWallet.class, CommandFind.class, CommandStaff.class);
+                CommandPoints.class, CommandWallet.class, CommandFind.class, CommandStaff.class,
+                CommandUser.class);
 
         for (Class<? extends Command> commande : commandes) {
             try {
