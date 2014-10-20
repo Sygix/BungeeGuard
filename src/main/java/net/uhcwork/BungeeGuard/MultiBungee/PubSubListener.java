@@ -209,9 +209,9 @@ public class PubSubListener implements Listener {
         }
 
         if (subchannel.equals("addCoins")) {
-            String playerName = in.readUTF();
+            UUID uuid = UUID.fromString(in.readUTF());
             int amount = in.readInt();
-            plugin.getWM().addToBalance(MB.getUuidFromName(playerName), amount);
+            plugin.getWM().addToBalance(uuid, amount);
         }
         if (subchannel.equals("cheat")) {
             String playerName = in.readUTF();
