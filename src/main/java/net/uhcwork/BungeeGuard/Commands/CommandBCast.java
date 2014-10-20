@@ -5,8 +5,8 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
-import net.uhcwork.BungeeGuard.Lobbies.Lobby;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Managers.LobbyManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +32,9 @@ public class CommandBCast extends Command {
             for (String m : args)
                 msg += m + " ";
 
-            msg = BungeeGuardUtils.translateCodes(msg);
             List<String> serversList = new ArrayList<>();
 
-            for (Lobby server : plugin.getLM().getLobbies()) {
+            for (LobbyManager.Lobby server : plugin.getLM().getLobbies()) {
                 if (server == null || !server.isOnline())
                     continue;
                 serversList.add(server.getName());

@@ -1,8 +1,9 @@
-package net.uhcwork.BungeeGuard.Party;
+package net.uhcwork.BungeeGuard.Managers;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
+import net.uhcwork.BungeeGuard.Party.Party;
 
 import java.util.*;
 

@@ -14,7 +14,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
-import net.uhcwork.BungeeGuard.Wallet.WalletManager;
+import net.uhcwork.BungeeGuard.Managers.WalletManager;
 
 public class CommandPoints extends Command {
     public Main plugin;

@@ -2,7 +2,7 @@ package net.uhcwork.BungeeGuard.MultiBungee.PubSub;
 
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
-import net.uhcwork.BungeeGuard.Mute.MuteManager;
+import net.uhcwork.BungeeGuard.Managers.MuteManager;
 
 import java.util.UUID;
 

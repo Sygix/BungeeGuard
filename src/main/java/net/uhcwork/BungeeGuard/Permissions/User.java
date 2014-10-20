@@ -31,8 +31,10 @@ public class User {
         for (UserModel _um : groupes) {
             if (_um.isValid())
                 _groupes.add(_um.getGroup());
-            else
+            else {
                 groupes.remove(_um);
+                _um.delete();
+            }
         }
         return _groupes;
     }

@@ -6,8 +6,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.Ban.BanManager;
-import net.uhcwork.BungeeGuard.Ban.BanType;
+import net.uhcwork.BungeeGuard.Managers.BanManager;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
@@ -56,14 +55,7 @@ public class CommandBan extends Command {
             if (!reason.isEmpty())
                 reason = ChatColor.translateAlternateColorCodes('&', reason);
 
-            BanType BanTypeVar;
-            if (duration) {
-                BanTypeVar = (reason != null) ? BanType.NON_PERMANENT_W_REASON : BanType.NON_PERMANENT;
-                bannedUntilTime = System.currentTimeMillis() + bannedTime + 1; // Une seconde de ban gratuite :D
-            } else {
-                BanTypeVar = (reason != null) ? BanType.PERMANENT_W_REASON : BanType.PERMANENT;
-                bannedUntilTime = -1;
-            }
+            bannedUntilTime = duration ? System.currentTimeMillis() + bannedTime + 1 : -1; // Une seconde de ban gratuite :D
 
             String bannedName = args[0];
             UUID bannedUUID = Main.getMB().getUuidFromName(bannedName);
@@ -71,16 +63,13 @@ public class CommandBan extends Command {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inexistant."));
                 return;
             }
-            String bannedDurationStr = BungeeGuardUtils.getDuration(bannedUntilTime);
-
-            Main.getMB().kickPlayer(bannedName, BanTypeVar.kickFormat(bannedDurationStr, reason));
 
             BungeeBan ban = BM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, true);
 
-            Main.getMB().banPlayer(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
+            Main.getMB().kickPlayer(bannedName, ban.getBanMessage());
 
-            String adminFormat = BanTypeVar.adminFormat(bannedDurationStr, reason, adminName, bannedName);
-            Main.getMB().notifyStaff(adminFormat);
+            Main.getMB().banPlayer(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
+            Main.getMB().notifyStaff(ban.getAdminNotification());
         }
     }
 }

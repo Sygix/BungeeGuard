@@ -1,6 +1,6 @@
 package net.uhcwork.BungeeGuard.MultiBungee.PubSub;
 
-import net.uhcwork.BungeeGuard.Ban.BanManager;
+import net.uhcwork.BungeeGuard.Managers.BanManager;
 import net.uhcwork.BungeeGuard.Main;
 
 import java.util.UUID;

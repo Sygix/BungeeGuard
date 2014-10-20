@@ -1,5 +1,7 @@
 package net.uhcwork.BungeeGuard.Models;
 
+import net.md_5.bungee.api.ChatColor;
+import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
@@ -77,5 +79,21 @@ public class BungeeBan extends Model {
 
     public void setUnbanAdminName(String adminName) {
         setString("unbanName", adminName);
+    }
+
+    public String getBannedName() {
+        return getString("bannedName");
+    }
+
+    public String getBanMessage() {
+        String reason = (getReason().isEmpty()) ? "." : getReason();
+        String duration = isDefBanned() ? "définitivement" : "pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
+        return ChatColor.RED + "Vous avez été banni " + ChatColor.RED + duration + reason;
+    }
+
+    public String getAdminNotification() {
+        String reason = (getReason().isEmpty()) ? "." : getReason();
+        String duration = isDefBanned() ? "définitivement" : "pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
+        return ChatColor.AQUA + getAdminName() + " a banni " + ChatColor.GREEN + getBannedName() + ChatColor.RED + duration + reason;
     }
 }

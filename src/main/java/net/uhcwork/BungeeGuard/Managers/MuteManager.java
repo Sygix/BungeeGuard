@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.Mute;
+package net.uhcwork.BungeeGuard.Managers;
 
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;

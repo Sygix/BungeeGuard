@@ -10,7 +10,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
-import net.uhcwork.BungeeGuard.Mute.MuteType;
 import net.uhcwork.BungeeGuard.Permissions.Permissions;
 import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
@@ -42,9 +41,7 @@ public class CommandMsg extends Command {
         BungeeMute mute = plugin.getMM().findMute(p.getUniqueId());
         if (mute != null) {
             if (mute.isMute()) {
-                MuteType muteType = (mute.getReason() != null) ? net.uhcwork.BungeeGuard.Mute.MuteType.NON_PERMANENT_W_REASON : net.uhcwork.BungeeGuard.Mute.MuteType.NON_PERMANENT;
-                String MuteMsg = muteType.playerFormat("", mute.getReason());
-                p.sendMessage(new ComponentBuilder(MuteMsg).create());
+                p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
             } else {
                 plugin.getMM().unmute(mute, "TimeEnd", "Automatique", true);
                 Main.getMB().unmutePlayer(p.getUniqueId());

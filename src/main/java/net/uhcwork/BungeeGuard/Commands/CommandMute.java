@@ -8,8 +8,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.Mute.MuteManager;
-import net.uhcwork.BungeeGuard.Mute.MuteType;
+import net.uhcwork.BungeeGuard.Models.BungeeMute;
+import net.uhcwork.BungeeGuard.Managers.MuteManager;
 
 import java.util.UUID;
 
@@ -58,9 +58,8 @@ public class CommandMute extends Command {
         if (plugin.isPremadeMessage(reason))
             reason = plugin.getPremadeMessage(reason);
 
-        MuteType MuteTypeVar;
-        MuteTypeVar = (reason != null) ? MuteType.NON_PERMANENT_W_REASON : MuteType.NON_PERMANENT;
-        if (reason != null) reason = ChatColor.translateAlternateColorCodes('&', reason);
+        if (reason != null)
+            reason = ChatColor.translateAlternateColorCodes('&', reason);
 
         String muteName = args[0];
 
@@ -69,16 +68,12 @@ public class CommandMute extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inexistant."));
             return;
         }
-        String muteDurationStr = BungeeGuardUtils.getDuration(muteUntilTime);
-        String muteMessage = MuteTypeVar.playerFormat(muteDurationStr, reason);
+        BungeeMute mute = MM.mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID, true);
 
-        Main.getMB().sendPlayerMessage(muteUUID, muteMessage);
-
-        MM.mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID, true);
+        Main.getMB().sendPlayerMessage(muteUUID, mute.getMuteMessage());
 
         Main.getMB().mutePlayer(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
 
-        String adminFormat = MuteTypeVar.adminFormat(muteDurationStr, reason, adminName, muteName);
-        Main.getMB().notifyStaff(adminFormat);
+        Main.getMB().notifyStaff(mute.getAdminNotification());
     }
 }

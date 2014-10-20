@@ -13,7 +13,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
-import net.uhcwork.BungeeGuard.Wallet.WalletManager;
+import net.uhcwork.BungeeGuard.Managers.WalletManager;
 
 import java.util.UUID;
 

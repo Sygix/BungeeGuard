@@ -1,5 +1,7 @@
 package net.uhcwork.BungeeGuard.Models;
 
+import net.md_5.bungee.api.ChatColor;
+import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
@@ -74,5 +76,21 @@ public class BungeeMute extends Model {
 
     public void setUnmuteAdminName(String adminName) {
         setString("unmuteName", adminName);
+    }
+
+    public String getMuteMessage() {
+        String reason = (getReason().isEmpty()) ? "." : " avec la raison: " + ChatColor.AQUA + getReason() + ChatColor.RED + ".";
+        String duration = "pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
+        return ChatColor.RED + "Vous avez été mute " + ChatColor.RED + duration + reason;
+    }
+
+    public String getAdminNotification() {
+        String reason = (getReason().isEmpty()) ? "." : " avec la raison: " + ChatColor.AQUA + getReason() + ChatColor.RED + ".";
+        String duration = "pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
+        return ChatColor.AQUA + getAdminName() + " a mute " + ChatColor.GREEN + getMutedName() + ChatColor.RED + duration + reason;
+    }
+
+    public String getMutedName() {
+        return getString("muteName");
     }
 }

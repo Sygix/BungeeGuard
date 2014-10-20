@@ -1,4 +1,4 @@
-package net.uhcwork.BungeeGuard.Ban;
+package net.uhcwork.BungeeGuard.Managers;
 
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;

@@ -1,11 +1,16 @@
-package net.uhcwork.BungeeGuard.Permissions;
+package net.uhcwork.BungeeGuard.Commands;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Managers.PermissionManager;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
+import net.uhcwork.BungeeGuard.Permissions.Group;
+import net.uhcwork.BungeeGuard.Permissions.User;
+import net.uhcwork.BungeeGuard.Permissions.UserModel;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import net.uhcwork.BungeeGuard.Utils.DateUtil;
 
@@ -41,14 +46,14 @@ public class CommandUser extends Command {
         final String playerName = args[0];
         final UUID uuid = MB.getUuidFromName(playerName);
         if (uuid == null) {
-            sender.sendMessage("Joueur inconnu.");
+            sender.sendMessage(TextComponent.fromLegacyText("Joueur inconnu."));
             return;
         }
         final User u = PM.getUser(uuid);
-        sender.sendMessage("Joueur " + ChatColor.GREEN + playerName);
+        sender.sendMessage(TextComponent.fromLegacyText("Joueur " + ChatColor.GREEN + playerName));
         if (args.length == 1) {
             if (u == null) {
-                sender.sendMessage(ChatColor.GOLD + "Groupe : ... Aucun :(");
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Groupe : ... Aucun :("));
                 return;
             }
             plugin.executePersistenceRunnable(new VoidRunner() {
@@ -58,22 +63,23 @@ public class CommandUser extends Command {
                         Timestamp until = g.getUntil();
                         Group groupe = PM.getGroup(g.getGroup());
                         if (until != null && until.getTime() > 0) {
-                            sender.sendMessage("- " + groupe.getColor() + groupe.getName() + ChatColor.RESET + " pour encore " + ChatColor.GOLD +
-                                    DateUtil.formatDateDiff(until.getTime()));
+                            sender.sendMessage(TextComponent.fromLegacyText("- " + groupe.getColor() + groupe.getName() + ChatColor.RESET + " pour encore " + ChatColor.GOLD +
+                                    DateUtil.formatDateDiff(until.getTime())));
                         } else {
-                            sender.sendMessage("- " + groupe.getColor() + groupe.getName() + ChatColor.RESET + " à vie.");
+                            sender.sendMessage(TextComponent.fromLegacyText("- " + groupe.getColor() + groupe.getName() + ChatColor.RESET + " à vie."));
                         }
                     }
                 }
             });
             return;
         }
+
         if (args.length == 3 || args.length == 4) {
             String action = args[1];
             final String group_id = args[2];
             final Group groupe = PM.getGroup(group_id);
             if (groupe == null) {
-                sender.sendMessage(ChatColor.RED + "Groupe inexistant");
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Groupe inexistant"));
                 return;
             }
             String duration = "";
@@ -89,7 +95,7 @@ public class CommandUser extends Command {
                         PM.invalidateUser(uuid);
                     }
                 });
-                sender.sendMessage(ChatColor.GREEN + "Groupe ajouté");
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Groupe ajouté"));
             }
             if (action.equalsIgnoreCase("del")) {
                 plugin.executePersistenceRunnable(new VoidRunner() {
@@ -99,7 +105,7 @@ public class CommandUser extends Command {
                         PM.invalidateUser(uuid);
                     }
                 });
-                sender.sendMessage(ChatColor.GREEN + "Groupe supprimé");
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Groupe supprimé"));
             }
 
 
@@ -107,9 +113,9 @@ public class CommandUser extends Command {
     }
 
     private void usage(CommandSender sender) {
-        sender.sendMessage(ChatColor.RED + "Usage: /user <pseudo>");
-        sender.sendMessage(ChatColor.RED + "Ou /user <pseudo> add <groupe>");
-        sender.sendMessage(ChatColor.RED + "Ou /user <pseudo> add <groupe> <duree>");
-        sender.sendMessage(ChatColor.RED + "Ou /user <pseudo> del <groupe>");
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Usage: /user <pseudo>"));
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ou /user <pseudo> add <groupe>"));
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ou /user <pseudo> add <groupe> <duree>"));
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ou /user <pseudo> del <groupe>"));
     }
 }

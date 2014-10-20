@@ -1,6 +1,7 @@
 package net.uhcwork.BungeeGuard.Permissions;
 
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Managers.PermissionManager;
 
 import java.util.List;
 import java.util.UUID;
