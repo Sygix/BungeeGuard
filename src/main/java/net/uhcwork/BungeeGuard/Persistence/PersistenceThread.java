@@ -24,13 +24,11 @@ import java.util.Properties;
 public class PersistenceThread extends Thread {
     public PersistenceThread(ThreadGroup group, Runnable runnable) {
         super(group, runnable);
-        System.out.println("A");
-
     }
 
     @Override
     public void run() {
-        System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :(");
+        System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :)");
         this.setup();
 
         super.run();

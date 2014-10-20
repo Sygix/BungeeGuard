@@ -8,7 +8,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
-import net.uhcwork.BungeeGuard.Utils.Permissions;
+import net.uhcwork.BungeeGuard.Permissions.Permissions;
 
 import java.util.UUID;
 

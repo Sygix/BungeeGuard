@@ -10,7 +10,6 @@ import net.md_5.bungee.util.CaseInsensitiveMap;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.*;
-import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -26,6 +25,9 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     private Main plugin;
     private String host;
     private BungeeConfig conf;
+    Collection<ListenerInfo> listeners = new HashSet<>();
+    private HashMap<String, ServerInfo> servers = new HashMap<>();
+
 
     public MysqlConfigAdapter(Main plugin) {
         this.plugin = plugin;
@@ -37,6 +39,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     @SuppressWarnings("unchecked")
     @Override
     public void load() {
+        final MysqlConfigAdapter _self = this;
         Future<Void> x = plugin.executePersistenceRunnable(new VoidRunner() {
             @Override
             protected void run() {
@@ -77,6 +80,56 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
                 List<BungeeAnnouncements> announcements = BungeeAnnouncements.findAll();
                 plugin.getAM().setAnnouncements(announcements);
                 plugin.setBroadcastDelay(conf.getBroadcastDelay());
+
+                // Load servers
+                plugin.resetPrettyServerNames();
+                plugin.resetShortServerNames();
+                List<BungeeServer> _s = BungeeServer.findAll();
+                HashMap<String, ServerInfo> servers_new = new HashMap<>();
+                for (BungeeServer serveur : _s) {
+                    String name = serveur.getName();
+                    String addr = serveur.getAddress();
+                    String prettyName = ChatColor.translateAlternateColorCodes('&', serveur.getPrettyName());
+                    String shortName = ChatColor.translateAlternateColorCodes('&', serveur.getShortName());
+                    String motd = "Serveur UHCGames"; // Should <not> be displayed.
+                    boolean restricted = false;
+                    plugin.addPrettyServerName(name, prettyName);
+                    plugin.addShortServerName(name, shortName);
+                    InetSocketAddress address = Util.getAddr(addr);
+                    ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, motd, restricted);
+                    servers_new.put(name, info);
+                }
+                _self.setServers(servers_new);
+
+                // Load listeners
+                if (listeners.isEmpty()) {
+
+                    Map<OPTIONS, Object> options = getOptions();
+                    Map<String, String> forced = getForcedHosts();
+                    String motd = String.valueOf(options.get(OPTIONS.MOTD));
+
+                    int maxPlayers = (int) options.get(OPTIONS.MAX_PLAYERS);
+                    // Bungee n'apprécie pas trop qu'on change d'ip:port d'écoute quand il tourne, donc on attend reboot :)
+                    host = (host == null) ? (String) options.get(OPTIONS.BIND_ADDRESS) : host;
+
+                    String defaultServer = "hub";
+                    String fallbackServer = "limbo";
+                    boolean forceDefault = true;
+                    int tabListSize = 60;
+                    DefaultTabList value = DefaultTabList.SERVER;
+                    boolean setLocalAddress = false; // On laisse debian s'en occuper :}
+                    boolean pingPassthrough = false;
+                    boolean query = false;
+                    int queryPort = 25577;
+
+                    ListenerInfo info;
+
+                    InetSocketAddress address = Util.getAddr(host);
+                    //noinspection ConstantConditions
+                    info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
+                    listeners.add(info);
+                }
+
             }
         });
         try {
@@ -136,79 +189,13 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     @Override
     @SuppressWarnings("unchecked")
     public Map<String, ServerInfo> getServers() {
-
-        Future<Map<String, ServerInfo>> x = plugin.executePersistenceRunnable(new PersistenceRunnable<Map<String, ServerInfo>>() {
-            @Override
-            public Map<String, ServerInfo> call() {
-                Map<String, ServerInfo> ret = new HashMap<>();
-                plugin.resetPrettyServerNames();
-                plugin.resetShortServerNames();
-                List<BungeeServer> serveurs = BungeeServer.findAll();
-                for (BungeeServer serveur : serveurs) {
-                    String name = serveur.getName();
-                    String addr = serveur.getAddress();
-                    String prettyName = ChatColor.translateAlternateColorCodes('&', serveur.getPrettyName());
-                    String shortName = ChatColor.translateAlternateColorCodes('&', serveur.getShortName());
-                    String motd = "Serveur UHCGames"; // Should <not> be displayed.
-                    boolean restricted = false;
-                    plugin.addPrettyServerName(name, prettyName);
-                    plugin.addShortServerName(name, shortName);
-                    InetSocketAddress address = Util.getAddr(addr);
-                    ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, motd, restricted);
-                    ret.put(name, info);
-                }
-                return ret;
-            }
-        });
-        try {
-            return x.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return servers;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Collection<ListenerInfo> getListeners() {
-        Future<Collection<ListenerInfo>> x = plugin.executePersistenceRunnable(new PersistenceRunnable<Collection<ListenerInfo>>() {
-            public Collection<ListenerInfo> call() {
-
-                Map<OPTIONS, Object> options = getOptions();
-                Map<String, String> forced = getForcedHosts();
-                String motd = String.valueOf(options.get(OPTIONS.MOTD));
-
-                int maxPlayers = (int) options.get(OPTIONS.MAX_PLAYERS);
-                // Bungee n'apprécie pas trop qu'on change d'ip:port d'écoute quand il tourne, donc on attend reboot :)
-                host = (host == null) ? (String) options.get(OPTIONS.BIND_ADDRESS) : host;
-
-                String defaultServer = "hub";
-                String fallbackServer = "limbo";
-                boolean forceDefault = true;
-                int tabListSize = 60;
-                DefaultTabList value = DefaultTabList.SERVER;
-                boolean setLocalAddress = false; // On laisse debian s'en occuper :}
-                boolean pingPassthrough = false;
-                boolean query = false;
-                int queryPort = 25577;
-
-                ListenerInfo info;
-
-                Collection<ListenerInfo> listeners = new HashSet<>();
-                InetSocketAddress address = Util.getAddr(host);
-                //noinspection ConstantConditions
-                info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
-                listeners.add(info);
-
-                return listeners;
-            }
-        });
-        try {
-            return x.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return listeners;
     }
 
     private Map<OPTIONS, Object> getOptions() {
@@ -249,6 +236,11 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
             forced_hosts.put(bf.getIp().toLowerCase(), bf.getServer());
         }
         return forced_hosts;
+    }
+
+    public void setServers(HashMap<String, ServerInfo> _servers) {
+        servers.clear();
+        servers.putAll(_servers);
     }
 
     /**

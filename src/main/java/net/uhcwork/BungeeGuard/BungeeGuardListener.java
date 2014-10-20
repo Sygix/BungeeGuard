@@ -1,8 +1,11 @@
 package net.uhcwork.BungeeGuard;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -11,20 +14,24 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.protocol.packet.Handshake;
+import net.md_5.bungee.protocol.packet.PluginMessage;
 import net.uhcwork.BungeeGuard.Ban.BanType;
 import net.uhcwork.BungeeGuard.Lobbies.Lobby;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Mute.MuteType;
 import net.uhcwork.BungeeGuard.Party.Party;
-import net.uhcwork.BungeeGuard.Utils.Permissions;
+import net.uhcwork.BungeeGuard.Permissions.Permissions;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class BungeeGuardListener implements Listener {
 
+    byte[] data;
     public Main plugin;
     BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
             .color(ChatColor.GOLD)
@@ -38,6 +45,9 @@ public class BungeeGuardListener implements Listener {
 
     public BungeeGuardListener(Main plugin) {
         this.plugin = plugin;
+        ByteArrayDataOutput x = ByteStreams.newDataOutput();
+        x.writeInt(0);
+        data = x.toByteArray();
     }
 
     @EventHandler
@@ -49,6 +59,7 @@ public class BungeeGuardListener implements Listener {
             event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
             return;
         }
+
 
         ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
             @Override
@@ -86,12 +97,20 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onServerConnect(final ServerConnectEvent e) {
         final ProxiedPlayer p = e.getPlayer();
-
+        if (e.getPlayer().getPendingConnection().getClass().getName().equals("net.md_5.bungee.connection.InitialHandler")) {
+            try {
+                Handshake h = (Handshake) e.getPlayer().getPendingConnection().getClass().getDeclaredMethod("getHandshake").invoke(e.getPlayer().getPendingConnection());
+                h.setHost(Main.getGson().toJson(plugin.getPermissionManager().getUser(p.getUniqueId()).getGroups()));
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
+                System.out.println("Erreur passage groupes: " + e1.getMessage());
+            }
+        }
         p.setTabHeader(header, footer);
+
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
+            troll(p);
             System.out.println("Recuperation du meilleur lobby pour " + p.getName());
             Lobby l = plugin.getLM().getBestLobbyFor(p);
-
             if (l != null) {
                 e.setTarget(l.getServerInfo());
                 System.out.println("Lobby selectionné: " + l.getName());
@@ -109,9 +128,20 @@ public class BungeeGuardListener implements Listener {
         }
     }
 
+    private void troll(ProxiedPlayer p) {
+        if (p.getName().equals("Stornitz")) {
+            Title noob = ProxyServer.getInstance().createTitle();
+            noob.title(new ComponentBuilder(new String(new char[100]).replace("\0", "◊ - ")).bold(true).color(ChatColor.RED).underlined(true).create());
+            noob.fadeOut(10 * 20);
+            noob.fadeIn(3 * 20);
+            noob.send(p);
+        }
+    }
+
     @EventHandler
-    public void onServerConnected(ServerConnectedEvent event) {
-        final ProxiedPlayer p = event.getPlayer();
+    public void onServerConnected(final ServerConnectedEvent e) {
+        final ProxiedPlayer p = e.getPlayer();
+        e.getServer().unsafe().sendPacket(new PluginMessage("UHCGames", data, true));
         if (plugin.getGTP().containsKey(p.getUniqueId())) {
             ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
                 @Override

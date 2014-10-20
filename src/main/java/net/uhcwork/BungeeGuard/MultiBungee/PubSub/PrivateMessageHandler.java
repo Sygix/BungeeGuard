@@ -8,7 +8,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.Utils.Permissions;
+import net.uhcwork.BungeeGuard.Permissions.Permissions;
 import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
 import java.util.UUID;
