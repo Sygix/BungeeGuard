@@ -41,7 +41,7 @@ public class User {
 
     public boolean inGroup(String name) {
         for (UserModel _um : groupes) {
-            if (_um.getGroup().equals(name))
+            if (_um.getGroup().equals(name) && _um.isValid())
                 return true;
         }
         return false;
@@ -51,14 +51,22 @@ public class User {
         // duration en ms
         if (inGroup(group.getId())) {
             for (UserModel _um : groupes) {
-                if (_um.getGroup().equals(group.getId())) {
-                    _um.setUntil(new Timestamp(_um.getUntil().getTime() + duration));
+                if (_um.getGroup().equals(group.getId()) && _um.isValid()) {
+                    if (duration == null) {
+                        _um.setUntil(null);
+                    } else {
+                        _um.setUntil(new Timestamp(_um.getUntil().getTime() + duration));
+                    }
                     _um.saveIt();
                 }
             }
         } else {
             UserModel _um = new UserModel();
-            _um.setUntil(new Timestamp(System.currentTimeMillis() + duration));
+            if (duration == null) {
+                _um.setUntil(null);
+            } else {
+                _um.setUntil(new Timestamp(System.currentTimeMillis() + duration));
+            }
             _um.setGroup(group.getId());
             _um.setUUID(uuid);
             _um.saveIt();
