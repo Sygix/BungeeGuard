@@ -3,7 +3,6 @@ package net.uhcwork.BungeeGuard;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
-import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -89,7 +88,6 @@ public class BungeeGuardListener implements Listener {
         p.setTabHeader(header, footer);
 
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
-            troll(p);
             System.out.println("Recuperation du meilleur lobby pour " + p.getName());
             LobbyManager.Lobby l = plugin.getLM().getBestLobbyFor(p);
             if (l != null) {
@@ -106,16 +104,6 @@ public class BungeeGuardListener implements Listener {
             if (party != null && party.isOwner(p)) {
                 Main.getMB().summonParty(party.getName(), e.getTarget().getName());
             }
-        }
-    }
-
-    private void troll(ProxiedPlayer p) {
-        if (p.getName().equals("Stornitz")) {
-            Title noob = ProxyServer.getInstance().createTitle();
-            noob.title(new ComponentBuilder(new String(new char[100]).replace("\0", "◊ - ")).bold(true).color(ChatColor.RED).underlined(true).create());
-            noob.fadeOut(20);
-            noob.fadeIn(3 * 20);
-            noob.send(p);
         }
     }
 

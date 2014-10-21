@@ -29,7 +29,7 @@ public class PermissionManager {
         }
     };
     Main plugin;
-    Cache<UUID, User> playersCache = CacheBuilder.newBuilder().maximumSize(500).expireAfterWrite(1, TimeUnit.MINUTES).build();
+    Cache<UUID, User> playersCache = CacheBuilder.newBuilder().maximumSize(750).expireAfterWrite(10, TimeUnit.MINUTES).build();
     @Getter
     Map<String, Group> groups = new HashMap<>();
 
@@ -62,8 +62,6 @@ public class PermissionManager {
                 @Override
                 public User call() {
                     List<UserModel> um = UserModel.find("uuid=? AND (`until` IS NULL OR `until`=-1 OR `until`>CURRENT_TIMESTAMP)", uuid.toString());
-                    if (um == null || um.isEmpty())
-                        return new User(uuid, null);
                     return new User(uuid, um);
                 }
             });

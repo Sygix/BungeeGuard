@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.GroupedThreadFactory;
@@ -28,6 +29,7 @@ import java.util.concurrent.*;
 
 public class Main extends Plugin {
 
+    public static final String ADMIN_TAG = ChatColor.RED + "[BungeeGuard]" + ChatColor.RESET;
     public static Main plugin;
     @Getter
     public static Gson gson = new Gson();
