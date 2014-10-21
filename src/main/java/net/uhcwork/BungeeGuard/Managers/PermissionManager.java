@@ -42,8 +42,8 @@ public class PermissionManager {
             @Override
             protected void run() {
                 Map<String, Group> _groupes = new HashMap<>();
-                //noinspection unchecked
-                LazyList<GroupModel> x = GroupModel.findAll().include(PermissionModel.class);
+                LazyList<GroupModel> x = GroupModel.findAll();
+                x.include(PermissionModel.class);
                 for (GroupModel GM : x) {
                     Group G = new Group(GM);
                     _groupes.put(G.getId(), G);

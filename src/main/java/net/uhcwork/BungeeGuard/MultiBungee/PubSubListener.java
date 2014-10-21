@@ -217,6 +217,9 @@ public class PubSubListener implements Listener {
             String playerName = in.readUTF();
             String cheatName = in.readUTF();
             double score = in.readDouble();
+            if (!(cheat.equals("ForceField") || cheat.equals("moving.survivalfly"))) {
+                return;
+            }
             BungeeCheat BC = new BungeeCheat();
             BC.setPlayerName(playerName);
             BC.setServerName(sender.getInfo().getName());
