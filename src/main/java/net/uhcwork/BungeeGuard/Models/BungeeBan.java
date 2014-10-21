@@ -15,10 +15,6 @@ import java.util.UUID;
  */
 @Table("BungeeGuard_Ban")
 public class BungeeBan extends Model {
-    public void setBannedName(String bannedName) {
-        setString("nameBanned", bannedName);
-    }
-
     public void setAdminUUID(String adminUUID) {
         setString("uuidAdmin", adminUUID);
     }
@@ -82,7 +78,11 @@ public class BungeeBan extends Model {
     }
 
     public String getBannedName() {
-        return getString("bannedName");
+        return getString("nameBanned");
+    }
+
+    public void setBannedName(String bannedName) {
+        setString("nameBanned", bannedName);
     }
 
     public String getBanMessage() {

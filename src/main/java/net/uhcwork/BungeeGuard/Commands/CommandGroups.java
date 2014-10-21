@@ -35,10 +35,9 @@ public class CommandGroups extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Usage: /groups"));
             return;
         }
-        String espace = (sender.getName().equals("Stornitz") ? " " : "");
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Liste des groupes"));
         for (Group g : PM.getGroups().values()) {
-            sender.sendMessage(TextComponent.fromLegacyText("- " + g.getColor() + espace + g.getName() + ChatColor.RESET + "(" + g.getId() + ")"));
+            sender.sendMessage(TextComponent.fromLegacyText("- " + g.getColor() + g.getName() + ChatColor.RESET + " (" + g.getId() + ")"));
         }
 
     }

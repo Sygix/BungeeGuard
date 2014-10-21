@@ -5,15 +5,15 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.Managers.BanManager;
+import net.md_5.bungee.command.PlayerCommand;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Managers.BanManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 
 import java.util.UUID;
 
-public class CommandBan extends Command {
+public class CommandBan extends PlayerCommand {
 
     public Main plugin;
     BanManager BM;

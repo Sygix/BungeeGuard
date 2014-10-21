@@ -16,10 +16,6 @@ import java.util.UUID;
 @Table("BungeeGuard_Mute")
 public class BungeeMute extends Model {
 
-    public void setMutedName(String mutedName) {
-        setString("nameMute", mutedName);
-    }
-
     public void setAdminUUID(String adminUUID) {
         setString("uuidAdmin", adminUUID);
     }
@@ -91,6 +87,10 @@ public class BungeeMute extends Model {
     }
 
     public String getMutedName() {
-        return getString("muteName");
+        return getString("nameMute");
+    }
+
+    public void setMutedName(String mutedName) {
+        setString("nameMute", mutedName);
     }
 }
