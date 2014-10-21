@@ -21,11 +21,11 @@ import java.util.concurrent.Future;
 
 public class MysqlConfigAdapter implements ConfigurationAdapter {
     private final Yaml yaml;
+    Collection<ListenerInfo> listeners = new HashSet<>();
     private Map<String, Object> config;
     private Main plugin;
     private String host;
     private BungeeConfig conf;
-    Collection<ListenerInfo> listeners = new HashSet<>();
     private HashMap<String, ServerInfo> servers = new HashMap<>();
 
 
@@ -102,34 +102,31 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
                 _self.setServers(servers_new);
 
                 // Load listeners
-                if (listeners.isEmpty()) {
 
-                    Map<OPTIONS, Object> options = getOptions();
-                    Map<String, String> forced = getForcedHosts();
-                    String motd = String.valueOf(options.get(OPTIONS.MOTD));
+                Map<OPTIONS, Object> options = getOptions();
+                Map<String, String> forced = getForcedHosts();
+                String motd = String.valueOf(options.get(OPTIONS.MOTD));
 
-                    int maxPlayers = (int) options.get(OPTIONS.MAX_PLAYERS);
-                    // Bungee n'apprécie pas trop qu'on change d'ip:port d'écoute quand il tourne, donc on attend reboot :)
-                    host = (host == null) ? (String) options.get(OPTIONS.BIND_ADDRESS) : host;
+                int maxPlayers = (int) options.get(OPTIONS.MAX_PLAYERS);
+                // Bungee n'apprécie pas trop qu'on change d'ip:port d'écoute quand il tourne, donc on attend reboot :)
+                host = (host == null) ? (String) options.get(OPTIONS.BIND_ADDRESS) : host;
 
-                    String defaultServer = "hub";
-                    String fallbackServer = "limbo";
-                    boolean forceDefault = true;
-                    int tabListSize = 60;
-                    DefaultTabList value = DefaultTabList.SERVER;
-                    boolean setLocalAddress = false; // On laisse debian s'en occuper :}
-                    boolean pingPassthrough = false;
-                    boolean query = false;
-                    int queryPort = 25577;
+                String defaultServer = "hub";
+                String fallbackServer = "limbo";
+                boolean forceDefault = true;
+                int tabListSize = 60;
+                DefaultTabList value = DefaultTabList.SERVER;
+                boolean setLocalAddress = false; // On laisse debian s'en occuper :}
+                boolean pingPassthrough = false;
+                boolean query = false;
+                int queryPort = 25577;
 
-                    ListenerInfo info;
+                ListenerInfo info;
 
-                    InetSocketAddress address = Util.getAddr(host);
-                    //noinspection ConstantConditions
-                    info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
-                    listeners.add(info);
-                }
-
+                InetSocketAddress address = Util.getAddr(host);
+                //noinspection ConstantConditions
+                info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, forced, value.toString(), setLocalAddress, pingPassthrough, queryPort, query);
+                listeners.add(info);
             }
         });
         try {
@@ -192,6 +189,11 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         return servers;
     }
 
+    public void setServers(HashMap<String, ServerInfo> _servers) {
+        servers.clear();
+        servers.putAll(_servers);
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public Collection<ListenerInfo> getListeners() {
@@ -236,11 +238,6 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
             forced_hosts.put(bf.getIp().toLowerCase(), bf.getServer());
         }
         return forced_hosts;
-    }
-
-    public void setServers(HashMap<String, ServerInfo> _servers) {
-        servers.clear();
-        servers.putAll(_servers);
     }
 
     /**
