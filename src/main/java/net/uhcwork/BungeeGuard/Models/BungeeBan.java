@@ -70,7 +70,7 @@ public class BungeeBan extends Model {
     }
 
     public boolean isBanned() {
-        return getUntilTimestamp() > System.currentTimeMillis();
+        return isDefBanned() || getUntilTimestamp() > System.currentTimeMillis();
     }
 
     public void setUnbanAdminName(String adminName) {
