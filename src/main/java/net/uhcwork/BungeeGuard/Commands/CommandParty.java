@@ -39,7 +39,7 @@ public class CommandParty extends Command {
 
 
     public CommandParty(Main plugin) {
-        super("party", "party.use", "p", "g", "group", "groupe");
+        super("party", "bungee.party.use", "p", "g", "group", "groupe");
         this.plugin = plugin;
         this.PM = plugin.getPM();
         this.MB = Main.getMB();

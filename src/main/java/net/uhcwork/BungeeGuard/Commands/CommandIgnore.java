@@ -23,7 +23,7 @@ public class CommandIgnore extends Command {
     public Main plugin;
 
     public CommandIgnore(Main plugin) {
-        super("ignore", "bungeeguard.ignore");
+        super("ignore", "bungee.ignore");
         this.plugin = plugin;
     }
 

@@ -17,7 +17,7 @@ public class CommandBLoad extends Command {
     public Main plugin;
 
     public CommandBLoad(Main plugin) {
-        super("b:load", "bungeeguard.bload");
+        super("b:load", "bungee.bload");
         this.plugin = plugin;
     }
 

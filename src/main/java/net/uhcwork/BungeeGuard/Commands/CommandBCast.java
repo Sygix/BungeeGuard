@@ -16,7 +16,7 @@ public class CommandBCast extends Command {
     public Main plugin;
 
     public CommandBCast(Main plugin) {
-        super("bcast", "bungeeguard.bcast");
+        super("bcast", "bungee.bcast");
         this.plugin = plugin;
     }
 

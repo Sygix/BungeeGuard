@@ -163,7 +163,7 @@ public class BungeeGuardListener implements Listener {
                     Main.getMB().unmutePlayer(p.getUniqueId());
                 }
             }
-            if ((p.hasPermission("bungeeguard.staffchat")) && (e.getMessage().startsWith("!!"))) {
+            if ((p.hasPermission("bungee.staffchat")) && (e.getMessage().startsWith("!!"))) {
                 e.setCancelled(true);
                 Main.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), e.getMessage().substring(2));
                 e.setMessage("");
@@ -176,7 +176,7 @@ public class BungeeGuardListener implements Listener {
                 e.setCancelled(true);
             }
             if (plugin.isSilenced(p.getServer().getInfo().getName())) {
-                if (!p.hasPermission("bungeeguard.bypasschat")) {
+                if (!p.hasPermission("bungee.bypasschat")) {
                     e.setCancelled(true);
                     p.sendMessage(new TextComponent(ChatColor.RED + "Le chat est désactivé temporairement !"));
                 }

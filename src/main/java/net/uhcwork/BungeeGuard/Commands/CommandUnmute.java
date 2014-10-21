@@ -6,8 +6,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Managers.MuteManager;
+import net.uhcwork.BungeeGuard.Models.BungeeMute;
 
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ public class CommandUnmute extends Command {
     private MuteManager MM;
 
     public CommandUnmute(Main plugin) {
-        super("unmute", "bungeeguard.mute");
+        super("unmute", "bungee.mute");
         this.plugin = plugin;
         this.MM = plugin.getMM();
     }

@@ -20,7 +20,7 @@ public class StaffChatHandler extends PubSubBase {
         String senderName = args[1];
         String message = ChatColor.translateAlternateColorCodes('&', args[2]);
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-            if (player.hasPermission("bungeeguard.staffchat")) {
+            if (player.hasPermission("bungee.staffchat")) {
                 player.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.RED + "[" + Main.getPrettyServerName(serverName) + ChatColor.RESET + ChatColor.RED + "] " + senderName + ": " + message));
             }
         }

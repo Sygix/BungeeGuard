@@ -10,7 +10,7 @@ public class CommandSay extends Command {
     public Main plugin;
 
     public CommandSay(Main plugin) {
-        super("say", "bungeeguard.say");
+        super("say", "bungee.say");
         this.plugin = plugin;
     }
 

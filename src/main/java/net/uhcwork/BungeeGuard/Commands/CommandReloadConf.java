@@ -20,7 +20,7 @@ public class CommandReloadConf extends Command {
     public Main plugin;
 
     public CommandReloadConf(Main plugin) {
-        super("b:rl", "bungeeguard.brl");
+        super("b:rl", "bungee.brl");
         this.plugin = plugin;
     }
 

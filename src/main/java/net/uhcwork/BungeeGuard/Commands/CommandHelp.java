@@ -12,7 +12,7 @@ public class CommandHelp extends Command {
     public Main plugin;
 
     public CommandHelp(Main plugin) {
-        super("help", "bungeeguard.help");
+        super("help", "bungee.help");
         this.plugin = plugin;
     }
 

@@ -21,7 +21,7 @@ public class CommandBPl extends Command {
     public Main plugin;
 
     public CommandBPl(Main plugin) {
-        super("b:pl", "bungeeguard.bpl", "b:up", "b:version", "b:ver");
+        super("b:pl", "bungee.bpl", "b:up", "b:version", "b:ver");
         this.plugin = plugin;
     }
 

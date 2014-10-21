@@ -14,7 +14,7 @@ public class CommandGtp extends Command {
     public Main plugin;
 
     public CommandGtp(Main plugin) {
-        super("gtp", "bungeeguard.gtp");
+        super("gtp", "bungee.gtp");
         this.plugin = plugin;
     }
 

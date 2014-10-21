@@ -22,7 +22,7 @@ public class CommandGroups extends Command {
     PermissionManager PM;
 
     public CommandGroups(Main plugin) {
-        super("groups", "bungeeguard.admin.permission");
+        super("groups", "bungee.groups");
         this.plugin = plugin;
         this.MB = Main.getMB();
         this.PM = plugin.getPermissionManager();

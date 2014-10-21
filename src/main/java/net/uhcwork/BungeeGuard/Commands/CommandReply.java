@@ -19,7 +19,7 @@ public class CommandReply extends Command {
     public Main plugin;
 
     public CommandReply(Main plugin) {
-        super("r", "bungeeguard.reply");
+        super("r", "bungee.reply");
         this.plugin = plugin;
     }
 
@@ -31,7 +31,7 @@ public class CommandReply extends Command {
         }
         ProxiedPlayer p = (ProxiedPlayer) sender;
 
-        if (!p.hasPermission("bungeeguard.reply")) {
+        if (!p.hasPermission("bungee.reply")) {
             return;
         }
 
@@ -64,18 +64,18 @@ public class CommandReply extends Command {
             p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());
             return;
         }
-        if (plugin.getIM().playerIgnores(destinataire, p.getUniqueId()) && !p.hasPermission("bungeeguard.ignore.ignore")) {
+        if (plugin.getIM().playerIgnores(destinataire, p.getUniqueId()) && !p.hasPermission("bungee.ignore.ignore")) {
             p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
             return;
         }
-        if (plugin.getIM().playerIgnores(p.getUniqueId(), destinataire) && !p.hasPermission("bungeeguard.ignore.ignore")) {
+        if (plugin.getIM().playerIgnores(p.getUniqueId(), destinataire) && !p.hasPermission("bungee.ignore.ignore")) {
             p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
             return;
         }
 
         BaseComponent[] contenu = new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(destinataireName).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" ").create();
 
-        if (p.hasPermission("bungeeguard.colormsg"))
+        if (p.hasPermission("bungee.colormsg"))
             contenu = ObjectArrays.concat(contenu, PrettyLinkComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)), BaseComponent.class);
         else
             contenu = ObjectArrays.concat(contenu, new TextComponent(message));
