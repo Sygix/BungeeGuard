@@ -20,19 +20,14 @@ public class CommandMsg extends Command {
     public Main plugin;
 
     public CommandMsg(Main plugin) {
-        super("msg", "bungeeguard.msg", "m", "w", "tell", "whisper", "mp");
+        super("msg", "bungee.msg", "m", "w", "tell", "whisper", "mp");
         this.plugin = plugin;
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (sender instanceof ProxiedPlayer) {
-            ProxiedPlayer p = (ProxiedPlayer) sender;
-            if (!p.hasPermission("bungeeguard.msg")) {
-                return;
-            }
-        } else {
-            sender.sendMessage(new ComponentBuilder("Vous devez etre un joueur pour executer cette command !").color(ChatColor.RED).create());
+        if (!(sender instanceof ProxiedPlayer)) {
+            sender.sendMessage(new ComponentBuilder("Vous devez etre un joueur pour executer cette commande !").color(ChatColor.RED).create());
             return;
         }
 
@@ -70,15 +65,15 @@ public class CommandMsg extends Command {
             }
             UUID receiverUUID = Main.getMB().getUuidFromName(args[0]);
             boolean isReply = plugin.isReply(p.getUniqueId(), receiverUUID);
-            if (Permissions.hasPerm(args[0], "bungeeguard.moremsg") && !p.hasPermission("bungeeguard.moremsg") && !isReply) {
+            if (Permissions.hasPerm(args[0], "bungee.moremsg") && !p.hasPermission("bungee.moremsg") && !isReply) {
                 p.sendMessage(new ComponentBuilder("Vous n'avez pas la permission de parler à ce joueur !").color(ChatColor.RED).create());
                 return;
             }
-            if (plugin.getIM().playerIgnores(receiverUUID, p.getUniqueId()) && !Permissions.hasPerm(args[0], "bungeeguard.ignore.ignore")) {
+            if (plugin.getIM().playerIgnores(receiverUUID, p.getUniqueId()) && !Permissions.hasPerm(args[0], "bungee.ignore.ignore")) {
                 p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
                 return;
             }
-            if (plugin.getIM().playerIgnores(p.getUniqueId(), receiverUUID) && !p.hasPermission("bungeeguard.ignore.ignore")) {
+            if (plugin.getIM().playerIgnores(p.getUniqueId(), receiverUUID) && !p.hasPermission("bungee.ignore.ignore")) {
                 p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
                 return;
             }
@@ -90,7 +85,7 @@ public class CommandMsg extends Command {
 
             BaseComponent[] contenu = new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(args[0]).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" ").create();
 
-            if (p.hasPermission("bungeeguard.colormsg"))
+            if (p.hasPermission("bungee.colormsg"))
                 contenu = ObjectArrays.concat(contenu, PrettyLinkComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', text)), BaseComponent.class);
             else
                 contenu = ObjectArrays.concat(contenu, new TextComponent(text));

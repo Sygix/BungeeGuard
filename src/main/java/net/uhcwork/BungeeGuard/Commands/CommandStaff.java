@@ -63,7 +63,7 @@ public class CommandStaff extends Command {
                 for (String playerName : staff.get(groupeName)) {
                     ComponentBuilder TC = new ComponentBuilder(playerName)
                             .color(groupes.get(groupeName));
-                    if (sender.hasPermission("bungeeguard.staff.see")) {
+                    if (sender.hasPermission("bungee.staff.see")) {
                         TC.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 new ComponentBuilder("Serveur: ")
                                         .append(Main.getPrettyServerName(MB.getServerFor(playerName).getName() + ChatColor.RESET)

@@ -12,8 +12,8 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.Managers.WalletManager;
+import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ public class CommandWallet extends Command {
     String prefix = "[" + ChatColor.AQUA + "Wallet" + ChatColor.RESET + "] ";
 
     public CommandWallet(Main plugin) {
-        super("wallet", "wallet.admin");
+        super("wallet", "bungee.wallet.admin");
         this.plugin = plugin;
         this.WM = plugin.getWM();
         this.MB = Main.getMB();
@@ -34,10 +34,6 @@ public class CommandWallet extends Command {
     public void execute(CommandSender sender, String[] args) {
         String name;
         UUID uuid;
-        if (!sender.hasPermission("wallet.admin")) {
-            return;
-        }
-
         if (args.length == 0) {
             help(sender);
         } else if (args.length == 1) {

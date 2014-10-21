@@ -15,7 +15,7 @@ public class CommandCheck extends Command {
     public Main plugin;
 
     public CommandCheck(Main plugin) {
-        super("check", "bungeeguard.check");
+        super("check", "bungee.check");
         this.plugin = plugin;
     }
 

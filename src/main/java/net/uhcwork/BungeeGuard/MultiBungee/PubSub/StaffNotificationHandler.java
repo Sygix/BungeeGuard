@@ -22,7 +22,7 @@ public class StaffNotificationHandler extends PubSubBase {
     @Override
     public void handle(String channel, String message, String[] args) {
         for (ProxiedPlayer p : plugin.getProxy().getPlayers()) {
-            if (p.hasPermission("bungeeguard.notify")) {
+            if (p.hasPermission("bungee.notify")) {
                 p.sendMessage(TextComponent.fromLegacyText(message));
             }
         }

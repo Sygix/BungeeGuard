@@ -13,7 +13,7 @@ public class CommandSilence extends Command {
     public Main plugin;
 
     public CommandSilence(Main plugin) {
-        super("silence", "bungeeguard.silence");
+        super("silence", "bungee.silence");
         this.plugin = plugin;
     }
 
@@ -29,8 +29,8 @@ public class CommandSilence extends Command {
         if (args.length == 0) {
             String servName = p.getServer().getInfo().getName();
             boolean silenced = !plugin.isSilenced(servName);
-            plugin.getMB().silenceServer(servName, silenced);
-            plugin.getMB().notifyStaff(BungeeGuardUtils.getStaffBroadcastTag() + ChatColor.GRAY + "Le chat du serveur "
+            Main.getMB().silenceServer(servName, silenced);
+            Main.getMB().notifyStaff(BungeeGuardUtils.getStaffBroadcastTag() + ChatColor.GRAY + "Le chat du serveur "
                     + ChatColor.AQUA + servName + ChatColor.GRAY +
                     " a été " +
                     (silenced ? ChatColor.RED + "désactivé " : ChatColor.GREEN + "activé")

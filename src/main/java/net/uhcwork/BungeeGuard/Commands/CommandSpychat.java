@@ -18,7 +18,7 @@ public class CommandSpychat extends Command {
     public Main plugin;
 
     public CommandSpychat(Main plugin) {
-        super("spychat", "bungeeguard.spychat", "sc");
+        super("spychat", "bungee.spychat", "sc");
         this.plugin = plugin;
     }
 

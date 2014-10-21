@@ -30,7 +30,7 @@ public class CommandUser extends Command {
     PermissionManager PM;
 
     public CommandUser(Main plugin) {
-        super("user", "bungeeguard.admin.permission");
+        super("user", "bungee.permission");
         this.plugin = plugin;
         this.MB = Main.getMB();
         this.PM = plugin.getPermissionManager();

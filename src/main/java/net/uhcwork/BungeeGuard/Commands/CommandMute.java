@@ -8,8 +8,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Managers.MuteManager;
+import net.uhcwork.BungeeGuard.Models.BungeeMute;
 
 import java.util.UUID;
 
@@ -19,7 +19,7 @@ public class CommandMute extends Command {
     private MuteManager MM;
 
     public CommandMute(Main plugin) {
-        super("mute", "bungeeguard.mute");
+        super("mute", "bungee.mute");
         this.plugin = plugin;
         this.MM = plugin.getMM();
     }

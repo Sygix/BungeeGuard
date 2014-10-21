@@ -12,7 +12,7 @@ public class CommandKick extends Command {
     public Main plugin;
 
     public CommandKick(Main plugin) {
-        super("kick", "bungeeguard.kick");
+        super("kick", "bungee.kick");
         this.plugin = plugin;
     }
 

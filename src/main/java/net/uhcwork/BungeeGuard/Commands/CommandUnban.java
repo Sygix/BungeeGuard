@@ -6,8 +6,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.Managers.BanManager;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Managers.BanManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 
 import java.util.UUID;
@@ -18,7 +18,7 @@ public class CommandUnban extends Command {
     BanManager BM;
 
     public CommandUnban(Main plugin) {
-        super("unban", "bungeeguard.ban");
+        super("unban", "bungee.ban");
         this.plugin = plugin;
         this.BM = plugin.getBM();
     }
