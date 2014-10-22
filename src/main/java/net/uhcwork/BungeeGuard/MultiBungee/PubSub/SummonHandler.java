@@ -6,6 +6,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.MultiBungee.PubSubHandler;
+import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 
 /**
  * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
@@ -13,12 +15,12 @@ import net.uhcwork.BungeeGuard.Main;
  * Time: 18:46
  * May be open-source & be sold (by mguerreiro, of course !)
  */
-public class SummonHandler extends PubSubBase {
-    @Override
-    public void handle(String channel, String message, String[] args) {
-        String playerName = args[0];
-        String server_target = args[1];
-        String sender = args[2];
+public class SummonHandler {
+    @PubSubHandler("summon")
+    public void summon(PubSubMessageEvent e) {
+        String playerName = e.getArg(0);
+        String server_target = e.getArg(1);
+        String sender = e.getArg(2);
         ServerInfo target = ProxyServer.getInstance().getServerInfo(server_target);
         if (target == null) {
             return;
@@ -41,7 +43,7 @@ public class SummonHandler extends PubSubBase {
         if (player.getServer() != null && !player.getServer().getInfo().equals(target)) {
             player.connect(target);
             if (!senderName.isEmpty())
-                player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Summoned to " + Main.getPrettyServerName(target.getName()) + ChatColor.RESET + ChatColor.GOLD + " by " + senderName));
+                player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Envoyé sur " + Main.getPrettyServerName(target.getName()) + ChatColor.RESET + ChatColor.GOLD + " par " + senderName));
         }
     }
 }

@@ -8,9 +8,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
-import net.uhcwork.BungeeGuard.Party.Party;
 import net.uhcwork.BungeeGuard.Managers.PartyManager;
+import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 import java.util.UUID;
 
@@ -131,9 +130,9 @@ public class CommandParty extends Command {
         }
         String player = args[1];
         UUID u = MB.getUuidFromName(player);
-        Party party = PM.getPartyByPlayer(u);
+        PartyManager.Party party = PM.getPartyByPlayer(u);
         if (!sender.hasPermission("bungee.party.kick")) {
-            Party p = PM.getPartyByPlayer(sender);
+            PartyManager.Party p = PM.getPartyByPlayer(sender);
             if (p == null) {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
                 return;
@@ -157,7 +156,7 @@ public class CommandParty extends Command {
     }
 
     private void owner(ProxiedPlayer sender, String[] args) {
-        Party p = PM.getPartyByPlayer(sender);
+        PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
             return;
@@ -180,7 +179,7 @@ public class CommandParty extends Command {
     }
 
     private void chat(ProxiedPlayer sender) {
-        Party p = PM.getPartyByPlayer(sender);
+        PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
             return;
@@ -194,7 +193,7 @@ public class CommandParty extends Command {
     }
 
     private void leave(ProxiedPlayer sender) {
-        Party p = PM.getPartyByPlayer(sender);
+        PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
             return;
@@ -204,7 +203,7 @@ public class CommandParty extends Command {
     }
 
     private void publique(ProxiedPlayer sender) {
-        Party p = PM.getPartyByPlayer(sender);
+        PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
             return;
@@ -231,7 +230,7 @@ public class CommandParty extends Command {
             return;
         }
         String party = args[1];
-        Party p = PM.getParty(party);
+        PartyManager.Party p = PM.getParty(party);
         if (p == null) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Party " + party + " inconnue."));
             return;
@@ -250,7 +249,7 @@ public class CommandParty extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /party invite <pseudo>"));
             return;
         }
-        Party p = PM.getPartyByPlayer(sender);
+        PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous ne pouvez lancer cette commande sans être dans une Party"));
             return;
@@ -261,7 +260,7 @@ public class CommandParty extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne"));
             return;
         }
-        Party p2 = PM.getPartyByPlayer(u);
+        PartyManager.Party p2 = PM.getPartyByPlayer(u);
         if (p2 != null) {
             sender.sendMessage(TextComponent.fromLegacyText("Ce joueur est déjà dans une Party."));
             return;
@@ -279,7 +278,7 @@ public class CommandParty extends Command {
         }
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Liste des Party"));
         TextComponent TC;
-        for (Party p : PM.getParties().values()) {
+        for (PartyManager.Party p : PM.getParties().values()) {
             TC = new TextComponent("- ");
             TC.addExtra(p.getDisplay());
             sender.sendMessage(TC);

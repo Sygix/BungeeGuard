@@ -13,9 +13,9 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.protocol.packet.Handshake;
 import net.uhcwork.BungeeGuard.Managers.LobbyManager;
+import net.uhcwork.BungeeGuard.Managers.PartyManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
-import net.uhcwork.BungeeGuard.Party.Party;
 import net.uhcwork.BungeeGuard.Permissions.Permissions;
 
 import java.lang.reflect.InvocationTargetException;
@@ -100,7 +100,7 @@ public class BungeeGuardListener implements Listener {
                 e.getPlayer().disconnect(new ComponentBuilder(ChatColor.RED + "Nos services sont momentanément indisponibles" + '\n' + ChatColor.RED + "Veuillez réessayer dans quelques instants").create());
             }
         } else if (!e.getTarget().getName().startsWith("lobby")) {
-            final Party party = plugin.getPM().getPartyByPlayer(p);
+            final PartyManager.Party party = plugin.getPM().getPartyByPlayer(p);
             if (party != null && party.isOwner(p)) {
                 Main.getMB().summonParty(party.getName(), e.getTarget().getName());
             }
@@ -159,7 +159,7 @@ public class BungeeGuardListener implements Listener {
 
                 return;
             }
-            Party party = plugin.getPM().getPartyByPlayer(p);
+            PartyManager.Party party = plugin.getPM().getPartyByPlayer(p);
             if (party != null && party.isPartyChat(p)) {
                 Main.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage());
                 e.setCancelled(true);

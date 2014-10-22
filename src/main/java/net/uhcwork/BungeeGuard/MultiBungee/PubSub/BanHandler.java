@@ -1,7 +1,11 @@
 package net.uhcwork.BungeeGuard.MultiBungee.PubSub;
 
-import net.uhcwork.BungeeGuard.Managers.BanManager;
+import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Managers.BanManager;
+import net.uhcwork.BungeeGuard.Models.BungeeBan;
+import net.uhcwork.BungeeGuard.MultiBungee.PubSubHandler;
+import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 
 import java.util.UUID;
 
@@ -11,16 +15,23 @@ import java.util.UUID;
  * Time: 15:46
  * May be open-source & be sold (by PunKeel, of course !)
  */
-public class BanHandler extends PubSubBase {
-    @Override
-    public void handle(String channel, String message, String[] args) {
+public class BanHandler {
+    @PubSubHandler("ban")
+    public void ban(PubSubMessageEvent e) {
+        if (e.getArg(0).equals(BungeeGuardUtils.getServerID()))
+            return;
         BanManager BM = Main.plugin.getBM();
-        BM.ban(UUID.fromString(args[1]), args[2], Long.parseLong(args[3]), args[4], args[5],
-                UUID.fromString(args[6]), false);
+        BM.ban(UUID.fromString(e.getArg(1)), e.getArg(2), Long.parseLong(e.getArg(3)), e.getArg(4), e.getArg(5),
+                UUID.fromString(e.getArg(6)), false);
     }
 
-    @Override
-    public boolean ignoreSelfMessage() {
-        return true;
+    @PubSubHandler("unban")
+    public void unban(PubSubMessageEvent e) {
+        if (e.getArg(0).equals(BungeeGuardUtils.getServerID()))
+            return;
+        UUID muteUUID = UUID.fromString(e.getArg(1));
+        BanManager BM = Main.plugin.getBM();
+        BungeeBan ban = BM.findBan(muteUUID);
+        BM.removeBan(ban);
     }
 }

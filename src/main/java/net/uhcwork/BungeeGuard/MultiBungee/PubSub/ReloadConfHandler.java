@@ -6,6 +6,8 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.util.CaseInsensitiveMap;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.MultiBungee.PubSubHandler;
+import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 
 import java.net.InetSocketAddress;
 import java.util.Iterator;
@@ -17,15 +19,9 @@ import java.util.Map;
  * Time: 18:22
  * May be open-source & be sold (by mguerreiro, of course !)
  */
-public class ReloadConfHandler extends PubSubBase {
-    Main plugin;
-
-    public ReloadConfHandler(Main plugin) {
-        this.plugin = plugin;
-    }
-
-    @Override
-    public void handle(String channel, String message, String[] args) {
+public class ReloadConfHandler {
+    @PubSubHandler("reloadConf")
+    public void reloadConf(Main plugin, PubSubMessageEvent e) {
         plugin.getLogger().info("Reloading groups & permissions");
         plugin.getPermissionManager().loadGroups();
 
@@ -86,7 +82,7 @@ public class ReloadConfHandler extends PubSubBase {
         plugin.getLogger().info("-Configuration reloaded !-");
     }
 
-    public void handle() {
-        handle(null, null, null);
+    public void handle(Main plugin) {
+        reloadConf(plugin, null);
     }
 }

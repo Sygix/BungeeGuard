@@ -31,7 +31,7 @@ public class CommandReloadConf extends Command {
             sender.sendMessage(new TextComponent(ChatColor.GREEN + "Usage: /b:rl "));
             return;
         }
-        new ReloadConfHandler(plugin).handle();
+        new ReloadConfHandler().handle(plugin);
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Reload : en cours …"));
         Main.getMB().notifyStaff(ChatColor.DARK_RED + "/b:rl par " + sender.getName());
     }

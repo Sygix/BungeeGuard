@@ -203,7 +203,7 @@ public class Main extends Plugin {
 
         getProxy().getPluginManager().registerListener(this, BGListener);
 
-        getProxy().getPluginManager().registerListener(this, new RedisBungeeListener());
+        getProxy().getPluginManager().registerListener(this, new RedisBungeeListener(this));
 
         getProxy().registerChannel("UHCGames");
         getProxy().getPluginManager().registerListener(this, new PubSubListener(this));
@@ -230,7 +230,7 @@ public class Main extends Plugin {
         getProxy().getScheduler().schedule(this, new Runnable() {
             @Override
             public void run() {
-                new ReloadConfHandler(plugin).handle();
+                new ReloadConfHandler().handle(plugin);
             }
         }, 0, 10, TimeUnit.SECONDS);
 
