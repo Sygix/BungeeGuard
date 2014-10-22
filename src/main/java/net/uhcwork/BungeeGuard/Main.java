@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.GroupedThreadFactory;
@@ -20,10 +21,11 @@ import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubListener;
 import net.uhcwork.BungeeGuard.MultiBungee.RedisBungeeListener;
-import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
-import net.uhcwork.BungeeGuard.Persistence.PersistenceThread;
 import net.uhcwork.BungeeGuard.Utils.ShopTask;
+import org.javalite.activejdbc.Base;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.*;
@@ -99,13 +101,54 @@ public class Main extends Plugin {
         }
     }
 
-    public <T> Future<T> executePersistenceRunnable(PersistenceRunnable<T> runnable) {
+    public <T> Future<T> executePersistenceRunnable(final Callable<T> callable) {
         if (executorService == null) {
-            FutureTask<T> F = new FutureTask<>(runnable);
+            FutureTask<T> F = new FutureTask<>(callable);
             getProxy().getScheduler().runAsync(this, F);
             return F;
         }
-        return executorService.submit(runnable);
+        return executorService.submit(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :)");
+                setup();
+                T value = callable.call();
+                System.out.println("[ORM] Fermeture pour " + Thread.currentThread().toString() + " ... :D");
+                cleanup();
+                return value;
+            }
+
+            private void setup() {
+                String host = getEnv("MYSQL_HOST");
+                String database = getEnv("MYSQL_DATABASE");
+                String user = getEnv("MYSQL_USER");
+                String pass = getEnv("MYSQL_PASS");
+                if (host.isEmpty() || database.isEmpty() || user.isEmpty() || pass.isEmpty()) {
+                    ProxyServer.getInstance().stop();
+                    throw new RuntimeException("La configuration est mauvaise, chef.");
+                }
+                Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://" + host + "/" + database, user, pass);
+            }
+
+            private String getEnv(String name) {
+                String _ = System.getenv(name);
+                if (_ == null) {
+                    Properties prop = new Properties();
+                    try {
+                        prop.load(new FileInputStream("config.properties"));
+                        _ = prop.getProperty(name, "");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return _ == null ? "" : _;
+            }
+
+
+            private void cleanup() {
+                Base.close();
+            }
+        });
     }
 
     @Override
@@ -114,11 +157,11 @@ public class Main extends Plugin {
         startTime = System.currentTimeMillis();
         new BungeeGuardUtils(this);
         System.out.println("Welcome to MultiBungee ~ With ORM. ~ Crafted with love, and Intellij Idea.");
-        executorService = Executors.newCachedThreadPool(new ThreadFactoryBuilder()
+        executorService = Executors.newFixedThreadPool(10, new ThreadFactoryBuilder()
                 .setNameFormat("BungeeGuard Pool Thread #%1$d")
                 .setThreadFactory(new GroupedThreadFactory(this) {
                     public Thread newThread(Runnable runnable) {
-                        return new PersistenceThread(this.getGroup(), runnable);
+                        return new Thread(this.getGroup(), runnable);
                     }
                 }).build());
 

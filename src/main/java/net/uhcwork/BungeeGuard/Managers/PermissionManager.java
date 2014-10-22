@@ -7,11 +7,11 @@ import com.google.common.primitives.Ints;
 import lombok.Getter;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Permissions.*;
-import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import org.javalite.activejdbc.LazyList;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -58,7 +58,7 @@ public class PermissionManager {
     public User getUser(final UUID uuid) {
         User user = playersCache.getIfPresent(uuid);
         if (user == null) {
-            Future<User> x = plugin.executePersistenceRunnable(new PersistenceRunnable<User>() {
+            Future<User> x = plugin.executePersistenceRunnable(new Callable<User>() {
                 @Override
                 public User call() {
                     List<UserModel> um = UserModel.find("uuid=? AND (`until` IS NULL OR `until`=-1 OR `until`>CURRENT_TIMESTAMP)", uuid.toString());

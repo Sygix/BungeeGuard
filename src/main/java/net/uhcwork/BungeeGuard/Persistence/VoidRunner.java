@@ -1,8 +1,9 @@
 package net.uhcwork.BungeeGuard.Persistence;
 
-abstract public class VoidRunner extends PersistenceRunnable<Void> {
+import java.util.concurrent.Callable;
+
+abstract public class VoidRunner implements Callable<Void> {
     public Void call() {
-        super.call();
         run();
         return null;
     }

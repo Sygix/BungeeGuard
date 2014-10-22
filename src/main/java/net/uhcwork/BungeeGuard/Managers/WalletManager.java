@@ -7,10 +7,10 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.WalletAccountModel;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
-import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
 import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +31,7 @@ public class WalletManager {
             .build(new CacheLoader<UUID, WalletAccountModel>() {
                 @Override
                 public WalletAccountModel load(final UUID u) throws Exception {
-                    Future<WalletAccountModel> x = plugin.executePersistenceRunnable(new PersistenceRunnable<WalletAccountModel>() {
+                    Future<WalletAccountModel> x = plugin.executePersistenceRunnable(new Callable<WalletAccountModel>() {
                         @Override
                         public WalletAccountModel call() {
                             WalletAccountModel WAM = WalletAccountModel.findFirst("uuid = ?", "" + u);
