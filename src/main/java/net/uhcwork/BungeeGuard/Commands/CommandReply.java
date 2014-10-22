@@ -82,6 +82,7 @@ public class CommandReply extends Command {
 
         p.sendMessage(contenu);
         plugin.setReply(p.getUniqueId(), destinataire);
+        plugin.setReply(destinataire, p.getUniqueId());
         Main.getMB().sendPrivateMessage(p.getName(), destinataire, message);
     }
 }

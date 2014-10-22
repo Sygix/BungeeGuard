@@ -12,7 +12,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.Party.Party;
+import net.uhcwork.BungeeGuard.Managers.PartyManager;
 
 import java.net.InetAddress;
 import java.util.Collection;
@@ -396,39 +396,39 @@ public class MultiBungee {
         sendChannelMessage("@" + server + "/partyReply", data);
     }
 
-    public void inviteParty(Party party, UUID joueur) {
+    public void inviteParty(PartyManager.Party party, UUID joueur) {
         sendChannelMessage("inviteParty", party.getName(), "" + joueur);
     }
 
-    public void addPlayerToParty(Party party, ProxiedPlayer player) {
+    public void addPlayerToParty(PartyManager.Party party, ProxiedPlayer player) {
         addPlayerToParty(party, player.getUniqueId());
     }
 
-    private void addPlayerToParty(Party party, UUID uniqueId) {
+    private void addPlayerToParty(PartyManager.Party party, UUID uniqueId) {
         sendChannelMessage("addPartyMember", party.getName(), "" + uniqueId);
     }
 
-    public void setPartyPublique(Party p, boolean publique) {
+    public void setPartyPublique(PartyManager.Party p, boolean publique) {
         sendChannelMessage("setPartyPublique", p.getName(), "" + publique);
     }
 
-    public void playerLeaveParty(Party p, ProxiedPlayer sender) {
+    public void playerLeaveParty(PartyManager.Party p, ProxiedPlayer sender) {
         playerLeaveParty(p, sender.getUniqueId());
     }
 
-    private void playerLeaveParty(Party p, UUID uniqueId) {
+    private void playerLeaveParty(PartyManager.Party p, UUID uniqueId) {
         sendChannelMessage("playerLeaveParty", p.getName(), "" + uniqueId);
     }
 
-    public void setPartyChat(Party p, UUID uniqueId, boolean isPartyChat) {
+    public void setPartyChat(PartyManager.Party p, UUID uniqueId, boolean isPartyChat) {
         sendChannelMessage("setPartyChat", p.getName(), "" + uniqueId, "" + isPartyChat);
     }
 
-    public void setPartyOwner(Party p, UUID u) {
+    public void setPartyOwner(PartyManager.Party p, UUID u) {
         sendChannelMessage("setPartyOwner", p.getName(), "" + u);
     }
 
-    public void kickFromParty(Party p, UUID u) {
+    public void kickFromParty(PartyManager.Party p, UUID u) {
         sendChannelMessage("kickFromParty", p.getName(), "" + u);
     }
 

@@ -1,6 +1,7 @@
 package net.uhcwork.BungeeGuard.MultiBungee;
 
 
+import lombok.Getter;
 import net.md_5.bungee.api.plugin.Event;
 
 /**
@@ -11,20 +12,19 @@ import net.md_5.bungee.api.plugin.Event;
  * @since 0.2.6
  */
 public class PubSubMessageEvent extends Event {
+    @Getter
     private final String channel;
+    @Getter
     private final String message;
+    private final String[] args;
 
     public PubSubMessageEvent(String channel, String message) {
         this.channel = channel;
         this.message = message;
+        this.args = message.split(MultiBungee.REGEX_SEPARATOR);
     }
 
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public String getMessage() {
-        return message;
+    public String getArg(int i) {
+        return (args.length > i) ? args[i] : "";
     }
 }

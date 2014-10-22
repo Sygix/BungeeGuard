@@ -1,6 +1,8 @@
 package net.uhcwork.BungeeGuard.MultiBungee.PubSub;
 
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.MultiBungee.PubSubHandler;
+import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 
 import java.util.UUID;
 
@@ -10,18 +12,12 @@ import java.util.UUID;
  * Time: 17:57
  * May be open-source & be sold (by mguerreiro, of course !)
  */
-public class IgnoreHandler extends PubSubBase {
-    Main plugin;
-
-    public IgnoreHandler(Main plugin) {
-        this.plugin = plugin;
-    }
-
-    @Override
-    public void handle(String channel, String message, String[] args) {
-        UUID joueur = UUID.fromString(args[0]);
-        String action = args[1];
-        UUID toIgnore = UUID.fromString(args[2]);
+public class IgnoreHandler {
+    @PubSubHandler("ignore")
+    public void ignore(Main plugin, PubSubMessageEvent e) {
+        UUID joueur = UUID.fromString(e.getArg(0));
+        String action = e.getArg(1);
+        UUID toIgnore = UUID.fromString(e.getArg(2));
 
         switch (action) {
             case "+":

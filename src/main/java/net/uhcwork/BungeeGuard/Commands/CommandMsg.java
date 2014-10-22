@@ -94,6 +94,7 @@ public class CommandMsg extends Command {
 
 
             plugin.setReply(receiverUUID, p.getUniqueId());
+            plugin.setReply(p.getUniqueId(), receiverUUID);
         }
     }
 }
