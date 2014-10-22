@@ -26,18 +26,14 @@ public class ShopTask implements Runnable {
     }
 
     public void run() {
-        final ShopTask self = this;
         plugin.executePersistenceRunnable(new VoidRunner() {
             @Override
             protected void run() {
-                List<ShopActionModel> actions = ShopActionModel.findAll().load();
+                List<ShopActionModel> actions = ShopActionModel.findAll();
                 for (ShopActionModel action : actions) {
-                    System.out.println("Going to do task " + action);
                     String todo = action.getAction();
                     if (action.delete()) {
-                        System.out.println("doTask0");
                         doTask(todo);
-                        System.out.println("Removed!");
                     }
                 }
             }
@@ -45,19 +41,12 @@ public class ShopTask implements Runnable {
     }
 
     private void doTask(String todo) {
-        System.out.println("doTask1");
         Type mapType = new TypeToken<List<Map<String, Object>>>() {
         }.getType();
-        System.out.println("doTask2");
-        System.out.println("doTask3");
         List<Map<String, Object>> actions = Main.getGson().fromJson(todo, mapType);
-        System.out.println("doTask4");
-        System.out.println(actions);
-        System.out.println("doTask5");
         for (Map<String, Object> params : actions) {
             if (params.containsKey("action")) {
                 String action = (String) params.get("action");
-                System.out.println(action);
                 switch (action) {
                     case "broadcast":
                         broadcast(params);
