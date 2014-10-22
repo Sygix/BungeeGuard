@@ -56,7 +56,6 @@ public class RedisBungeeListener implements Listener {
     public void dispatchEvent(PubSubMessageEvent event) {
         for (Object handler : handlers) {
             dispatchEventTo(event, handler);
-
         }
     }
 
@@ -81,7 +80,7 @@ public class RedisBungeeListener implements Listener {
 
     protected Collection<Method> findMatchingEventHandlerMethods(Object handler, String eventName) {
         Method[] methods = handler.getClass().getDeclaredMethods();
-        Collection<Method> result = new ArrayList<Method>();
+        Collection<Method> result = new ArrayList<>();
         for (Method method : methods) {
             if (canHandleEvent(method, eventName)) {
                 result.add(method);
