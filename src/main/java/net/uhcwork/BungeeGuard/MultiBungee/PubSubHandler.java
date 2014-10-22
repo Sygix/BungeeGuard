@@ -1,6 +1,8 @@
 package net.uhcwork.BungeeGuard.MultiBungee;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
@@ -10,6 +12,7 @@ import java.lang.annotation.Target;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+@Retention(RetentionPolicy.RUNTIME)
 public @interface PubSubHandler {
     String value();
 }
