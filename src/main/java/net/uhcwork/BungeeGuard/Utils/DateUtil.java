@@ -109,7 +109,7 @@ public class DateUtil {
     public static String formatDateDiff(Calendar fromDate, Calendar toDate) {
         boolean future = false;
         if (toDate.equals(fromDate)) {
-            return "maintenant";
+            return "0 seconde";
         }
         if (toDate.after(fromDate)) {
             future = true;
