@@ -39,7 +39,7 @@ public class CommandMute extends Command {
             muteTime = BungeeGuardUtils.parseDuration(args[1]);
             duration = (muteTime != null && muteTime > 0);
         }
-        if (!duration || muteTime > 604800000L)
+        if (!duration || muteTime > 604800000L || muteTime < 1)
             muteTime = 604800000L;
 
         long muteUntilTime = System.currentTimeMillis() + muteTime + 1; // 1 seconde de mute gratuite !

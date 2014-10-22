@@ -87,14 +87,14 @@ public class BungeeBan extends Model {
     }
 
     public String getBanMessage() {
-        String reason = (getReason().isEmpty()) ? "." : "avec la raison:\n" + getReason();
+        String reason = (getReason().isEmpty()) ? "." : " avec la raison:\n" + getReason();
         String duration = isDefBanned() ? "définitivement" : "pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
         return ChatColor.RED + "Vous avez été banni " + ChatColor.RED + duration + reason;
     }
 
     public String getAdminNotification() {
-        String reason = (getReason().isEmpty()) ? "." : "avec la raison " + getReason();
-        String duration = isDefBanned() ? "définitivement" : "pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
-        return Main.ADMIN_TAG + ChatColor.AQUA + getAdminName() + " a banni " + ChatColor.GREEN + getBannedName() + ChatColor.RED + duration + reason;
+        String reason = (getReason().isEmpty()) ? "." : " avec la raison " + getReason();
+        String duration = isDefBanned() ? " définitivement" : " pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
+        return Main.ADMIN_TAG + ChatColor.AQUA + getAdminName() + ChatColor.RED + " a banni " + ChatColor.GREEN + getBannedName() + ChatColor.RED + duration + reason;
     }
 }

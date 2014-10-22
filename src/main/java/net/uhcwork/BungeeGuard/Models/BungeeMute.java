@@ -83,8 +83,8 @@ public class BungeeMute extends Model {
 
     public String getAdminNotification() {
         String reason = (getReason().isEmpty()) ? "." : " avec la raison: " + ChatColor.AQUA + getReason() + ChatColor.RED + ".";
-        String duration = "pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
-        return Main.ADMIN_TAG + ChatColor.AQUA + getAdminName() + " a mute " + ChatColor.GREEN + getMutedName() + ChatColor.RED + duration + reason;
+        String duration = " pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
+        return Main.ADMIN_TAG + ChatColor.AQUA + getAdminName() + ChatColor.RED + " a mute " + ChatColor.GREEN + getMutedName() + ChatColor.RED + duration + reason;
     }
 
     public String getMutedName() {
