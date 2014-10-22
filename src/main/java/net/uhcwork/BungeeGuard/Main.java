@@ -22,6 +22,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubListener;
 import net.uhcwork.BungeeGuard.MultiBungee.RedisBungeeListener;
 import net.uhcwork.BungeeGuard.Persistence.PersistenceRunnable;
 import net.uhcwork.BungeeGuard.Persistence.PersistenceThread;
+import net.uhcwork.BungeeGuard.Utils.ShopTask;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -29,7 +30,7 @@ import java.util.concurrent.*;
 
 public class Main extends Plugin {
 
-    public static final String ADMIN_TAG = ChatColor.RED + "[BungeeGuard]" + ChatColor.RESET;
+    public static final String ADMIN_TAG = ChatColor.RED + "[BungeeGuard] " + ChatColor.RESET;
     public static Main plugin;
     @Getter
     public static Gson gson = new Gson();
@@ -189,6 +190,8 @@ public class Main extends Plugin {
                 new ReloadConfHandler(plugin).handle();
             }
         }, 0, 10, TimeUnit.SECONDS);
+
+        getProxy().getScheduler().schedule(this, new ShopTask(this), 0, 10, TimeUnit.SECONDS);
 
         getProxy().getScheduler().schedule(this, new AnnouncementTask(), 1, 1, TimeUnit.SECONDS);
     }

@@ -146,6 +146,7 @@ public class BungeeGuardListener implements Listener {
                 if (mute.isMute()) {
                     p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
                     e.setCancelled(true);
+                    return;
                 } else {
                     plugin.getMM().unmute(mute, "TimeEnd", "Automatique", true);
                     Main.getMB().unmutePlayer(p.getUniqueId());
