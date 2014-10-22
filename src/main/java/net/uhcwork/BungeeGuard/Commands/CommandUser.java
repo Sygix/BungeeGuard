@@ -101,9 +101,9 @@ public class CommandUser extends Command {
                     @Override
                     protected void run() {
                         u.removeGroup(groupe);
-                        PM.invalidateUser(uuid);
                     }
                 });
+                MB.invalidatePermissionUser(u.getUuid());
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Groupe supprimé"));
             }
 
