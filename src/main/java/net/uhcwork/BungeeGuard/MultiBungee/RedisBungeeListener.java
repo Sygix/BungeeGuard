@@ -31,6 +31,7 @@ public class RedisBungeeListener implements Listener {
         addHandler(new ServerSilenceHandler());
         addHandler(new StaffChatHandler());
         addHandler(new SummonHandler());
+        addHandler(new PermissionHandler());
         addHandler(new PartyHandler());
     }
 

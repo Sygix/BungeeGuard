@@ -469,6 +469,10 @@ public class MultiBungee {
         sendChannelMessage("disbandParty", name);
     }
 
+    public void invalidatePermissionUser(UUID u) {
+        sendChannelMessage("invalidatePermissionUser", "" + u);
+    }
+
     public void mutePlayer(UUID muteUUID, String muteName, long muteUntilTime, String reason, String adminName, UUID adminUUID) {
         sendChannelMessage("mute", Main.getMB().getServerId(), "" + muteUUID,
                 muteName, "" + muteUntilTime, reason, adminName, "" + adminUUID);
