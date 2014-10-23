@@ -19,7 +19,7 @@ public class CommandReply extends Command {
     public Main plugin;
 
     public CommandReply(Main plugin) {
-        super("r", "bungee.reply");
+        super("r", "bungee.reply", "reply");
         this.plugin = plugin;
     }
 
