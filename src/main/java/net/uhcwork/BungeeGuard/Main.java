@@ -185,15 +185,6 @@ public class Main extends Plugin {
     @Override
     public void onEnable() {
         MB.init();
-        MB.registerPubSubChannels("ban", "unban");
-        MB.registerPubSubChannels("kick", "silenceServer");
-        MB.registerPubSubChannels("mute", "unmute");
-        MB.registerPubSubChannels("staffChat", "notifyStaff");
-        MB.registerPubSubChannels("message", "privateMessage", "ignore", "broadcast");
-        MB.registerPubSubChannels("reloadConf", "summon");
-        MB.registerPubSubChannels("setPartyPublique", "inviteParty", "addPartyMember", "playerLeaveParty", "setPartyChat",
-                "setPartyOwner", "kickFromParty", "summonParty", "partyChat", "createParty", "disbandParty");
-        MB.registerPubSubChannels("@" + MB.getServerId() + "/partyRequest", "@" + MB.getServerId() + "/partyReply");
 
         BM.loadBans();
         MM.loadMutes();

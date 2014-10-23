@@ -33,6 +33,14 @@ public class RedisBungeeListener implements Listener {
         addHandler(new SummonHandler());
         addHandler(new PermissionHandler());
         addHandler(new PartyHandler());
+        for (Object handler : handlers) {
+            Method[] methods = handler.getClass().getDeclaredMethods();
+            for (Method method : methods) {
+                if (getEventName(method).isEmpty())
+                    continue;
+                Main.getMB().registerPubSubChannels(getEventName(method));
+            }
+        }
     }
 
     @EventHandler
@@ -82,19 +90,18 @@ public class RedisBungeeListener implements Listener {
         Method[] methods = handler.getClass().getDeclaredMethods();
         Collection<Method> result = new ArrayList<>();
         for (Method method : methods) {
-            if (canHandleEvent(method, eventName)) {
+            if (getEventName(method).equals(eventName)) {
                 result.add(method);
             }
         }
         return result;
     }
 
-    protected boolean canHandleEvent(Method method, String eventName) {
+    protected String getEventName(Method method) {
         PubSubHandler handleEventAnnotation = method.getAnnotation(PubSubHandler.class);
         if (handleEventAnnotation != null) {
-            String value = handleEventAnnotation.value();
-            return value.equals(eventName);
+            return handleEventAnnotation.value();
         }
-        return false;
+        return "";
     }
 }
