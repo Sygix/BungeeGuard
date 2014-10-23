@@ -85,22 +85,20 @@ public class PermissionManager {
         Group g;
         for (String _g : groups) {
             g = getGroup(_g);
-            if (!_groupes.contains(g))
-                _groupes.add(g);
-        }
-        for (String _g : groups) {
-            g = getGroup(_g);
+
             if (g == null)
                 continue;
+
+            if (!_groupes.contains(g))
+                _groupes.add(g);
+
             while (g.getInherit() != null) {
-                if (!_groupes.contains(g))
-                    _groupes.add(getGroup(g.getInherit()));
                 g = getGroup(g.getInherit());
                 if (!_groupes.contains(g))
-                    break;
+                    _groupes.add(g);
             }
         }
-        return groupOrderer.sortedCopy(_groupes);
+        return groupOrderer.reverse().sortedCopy(_groupes);
     }
 
     public List<Group> getGroups(User u) {
