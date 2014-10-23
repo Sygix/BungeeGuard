@@ -110,15 +110,23 @@ public class Main extends Plugin {
         return executorService.submit(new Callable<T>() {
             @Override
             public T call() throws Exception {
-                System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :)");
-                setup();
-                T value = callable.call();
-                System.out.println("[ORM] Fermeture pour " + Thread.currentThread().toString() + " ... :D");
-                cleanup();
+                T value = null;
+                try {
+                    System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :)");
+                    setup();
+                    value = callable.call();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    System.out.println("[ORM] Fermeture pour " + Thread.currentThread().toString() + " ... :D");
+                    cleanup();
+                }
                 return value;
             }
 
             private void setup() {
+                if (Base.hasConnection())
+                    return;
                 String host = getEnv("MYSQL_HOST");
                 String database = getEnv("MYSQL_DATABASE");
                 String user = getEnv("MYSQL_USER");
