@@ -91,9 +91,9 @@ public class CommandUser extends Command {
                             u.addGroup(groupe, null);
                         else
                             u.addGroup(groupe, BungeeGuardUtils.parseDuration(duration));
-                        PM.invalidateUser(uuid);
                     }
                 });
+                MB.invalidatePermissionUser(u.getUuid());
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Groupe ajouté"));
             }
             if (action.equalsIgnoreCase("del")) {
