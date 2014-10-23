@@ -157,7 +157,7 @@ public class Main extends Plugin {
         startTime = System.currentTimeMillis();
         new BungeeGuardUtils(this);
         System.out.println("Welcome to MultiBungee ~ With ORM. ~ Crafted with love, and Intellij Idea.");
-        executorService = Executors.newFixedThreadPool(10, new ThreadFactoryBuilder()
+        executorService = Executors.newFixedThreadPool(20, new ThreadFactoryBuilder()
                 .setNameFormat("BungeeGuard Pool Thread #%1$d")
                 .setThreadFactory(new GroupedThreadFactory(this) {
                     public Thread newThread(Runnable runnable) {
@@ -223,7 +223,7 @@ public class Main extends Plugin {
             public void run() {
                 new ReloadConfHandler().handle(plugin);
             }
-        }, 0, 10, TimeUnit.SECONDS);
+        }, 0, 20, TimeUnit.SECONDS);
 
         getProxy().getScheduler().schedule(this, new ShopTask(this), 0, 10, TimeUnit.SECONDS);
 
