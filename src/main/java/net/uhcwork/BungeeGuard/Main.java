@@ -3,7 +3,6 @@ package net.uhcwork.BungeeGuard;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.Gson;
 import lombok.Getter;
-import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
@@ -21,6 +20,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubListener;
 import net.uhcwork.BungeeGuard.MultiBungee.RedisBungeeListener;
+import net.uhcwork.BungeeGuard.Utils.MyReconnectHandler;
 import net.uhcwork.BungeeGuard.Utils.ShopTask;
 import org.javalite.activejdbc.Base;
 
@@ -40,9 +40,6 @@ public class Main extends Plugin {
     private static Map<String, String> premadeMessages = new HashMap<>();
     private static List<String> forbiddenCommands = new ArrayList<>();
     @Getter
-    @Setter
-    private static String motd;
-    @Getter
     private static MultiBungee MB = new MultiBungee();
     private static Map<UUID, UUID> reply = new HashMap<>();
     private static List<UUID> spy = new ArrayList<>();
@@ -51,6 +48,8 @@ public class Main extends Plugin {
     PermissionManager permissionManager = new PermissionManager(this);
     @Getter
     ServerManager serverManager = new ServerManager(this);
+    @Getter
+    MysqlConfigAdapter config;
     private long startTime;
     private List<String> silencedServers = new ArrayList<>();
     private HashMap<UUID, String> gtp = new HashMap<>();
@@ -73,7 +72,6 @@ public class Main extends Plugin {
     private WalletManager WM = new WalletManager(this);
     @Getter
     private ExecutorService executorService;
-
 
     public static String getPrettyServerName(String name) {
         return prettyServerNames.containsKey(name) ? prettyServerNames.get(name) : name;
@@ -172,8 +170,9 @@ public class Main extends Plugin {
                         return new Thread(this.getGroup(), runnable);
                     }
                 }).build());
-
-        getProxy().setConfigurationAdapter(new MysqlConfigAdapter(this));
+        getProxy().setReconnectHandler(new MyReconnectHandler());
+        config = new MysqlConfigAdapter(this);
+        getProxy().setConfigurationAdapter(config);
 
     }
 
@@ -312,19 +311,12 @@ public class Main extends Plugin {
         this.broadcastDelay = broadcastDelay;
     }
 
-    public void resetPrettyServerNames() {
-        prettyServerNames.clear();
-    }
-
     public void addPrettyServerName(String name, String prettyName) {
         prettyServerNames.put(name, prettyName);
-    }
-
-    public void resetShortServerNames() {
-        shortServerNames.clear();
     }
 
     public void addShortServerName(String name, String shortName) {
         shortServerNames.put(name, shortName);
     }
+
 }

@@ -45,7 +45,7 @@ public class BungeeGuardListener implements Listener {
     public void onLogin(final LoginEvent event) {
         String hostString = event.getConnection().getVirtualHost().getHostString().toLowerCase();
         if (!Permissions.hasPerm(event.getConnection().getName(), "bungee.canBypassHost") &&
-                !event.getConnection().getListener().getForcedHosts().containsKey(hostString)) {
+                !plugin.getConfig().getForcedHosts().containsKey(hostString)) {
             event.setCancelled(true);
             event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
             return;
@@ -128,7 +128,7 @@ public class BungeeGuardListener implements Listener {
         if (!p.hasPermission("bungee.admin")) {
             plugin.getAS().onChat(e);
 
-            if (Permissions.miniglob(plugin.getForbiddenCommands(), e.getMessage())) {
+            if (Permissions.miniglob(plugin.getForbiddenCommands(), e.getMessage().toLowerCase())) {
                 e.setMessage("");
                 e.setCancelled(true);
                 return;
@@ -184,8 +184,9 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onProxyPing(ProxyPingEvent e) {
         ServerPing sp = e.getResponse();
+        sp.getPlayers().setMax(plugin.getConfig().getMaxPlayers());
         sp.getPlayers().setOnline(Main.getMB().getPlayerCount());
-        sp.setDescription(Main.getMotd());
+        sp.setDescription(plugin.getConfig().getMotd());
 
         List<String> lines = new ArrayList<>();
 
@@ -259,17 +260,13 @@ public class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onTabCompleteEvent(TabCompleteEvent e) {
-        if (!(e.getSender() instanceof ProxiedPlayer)) {
-            return;
-        }
-        ProxiedPlayer p = (ProxiedPlayer) e.getSender();
-
         String message = e.getCursor();
-        String[] words = message.split("\\s+");
-        String to_complete = words[words.length - 1].toLowerCase();
+        if (message.contains(" ")) {
+            message = message.substring(message.lastIndexOf(" ") + 1);
+        }
 
         for (String name : Main.getMB().getHumanPlayersOnline()) {
-            if (name.toLowerCase().startsWith(to_complete) && !e.getSuggestions().contains(name))
+            if (name.toLowerCase().startsWith(message) && !e.getSuggestions().contains(name))
                 e.getSuggestions().add(name);
         }
     }
