@@ -198,7 +198,7 @@ public class BungeeGuardListener implements Listener {
         lines.add(ChatColor.GRAY + " ");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.RED + "Kill The Patrick");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.YELLOW + "Ultra HungerGames");
-        lines.add(ChatColor.GRAY + "➟" + ChatColor.BLUE + "Rush");
+        lines.add(ChatColor.GRAY + "➟ " + ChatColor.BLUE + "Rush");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.AQUA + "Fatality");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.LIGHT_PURPLE + "Tower");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.GREEN + "FightOnFaces");
@@ -260,14 +260,13 @@ public class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onTabCompleteEvent(TabCompleteEvent e) {
-        String message = e.getCursor();
-        if (message.contains(" ")) {
-            message = message.substring(message.lastIndexOf(" ") + 1);
-        }
+        String[] args = e.getCursor().split(" ");
 
-        for (String name : Main.getMB().getHumanPlayersOnline()) {
-            if (name.toLowerCase().startsWith(message) && !e.getSuggestions().contains(name))
-                e.getSuggestions().add(name);
+        final String checked = (args.length > 0 ? args[args.length - 1] : e.getCursor()).toLowerCase();
+        for (String playerName : Main.getMB().getHumanPlayersOnline()) {
+            if (playerName.toLowerCase().startsWith(checked)) {
+                e.getSuggestions().add(playerName);
+            }
         }
     }
 

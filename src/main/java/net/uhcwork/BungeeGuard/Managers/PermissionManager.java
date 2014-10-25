@@ -113,4 +113,8 @@ public class PermissionManager {
     public void invalidateUser(UUID u) {
         playersCache.invalidate(u);
     }
+
+    public User getUser(String playerName) {
+        return getUser(plugin.getMB().getUuidFromName(playerName));
+    }
 }
