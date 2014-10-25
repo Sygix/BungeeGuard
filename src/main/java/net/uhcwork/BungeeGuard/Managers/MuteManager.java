@@ -6,10 +6,7 @@ import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import org.javalite.activejdbc.LazyList;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Part of net.uhcwork.BungeeGuard.Mute (bungeeguard)
@@ -35,9 +32,14 @@ public class MuteManager {
     }
 
     public BungeeMute findMute(UUID uuid) {
-        for (BungeeMute mute : muteList) {
+        for (BungeeMute mute : Collections.unmodifiableCollection(muteList)) {
             if (mute.getMutedUUID().equals(uuid)) {
-                return mute;
+                if (mute.isMute())
+                    return mute;
+                else {
+                    unmute(mute, "Automatique", "Fin du mute", true);
+                    removeMute(mute);
+                }
             }
         }
         return null;

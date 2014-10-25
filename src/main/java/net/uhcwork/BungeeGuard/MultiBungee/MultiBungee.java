@@ -477,4 +477,8 @@ public class MultiBungee {
         sendChannelMessage("mute", Main.getMB().getServerId(), "" + muteUUID,
                 muteName, "" + muteUntilTime, reason, adminName, "" + adminUUID);
     }
+
+    public RedisBungee getPlugin() {
+        return redisbungee;
+    }
 }

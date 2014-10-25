@@ -6,10 +6,7 @@ import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import org.javalite.activejdbc.LazyList;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Part of net.uhcwork.BungeeGuard.Ban (bungeeguard)
@@ -36,9 +33,14 @@ public class BanManager {
     }
 
     public BungeeBan findBan(UUID uuid) {
-        for (BungeeBan ban : banList) {
+        for (BungeeBan ban : Collections.unmodifiableCollection(banList)) {
             if (ban.getBannedUUID().equals(uuid)) {
-                return ban;
+                if (ban.isBanned())
+                    return ban;
+                else {
+                    unban(ban, "Automatique", "Fin du ban", false);
+                    removeBan(ban);
+                }
             }
         }
         return null;

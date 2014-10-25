@@ -6,29 +6,31 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.ObjectArrays;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.config.ConfigurationAdapter;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Managers.PermissionManager;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class CommandStaff extends Command {
-    public Main plugin;
-    Map<String, ChatColor> groupes = new LinkedHashMap<>();
+    private final PermissionManager PM;
+    private final Main plugin;
     // LinkedHashMap: garde l'ordre d'insertion, ce qui fait que les groupes sont affichés dans le bon ordre
-    MultiBungee MB;
+    private final MultiBungee MB;
+    Map<String, ChatColor> groupes = new LinkedHashMap<>();
 
     public CommandStaff(Main plugin) {
         super("staff");
         this.plugin = plugin;
         MB = Main.getMB();
+        PM = plugin.getPermissionManager();
         groupes.put("admin", ChatColor.RED);
         groupes.put("modo", ChatColor.BLUE);
         groupes.put("yt", ChatColor.GOLD);
@@ -41,18 +43,16 @@ public class CommandStaff extends Command {
                 .append(": ")
                 .create();
         boolean isStaffOnline = false;
-        ConfigurationAdapter config = ProxyServer.getInstance().getConfigurationAdapter();
-
         Multimap<String, String> staff = ArrayListMultimap.create();
         // Permet d'avoir les joueurs par groupe, au lieu de les avoir dans un ordre random
 
 
         playersBoucle:
-        for (String playerName : MB.getHumanPlayersOnline()) {
+        for (UUID playerUUID : MB.getPlayersOnline()) {
             for (String groupeName : groupes.keySet()) {
-                if (config.getGroups(playerName).contains(groupeName)) {
+                if (PM.getUser(playerUUID).inGroup(groupeName)) {
                     isStaffOnline = true;
-                    staff.put(groupeName, playerName);
+                    staff.put(groupeName, MB.getNameFromUuid(playerUUID));
                     continue playersBoucle;
                 }
             }
@@ -73,7 +73,7 @@ public class CommandStaff extends Command {
                                         .append(MB.getProxy(playerName))
                                         .color(ChatColor.DARK_AQUA)
                                         .append("\nGroupes: ")
-                                        .append(Joiner.on(", ").join(config.getGroups(playerName)))
+                                        .append(Joiner.on(", ").join(PM.getUser(playerName).getGroups()))
                                         .color(ChatColor.RED)
                                         .create()));
                     }
