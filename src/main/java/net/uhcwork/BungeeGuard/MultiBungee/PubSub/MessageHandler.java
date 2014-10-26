@@ -57,7 +57,7 @@ public class MessageHandler {
         for (UUID uuid : plugin.getSpies()) {
             try {
                 admin = ProxyServer.getInstance().getPlayer(uuid);
-                mp = new ComponentBuilder("[").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("] ").color(ChatColor.GRAY).append(sender).append(": /msg ").append(Main.getMB().getNameFromUuid(receiver) + " ").create();
+                mp = new ComponentBuilder("[").color(ChatColor.GRAY).append("SPY").color(ChatColor.RED).append("] ").color(ChatColor.AQUA).append(sender).append(" > /msg ").append(Main.getMB().getNameFromUuid(receiver) + " ").create();
                 admin.sendMessage(ObjectArrays.concat(mp, contenu, BaseComponent.class));
             } catch (Exception ignored) {
             }
