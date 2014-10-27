@@ -38,7 +38,6 @@ public class MuteManager {
                     return mute;
                 else {
                     unmute(mute, "Automatique", "Fin du mute", true);
-                    removeMute(mute);
                 }
             }
         }

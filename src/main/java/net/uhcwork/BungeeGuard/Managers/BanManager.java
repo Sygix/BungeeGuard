@@ -39,7 +39,6 @@ public class BanManager {
                     return ban;
                 else {
                     unban(ban, "Automatique", "Fin du ban", false);
-                    removeBan(ban);
                 }
             }
         }

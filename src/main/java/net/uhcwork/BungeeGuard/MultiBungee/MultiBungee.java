@@ -302,7 +302,10 @@ public class MultiBungee {
      * @since 0.3.2
      */
     public final String getNameFromUuid(UUID uuid, boolean expensiveLookups) {
-        return api.getNameFromUuid(uuid, expensiveLookups);
+        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(uuid);
+        if (p == null || p.getUniqueId() == null)
+            return api.getNameFromUuid(uuid, expensiveLookups);
+        return p.getName();
     }
 
     /**
@@ -320,6 +323,7 @@ public class MultiBungee {
      * @since 0.3
      */
     public final UUID getUuidFromName(String name) {
+
         return api.getUuidFromName(name, true);
     }
 
@@ -336,7 +340,10 @@ public class MultiBungee {
      * @since 0.3.2
      */
     public final UUID getUuidFromName(String name, boolean expensiveLookups) {
-        return api.getUuidFromName(name, expensiveLookups);
+        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(name);
+        if (p == null || p.getUniqueId() == null)
+            return api.getUuidFromName(name, expensiveLookups);
+        return p.getUniqueId();
     }
 
     public final void notifyStaff(String message) {
