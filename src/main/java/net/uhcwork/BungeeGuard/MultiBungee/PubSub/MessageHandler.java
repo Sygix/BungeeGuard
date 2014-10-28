@@ -59,7 +59,7 @@ public class MessageHandler {
                 admin = ProxyServer.getInstance().getPlayer(uuid);
                 mp = new ComponentBuilder("[").color(ChatColor.GRAY)
                         .append("SPY").color(ChatColor.RED)
-                        .append("] ")
+                        .append("] ").color(ChatColor.GRAY)
                         .append(sender).color(ChatColor.AQUA)
                         .append(" > /msg ").color(ChatColor.WHITE)
                         .append(Main.getMB().getNameFromUuid(receiver) + " ").create();
