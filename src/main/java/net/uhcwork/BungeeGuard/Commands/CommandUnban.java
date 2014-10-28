@@ -28,6 +28,7 @@ public class CommandUnban extends Command {
 
         if (args.length == 0) {
             sender.sendMessage(new ComponentBuilder("Usage: /unban <pseudo> [reason]").color(ChatColor.RED).create());
+            return;
         }
         String unbanReason = "";
         String unbanName = (sender instanceof ProxiedPlayer) ? sender.getName() : "UHConsole";
