@@ -72,7 +72,6 @@ public class ShopTask implements Runnable {
     private void broadcast(Map<String, Object> params) {
         Preconditions.checkArgument(params.containsKey("message"));
         String message = (String) params.get("message");
-        System.out.println("[SHOP] Broadcast lobbies: " + message);
         List<String> serversList = new ArrayList<>();
 
         for (LobbyManager.Lobby server : plugin.getLM().getLobbies()) {
@@ -87,7 +86,6 @@ public class ShopTask implements Runnable {
     private void say(Map<String, Object> params) {
         Preconditions.checkArgument(params.containsKey("message"));
         String message = (String) params.get("message");
-        System.out.println("[SHOP] Broadcast *: " + message);
         Main.getMB().broadcastServers("*", message);
 
     }
@@ -97,7 +95,6 @@ public class ShopTask implements Runnable {
         Preconditions.checkArgument(params.containsKey("time"));
         String pseudo = (String) params.get("pseudo");
         String duration = (String) params.get("time");
-        System.out.println("[SHOP] Add VIP for " + pseudo + " (" + duration + ")");
         plugin.getProxy().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), "user " + pseudo + " add vip " + duration);
     }
 
@@ -106,12 +103,10 @@ public class ShopTask implements Runnable {
         String pseudo = (String) params.get("pseudo");
         if (params.containsKey("set")) {
             double amount = (double) params.get("set");
-            System.out.println("[SHOP] Set " + amount + " coins to " + pseudo);
             plugin.getProxy().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), "wallet set " + pseudo + " " + (int) amount);
         }
         if (params.containsKey("add")) {
             double amount = (double) params.get("add");
-            System.out.println("[SHOP] Add " + amount + " coins to " + pseudo);
             plugin.getProxy().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), "wallet add " + pseudo + " " + (int) amount);
         }
     }

@@ -52,7 +52,6 @@ public class Main extends Plugin {
     MysqlConfigAdapter config;
     private long startTime;
     private List<String> silencedServers = new ArrayList<>();
-    private HashMap<UUID, String> gtp = new HashMap<>();
     @Getter
     private PartyManager PM = new PartyManager();
     @Getter
@@ -113,8 +112,6 @@ public class Main extends Plugin {
                     System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :)");
                     setup();
                     value = callable.call();
-                } catch (Exception e) {
-                    e.printStackTrace();
                 } finally {
                     System.out.println("[ORM] Fermeture pour " + Thread.currentThread().toString() + " ... :D");
                     cleanup();
@@ -214,7 +211,7 @@ public class Main extends Plugin {
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
                 CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
                 CommandPoints.class, CommandWallet.class, CommandFind.class, CommandStaff.class,
-                CommandUser.class, CommandGroups.class);
+                CommandUser.class, CommandGroups.class, CommandGtpHere.class);
 
         for (Class<? extends Command> commande : commandes) {
             try {
@@ -241,11 +238,6 @@ public class Main extends Plugin {
     public void onDisable() {
         getProxy().getScheduler().cancel(this);
         executorService.shutdown();
-    }
-
-    public void addGtp(UUID uuid, String playerName) {
-        gtp.put(uuid, playerName);
-
     }
 
     public boolean isSilenced(String servName) {
@@ -285,10 +277,6 @@ public class Main extends Plugin {
 
     public UUID getReply(UUID uniqueId) {
         return reply.containsKey(uniqueId) ? reply.get(uniqueId) : null;
-    }
-
-    public HashMap<UUID, String> getGTP() {
-        return gtp;
     }
 
     public boolean isPremadeMessage(String slug) {

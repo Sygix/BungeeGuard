@@ -26,6 +26,31 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class BungeeGuardListener implements Listener {
+    private static final ServerPing.PlayerInfo[] playersPing;
+
+    static {
+        List<String> lines = new ArrayList<>();
+        lines.add(ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "         " + ChatColor.RESET + "" + ChatColor.BOLD + "«" + ChatColor.GOLD + "" + ChatColor.BOLD + " UHC " + ChatColor.AQUA + "" + ChatColor.BOLD + "Network " + ChatColor.RESET + "" + ChatColor.BOLD + "»" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "         ");
+        lines.add(ChatColor.GRAY + " ");
+        lines.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Un serveur de jeux UltraHardCore !");
+        lines.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "  Stress, Difficulté, Travail d'équipe");
+        lines.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "      Vous allez aimer UHCGames !");
+        lines.add(ChatColor.GRAY + " ");
+        lines.add(ChatColor.GRAY + "➟ " + ChatColor.RED + "Kill The Patrick");
+        lines.add(ChatColor.GRAY + "➟ " + ChatColor.YELLOW + "Ultra HungerGames");
+        lines.add(ChatColor.GRAY + "➟ " + ChatColor.BLUE + "Rush");
+        lines.add(ChatColor.GRAY + "➟ " + ChatColor.AQUA + "Fatality");
+        lines.add(ChatColor.GRAY + "➟ " + ChatColor.LIGHT_PURPLE + "Tower");
+        lines.add(ChatColor.GRAY + "➟ " + ChatColor.GREEN + "FightOnFaces");
+        lines.add(ChatColor.GRAY + "Et bien d'autres jeux ...");
+
+
+        ServerPing.PlayerInfo[] players = new ServerPing.PlayerInfo[lines.size()];
+        for (int i = 0; i < players.length; i++) {
+            players[i] = new ServerPing.PlayerInfo(lines.get(i), "");
+        }
+        playersPing = players;
+    }
     public Main plugin;
     BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
             .color(ChatColor.GOLD)
@@ -43,32 +68,34 @@ public class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onLogin(final LoginEvent event) {
+        event.registerIntent(plugin);
         String hostString = event.getConnection().getVirtualHost().getHostString().toLowerCase();
         if (!Permissions.hasPerm(event.getConnection().getName(), "bungee.canBypassHost") &&
                 !plugin.getConfig().getForcedHosts().containsKey(hostString)) {
             event.setCancelled(true);
             event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
-            return;
-        }
+        } else {
 
 
-        ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
-            @Override
-            public void run() {
-                plugin.getWM().getAccount(event.getConnection().getUniqueId());
+            ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    plugin.getWM().getAccount(event.getConnection().getUniqueId());
+                }
+            }, 10, TimeUnit.MILLISECONDS);
+
+            BungeeBan ban = BungeeGuardUtils.getBan(event.getConnection().getUniqueId());
+            if (ban != null) {
+                if (ban.isBanned()) {
+                    event.setCancelled(true);
+                    event.setCancelReason(ban.getBanMessage());
+                    return;
+                }
+                plugin.getBM().unban(ban, "TimeEnd", "Automatique", true);
+                Main.getMB().unban(event.getConnection().getUniqueId());
             }
-        }, 10, TimeUnit.MILLISECONDS);
-
-        BungeeBan ban = BungeeGuardUtils.getBan(event.getConnection().getUniqueId());
-        if (ban != null) {
-            if (ban.isBanned()) {
-                event.setCancelled(true);
-                event.setCancelReason(ban.getBanMessage());
-                return;
-            }
-            plugin.getBM().unban(ban, "TimeEnd", "Automatique", true);
-            Main.getMB().unban(event.getConnection().getUniqueId());
         }
+        event.completeIntent(plugin);
     }
 
     @EventHandler
@@ -104,20 +131,6 @@ public class BungeeGuardListener implements Listener {
             if (party != null && party.isOwner(p)) {
                 Main.getMB().summonParty(party.getName(), e.getTarget().getName());
             }
-        }
-    }
-
-    @EventHandler
-    public void onServerConnected(final ServerConnectedEvent e) {
-        final ProxiedPlayer p = e.getPlayer();
-        if (plugin.getGTP().containsKey(p.getUniqueId())) {
-            ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    p.chat("/tp " + plugin.getGTP().get(p.getUniqueId()));
-                    plugin.getGTP().remove(p.getUniqueId());
-                }
-            }, 10, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -183,33 +196,13 @@ public class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onProxyPing(ProxyPingEvent e) {
+        e.registerIntent(plugin);
         ServerPing sp = e.getResponse();
         sp.getPlayers().setMax(plugin.getConfig().getMaxPlayers());
         sp.getPlayers().setOnline(Main.getMB().getPlayerCount());
         sp.setDescription(plugin.getConfig().getMotd());
-
-        List<String> lines = new ArrayList<>();
-
-        lines.add(ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "         " + ChatColor.RESET + "" + ChatColor.BOLD + "«" + ChatColor.GOLD + "" + ChatColor.BOLD + " UHC " + ChatColor.AQUA + "" + ChatColor.BOLD + "Network " + ChatColor.RESET + "" + ChatColor.BOLD + "»" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "         ");
-        lines.add(ChatColor.GRAY + " ");
-        lines.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Un serveur de jeux UltraHardCore !");
-        lines.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "  Stress, Difficulté, Travail d'équipe");
-        lines.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "      Vous allez aimer UHCGames !");
-        lines.add(ChatColor.GRAY + " ");
-        lines.add(ChatColor.GRAY + "➟ " + ChatColor.RED + "Kill The Patrick");
-        lines.add(ChatColor.GRAY + "➟ " + ChatColor.YELLOW + "Ultra HungerGames");
-        lines.add(ChatColor.GRAY + "➟ " + ChatColor.BLUE + "Rush");
-        lines.add(ChatColor.GRAY + "➟ " + ChatColor.AQUA + "Fatality");
-        lines.add(ChatColor.GRAY + "➟ " + ChatColor.LIGHT_PURPLE + "Tower");
-        lines.add(ChatColor.GRAY + "➟ " + ChatColor.GREEN + "FightOnFaces");
-        lines.add(ChatColor.GRAY + "Et bien d'autres jeux ...");
-
-
-        ServerPing.PlayerInfo[] players = new ServerPing.PlayerInfo[lines.size()];
-        for (int i = 0; i < players.length; i++) {
-            players[i] = new ServerPing.PlayerInfo(lines.get(i), "");
-        }
-        e.getResponse().getPlayers().setSample(players);
+        e.getResponse().getPlayers().setSample(playersPing);
+        e.completeIntent(plugin);
     }
 
     @EventHandler
