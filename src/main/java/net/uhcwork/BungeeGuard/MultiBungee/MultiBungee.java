@@ -488,4 +488,12 @@ public class MultiBungee {
     public RedisBungee getPlugin() {
         return redisbungee;
     }
+
+    public void gtp(String playerName, String to_player) {
+        sendChannelMessage("gtp", playerName, to_player);
+    }
+
+    public void runCommand(String playerName, String command) {
+        sendChannelMessage("runCommand", playerName, command);
+    }
 }

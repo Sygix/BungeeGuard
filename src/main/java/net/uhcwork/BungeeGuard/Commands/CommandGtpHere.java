@@ -1,20 +1,29 @@
 package net.uhcwork.BungeeGuard.Commands;
 
+/**
+ * Part of net.uhcwork.BungeeGuard.Commands (BungeeGuard)
+ * Date: 29/10/2014
+ * Time: 24:11
+ * May be open-source & be sold (by mguerreiro, of course !)
+ */
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
-public class CommandGtp extends Command {
+import java.util.UUID;
+
+
+public class CommandGtpHere extends Command {
     public Main plugin;
 
-    public CommandGtp(Main plugin) {
-        super("gtp", "bungee.gtp");
+    public CommandGtpHere(Main plugin) {
+        super("gtphere", "bungee.gtphere", "gs");
         this.plugin = plugin;
     }
 
@@ -26,18 +35,19 @@ public class CommandGtp extends Command {
         ProxiedPlayer p = (ProxiedPlayer) sender;
 
         if (args.length != 1) {
-            BungeeGuardUtils.msgPluginCommand(sender);
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Usage: /gs <pseudo>"));
             return;
         }
-        String playerName = args[0];
         MultiBungee MB = Main.getMB();
-        if (MB.isPlayerOnline(playerName)) {
+        String playerName = args[0];
+        UUID u = MB.getUuidFromName(playerName);
+        if (u == null || MB.isPlayerOnline(playerName)) {
             ServerInfo server = MB.getServerFor(playerName);
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Téléportation vers " + ChatColor.BLUE + playerName + ChatColor.GREEN + " dans le monde " + ChatColor.GOLD + Main.getPrettyServerName(server.getName()) + ChatColor.RESET + ChatColor.GOLD + "(" + server.getName() + ")" + ChatColor.GREEN + "..."));
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Envoi de " + playerName + " vers vous ..."));
             if (server.getName().equalsIgnoreCase(((ProxiedPlayer) sender).getServer().getInfo().getName())) {
-                p.chat("/tp " + playerName);
+                p.chat("/tp " + args[0] + " " + p.getName());
             } else {
-                MB.gtp(p.getName(), playerName);
+                MB.gtp(playerName, sender.getName());
             }
         } else {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Erreur: Ce joueur n'est pas en ligne"));

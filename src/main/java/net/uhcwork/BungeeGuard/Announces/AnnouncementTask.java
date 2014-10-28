@@ -112,7 +112,9 @@ public class AnnouncementTask implements Runnable {
 
     private void advanced(String key) {
         int val = index.get(key);
-
+        // Avantage face au modulo:
+        // Cette fonction supporte un changement dans la liste
+        // Alors qu'un modulo risque de redonner plusieurs fois le meme message
         if (val + 1 == AM.getAnnouncements().size())
             index.put(key, 0);
         else
