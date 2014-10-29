@@ -34,7 +34,7 @@ public class CommandBCast extends Command {
 
             List<String> serversList = new ArrayList<>();
 
-            for (LobbyManager.Lobby server : plugin.getLM().getLobbies()) {
+            for (LobbyManager.Lobby server : plugin.getLobbyManager().getLobbies()) {
                 if (server == null || !server.isOnline())
                     continue;
                 serversList.add(server.getName());

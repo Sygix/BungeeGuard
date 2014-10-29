@@ -35,12 +35,12 @@ public class CommandReply extends Command {
             return;
         }
 
-        BungeeMute mute = plugin.getMM().findMute(p.getUniqueId());
+        BungeeMute mute = plugin.getMuteManager().findMute(p.getUniqueId());
         if (mute != null) {
             if (mute.isMute()) {
                 p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
             } else {
-                plugin.getMM().unmute(mute, "TimeEnd", "Automatique", true);
+                plugin.getMuteManager().unmute(mute, "TimeEnd", "Automatique", true);
                 Main.getMB().unmutePlayer(p.getUniqueId());
             }
             return;
@@ -64,11 +64,11 @@ public class CommandReply extends Command {
             p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());
             return;
         }
-        if (plugin.getIM().playerIgnores(destinataire, p.getUniqueId()) && !p.hasPermission("bungee.ignore.ignore")) {
+        if (plugin.getIgnoreManager().playerIgnores(destinataire, p.getUniqueId()) && !p.hasPermission("bungee.ignore.ignore")) {
             p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
             return;
         }
-        if (plugin.getIM().playerIgnores(p.getUniqueId(), destinataire) && !p.hasPermission("bungee.ignore.ignore")) {
+        if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), destinataire) && !p.hasPermission("bungee.ignore.ignore")) {
             p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
             return;
         }

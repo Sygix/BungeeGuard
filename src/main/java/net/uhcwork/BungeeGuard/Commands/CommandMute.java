@@ -21,7 +21,7 @@ public class CommandMute extends Command {
     public CommandMute(Main plugin) {
         super("mute", "bungee.mute");
         this.plugin = plugin;
-        this.MM = plugin.getMM();
+        this.MM = plugin.getMuteManager();
     }
 
     @Override

@@ -53,22 +53,22 @@ public class Main extends Plugin {
     private long startTime;
     private List<String> silencedServers = new ArrayList<>();
     @Getter
-    private PartyManager PM = new PartyManager();
+    private PartyManager partyManager = new PartyManager();
     @Getter
-    private BanManager BM = new BanManager(this);
+    private BanManager banManager = new BanManager(this);
     @Getter
-    private MuteManager MM = new MuteManager(this);
+    private MuteManager muteManager = new MuteManager(this);
     @Getter
-    private LobbyManager LM = new LobbyManager(this);
+    private LobbyManager lobbyManager = new LobbyManager(this);
     @Getter
-    private IgnoreManager IM = new IgnoreManager(this);
+    private IgnoreManager ignoreManager = new IgnoreManager(this);
     @Getter
-    private AntiSpamListener AS = new AntiSpamListener();
+    private AntiSpamListener antiSpamListener = new AntiSpamListener();
     @Getter
-    private AnnouncementManager AM = new AnnouncementManager(this);
+    private AnnouncementManager announcementManager = new AnnouncementManager(this);
     private int broadcastDelay = 180;
     @Getter
-    private WalletManager WM = new WalletManager(this);
+    private WalletManager walletManager = new WalletManager(this);
     @Getter
     private ExecutorService executorService;
 
@@ -175,7 +175,7 @@ public class Main extends Plugin {
 
     private void fetchParties() {
         List<String> server = MB.getAllServers();
-        PM = new PartyManager();
+        partyManager = new PartyManager();
         for (String s : server) {
             if (!s.equals(MB.getServerId())) {
                 System.out.println("RequestParties: " + s);
@@ -190,9 +190,9 @@ public class Main extends Plugin {
     public void onEnable() {
         MB.init();
 
-        BM.loadBans();
-        MM.loadMutes();
-        LM.setupPingTask();
+        banManager.loadBans();
+        muteManager.loadMutes();
+        lobbyManager.setupPingTask();
 
         BungeeGuardListener BGListener = new BungeeGuardListener(this);
 

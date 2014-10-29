@@ -20,7 +20,7 @@ public class BanHandler {
     public void ban(PubSubMessageEvent e) {
         if (e.getArg(0).equals(BungeeGuardUtils.getServerID()))
             return;
-        BanManager BM = Main.plugin.getBM();
+        BanManager BM = Main.plugin.getBanManager();
         BM.ban(UUID.fromString(e.getArg(1)), e.getArg(2), Long.parseLong(e.getArg(3)), e.getArg(4), e.getArg(5),
                 UUID.fromString(e.getArg(6)), false);
     }
@@ -30,7 +30,7 @@ public class BanHandler {
         if (e.getArg(0).equals(BungeeGuardUtils.getServerID()))
             return;
         UUID muteUUID = UUID.fromString(e.getArg(1));
-        BanManager BM = Main.plugin.getBM();
+        BanManager BM = Main.plugin.getBanManager();
         BungeeBan ban = BM.findBan(muteUUID);
         BM.removeBan(ban);
     }

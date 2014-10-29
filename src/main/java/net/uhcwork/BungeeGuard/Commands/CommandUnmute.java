@@ -19,7 +19,7 @@ public class CommandUnmute extends Command {
     public CommandUnmute(Main plugin) {
         super("unmute", "bungee.mute");
         this.plugin = plugin;
-        this.MM = plugin.getMM();
+        this.MM = plugin.getMuteManager();
     }
 
     @Override

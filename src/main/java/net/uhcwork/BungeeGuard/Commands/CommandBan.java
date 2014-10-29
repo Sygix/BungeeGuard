@@ -21,7 +21,7 @@ public class CommandBan extends PlayerCommand {
     public CommandBan(Main plugin) {
         super("ban", "bungee.ban");
         this.plugin = plugin;
-        this.BM = plugin.getBM();
+        this.BM = plugin.getBanManager();
     }
 
     @Override

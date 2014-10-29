@@ -189,7 +189,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         List<BungeeBlockedCommands> blockedCommands = BungeeBlockedCommands.findAll();
         plugin.setForbiddenCommands(blockedCommands);
         List<BungeeAnnouncements> announcements = BungeeAnnouncements.findAll();
-        plugin.getAM().setAnnouncements(announcements);
+        plugin.getAnnouncementManager().setAnnouncements(announcements);
         plugin.setBroadcastDelay(conf.getBroadcastDelay());
     }
 
