@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class BungeeGuardListener implements Listener {
+class BungeeGuardListener implements Listener {
     private static final ServerPing.PlayerInfo[] playersPing;
 
     static {
@@ -54,11 +54,11 @@ public class BungeeGuardListener implements Listener {
         playersPing = players;
     }
 
-    public Main plugin;
-    BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
+    private final Main plugin;
+    private final BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
             .color(ChatColor.GOLD)
             .bold(true).create();
-    BaseComponent[] footer = new ComponentBuilder("Store")
+    private final BaseComponent[] footer = new ComponentBuilder("Store")
             .color(ChatColor.RED)
             .bold(true)
             .append(".UHCGames.com")

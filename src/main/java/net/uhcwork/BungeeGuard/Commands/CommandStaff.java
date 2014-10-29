@@ -21,14 +21,12 @@ import java.util.UUID;
 
 public class CommandStaff extends Command {
     private final PermissionManager PM;
-    private final Main plugin;
     // LinkedHashMap: garde l'ordre d'insertion, ce qui fait que les groupes sont affichés dans le bon ordre
     private final MultiBungee MB;
-    Map<String, ChatColor> groupes = new LinkedHashMap<>();
+    private final Map<String, ChatColor> groupes = new LinkedHashMap<>();
 
     public CommandStaff(Main plugin) {
         super("staff");
-        this.plugin = plugin;
         MB = Main.getMB();
         PM = plugin.getPermissionManager();
         groupes.put("admin", ChatColor.RED);

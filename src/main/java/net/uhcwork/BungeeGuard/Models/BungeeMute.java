@@ -41,7 +41,7 @@ public class BungeeMute extends Model {
         setLong("unmute", unmuteTime);
     }
 
-    public String getReason() {
+    String getReason() {
         return getString("reason");
     }
 
@@ -51,11 +51,11 @@ public class BungeeMute extends Model {
         setString("reason", reason);
     }
 
-    public long getUntilTimestamp() {
+    long getUntilTimestamp() {
         return getLong("mute");
     }
 
-    public String getAdminName() {
+    String getAdminName() {
         return getString("nameAdmin");
     }
 
@@ -87,7 +87,7 @@ public class BungeeMute extends Model {
         return Main.ADMIN_TAG + ChatColor.AQUA + getAdminName() + ChatColor.RED + " a mute " + ChatColor.GREEN + getMutedName() + ChatColor.RED + duration + reason;
     }
 
-    public String getMutedName() {
+    String getMutedName() {
         return getString("nameMute");
     }
 

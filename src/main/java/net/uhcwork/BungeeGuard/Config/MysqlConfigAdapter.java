@@ -17,9 +17,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class MysqlConfigAdapter implements ConfigurationAdapter {
-    private Main plugin;
+    private final Main plugin;
+    private final HashMap<String, ServerInfo> servers = new HashMap<>();
     private String host;
-    private HashMap<String, ServerInfo> servers = new HashMap<>();
     private ListenerInfo listener = null;
     private Map<String, String> forced_hosts;
     private BungeeConfig options;
@@ -89,7 +89,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         return servers;
     }
 
-    public void setServers(HashMap<String, ServerInfo> _servers) {
+    void setServers(HashMap<String, ServerInfo> _servers) {
         servers.clear();
         servers.putAll(_servers);
     }

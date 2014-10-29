@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DateUtil {
-    private static Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE);
+    private static final Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE);
 
     public static Long parseDateDiff(String time, boolean future) {
         Matcher m = timePattern.matcher(time);
@@ -86,7 +86,7 @@ public class DateUtil {
         return c.getTimeInMillis();
     }
 
-    static int dateDiff(int type, Calendar fromDate, Calendar toDate, boolean future) {
+    private static int dateDiff(int type, Calendar fromDate, Calendar toDate, boolean future) {
         int diff = 0;
         long savedDate = fromDate.getTimeInMillis();
         while ((future && !fromDate.after(toDate)) || (!future && !fromDate.before(toDate))) {
@@ -106,7 +106,7 @@ public class DateUtil {
         return DateUtil.formatDateDiff(now, c);
     }
 
-    public static String formatDateDiff(Calendar fromDate, Calendar toDate) {
+    private static String formatDateDiff(Calendar fromDate, Calendar toDate) {
         boolean future = false;
         if (toDate.equals(fromDate)) {
             return "0 seconde";

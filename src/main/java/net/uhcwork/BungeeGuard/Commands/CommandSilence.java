@@ -10,7 +10,7 @@ import net.uhcwork.BungeeGuard.Main;
 
 public class CommandSilence extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandSilence(Main plugin) {
         super("silence", "bungee.silence");

@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class CommandCheck extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandCheck(Main plugin) {
         super("check", "bungee.check");

@@ -17,8 +17,8 @@ import java.util.*;
 @EqualsAndHashCode
 @ToString
 public class User {
-    Set<UserModel> groupes = new HashSet<>();
-    UUID uuid;
+    final Set<UserModel> groupes = new HashSet<>();
+    final UUID uuid;
 
     public User(UUID u, List<UserModel> um) {
         this.uuid = u;

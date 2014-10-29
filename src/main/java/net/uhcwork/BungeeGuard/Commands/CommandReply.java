@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class CommandReply extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandReply(Main plugin) {
         super("r", "bungee.reply", "reply");

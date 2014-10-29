@@ -12,10 +12,6 @@ import org.javalite.activejdbc.annotations.Table;
 @Table("bungee_config")
 public class BungeeConfig extends Model {
 
-    public String getPermissions() {
-        return getString("permissions");
-    }
-
     public String getMotd() {
         return getString("motd");
     }

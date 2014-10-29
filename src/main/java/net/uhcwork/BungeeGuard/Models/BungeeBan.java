@@ -66,7 +66,7 @@ public class BungeeBan extends Model {
         setBoolean("status", status);
     }
 
-    public boolean isDefBanned() {
+    boolean isDefBanned() {
         return getUntilTimestamp() == -1;
     }
 
@@ -78,7 +78,7 @@ public class BungeeBan extends Model {
         setString("unbanName", adminName);
     }
 
-    public String getBannedName() {
+    String getBannedName() {
         return getString("nameBanned");
     }
 

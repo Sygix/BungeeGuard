@@ -7,7 +7,7 @@ import net.uhcwork.BungeeGuard.Main;
 
 public class CommandSay extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandSay(Main plugin) {
         super("say", "bungee.say");

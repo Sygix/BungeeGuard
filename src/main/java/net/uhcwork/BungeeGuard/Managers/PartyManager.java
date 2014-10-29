@@ -21,7 +21,7 @@ import java.util.*;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class PartyManager {
-    Map<String, Party> parties = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private Map<String, Party> parties = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public Map<String, Party> getParties() {
         clean();
@@ -108,18 +108,18 @@ public class PartyManager {
      */
     public static class Party implements Serializable {
         private static final long serialVersionUID = 7009960713031110863L;
+        final List<UUID> chatMembers = new ArrayList<>();
+        @Getter
+        @Setter
+        final
+        List<UUID> members = new ArrayList<>();
+        final List<UUID> invitations = new ArrayList<>();
         @Getter
         @Setter
         String name = "";
         @Getter
         @Setter
         UUID owner = UUID.randomUUID();
-        List<UUID> chatMembers = new ArrayList<>();
-        @Getter
-        @Setter
-        List<UUID> members = new ArrayList<>();
-        List<UUID> invitations = new ArrayList<>();
-
         @Getter
         @Setter
         boolean publique = false;

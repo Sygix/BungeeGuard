@@ -19,10 +19,10 @@ import java.util.UUID;
 
 public class CommandWallet extends Command {
 
-    Main plugin;
-    WalletManager WM;
-    MultiBungee MB;
-    String prefix = "[" + ChatColor.AQUA + "Wallet" + ChatColor.RESET + "] ";
+    private final Main plugin;
+    private final WalletManager WM;
+    private final MultiBungee MB;
+    private final String prefix = "[" + ChatColor.AQUA + "Wallet" + ChatColor.RESET + "] ";
 
     public CommandWallet(Main plugin) {
         super("wallet", "bungee.wallet.admin");
@@ -84,7 +84,7 @@ public class CommandWallet extends Command {
                 int amount = Integer.parseInt(args[2]);
                 WM.setBalance(uuid, amount);
                 sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le compte du joueur " + ChatColor.AQUA + name + ChatColor.GRAY + " a été defini à " + ChatColor.GREEN + amount + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
-            } else if (args[0].equalsIgnoreCase("add")) {
+            } else if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("sub")) {
                 name = args[1];
                 uuid = MB.getUuidFromName(name);
                 if (uuid == null) {
@@ -92,18 +92,8 @@ public class CommandWallet extends Command {
                     return;
                 }
                 int amount = Integer.parseInt(args[2]);
+                amount *= (args[0].equalsIgnoreCase("sub") ? -1 : 1);
                 WM.addToBalance(uuid, amount);
-                sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le compte du joueur " + ChatColor.AQUA + name + ChatColor.GRAY + " a été crédité de " + ChatColor.GREEN + amount + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
-                sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le nouveau solde de " + ChatColor.AQUA + name + ChatColor.GRAY + " est de " + ChatColor.GREEN + WM.getBalance(uuid) + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
-            } else if (args[0].equalsIgnoreCase("sub")) {
-                name = args[1];
-                uuid = MB.getUuidFromName(name);
-                if (uuid == null) {
-                    sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inconnu"));
-                    return;
-                }
-                int amount = Integer.parseInt(args[2]);
-                WM.addToBalance(uuid, -amount);
                 sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le compte du joueur " + ChatColor.AQUA + name + ChatColor.GRAY + " a été crédité de " + ChatColor.GREEN + amount + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
                 sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le nouveau solde de " + ChatColor.AQUA + name + ChatColor.GRAY + " est de " + ChatColor.GREEN + WM.getBalance(uuid) + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
             }
@@ -113,10 +103,8 @@ public class CommandWallet extends Command {
     private void help(CommandSender sender) {
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet " + ChatColor.GRAY + "[help/?]"));
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet " + ChatColor.GRAY + "<player>"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet set " + ChatColor.GRAY + "<player> <amount>"));
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet reset " + ChatColor.GRAY + "<player>"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet add " + ChatColor.GRAY + "<player> <amount>"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet sub " + ChatColor.GRAY + "<player> <amount>"));
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet (set,add,sub) " + ChatColor.GRAY + "<player> <amount>"));
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet toggle " + ChatColor.GRAY + "<player>"));
     }
 }

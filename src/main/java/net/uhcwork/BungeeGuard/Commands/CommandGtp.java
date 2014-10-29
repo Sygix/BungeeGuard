@@ -11,7 +11,7 @@ import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 public class CommandGtp extends Command {
-    public Main plugin;
+    private final Main plugin;
 
     public CommandGtp(Main plugin) {
         super("gtp", "bungee.gtp");

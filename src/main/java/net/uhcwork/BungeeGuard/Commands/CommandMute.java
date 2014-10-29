@@ -1,5 +1,6 @@
 package net.uhcwork.BungeeGuard.Commands;
 
+import com.google.common.base.Joiner;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -11,12 +12,13 @@ import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.MuteManager;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class CommandMute extends Command {
 
-    public Main plugin;
-    private MuteManager MM;
+    private final Main plugin;
+    private final MuteManager MM;
 
     public CommandMute(Main plugin) {
         super("mute", "bungee.mute");
@@ -44,22 +46,11 @@ public class CommandMute extends Command {
 
         long muteUntilTime = System.currentTimeMillis() + muteTime + 1; // 1 seconde de mute gratuite !
 
-        int startArgForReason = (duration) ? 2 : 1;
-
-        String reason = "";
-        if (args.length > startArgForReason) {
-            for (int i = startArgForReason; i < args.length; i++) {
-                reason += " " + args[i];
-            }
-        }
-
-        reason = reason.trim();
+        String reason = Joiner.on(" ").join(Arrays.copyOfRange(args, duration ? 2 : 1, args.length)).trim();
 
         if (plugin.isPremadeMessage(reason))
             reason = plugin.getPremadeMessage(reason);
-
-        if (reason != null)
-            reason = ChatColor.translateAlternateColorCodes('&', reason);
+        reason = ChatColor.translateAlternateColorCodes('&', reason);
 
         String muteName = args[0];
 

@@ -31,7 +31,7 @@ public class Permissions {
         return false;
     }
 
-    public static boolean miniglob(String[] pattern, String line) {
+    private static boolean miniglob(String[] pattern, String line) {
         if (pattern.length == 0)
             return line.isEmpty();
         if (pattern.length == 1)
@@ -53,7 +53,7 @@ public class Permissions {
 
     }
 
-    public static boolean miniglob(String pattern, String line) {
+    private static boolean miniglob(String pattern, String line) {
         // miniglob : parseur de permissions, avec support léger pour les wildcard :)
         // ("a.b.c", "a.b.c") -> true
         // ("a.*", "a.b.c") -> true

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CommandBCast extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandBCast(Main plugin) {
         super("bcast", "bungee.bcast", "broadcast", "bc");

@@ -14,9 +14,9 @@ import java.util.List;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class AnnouncementManager {
-    Main plugin;
+    private final Main plugin;
     @Getter
-    private List<Announcement> announcements = new ArrayList<>();
+    private final List<Announcement> announcements = new ArrayList<>();
 
     public AnnouncementManager(Main main) {
         this.plugin = main;

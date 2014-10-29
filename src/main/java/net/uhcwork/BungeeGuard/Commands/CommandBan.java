@@ -1,5 +1,6 @@
 package net.uhcwork.BungeeGuard.Commands;
 
+import com.google.common.base.Joiner;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -11,12 +12,13 @@ import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.BanManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class CommandBan extends PlayerCommand {
 
-    public Main plugin;
-    BanManager BM;
+    private final Main plugin;
+    private final BanManager BM;
 
     public CommandBan(Main plugin) {
         super("ban", "bungee.ban");
@@ -40,20 +42,12 @@ public class CommandBan extends PlayerCommand {
                 duration = (bannedTime != null && bannedTime > 0);
             }
 
-            int startArgForReason = (duration) ? 2 : 1;
-
-            String reason = "";
-            if (args.length > startArgForReason) {
-                for (int i = startArgForReason; i < args.length; i++) {
-                    reason += " " + args[i];
-                }
-            }
-            reason = reason.trim();
+            String reason = Joiner.on(" ").join(Arrays.copyOfRange(args, duration ? 2 : 1, args.length)).trim();
 
             if (plugin.isPremadeMessage(reason))
                 reason = plugin.getPremadeMessage(reason);
-            if (!reason.isEmpty())
-                reason = ChatColor.translateAlternateColorCodes('&', reason);
+
+            reason = ChatColor.translateAlternateColorCodes('&', reason);
 
             bannedUntilTime = duration ? System.currentTimeMillis() + bannedTime + 1 : -1; // Une seconde de ban gratuite :D
 

@@ -21,22 +21,22 @@ import java.util.UUID;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class CommandParty extends Command {
-    public Main plugin;
-    public PartyManager PM;
-    MultiBungee MB;
-    BaseComponent[] MSG_CREATION = new ComponentBuilder("Vous venez de créer une ").color(ChatColor.GRAY)
+    private final Main plugin;
+    private final PartyManager PM;
+    private final MultiBungee MB;
+    private final BaseComponent[] MSG_CREATION = new ComponentBuilder("Vous venez de créer une ").color(ChatColor.GRAY)
             .append("Party").color(ChatColor.GREEN)
             .append(" !").color(ChatColor.GRAY)
             .create();
-    BaseComponent[] MSG_CREATION2 = new ComponentBuilder("Tapez ").color(ChatColor.GRAY)
+    private final BaseComponent[] MSG_CREATION2 = new ComponentBuilder("Tapez ").color(ChatColor.GRAY)
             .append("/party invite <nom de joueur>").color(ChatColor.GREEN)
             .append(" pour inviter un joueur").color(ChatColor.GRAY)
             .create();
-    BaseComponent[] MSG_CREATION3 = new ComponentBuilder("Tapez ").color(ChatColor.GRAY)
+    private final BaseComponent[] MSG_CREATION3 = new ComponentBuilder("Tapez ").color(ChatColor.GRAY)
             .append("/party help").color(ChatColor.GREEN)
             .append(" pour plus d'informations ...").color(ChatColor.GRAY)
             .create();
-    private CharMatcher partyNameMatcher = CharMatcher.anyOf(".-_").or(CharMatcher.JAVA_LETTER_OR_DIGIT);
+    private final CharMatcher partyNameMatcher = CharMatcher.anyOf(".-_").or(CharMatcher.JAVA_LETTER_OR_DIGIT);
 
 
     public CommandParty(Main plugin) {

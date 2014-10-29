@@ -17,7 +17,7 @@ public class CommandReloadConf extends Command {
     /* reloadConf */
 
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandReloadConf(Main plugin) {
         super("b:rl", "bungee.brl");

@@ -8,7 +8,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 
 public class CommandFind extends Command {
-    Main plugin;
+    private final Main plugin;
 
     public CommandFind(Main plugin) {
         super("find", "bungeecord.command.find");

@@ -20,7 +20,7 @@ import java.util.UUID;
  */
 public class CommandIgnore extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandIgnore(Main plugin) {
         super("ignore", "bungee.ignore");

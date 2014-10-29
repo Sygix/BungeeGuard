@@ -18,9 +18,14 @@ import java.util.Set;
 @EqualsAndHashCode
 @ToString
 public class Group {
-    String id, name, prefix, suffix, color, inherit;
-    Integer weight;
-    Set<String> permissions = new HashSet<>();
+    final String id;
+    final String name;
+    final String prefix;
+    final String suffix;
+    final String color;
+    final String inherit;
+    final Integer weight;
+    final Set<String> permissions = new HashSet<>();
 
     public Group(GroupModel model) {
         id = model.getIdentifier();

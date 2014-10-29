@@ -20,7 +20,7 @@ import java.util.UUID;
 
 
 public class CommandGtpHere extends Command {
-    public Main plugin;
+    private final Main plugin;
 
     public CommandGtpHere(Main plugin) {
         super("gtphere", "bungee.gtphere", "gs");

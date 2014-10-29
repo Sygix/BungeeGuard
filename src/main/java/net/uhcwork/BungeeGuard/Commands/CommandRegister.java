@@ -23,11 +23,11 @@ import java.util.regex.Pattern;
  * Time: 16:42
  * May be open-source & be sold (by mguerreiro, of course !)
  */
-public class CommandRegister extends Command {
+class CommandRegister extends Command {
 
-    public Main plugin;
-    StringTemplate url;
-    String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+    private final Main plugin;
+    private final StringTemplate url;
+    private final String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     public CommandRegister(Main plugin) {

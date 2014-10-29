@@ -17,9 +17,9 @@ import net.uhcwork.BungeeGuard.Permissions.Group;
  */
 public class CommandGroups extends Command {
 
-    public Main plugin;
-    MultiBungee MB;
-    PermissionManager PM;
+    private final Main plugin;
+    private final MultiBungee MB;
+    private final PermissionManager PM;
 
     public CommandGroups(Main plugin) {
         super("groups", "bungee.groups");
