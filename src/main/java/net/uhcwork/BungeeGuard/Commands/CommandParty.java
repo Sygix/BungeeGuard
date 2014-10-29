@@ -1,5 +1,6 @@
 package net.uhcwork.BungeeGuard.Commands;
 
+import com.google.common.base.CharMatcher;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -35,6 +36,7 @@ public class CommandParty extends Command {
             .append("/party help").color(ChatColor.GREEN)
             .append(" pour plus d'informations ...").color(ChatColor.GRAY)
             .create();
+    private CharMatcher partyNameMatcher = CharMatcher.anyOf(".-_").or(CharMatcher.JAVA_LETTER_OR_DIGIT);
 
 
     public CommandParty(Main plugin) {
@@ -42,15 +44,6 @@ public class CommandParty extends Command {
         this.plugin = plugin;
         this.PM = plugin.getPM();
         this.MB = Main.getMB();
-    }
-
-    public static boolean isAlphanumeric(String str) {
-        for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
-            if (c < 0x30 || (c >= 0x3a && c <= 0x40) || (c > 0x5a && c <= 0x60) || c > 0x7a)
-                return false;
-        }
-        return true;
     }
 
     @Override
@@ -296,7 +289,7 @@ public class CommandParty extends Command {
             return;
         }
         String nom = args[1];
-        if (!isAlphanumeric(nom)) {
+        if (!partyNameMatcher.matchesAllOf(nom)) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /party create <nom>"));
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Le nom de votre Party ne peut contenir que des chiffres ou des lettres"));
             return;
