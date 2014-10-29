@@ -17,7 +17,7 @@ import java.util.Collection;
  */
 public class RedisBungeeListener implements Listener {
     private final Main plugin;
-    Collection<Object> handlers = new ArrayList<>();
+    private final Collection<Object> handlers = new ArrayList<>();
 
     public RedisBungeeListener(Main plugin) {
         this.plugin = plugin;
@@ -53,7 +53,7 @@ public class RedisBungeeListener implements Listener {
         dispatchEvent(new PubSubMessageEvent(channel, e.getMessage()));
     }
 
-    public void addHandler(Object handler) {
+    void addHandler(Object handler) {
         this.handlers.add(handler);
     }
 
@@ -61,13 +61,13 @@ public class RedisBungeeListener implements Listener {
         this.handlers.remove(handler);
     }
 
-    public void dispatchEvent(PubSubMessageEvent event) {
+    void dispatchEvent(PubSubMessageEvent event) {
         for (Object handler : handlers) {
             dispatchEventTo(event, handler);
         }
     }
 
-    protected void dispatchEventTo(PubSubMessageEvent event, Object handler) {
+    void dispatchEventTo(PubSubMessageEvent event, Object handler) {
         Collection<Method> methods = findMatchingEventHandlerMethods(handler, event.getChannel());
         for (Method method : methods) {
             try {
@@ -86,7 +86,7 @@ public class RedisBungeeListener implements Listener {
         }
     }
 
-    protected Collection<Method> findMatchingEventHandlerMethods(Object handler, String eventName) {
+    Collection<Method> findMatchingEventHandlerMethods(Object handler, String eventName) {
         Method[] methods = handler.getClass().getDeclaredMethods();
         Collection<Method> result = new ArrayList<>();
         for (Method method : methods) {
@@ -97,7 +97,7 @@ public class RedisBungeeListener implements Listener {
         return result;
     }
 
-    protected String getEventName(Method method) {
+    String getEventName(Method method) {
         PubSubHandler handleEventAnnotation = method.getAnnotation(PubSubHandler.class);
         if (handleEventAnnotation != null) {
             return handleEventAnnotation.value();

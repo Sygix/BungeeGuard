@@ -16,6 +16,9 @@ import java.util.UUID;
  * May be open-source & be sold (by PunKeel, of course !)
  */
 public class BanHandler {
+    /**
+     * @param e A redis pub sub event
+     */
     @PubSubHandler("ban")
     public void ban(PubSubMessageEvent e) {
         if (e.getArg(0).equals(BungeeGuardUtils.getServerID()))
@@ -25,11 +28,14 @@ public class BanHandler {
                 UUID.fromString(e.getArg(6)), false);
     }
 
+    /**
+     * @param event A redis pub sub event
+     */
     @PubSubHandler("unban")
-    public void unban(PubSubMessageEvent e) {
-        if (e.getArg(0).equals(BungeeGuardUtils.getServerID()))
+    public void unban(PubSubMessageEvent event) {
+        if (event.getArg(0).equals(BungeeGuardUtils.getServerID()))
             return;
-        UUID muteUUID = UUID.fromString(e.getArg(1));
+        UUID muteUUID = UUID.fromString(event.getArg(1));
         BanManager BM = Main.plugin.getBanManager();
         BungeeBan ban = BM.findBan(muteUUID);
         BM.removeBan(ban);

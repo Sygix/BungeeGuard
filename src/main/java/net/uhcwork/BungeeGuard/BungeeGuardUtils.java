@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class BungeeGuardUtils {
-    public static Main plugin;
+    private static Main plugin;
     private static String server_id;
 
     public BungeeGuardUtils(Main plugin) {

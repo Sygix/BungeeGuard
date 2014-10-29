@@ -27,15 +27,15 @@ import java.util.regex.Pattern;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class AnnouncementTask implements Runnable {
-    AnnouncementManager AM;
-    Main plugin;
-    private Map<String, Integer> index = Maps.newHashMap();
-    private LoadingCache<String, Pattern> regexCache = CacheBuilder.newBuilder().build(new CacheLoader<String, Pattern>() {
+    private final Map<String, Integer> index = Maps.newHashMap();
+    private final LoadingCache<String, Pattern> regexCache = CacheBuilder.newBuilder().build(new CacheLoader<String, Pattern>() {
         @Override
         public Pattern load(String s) throws Exception {
             return Pattern.compile(s);
         }
     });
+    private AnnouncementManager AM;
+    private Main plugin;
     private int timeSinceLastRun = 0;
 
     @Override

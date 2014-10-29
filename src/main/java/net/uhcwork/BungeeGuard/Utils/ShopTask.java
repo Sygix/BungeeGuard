@@ -19,7 +19,7 @@ import java.util.Map;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class ShopTask implements Runnable {
-    Main plugin;
+    private final Main plugin;
 
     public ShopTask(Main plugin) {
         this.plugin = plugin;

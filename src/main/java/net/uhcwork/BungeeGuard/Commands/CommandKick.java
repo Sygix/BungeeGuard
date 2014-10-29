@@ -1,5 +1,6 @@
 package net.uhcwork.BungeeGuard.Commands;
 
+import com.google.common.base.Joiner;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -7,9 +8,11 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 
+import java.util.Arrays;
+
 public class CommandKick extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandKick(Main plugin) {
         super("kick", "bungee.kick");
@@ -23,13 +26,7 @@ public class CommandKick extends Command {
         if (args.length == 0) {
             sender.sendMessage(new ComponentBuilder("Usage: /kick <pseudo> [reason]").color(ChatColor.RED).create());
         } else {
-            String reason = "";
-            if (args.length > 1) {
-                for (int i = 1; i < args.length; i++) {
-                    reason += " " + args[i];
-                }
-            }
-            reason = reason.trim();
+            String reason = Joiner.on(" ").join(Arrays.copyOfRange(args, 1, args.length)).trim();
             if (plugin.isPremadeMessage(reason))
                 reason = plugin.getPremadeMessage(reason);
 

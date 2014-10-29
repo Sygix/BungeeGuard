@@ -14,7 +14,7 @@ import net.uhcwork.BungeeGuard.Main;
  */
 public class CommandList extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandList(Main plugin) {
         super("list", "", "who", "ls", "playerlist", "online", "plist");

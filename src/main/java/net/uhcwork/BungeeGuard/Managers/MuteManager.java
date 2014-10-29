@@ -20,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class MuteManager {
     final private List<BungeeMute> muteList = new ArrayList<>();
-    Main plugin;
+    private final Main plugin;
 
     public MuteManager(Main plugin) {
         this.plugin = plugin;

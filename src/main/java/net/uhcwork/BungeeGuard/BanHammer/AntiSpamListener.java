@@ -14,8 +14,8 @@ import java.util.UUID;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class AntiSpamListener implements Listener {
-    public HashMap<UUID, String> lastMessage = new HashMap<>();
-    public HashMap<UUID, Integer> duplicateCount = new HashMap<>();
+    private final HashMap<UUID, String> lastMessage = new HashMap<>();
+    private final HashMap<UUID, Integer> duplicateCount = new HashMap<>();
 
     public void onChat(ChatEvent e) {
         if (!(e.getSender() instanceof ProxiedPlayer))

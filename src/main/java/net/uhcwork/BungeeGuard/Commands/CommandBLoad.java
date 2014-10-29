@@ -14,7 +14,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 
 public class CommandBLoad extends Command {
-    public Main plugin;
+    private final Main plugin;
 
     public CommandBLoad(Main plugin) {
         super("b:load", "bungee.bload");

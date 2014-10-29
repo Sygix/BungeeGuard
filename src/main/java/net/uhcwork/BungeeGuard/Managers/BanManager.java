@@ -19,8 +19,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class BanManager {
-    public List<BungeeBan> banList = new ArrayList<>();
-    Main plugin;
+    private final List<BungeeBan> banList = new ArrayList<>();
+    private final Main plugin;
 
     public BanManager(Main plugin) {
         this.plugin = plugin;

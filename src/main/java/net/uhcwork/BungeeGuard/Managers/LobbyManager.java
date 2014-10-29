@@ -26,17 +26,17 @@ import java.util.concurrent.TimeUnit;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class LobbyManager {
-    Predicate<Lobby> isOnline = new Predicate<Lobby>() {
+    private final Predicate<Lobby> isOnline = new Predicate<Lobby>() {
         public boolean apply(Lobby lobby) {
             return lobby != null && lobby.isOnline();
         }
     };
-    Function<Lobby, Double> getScoreFunction = new Function<Lobby, Double>() {
+    private final Function<Lobby, Double> getScoreFunction = new Function<Lobby, Double>() {
         public Double apply(Lobby lobby) {
             return lobby.getScore();
         }
     };
-    private Main plugin;
+    private final Main plugin;
 
     @Getter
     private List<Lobby> lobbies = new ArrayList<>();
@@ -101,13 +101,13 @@ public class LobbyManager {
 
     @Data
     public static class Lobby {
-        private String name = "";
-        private int onlinePlayers = 0;
-        private int maxPlayers = 10;
-        private boolean isOnline = false;
-        private double tps = 0;
+        private final String name = "";
+        private final int onlinePlayers = 0;
+        private final int maxPlayers = 10;
+        private final double tps = 0;
         @Getter(lazy = true)
         private final Double score = score();
+        private boolean isOnline = false;
 
         public Lobby() {
         }

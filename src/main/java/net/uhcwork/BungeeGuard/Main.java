@@ -33,17 +33,24 @@ import java.util.concurrent.*;
 public class Main extends Plugin {
 
     public static final String ADMIN_TAG = ChatColor.RED + "[BungeeGuard] " + ChatColor.RESET;
+    private static final Map<String, String> shortServerNames = new HashMap<>();
+    private static final Map<String, String> premadeMessages = new HashMap<>();
+    private static final List<String> forbiddenCommands = new ArrayList<>();
+    @Getter
+    private static final MultiBungee MB = new MultiBungee();
+    private static final Map<UUID, UUID> reply = new HashMap<>();
+    private static final List<UUID> spy = new ArrayList<>();
+    private static final Map<String, String> prettyServerNames = new HashMap<>();
     public static Main plugin;
     @Getter
     public static Gson gson = new Gson();
-    static Map<String, String> shortServerNames = new HashMap<>();
-    private static Map<String, String> premadeMessages = new HashMap<>();
-    private static List<String> forbiddenCommands = new ArrayList<>();
+    private final List<String> silencedServers = new ArrayList<>();
     @Getter
-    private static MultiBungee MB = new MultiBungee();
-    private static Map<UUID, UUID> reply = new HashMap<>();
-    private static List<UUID> spy = new ArrayList<>();
-    private static Map<String, String> prettyServerNames = new HashMap<>();
+    private final BanManager banManager = new BanManager(this);
+    @Getter
+    private final MuteManager muteManager = new MuteManager(this);
+    @Getter
+    private final LobbyManager lobbyManager = new LobbyManager(this);
     @Getter
     PermissionManager permissionManager = new PermissionManager(this);
     @Getter
@@ -51,15 +58,8 @@ public class Main extends Plugin {
     @Getter
     MysqlConfigAdapter config;
     private long startTime;
-    private List<String> silencedServers = new ArrayList<>();
     @Getter
     private PartyManager partyManager = new PartyManager();
-    @Getter
-    private BanManager banManager = new BanManager(this);
-    @Getter
-    private MuteManager muteManager = new MuteManager(this);
-    @Getter
-    private LobbyManager lobbyManager = new LobbyManager(this);
     @Getter
     private IgnoreManager ignoreManager = new IgnoreManager(this);
     @Getter

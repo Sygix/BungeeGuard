@@ -31,11 +31,9 @@ import java.util.Map;
  */
 public class CommandServer extends Command implements TabExecutor {
 
-    private final Main plugin;
-
     public CommandServer(Main plugin) {
         super("server", "bungeecord.command.server");
-        this.plugin = plugin;
+        Main plugin1 = plugin;
     }
 
     @Override

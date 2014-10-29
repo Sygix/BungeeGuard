@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class CommandMsg extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandMsg(Main plugin) {
         super("msg", "bungee.msg", "m", "w", "tell", "whisper", "mp");

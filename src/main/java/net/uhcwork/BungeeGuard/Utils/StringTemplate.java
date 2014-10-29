@@ -14,12 +14,10 @@ public class StringTemplate {
 
     static final private Pattern keyPattern =
             Pattern.compile("\\$\\{([a-zA-Z][a-zA-Z0-9_]*(\\.[a-zA-Z][a-zA-Z0-9_]*)*)\\}");
-    final private String template;
     final private Matcher m;
     private boolean blanknull = false;
 
     public StringTemplate(String template) {
-        this.template = template;
         this.m = keyPattern.matcher(template);
         setBlankNull();
     }
@@ -44,7 +42,7 @@ public class StringTemplate {
         return sb.toString();
     }
 
-    public StringTemplate setBlankNull() {
+    StringTemplate setBlankNull() {
         this.blanknull = true;
         return this;
     }

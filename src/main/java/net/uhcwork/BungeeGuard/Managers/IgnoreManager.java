@@ -11,14 +11,14 @@ import java.util.*;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class IgnoreManager {
-    Main plugin;
-    Map<UUID, List<UUID>> ignoreList = new HashMap<>();
+    private final Main plugin;
+    private final Map<UUID, List<UUID>> ignoreList = new HashMap<>();
 
     public IgnoreManager(Main plugin) {
         this.plugin = plugin;
     }
 
-    public List<UUID> getIgnoreList(UUID joueur) {
+    List<UUID> getIgnoreList(UUID joueur) {
         List<UUID> liste;
         if (!ignoreList.containsKey(joueur)) {
             liste = new ArrayList<>();

@@ -16,7 +16,7 @@ import net.uhcwork.BungeeGuard.Main;
  */
 public class CommandLobby extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandLobby(Main plugin) {
         super("lobby", "", "leave", "hub", "quit", "spawn");

@@ -10,7 +10,7 @@ import org.javalite.activejdbc.Model;
  */
 
 public class SaveRunner extends VoidRunner {
-    Model model;
+    private final Model model;
 
     public SaveRunner(Model m) {
         this.model = m;

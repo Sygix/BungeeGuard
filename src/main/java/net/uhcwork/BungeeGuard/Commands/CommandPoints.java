@@ -17,8 +17,8 @@ import net.uhcwork.BungeeGuard.Managers.WalletManager;
 import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
 public class CommandPoints extends Command {
-    public Main plugin;
-    WalletManager WM;
+    private final Main plugin;
+    private final WalletManager WM;
 
     public CommandPoints(Main plugin) {
         super("points", "", "money", "coins", "mycoins", "uhcoins", "uhcoin");

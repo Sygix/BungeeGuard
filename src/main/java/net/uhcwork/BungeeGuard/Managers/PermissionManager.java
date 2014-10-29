@@ -23,15 +23,16 @@ import java.util.concurrent.TimeUnit;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class PermissionManager {
-    static Ordering<Group> groupOrderer = new Ordering<Group>() {
+    private static final Ordering<Group> groupOrderer = new Ordering<Group>() {
         public int compare(Group left, Group right) {
             return Ints.compare(left.getWeight(), right.getWeight());
         }
     };
-    Main plugin;
-    Cache<UUID, User> playersCache = CacheBuilder.newBuilder().maximumSize(750).expireAfterWrite(10, TimeUnit.MINUTES).build();
     @Getter
+    final
     Map<String, Group> groups = new HashMap<>();
+    private final Main plugin;
+    private final Cache<UUID, User> playersCache = CacheBuilder.newBuilder().maximumSize(750).expireAfterWrite(10, TimeUnit.MINUTES).build();
 
     public PermissionManager(Main plugin) {
         this.plugin = plugin;
@@ -42,8 +43,7 @@ public class PermissionManager {
             @Override
             protected void run() {
                 Map<String, Group> _groupes = new HashMap<>();
-                LazyList<GroupModel> x = GroupModel.findAll();
-                x.include(PermissionModel.class);
+                LazyList<GroupModel> x = GroupModel.findAll().include(PermissionModel.class);
                 for (GroupModel GM : x) {
                     Group G = new Group(GM);
                     _groupes.put(G.getId(), G);
@@ -79,7 +79,7 @@ public class PermissionManager {
         return groups.containsKey(groupName) ? groups.get(groupName) : null;
     }
 
-    public List<Group> getGroups(Set<String> groups) {
+    List<Group> getGroups(Set<String> groups) {
         Set<Group> _groupes = new HashSet<>();
         _groupes.add(getGroup("default"));
         Group g;
@@ -115,6 +115,6 @@ public class PermissionManager {
     }
 
     public User getUser(String playerName) {
-        return getUser(plugin.getMB().getUuidFromName(playerName));
+        return getUser(Main.getMB().getUuidFromName(playerName));
     }
 }

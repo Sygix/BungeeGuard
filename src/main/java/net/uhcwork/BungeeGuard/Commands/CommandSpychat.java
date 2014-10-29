@@ -15,7 +15,7 @@ import net.uhcwork.BungeeGuard.Main;
  */
 public class CommandSpychat extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandSpychat(Main plugin) {
         super("spychat", "bungee.spychat", "sc");

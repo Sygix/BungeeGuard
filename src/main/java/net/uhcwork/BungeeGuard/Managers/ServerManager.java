@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class ServerManager {
+    private final Main plugin;
     @Getter
     Cache<String, ServerPing> serversCache = CacheBuilder.newBuilder().maximumSize(100).expireAfterWrite(1, TimeUnit.SECONDS).build();
-    Main plugin;
 
     public ServerManager(Main main) {
         this.plugin = main;

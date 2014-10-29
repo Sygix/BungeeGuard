@@ -24,8 +24,8 @@ import java.util.UUID;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class PubSubListener implements Listener {
-    Main plugin;
-    MultiBungee MB;
+    private final Main plugin;
+    private final MultiBungee MB;
 
     public PubSubListener(Main plugin) {
         this.plugin = plugin;

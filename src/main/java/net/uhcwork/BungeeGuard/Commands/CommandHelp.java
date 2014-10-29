@@ -9,7 +9,7 @@ import net.uhcwork.BungeeGuard.Main;
 
 public class CommandHelp extends Command {
 
-    public Main plugin;
+    private final Main plugin;
 
     public CommandHelp(Main plugin) {
         super("help", "bungee.help");

@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 public class WalletManager {
 
     private final Main plugin;
-    private MultiBungee MB;
-    private LoadingCache<UUID, WalletAccountModel> walletsCache = CacheBuilder.newBuilder()
+    private final MultiBungee MB;
+    private final LoadingCache<UUID, WalletAccountModel> walletsCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .expireAfterWrite(60, TimeUnit.SECONDS)
             .build(new CacheLoader<UUID, WalletAccountModel>() {
@@ -107,7 +107,7 @@ public class WalletManager {
         setActive(uuid, true);
     }
 
-    public void setActive(UUID uuid, boolean active) {
+    void setActive(UUID uuid, boolean active) {
         final WalletAccountModel WAM = getAccount(uuid);
         WAM.setActive(active);
         plugin.executePersistenceRunnable(new SaveRunner(WAM));

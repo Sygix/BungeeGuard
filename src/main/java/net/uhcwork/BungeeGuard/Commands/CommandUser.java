@@ -25,9 +25,9 @@ import java.util.UUID;
  */
 public class CommandUser extends Command {
 
-    public Main plugin;
-    MultiBungee MB;
-    PermissionManager PM;
+    private final Main plugin;
+    private final MultiBungee MB;
+    private final PermissionManager PM;
 
     public CommandUser(Main plugin) {
         super("user", "bungee.permission");

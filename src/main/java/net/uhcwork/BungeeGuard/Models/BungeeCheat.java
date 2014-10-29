@@ -3,8 +3,6 @@ package net.uhcwork.BungeeGuard.Models;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
-import java.util.UUID;
-
 /**
  * Part of net.uhcwork.BungeeGuard.Models (BungeeGuard)
  * Date: 12/10/2014
@@ -15,10 +13,6 @@ import java.util.UUID;
 public class BungeeCheat extends Model {
     public void setPlayerName(String playerName) {
         setString("player_name", playerName);
-    }
-
-    public void setPlayerUUID(UUID playerUUID) {
-        setString("player_uuid", playerUUID.toString());
     }
 
     public void setCheatType(String cheatType) {

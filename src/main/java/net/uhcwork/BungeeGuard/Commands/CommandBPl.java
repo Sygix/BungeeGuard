@@ -18,7 +18,7 @@ import net.uhcwork.BungeeGuard.Main;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class CommandBPl extends Command {
-    public Main plugin;
+    private final Main plugin;
 
     public CommandBPl(Main plugin) {
         super("b:pl", "bungee.bpl", "b:up", "b:version", "b:ver");
@@ -42,11 +42,11 @@ public class CommandBPl extends Command {
         return duration;
     }
 
-    static String s(int n, String s, String none) {
+    private static String s(int n, String s, String none) {
         return (n > 1) ? s : none;
     }
 
-    static String s(int n) {
+    private static String s(int n) {
         return s(n, "s", "");
     }
 
