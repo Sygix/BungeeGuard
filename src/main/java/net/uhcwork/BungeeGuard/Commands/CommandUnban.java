@@ -20,7 +20,7 @@ public class CommandUnban extends Command {
     public CommandUnban(Main plugin) {
         super("unban", "bungee.ban");
         this.plugin = plugin;
-        this.BM = plugin.getBM();
+        this.BM = plugin.getBanManager();
     }
 
     @Override

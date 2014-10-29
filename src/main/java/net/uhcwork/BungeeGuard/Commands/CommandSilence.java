@@ -30,7 +30,7 @@ public class CommandSilence extends Command {
             String servName = p.getServer().getInfo().getName();
             boolean silenced = !plugin.isSilenced(servName);
             Main.getMB().silenceServer(servName, silenced);
-            Main.getMB().notifyStaff(BungeeGuardUtils.getStaffBroadcastTag() + ChatColor.GRAY + "Le chat du serveur "
+            Main.getMB().notifyStaff(Main.ADMIN_TAG + ChatColor.GRAY + "Le chat du serveur "
                     + ChatColor.AQUA + servName + ChatColor.GRAY +
                     " a été " +
                     (silenced ? ChatColor.RED + "désactivé " : ChatColor.GREEN + "activé")

@@ -42,7 +42,7 @@ public class AnnouncementTask implements Runnable {
     public void run() {
         if (plugin == null) {
             plugin = Main.plugin;
-            AM = plugin.getAM();
+            AM = plugin.getAnnouncementManager();
         }
         if (timeSinceLastRun + 1 >= plugin.getBroadcastDelay()) {
             timeSinceLastRun = 0;
@@ -97,7 +97,7 @@ public class AnnouncementTask implements Runnable {
     }
 
     private Announcement selectAnnouncementFor(String server) {
-        List<Announcement> announcements = ImmutableList.copyOf(plugin.getAM().getAnnouncements());
+        List<Announcement> announcements = ImmutableList.copyOf(plugin.getAnnouncementManager().getAnnouncements());
         Announcement a;
         int tries = 0;
         while (tries < 5) {

@@ -48,7 +48,7 @@ public class CommandIgnore extends Command {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous n'avez pas la permission d'ignorer ce joueur."));
             return;
         }
-        if (plugin.getIM().playerIgnores(p.getUniqueId(), toIgnore)) {
+        if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), toIgnore)) {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous n'ignorez plus " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
             MB.ignorePlayer(p.getUniqueId(), '-', toIgnore);
         } else {

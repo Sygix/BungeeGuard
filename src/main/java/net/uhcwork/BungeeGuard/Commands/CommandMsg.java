@@ -33,12 +33,12 @@ public class CommandMsg extends Command {
 
         ProxiedPlayer p = (ProxiedPlayer) sender;
 
-        BungeeMute mute = plugin.getMM().findMute(p.getUniqueId());
+        BungeeMute mute = plugin.getMuteManager().findMute(p.getUniqueId());
         if (mute != null) {
             if (mute.isMute()) {
                 p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
             } else {
-                plugin.getMM().unmute(mute, "TimeEnd", "Automatique", true);
+                plugin.getMuteManager().unmute(mute, "TimeEnd", "Automatique", true);
                 Main.getMB().unmutePlayer(p.getUniqueId());
             }
             return;
@@ -69,11 +69,11 @@ public class CommandMsg extends Command {
                 p.sendMessage(new ComponentBuilder("Vous n'avez pas la permission de parler à ce joueur !").color(ChatColor.RED).create());
                 return;
             }
-            if (plugin.getIM().playerIgnores(receiverUUID, p.getUniqueId()) && !Permissions.hasPerm(args[0], "bungee.ignore.ignore")) {
+            if (plugin.getIgnoreManager().playerIgnores(receiverUUID, p.getUniqueId()) && !Permissions.hasPerm(args[0], "bungee.ignore.ignore")) {
                 p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
                 return;
             }
-            if (plugin.getIM().playerIgnores(p.getUniqueId(), receiverUUID) && !p.hasPermission("bungee.ignore.ignore")) {
+            if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), receiverUUID) && !p.hasPermission("bungee.ignore.ignore")) {
                 p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
                 return;
             }

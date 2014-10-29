@@ -27,7 +27,7 @@ public class CommandWallet extends Command {
     public CommandWallet(Main plugin) {
         super("wallet", "bungee.wallet.admin");
         this.plugin = plugin;
-        this.WM = plugin.getWM();
+        this.WM = plugin.getWalletManager();
         this.MB = Main.getMB();
     }
 

@@ -13,8 +13,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 import net.uhcwork.BungeeGuard.Managers.WalletManager;
+import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
 public class CommandPoints extends Command {
     public Main plugin;
@@ -23,7 +23,7 @@ public class CommandPoints extends Command {
     public CommandPoints(Main plugin) {
         super("points", "", "money", "coins", "mycoins", "uhcoins", "uhcoin");
         this.plugin = plugin;
-        this.WM = plugin.getWM();
+        this.WM = plugin.getWalletManager();
 
     }
 

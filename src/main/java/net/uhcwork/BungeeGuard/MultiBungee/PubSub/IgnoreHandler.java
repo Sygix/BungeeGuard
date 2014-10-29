@@ -21,10 +21,10 @@ public class IgnoreHandler {
 
         switch (action) {
             case "+":
-                plugin.getIM().ignore(joueur, toIgnore);
+                plugin.getIgnoreManager().ignore(joueur, toIgnore);
                 break;
             case "-":
-                plugin.getIM().unIgnore(joueur, toIgnore);
+                plugin.getIgnoreManager().unIgnore(joueur, toIgnore);
                 break;
         }
     }

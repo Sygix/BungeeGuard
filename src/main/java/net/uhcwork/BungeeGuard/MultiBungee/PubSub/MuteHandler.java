@@ -20,7 +20,7 @@ public class MuteHandler {
     public void mute(Main plugin, PubSubMessageEvent e) {
         if (e.getArg(0).equals(BungeeGuardUtils.getServerID()))
             return;
-        plugin.getMM().mute(UUID.fromString(e.getArg(1)), e.getArg(2), Long.parseLong(e.getArg(3)), e.getArg(4),
+        plugin.getMuteManager().mute(UUID.fromString(e.getArg(1)), e.getArg(2), Long.parseLong(e.getArg(3)), e.getArg(4),
                 e.getArg(5), UUID.fromString(e.getArg(6)), false);
 
     }
@@ -30,7 +30,7 @@ public class MuteHandler {
         if (e.getArg(0).equals(BungeeGuardUtils.getServerID()))
             return;
         UUID muteUUID = UUID.fromString(e.getArg(1));
-        MuteManager MM = plugin.getMM();
+        MuteManager MM = plugin.getMuteManager();
         BungeeMute mute = MM.findMute(muteUUID);
         MM.removeMute(mute);
     }

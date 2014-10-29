@@ -16,7 +16,6 @@ import java.util.UUID;
 public class BungeeGuardUtils {
     public static Main plugin;
     private static String server_id;
-    private static String staffBroadcastTag = ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + "" + ChatColor.BOLD + "STAFF" + ChatColor.GRAY + "" + ChatColor.BOLD + "]" + ChatColor.GRAY;
 
     public BungeeGuardUtils(Main plugin) {
         BungeeGuardUtils.plugin = plugin;
@@ -38,11 +37,11 @@ public class BungeeGuardUtils {
     }
 
     public static BungeeBan getBan(UUID u) {
-        return plugin.getBM().findBan(u);
+        return plugin.getBanManager().findBan(u);
     }
 
     public static BungeeMute getMute(UUID u) {
-        return plugin.getMM().findMute(u);
+        return plugin.getMuteManager().findMute(u);
     }
 
 
@@ -59,16 +58,6 @@ public class BungeeGuardUtils {
             server_id = String.valueOf(config.getString("server-id", "bungeeX"));
         }
         return server_id;
-    }
-
-    public static String translateCodes(String message) {
-        message = ChatColor.translateAlternateColorCodes('&', message).replaceAll("%n", "\n");
-        // message = message.replaceAll("%timer", getDateFormat(plugin.time));
-        return message;
-    }
-
-    public static String getStaffBroadcastTag() {
-        return staffBroadcastTag;
     }
 
     @SuppressWarnings("deprecation")
