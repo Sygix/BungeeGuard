@@ -7,6 +7,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
@@ -19,6 +20,7 @@ import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Permissions.Permissions;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,9 +64,15 @@ public class BungeeGuardListener implements Listener {
             .append(".UHCGames.com")
             .bold(true)
             .color(ChatColor.AQUA).create();
+    private Method handshakeMethod = null;
 
     public BungeeGuardListener(Main plugin) {
         this.plugin = plugin;
+        try {
+            handshakeMethod = PendingConnection.class.getDeclaredMethod("getHandshake");
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     @EventHandler
@@ -102,15 +110,14 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onServerConnect(final ServerConnectEvent e) {
         final ProxiedPlayer p = e.getPlayer();
-        if (e.getPlayer().getPendingConnection().getClass().getName().equals("net.md_5.bungee.connection.InitialHandler")) {
-            try {
-                Handshake h = (Handshake) e.getPlayer().getPendingConnection().getClass().getDeclaredMethod("getHandshake").invoke(e.getPlayer().getPendingConnection());
-                Map<String, Object> data = new HashMap<>();
-                data.put("groupes", plugin.getPermissionManager().getUser(p.getUniqueId()).getGroups());
-                h.setHost(Main.getGson().toJson(data));
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
-                System.out.println("Erreur passage groupes: " + e1.getMessage());
-            }
+        try {
+            Handshake h = (Handshake) handshakeMethod.invoke(p.getPendingConnection());
+            Map<String, Object> data = new HashMap<>();
+            data.put("server_id", e.getTarget().getName());
+            data.put("groupes", plugin.getPermissionManager().getUser(p.getUniqueId()).getGroups());
+            h.setHost(Main.getGson().toJson(data));
+        } catch (IllegalAccessException | InvocationTargetException e1) {
+            System.out.println("Erreur passage hostname: " + e1.getMessage());
         }
 
         p.setTabHeader(header, footer);
