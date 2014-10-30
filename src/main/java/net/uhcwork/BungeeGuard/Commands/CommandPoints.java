@@ -17,12 +17,10 @@ import net.uhcwork.BungeeGuard.Managers.WalletManager;
 import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
 public class CommandPoints extends Command {
-    private final Main plugin;
     private final WalletManager WM;
 
     public CommandPoints(Main plugin) {
         super("points", "", "money", "coins", "mycoins", "uhcoins", "uhcoin");
-        this.plugin = plugin;
         this.WM = plugin.getWalletManager();
 
     }
@@ -35,7 +33,7 @@ public class CommandPoints extends Command {
                 return;
             }
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Vous avez " + ChatColor.GOLD + (int) WM.getBalance(p.getUniqueId()) + ChatColor.AQUA + " UHCoins !"));
-            p.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.GRAY + "Vous n'avez pas de multiplicateur ! " + ChatColor.AQUA + "(" + ChatColor.RED + " http://UHCSHOP.com/ " + ChatColor.AQUA + ")"));
+            p.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.GRAY + "Vous n'avez pas de multiplicateur ! " + ChatColor.AQUA + "(" + ChatColor.RED + " https://STORE.UHCGames.COM/ " + ChatColor.AQUA + ")"));
         } else {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous n'etes pas un joueur !"));
         }
