@@ -1,5 +1,8 @@
 package net.uhcwork.BungeeGuard;
 
+import com.google.common.base.Charsets;
+import com.google.common.base.MoreObjects;
+import com.google.common.io.Files;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.Gson;
 import lombok.Getter;
@@ -24,7 +27,7 @@ import net.uhcwork.BungeeGuard.Utils.MyReconnectHandler;
 import net.uhcwork.BungeeGuard.Utils.ShopTask;
 import org.javalite.activejdbc.Base;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -71,6 +74,7 @@ public class Main extends Plugin {
     private WalletManager walletManager = new WalletManager(this);
     @Getter
     private ExecutorService executorService;
+    private String MYSQL_USER, MYSQL_HOST, MYSQL_DATABASE, MYSQL_PASS;
 
     public static String getPrettyServerName(String name) {
         return prettyServerNames.containsKey(name) ? prettyServerNames.get(name) : name;
@@ -122,31 +126,8 @@ public class Main extends Plugin {
             private void setup() {
                 if (Base.hasConnection())
                     return;
-                String host = getEnv("MYSQL_HOST");
-                String database = getEnv("MYSQL_DATABASE");
-                String user = getEnv("MYSQL_USER");
-                String pass = getEnv("MYSQL_PASS");
-                if (host.isEmpty() || database.isEmpty() || user.isEmpty() || pass.isEmpty()) {
-                    ProxyServer.getInstance().stop();
-                    throw new RuntimeException("La configuration est mauvaise, chef.");
-                }
-                Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://" + host + "/" + database, user, pass);
+                Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://" + MYSQL_HOST + "/" + MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS);
             }
-
-            private String getEnv(String name) {
-                String _ = System.getenv(name);
-                if (_ == null) {
-                    Properties prop = new Properties();
-                    try {
-                        prop.load(new FileInputStream("config.properties"));
-                        _ = prop.getProperty(name, "");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return _ == null ? "" : _;
-            }
-
 
             private void cleanup() {
                 Base.close();
@@ -154,10 +135,36 @@ public class Main extends Plugin {
         });
     }
 
+
+    private String getEnv(String name, String def, Properties prop) {
+        return MoreObjects.firstNonNull(System.getenv(name), prop.getProperty(name, def));
+    }
+
+
     @Override
     public void onLoad() {
         plugin = this;
         startTime = System.currentTimeMillis();
+
+
+        Properties prop = new Properties();
+        try {
+            prop.load(Files.newReader(new File("config.properties"), Charsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MYSQL_HOST = getEnv("MYSQL_HOST", "localhost", prop);
+        MYSQL_DATABASE = getEnv("MYSQL_DATABASE", "plugin", prop);
+        MYSQL_USER = getEnv("MYSQL_USER", "root", prop);
+        MYSQL_PASS = getEnv("MYSQL_PASS", "", prop);
+
+
+        if (MYSQL_HOST.isEmpty() || MYSQL_DATABASE.isEmpty() || MYSQL_USER.isEmpty() || MYSQL_PASS.isEmpty()) {
+            ProxyServer.getInstance().stop();
+            throw new RuntimeException("La configuration est mauvaise, chef.");
+        }
+
         new BungeeGuardUtils(this);
         System.out.println("Welcome to MultiBungee ~ With ORM. ~ Crafted with love, and Intellij Idea.");
         executorService = Executors.newFixedThreadPool(20, new ThreadFactoryBuilder()

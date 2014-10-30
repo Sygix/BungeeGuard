@@ -7,7 +7,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
@@ -69,8 +68,9 @@ class BungeeGuardListener implements Listener {
     public BungeeGuardListener(Main plugin) {
         this.plugin = plugin;
         try {
-            handshakeMethod = PendingConnection.class.getDeclaredMethod("getHandshake");
-        } catch (NoSuchMethodException e) {
+            Class<?> initialHandler = Class.forName("net.md_5.bungee.connection.InitialHandler");
+            handshakeMethod = initialHandler.getDeclaredMethod("getHandshake");
+        } catch (NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
