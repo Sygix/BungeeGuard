@@ -75,21 +75,21 @@ public class WalletManager {
         return WAM;
     }
 
-    int getBalance(ProxiedPlayer p) {
+    double getBalance(ProxiedPlayer p) {
         return getBalance(p.getUniqueId());
     }
 
-    public int getBalance(UUID uniqueId) {
+    public double getBalance(UUID uniqueId) {
         return getAccount(uniqueId).getMoney();
     }
 
-    public void setBalance(UUID uuid, int balance) {
+    public void setBalance(UUID uuid, double balance) {
         WalletAccountModel WAM = getAccount(uuid);
         WAM.setMoney(balance);
         plugin.executePersistenceRunnable(new SaveRunner(WAM));
     }
 
-    public void addToBalance(UUID uuid, int amount) {
+    public void addToBalance(UUID uuid, double amount) {
         WalletAccountModel WAM = getAccount(uuid);
         WAM.setMoney(WAM.getMoney() + amount);
         plugin.executePersistenceRunnable(new SaveRunner(WAM));

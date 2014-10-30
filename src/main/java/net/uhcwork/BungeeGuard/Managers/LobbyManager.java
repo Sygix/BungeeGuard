@@ -101,13 +101,13 @@ public class LobbyManager {
 
     @Data
     public static class Lobby {
-        private final String name = "";
-        private final int onlinePlayers = 0;
-        private final int maxPlayers = 10;
-        private final double tps = 0;
         @Getter(lazy = true)
         private final Double score = score();
-        private boolean isOnline = false;
+        String name = "";
+        int onlinePlayers = 0;
+        int maxPlayers = 10;
+        double tps = 0;
+        boolean isOnline = false;
 
         public Lobby() {
         }
