@@ -112,4 +112,9 @@ public class WalletManager {
         WAM.setActive(active);
         plugin.executePersistenceRunnable(new SaveRunner(WAM));
     }
+
+    public double getDisplayedBalance(UUID u) {
+        double balance = getBalance(u);
+        return Math.floor(balance * 4) / 4;
+    }
 }
