@@ -137,7 +137,8 @@ public class Main extends Plugin {
 
 
     private String getEnv(String name, String def, Properties prop) {
-        return MoreObjects.firstNonNull(System.getenv(name), prop.getProperty(name, def));
+        String property = (prop == null) ? def : prop.getProperty(name, def);
+        return MoreObjects.firstNonNull(System.getenv(name), property);
     }
 
 
@@ -147,9 +148,13 @@ public class Main extends Plugin {
         startTime = System.currentTimeMillis();
 
 
-        Properties prop = new Properties();
+        Properties prop = null;
         try {
-            prop.load(Files.newReader(new File("config.properties"), Charsets.UTF_8));
+            File configFile = new File("config.properties");
+            if (configFile.exists()) {
+                prop = new Properties();
+                prop.load(Files.newReader(configFile, Charsets.UTF_8));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
