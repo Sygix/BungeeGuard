@@ -77,7 +77,6 @@ class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onLogin(final LoginEvent event) {
-        event.registerIntent(plugin);
         String hostString = event.getConnection().getVirtualHost().getHostString().toLowerCase();
         if (!Permissions.hasPerm(event.getConnection().getName(), "bungee.canBypassHost") &&
                 !plugin.getConfig().getForcedHosts().containsKey(hostString)) {
@@ -104,7 +103,6 @@ class BungeeGuardListener implements Listener {
                 Main.getMB().unban(event.getConnection().getUniqueId());
             }
         }
-        event.completeIntent(plugin);
     }
 
     @EventHandler
@@ -204,13 +202,11 @@ class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onProxyPing(ProxyPingEvent e) {
-        e.registerIntent(plugin);
         ServerPing sp = e.getResponse();
         sp.getPlayers().setMax(plugin.getConfig().getMaxPlayers());
         sp.getPlayers().setOnline(Main.getMB().getPlayerCount());
         sp.setDescription(plugin.getConfig().getMotd());
         e.getResponse().getPlayers().setSample(playersPing);
-        e.completeIntent(plugin);
     }
 
     @EventHandler
