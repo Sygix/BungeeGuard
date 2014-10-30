@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-class BungeeGuardListener implements Listener {
+public class BungeeGuardListener implements Listener {
     private static final ServerPing.PlayerInfo[] playersPing;
 
     static {
