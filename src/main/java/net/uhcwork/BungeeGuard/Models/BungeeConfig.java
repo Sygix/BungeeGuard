@@ -1,5 +1,6 @@
 package net.uhcwork.BungeeGuard.Models;
 
+import net.md_5.bungee.api.ChatColor;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
@@ -13,7 +14,7 @@ import org.javalite.activejdbc.annotations.Table;
 public class BungeeConfig extends Model {
 
     public String getMotd() {
-        return getString("motd");
+        return ChatColor.translateAlternateColorCodes('&', getString("motd"));
     }
 
     public Integer getMaxPlayers() {
