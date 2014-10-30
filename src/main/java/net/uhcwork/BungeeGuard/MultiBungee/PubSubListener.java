@@ -100,7 +100,7 @@ public class PubSubListener implements Listener {
 
         if (subchannel.equals("addCoins")) {
             UUID uuid = UUID.fromString(in.readUTF());
-            int amount = in.readInt();
+            double amount = in.readDouble();
             plugin.getWalletManager().addToBalance(uuid, amount);
         }
         if (subchannel.equals("cheat")) {
@@ -113,7 +113,6 @@ public class PubSubListener implements Listener {
             BungeeCheat BC = new BungeeCheat();
             BC.setPlayerName(playerName);
             BC.setServerName(sender.getInfo().getName());
-            BC.setPlayerUUID(MB.getUuidFromName(playerName));
             BC.setCheatType(cheatName);
             BC.setCheatScore(score);
             plugin.executePersistenceRunnable(new SaveRunner(BC));

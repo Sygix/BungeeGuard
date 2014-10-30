@@ -81,7 +81,7 @@ public class CommandWallet extends Command {
                     sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inconnu"));
                     return;
                 }
-                int amount = Integer.parseInt(args[2]);
+                double amount = Double.parseDouble(args[2]);
                 WM.setBalance(uuid, amount);
                 sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le compte du joueur " + ChatColor.AQUA + name + ChatColor.GRAY + " a été defini à " + ChatColor.GREEN + amount + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
             } else if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("sub")) {
@@ -91,7 +91,7 @@ public class CommandWallet extends Command {
                     sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inconnu"));
                     return;
                 }
-                int amount = Integer.parseInt(args[2]);
+                double amount = Double.parseDouble(args[2]);
                 amount *= (args[0].equalsIgnoreCase("sub") ? -1 : 1);
                 WM.addToBalance(uuid, amount);
                 sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le compte du joueur " + ChatColor.AQUA + name + ChatColor.GRAY + " a été crédité de " + ChatColor.GREEN + amount + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));

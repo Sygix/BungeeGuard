@@ -17,12 +17,12 @@ public class WalletAccountModel extends Model {
         return getString("uuid");
     }
 
-    public void setUUID(UUID u) {
-        setUUID("" + u);
-    }
-
     private void setUUID(String u) {
         setString("uuid", u);
+    }
+
+    public void setUUID(UUID u) {
+        setUUID("" + u);
     }
 
     public String getPlayerName() {
@@ -33,12 +33,12 @@ public class WalletAccountModel extends Model {
         setString("player", playerName);
     }
 
-    public Integer getMoney() {
-        return getInteger("money");
+    public Double getMoney() {
+        return getDouble("money");
     }
 
-    public void setMoney(int money) {
-        setInteger("money", money);
+    public void setMoney(double money) {
+        setDouble("money", money);
     }
 
     public boolean isActive() {
