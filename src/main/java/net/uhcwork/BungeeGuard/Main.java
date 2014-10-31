@@ -25,6 +25,7 @@ import net.uhcwork.BungeeGuard.Utils.MyReconnectHandler;
 import net.uhcwork.BungeeGuard.Utils.ShopTask;
 import org.javalite.activejdbc.Base;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -149,7 +150,9 @@ public class Main extends Plugin {
             File configFile = new File("config.properties");
             if (configFile.exists()) {
                 prop = new Properties();
-                prop.load(Files.newReader(configFile, Charsets.UTF_8));
+                BufferedReader reader = Files.newReader(configFile, Charsets.UTF_8);
+                prop.load(reader);
+                reader.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
