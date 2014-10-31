@@ -3,14 +3,12 @@ package net.uhcwork.BungeeGuard;
 import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 import com.google.common.io.Files;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.Gson;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.api.scheduler.GroupedThreadFactory;
 import net.uhcwork.BungeeGuard.Announces.AnnouncementManager;
 import net.uhcwork.BungeeGuard.Announces.AnnouncementTask;
 import net.uhcwork.BungeeGuard.BanHammer.AntiSpamListener;
@@ -31,7 +29,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends Plugin {
 
@@ -72,8 +73,6 @@ public class Main extends Plugin {
     private int broadcastDelay = 180;
     @Getter
     private WalletManager walletManager = new WalletManager(this);
-    @Getter
-    private ExecutorService executorService;
     private String MYSQL_USER, MYSQL_HOST, MYSQL_DATABASE, MYSQL_PASS;
 
     public static String getPrettyServerName(String name) {
@@ -103,12 +102,7 @@ public class Main extends Plugin {
     }
 
     public <T> Future<T> executePersistenceRunnable(final Callable<T> callable) {
-        if (executorService == null) {
-            FutureTask<T> F = new FutureTask<>(callable);
-            getProxy().getScheduler().runAsync(this, F);
-            return F;
-        }
-        return executorService.submit(new Callable<T>() {
+        FutureTask<T> F = new FutureTask<T>(new Callable<T>() {
             @Override
             public T call() throws Exception {
                 T value = null;
@@ -133,6 +127,8 @@ public class Main extends Plugin {
                 Base.close();
             }
         });
+        getProxy().getScheduler().runAsync(this, F);
+        return F;
     }
 
 
@@ -172,13 +168,6 @@ public class Main extends Plugin {
 
         new BungeeGuardUtils(this);
         System.out.println("Welcome to MultiBungee ~ With ORM. ~ Crafted with love, and Intellij Idea.");
-        executorService = Executors.newFixedThreadPool(20, new ThreadFactoryBuilder()
-                .setNameFormat("BungeeGuard Pool Thread #%1$d")
-                .setThreadFactory(new GroupedThreadFactory(this) {
-                    public Thread newThread(Runnable runnable) {
-                        return new Thread(this.getGroup(), runnable);
-                    }
-                }).build());
         getProxy().setReconnectHandler(new MyReconnectHandler());
         config = new MysqlConfigAdapter(this);
         getProxy().setConfigurationAdapter(config);
@@ -249,7 +238,6 @@ public class Main extends Plugin {
     @Override
     public void onDisable() {
         getProxy().getScheduler().cancel(this);
-        executorService.shutdown();
     }
 
     public boolean isSilenced(String servName) {

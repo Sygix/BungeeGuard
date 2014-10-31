@@ -110,9 +110,7 @@ public class PartyManager {
         private static final long serialVersionUID = 7009960713031110863L;
         final List<UUID> chatMembers = new ArrayList<>();
         @Getter
-        @Setter
-        final
-        List<UUID> members = new ArrayList<>();
+        final List<UUID> members = new ArrayList<>();
         final List<UUID> invitations = new ArrayList<>();
         @Getter
         @Setter
