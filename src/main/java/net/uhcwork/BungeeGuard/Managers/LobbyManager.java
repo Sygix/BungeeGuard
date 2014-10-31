@@ -94,9 +94,8 @@ public class LobbyManager {
     public Lobby getBestLobbyFor(ProxiedPlayer p) {
         Collection<Lobby> lobbies = Collections2.filter(getLobbies(), isOnline);
         Ordering<Lobby> scoreOrdering = Ordering.natural().onResultOf(getScoreFunction);
-        ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(scoreOrdering).addAll(lobbies).build();
-
-        return sortedLobbies.descendingSet().first();
+        ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(scoreOrdering).addAll(lobbies).build().descendingSet();
+        return sortedLobbies.first();
     }
 
     @Data
