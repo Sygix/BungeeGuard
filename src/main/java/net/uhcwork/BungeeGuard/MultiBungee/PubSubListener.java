@@ -15,6 +15,8 @@ import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeCheat;
 import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -126,7 +128,8 @@ public class PubSubListener implements Listener {
 
     private void sendServersPing(final Server sender) {
         Callback<ServerPing> pingBack;
-        for (final String serverName : ProxyServer.getInstance().getServers().keySet()) {
+        Set<String> servers = new HashSet<>(ProxyServer.getInstance().getServers().keySet());
+        for (final String serverName : servers) {
             pingBack = new Callback<ServerPing>() {
                 @Override
                 public void done(ServerPing serverPing, Throwable throwable) {
