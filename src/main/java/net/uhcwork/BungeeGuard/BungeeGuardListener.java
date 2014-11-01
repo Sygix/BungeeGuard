@@ -11,6 +11,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 import net.md_5.bungee.protocol.packet.Handshake;
 import net.uhcwork.BungeeGuard.Managers.LobbyManager;
 import net.uhcwork.BungeeGuard.Managers.PartyManager;
@@ -108,15 +109,6 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onServerConnect(final ServerConnectEvent e) {
         final ProxiedPlayer p = e.getPlayer();
-        try {
-            Handshake h = (Handshake) handshakeMethod.invoke(p.getPendingConnection());
-            Map<String, Object> data = new HashMap<>();
-            data.put("server_id", e.getTarget().getName());
-            data.put("groupes", plugin.getPermissionManager().getUser(p.getUniqueId()).getGroups());
-            h.setHost(Main.getGson().toJson(data));
-        } catch (IllegalAccessException | InvocationTargetException e1) {
-            System.out.println("Erreur passage hostname: " + e1.getMessage());
-        }
 
         p.setTabHeader(header, footer);
 
@@ -266,5 +258,22 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onPermCheck(PermissionCheckEvent e) {
         e.setHasPermission(Permissions.hasPerm(e.getSender().getName(), e.getPermission()));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onConnect(ServerConnectEvent e) {
+        if (e.isCancelled())
+            return;
+
+        final ProxiedPlayer p = e.getPlayer();
+        try {
+            Handshake h = (Handshake) handshakeMethod.invoke(p.getPendingConnection());
+            Map<String, Object> data = new HashMap<>();
+            data.put("server_id", e.getTarget().getName());
+            data.put("groupes", plugin.getPermissionManager().getUser(p.getUniqueId()).getGroups());
+            h.setHost(Main.getGson().toJson(data));
+        } catch (IllegalAccessException | InvocationTargetException e1) {
+            System.out.println("Erreur passage hostname: " + e1.getMessage());
+        }
     }
 }
