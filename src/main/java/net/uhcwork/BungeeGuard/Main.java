@@ -205,7 +205,8 @@ public class Main extends Plugin {
 
         fetchParties();
         Set<Class<? extends Command>> commandes = new HashSet<>();
-        Collections.addAll(commandes, CommandKick.class, CommandLobby.class, CommandReloadConf.class,
+        Collections.addAll(commandes,
+                CommandKick.class, CommandLobby.class, CommandReloadConf.class, CommandBStats.class,
                 CommandSpychat.class, CommandSend.class, CommandBan.class, CommandUnban.class, CommandList.class,
                 CommandCheck.class, CommandMute.class, CommandUnmute.class, CommandSilence.class, CommandSay.class,
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
