@@ -51,7 +51,7 @@ public class SanctionManager {
                 if (ban.isBanned())
                     return ban;
                 else {
-                    unban(ban, "Automatique", "Fin du ban", false);
+                    removeBan(ban);
                 }
             }
         }
