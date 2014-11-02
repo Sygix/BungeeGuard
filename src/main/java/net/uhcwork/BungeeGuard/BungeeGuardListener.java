@@ -274,8 +274,8 @@ public class BungeeGuardListener implements Listener {
     public void onConnect(final ServerConnectEvent e) {
         final ProxiedPlayer p = e.getPlayer();
 
-        if (e.getTarget().equals(p.getServer().getInfo()))
-            e.setCancelled(true);
+        //if (e.getTarget().equals(p.getServer().getInfo()))
+        //    e.setCancelled(true);
 
         if (e.isCancelled())
             return;
