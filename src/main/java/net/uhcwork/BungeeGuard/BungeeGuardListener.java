@@ -15,19 +15,21 @@ import net.md_5.bungee.event.EventPriority;
 import net.md_5.bungee.protocol.packet.Handshake;
 import net.uhcwork.BungeeGuard.Managers.PartyManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
+import net.uhcwork.BungeeGuard.Models.BungeeLitycs;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Permissions.Permissions;
+import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
+import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class BungeeGuardListener implements Listener {
     private static final ServerPing.PlayerInfo[] playersPing;
+    private static final Map<UUID, BungeeLitycs> bungeelitycs = new ConcurrentHashMap<>();
 
     static {
         List<String> lines = new ArrayList<>();
@@ -188,6 +190,12 @@ public class BungeeGuardListener implements Listener {
         if (plugin.getPartyManager().inParty(p)) {
             Main.getMB().playerLeaveParty(plugin.getPartyManager().getPartyByPlayer(p), p);
         }
+        if (bungeelitycs.containsKey(p.getUniqueId())) {
+            final BungeeLitycs old_bl = bungeelitycs.get(p.getUniqueId());
+            old_bl.leave(p);
+            plugin.executePersistenceRunnable(new SaveRunner(old_bl));
+            bungeelitycs.remove(p.getUniqueId());
+        }
     }
 
     @EventHandler
@@ -232,9 +240,16 @@ public class BungeeGuardListener implements Listener {
         } else {
             p.disconnect(e.getKickReasonComponent());
         }
-
+        if (e.isCancelled())
+            return;
         if (plugin.getPartyManager().inParty(p)) {
             Main.getMB().playerLeaveParty(plugin.getPartyManager().getPartyByPlayer(p), p);
+        }
+        if (bungeelitycs.containsKey(p.getUniqueId())) {
+            final BungeeLitycs old_bl = bungeelitycs.get(p.getUniqueId());
+            old_bl.leave(p);
+            plugin.executePersistenceRunnable(new SaveRunner(old_bl));
+            bungeelitycs.remove(p.getUniqueId());
         }
     }
 
@@ -256,11 +271,15 @@ public class BungeeGuardListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onConnect(ServerConnectEvent e) {
+    public void onConnect(final ServerConnectEvent e) {
+        final ProxiedPlayer p = e.getPlayer();
+
+        if (e.getTarget().equals(p.getServer().getInfo()))
+            e.setCancelled(true);
+
         if (e.isCancelled())
             return;
 
-        final ProxiedPlayer p = e.getPlayer();
         try {
             Handshake h = (Handshake) handshakeMethod.invoke(p.getPendingConnection());
             Map<String, Object> data = new HashMap<>();
@@ -270,5 +289,24 @@ public class BungeeGuardListener implements Listener {
         } catch (IllegalAccessException | InvocationTargetException e1) {
             System.out.println("Erreur passage hostname: " + e1.getMessage());
         }
+        final BungeeLitycs old_bl;
+        if (bungeelitycs.containsKey(p.getUniqueId())) {
+            old_bl = bungeelitycs.get(p.getUniqueId());
+            bungeelitycs.remove(p.getUniqueId());
+        } else
+            old_bl = null;
+        plugin.executePersistenceRunnable(new VoidRunner() {
+            @Override
+            protected void run() {
+                if (old_bl != null) {
+                    old_bl.leave(p);
+                    old_bl.saveIt();
+                }
+                BungeeLitycs bl = new BungeeLitycs();
+                bl.join(p, e.getTarget());
+                bl.saveIt();
+                bungeelitycs.put(p.getUniqueId(), bl);
+            }
+        });
     }
 }
