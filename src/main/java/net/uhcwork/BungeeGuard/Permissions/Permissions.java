@@ -32,25 +32,25 @@ public class Permissions {
         return false;
     }
 
-    private static boolean miniglob(String[] pattern, String line) {
-        if (pattern.length == 0)
+    private static boolean do_miniglob(List<String> pattern, String line) {
+        if (pattern.size() == 0)
             return line.isEmpty();
-        if (pattern.length == 1)
-            return line.equals(pattern[0]);
-        if (!line.startsWith(pattern[0]))
+        if (pattern.size() == 1)
+            return line.equals(pattern.get(0));
+        if (!line.startsWith(pattern.get(0)))
             return false;
 
-        int idx = pattern[0].length();
+        int idx = pattern.get(0).length();
         String patternTok;
         int nextIdx;
-        for (int i = 1; i < pattern.length - 1; ++i) {
-            patternTok = pattern[i];
+        for (int i = 1; i < pattern.size() - 1; ++i) {
+            patternTok = pattern.get(i);
             nextIdx = line.indexOf(patternTok, idx);
             if (nextIdx < 0)
                 return false;
             idx = nextIdx + patternTok.length();
         }
-        return line.endsWith(pattern[pattern.length - 1]);
+        return line.endsWith(pattern.get(pattern.size() - 1));
 
     }
 
@@ -58,7 +58,7 @@ public class Permissions {
         // miniglob : parseur de permissions, avec support léger pour les wildcard :)
         // ("a.b.c", "a.b.c") -> true
         // ("a.*", "a.b.c") -> true
-        return miniglob(Splitter.on('*').splitToList(pattern), line);
+        return do_miniglob(Splitter.on('*').splitToList(pattern), line);
     }
 
     public static boolean miniglob(List<String> patterns, String line) {
