@@ -85,7 +85,7 @@ public class ServerManager {
                             public void done(ServerPing result, Throwable error) {
                                 Lobby lobby = new Lobby();
                                 boolean isError = (error != null) || (result == null);
-                                lobby.setOnline(isError);
+                                lobby.setOnline(!isError);
                                 if (!isError) {
                                     lobby.setName(serverInfo.getName());
                                     lobby.setMaxPlayers(result.getPlayers().getMax());
