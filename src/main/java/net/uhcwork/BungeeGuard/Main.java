@@ -99,7 +99,7 @@ public class Main extends Plugin {
     }
 
     public <T> Future<T> executePersistenceRunnable(final Callable<T> callable) {
-        FutureTask<T> F = new FutureTask<T>(new Callable<T>() {
+        FutureTask<T> F = new FutureTask<>(new Callable<T>() {
             @Override
             public T call() throws Exception {
                 T value = null;
@@ -210,7 +210,7 @@ public class Main extends Plugin {
                 CommandCheck.class, CommandMute.class, CommandUnmute.class, CommandSilence.class, CommandSay.class,
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
                 CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
-                CommandPoints.class, CommandWallet.class, CommandFind.class, CommandStaff.class,
+                CommandPoints.class, CommandWallet.class, CommandFind.class, CommandStaff.class, CommandSeen.class,
                 CommandUser.class, CommandGroups.class, CommandGtpHere.class, CommandRegister.class);
 
         for (Class<? extends Command> commande : commandes) {
