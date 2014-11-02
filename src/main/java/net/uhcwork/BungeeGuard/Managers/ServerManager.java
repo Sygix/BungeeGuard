@@ -62,7 +62,7 @@ public class ServerManager {
             final Callback<ServerPing> pingCallback = new Callback<ServerPing>() {
                 @Override
                 public void done(ServerPing serverPing, Throwable throwable) {
-                    Optional<ServerPing> serverPingOptional = Optional.of(serverPing);
+                    Optional<ServerPing> serverPingOptional = Optional.fromNullable(serverPing);
                     getServersCache().put(serverName, serverPingOptional);
                     pingBack.done(serverPing, throwable);
                 }
