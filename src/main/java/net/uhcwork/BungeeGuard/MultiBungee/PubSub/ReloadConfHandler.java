@@ -80,6 +80,12 @@ public class ReloadConfHandler {
             plugin.getLogger().info(si.getName() + " removed");
         }
         plugin.getLogger().info("-Configuration reloaded !-");
+
+
+        plugin.getLogger().info("Reloading bans/mutes");
+        plugin.getSanctionManager().loadBans();
+        plugin.getSanctionManager().loadMutes();
+
     }
 
     public void handle(Main plugin) {

@@ -71,7 +71,7 @@ public class BungeeBan extends Model {
     }
 
     public boolean isBanned() {
-        return isDefBanned() || getUntilTimestamp() > System.currentTimeMillis();
+        return getUnban() == null && (isDefBanned() || getUntilTimestamp() > System.currentTimeMillis());
     }
 
     public void setUnbanAdminName(String adminName) {
@@ -96,5 +96,9 @@ public class BungeeBan extends Model {
         String reason = (getReason().isEmpty()) ? "." : " avec la raison " + getReason();
         String duration = isDefBanned() ? " définitivement" : " pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
         return Main.ADMIN_TAG + ChatColor.AQUA + getAdminName() + ChatColor.RED + " a banni " + ChatColor.GREEN + getBannedName() + ChatColor.RED + duration + reason;
+    }
+
+    public Long getUnban() {
+        return getLong("unban");
     }
 }

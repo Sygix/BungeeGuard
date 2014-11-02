@@ -21,12 +21,11 @@ public class RedisBungeeListener implements Listener {
 
     public RedisBungeeListener(Main plugin) {
         this.plugin = plugin;
-        addHandler(new BanHandler());
         addHandler(new BroadcastHandler());
         addHandler(new IgnoreHandler());
         addHandler(new KickHandler());
         addHandler(new MessageHandler());
-        addHandler(new MuteHandler());
+        addHandler(new SanctionHandler());
         addHandler(new ReloadConfHandler());
         addHandler(new ServerSilenceHandler());
         addHandler(new StaffChatHandler());

@@ -33,12 +33,12 @@ public class CommandMsg extends Command {
 
         ProxiedPlayer p = (ProxiedPlayer) sender;
 
-        BungeeMute mute = plugin.getMuteManager().findMute(p.getUniqueId());
+        BungeeMute mute = plugin.getSanctionManager().findMute(p.getUniqueId());
         if (mute != null) {
             if (mute.isMute()) {
                 p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
             } else {
-                plugin.getMuteManager().unmute(mute, "TimeEnd", "Automatique", true);
+                plugin.getSanctionManager().unmute(mute, "TimeEnd", "Automatique", true);
                 Main.getMB().unmutePlayer(p.getUniqueId());
             }
             return;

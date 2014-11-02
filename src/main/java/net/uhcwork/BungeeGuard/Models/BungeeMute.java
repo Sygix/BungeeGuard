@@ -68,7 +68,11 @@ public class BungeeMute extends Model {
     }
 
     public boolean isMute() {
-        return getUntilTimestamp() > System.currentTimeMillis();
+        return getUnmute() == null && getUntilTimestamp() > System.currentTimeMillis();
+    }
+
+    private Long getUnmute() {
+        return getLong("unmute");
     }
 
     public void setUnmuteAdminName(String adminName) {

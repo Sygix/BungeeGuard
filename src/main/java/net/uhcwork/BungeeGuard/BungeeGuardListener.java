@@ -13,7 +13,6 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import net.md_5.bungee.protocol.packet.Handshake;
-import net.uhcwork.BungeeGuard.Managers.LobbyManager;
 import net.uhcwork.BungeeGuard.Managers.PartyManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
@@ -76,6 +75,7 @@ public class BungeeGuardListener implements Listener {
         }
     }
 
+
     @EventHandler
     public void onLogin(final LoginEvent event) {
         String hostString = event.getConnection().getVirtualHost().getHostString().toLowerCase();
@@ -84,8 +84,6 @@ public class BungeeGuardListener implements Listener {
             event.setCancelled(true);
             event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
         } else {
-
-
             ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
                 @Override
                 public void run() {
@@ -93,14 +91,14 @@ public class BungeeGuardListener implements Listener {
                 }
             }, 10, TimeUnit.MILLISECONDS);
 
-            BungeeBan ban = BungeeGuardUtils.getBan(event.getConnection().getUniqueId());
+            BungeeBan ban = plugin.getSanctionManager().findBan(event.getConnection().getUniqueId());
             if (ban != null) {
                 if (ban.isBanned()) {
                     event.setCancelled(true);
                     event.setCancelReason(ban.getBanMessage());
                     return;
                 }
-                plugin.getBanManager().unban(ban, "TimeEnd", "Automatique", true);
+                plugin.getSanctionManager().unban(ban, "TimeEnd", "Automatique", true);
                 Main.getMB().unban(event.getConnection().getUniqueId());
             }
         }
@@ -114,10 +112,10 @@ public class BungeeGuardListener implements Listener {
 
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
             System.out.println("Recuperation du meilleur lobby pour " + p.getName());
-            LobbyManager.Lobby l = plugin.getLobbyManager().getBestLobbyFor(p);
+            String l = plugin.getServerManager().getBestLobbyFor(p);
             if (l != null) {
-                e.setTarget(l.getServerInfo());
-                System.out.println("Lobby selectionné: " + l.getName());
+                e.setTarget(plugin.getProxy().getServerInfo(l));
+                System.out.println("Lobby selectionné: " + l);
             } else {
                 if (ProxyServer.getInstance().getServerInfo("limbo").getPlayers().size() < 70) {
                     e.setTarget(ProxyServer.getInstance().getServerInfo("limbo"));
@@ -152,14 +150,14 @@ public class BungeeGuardListener implements Listener {
             if (e.isCommand()) {
                 return;
             }
-            BungeeMute mute = BungeeGuardUtils.getMute(p.getUniqueId());
+            BungeeMute mute = plugin.getSanctionManager().findMute(p.getUniqueId());
             if (mute != null) {
                 if (mute.isMute()) {
                     p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
                     e.setCancelled(true);
                     return;
                 } else {
-                    plugin.getMuteManager().unmute(mute, "TimeEnd", "Automatique", true);
+                    plugin.getSanctionManager().unmute(mute, "TimeEnd", "Automatique", true);
                     Main.getMB().unmutePlayer(p.getUniqueId());
                 }
             }
@@ -218,14 +216,11 @@ public class BungeeGuardListener implements Listener {
                 reason.contains("kick") || reason.contains("VIP"))) {
 
             if (reason.contains("closed")) {
-                if (plugin.getLobbyManager().getLobby(kickedFrom.getName()) != null) {
-                    LobbyManager.Lobby Lobby = plugin.getLobbyManager().getLobby(kickedFrom.getName());
-                    Lobby.setOffline();
-                }
+                plugin.getServerManager().setOffline(kickedFrom.getName());
             }
 
-            LobbyManager.Lobby l = plugin.getLobbyManager().getBestLobbyFor(p);
-            ServerInfo server = l.getServerInfo();
+            String l = plugin.getServerManager().getBestLobbyFor(p);
+            ServerInfo server = plugin.getProxy().getServerInfo(l);
 
 
             ProxyServer.getInstance().getConsole().sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + e.getState().toString() + " - " + reason + ")"));
