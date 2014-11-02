@@ -1,5 +1,6 @@
 package net.uhcwork.BungeeGuard.Permissions;
 
+import com.google.common.base.Splitter;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.PermissionManager;
 
@@ -57,7 +58,7 @@ public class Permissions {
         // miniglob : parseur de permissions, avec support léger pour les wildcard :)
         // ("a.b.c", "a.b.c") -> true
         // ("a.*", "a.b.c") -> true
-        return miniglob(pattern.split("\\*+", -1), line);
+        return miniglob(Splitter.on('*').splitToList(pattern), line);
     }
 
     public static boolean miniglob(List<String> patterns, String line) {
