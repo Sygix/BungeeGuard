@@ -9,7 +9,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.command.PlayerCommand;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.Managers.BanManager;
+import net.uhcwork.BungeeGuard.Managers.SanctionManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 
 import java.util.Arrays;
@@ -18,12 +18,12 @@ import java.util.UUID;
 public class CommandBan extends PlayerCommand {
 
     private final Main plugin;
-    private final BanManager BM;
+    private final SanctionManager BM;
 
     public CommandBan(Main plugin) {
         super("ban", "bungee.ban");
         this.plugin = plugin;
-        this.BM = plugin.getBanManager();
+        this.BM = plugin.getSanctionManager();
     }
 
     @Override

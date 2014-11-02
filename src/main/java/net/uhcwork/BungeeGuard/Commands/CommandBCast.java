@@ -2,11 +2,11 @@ package net.uhcwork.BungeeGuard.Commands;
 
 import com.google.common.base.Joiner;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.Managers.LobbyManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +34,7 @@ public class CommandBCast extends Command {
 
             List<String> serversList = new ArrayList<>();
 
-            for (LobbyManager.Lobby server : plugin.getLobbyManager().getLobbies()) {
-                if (server == null || !server.isOnline())
-                    continue;
+            for (ServerInfo server : plugin.getServerManager().getOnlineLobbies()) {
                 serversList.add(server.getName());
             }
             if (sender instanceof ProxiedPlayer) {

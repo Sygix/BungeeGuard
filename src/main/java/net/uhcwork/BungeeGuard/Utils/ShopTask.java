@@ -2,8 +2,8 @@ package net.uhcwork.BungeeGuard.Utils;
 
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.Managers.LobbyManager;
 import net.uhcwork.BungeeGuard.Models.ShopActionModel;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 
@@ -74,9 +74,7 @@ public class ShopTask implements Runnable {
         String message = (String) params.get("message");
         List<String> serversList = new ArrayList<>();
 
-        for (LobbyManager.Lobby server : plugin.getLobbyManager().getLobbies()) {
-            if (server == null || !server.isOnline())
-                continue;
+        for (ServerInfo server : plugin.getServerManager().getOnlineLobbies()) {
             serversList.add(server.getName());
         }
         Main.getMB().broadcastServers(serversList, message);

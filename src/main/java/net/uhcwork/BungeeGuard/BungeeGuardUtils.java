@@ -5,13 +5,10 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-import net.uhcwork.BungeeGuard.Models.BungeeBan;
-import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Utils.DateUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 public class BungeeGuardUtils {
     private static Main plugin;
@@ -35,15 +32,6 @@ public class BungeeGuardUtils {
             return "-" + getDuration(-futureTimestamp);
         return DateUtil.formatDateDiff(futureTimestamp);
     }
-
-    public static BungeeBan getBan(UUID u) {
-        return plugin.getBanManager().findBan(u);
-    }
-
-    public static BungeeMute getMute(UUID u) {
-        return plugin.getMuteManager().findMute(u);
-    }
-
 
     public static String getServerID() {
         if (server_id != null)

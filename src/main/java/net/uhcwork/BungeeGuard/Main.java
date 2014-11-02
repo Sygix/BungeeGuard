@@ -51,11 +51,7 @@ public class Main extends Plugin {
     public static Gson gson = new Gson();
     private final List<String> silencedServers = new ArrayList<>();
     @Getter
-    private final BanManager banManager = new BanManager(this);
-    @Getter
-    private final MuteManager muteManager = new MuteManager(this);
-    @Getter
-    private final LobbyManager lobbyManager = new LobbyManager(this);
+    private final SanctionManager sanctionManager = new SanctionManager(this);
     @Getter
     PermissionManager permissionManager = new PermissionManager(this);
     @Getter
@@ -170,7 +166,7 @@ public class Main extends Plugin {
         }
 
         new BungeeGuardUtils(this);
-        System.out.println("Welcome to MultiBungee ~ With ORM. ~ Crafted with love, and Intellij Idea.");
+        System.out.println("Welcome to MultiBungee ~ With ORM ~ Crafted with love, and Intellij Idea.");
         getProxy().setReconnectHandler(new MyReconnectHandler());
         config = new MysqlConfigAdapter(this);
         getProxy().setConfigurationAdapter(config);
@@ -194,9 +190,9 @@ public class Main extends Plugin {
     public void onEnable() {
         MB.init();
 
-        banManager.loadBans();
-        muteManager.loadMutes();
-        lobbyManager.setupPingTask();
+        sanctionManager.loadBans();
+        sanctionManager.loadMutes();
+        serverManager.setupPingTask();
 
         BungeeGuardListener BGListener = new BungeeGuardListener(this);
 
@@ -215,7 +211,7 @@ public class Main extends Plugin {
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
                 CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
                 CommandPoints.class, CommandWallet.class, CommandFind.class, CommandStaff.class,
-                CommandUser.class, CommandGroups.class, CommandGtpHere.class);
+                CommandUser.class, CommandGroups.class, CommandGtpHere.class, CommandRegister.class);
 
         for (Class<? extends Command> commande : commandes) {
             try {
@@ -233,9 +229,33 @@ public class Main extends Plugin {
             }
         }, 0, 20, TimeUnit.SECONDS);
 
+        setupStopSchedule();
+
         getProxy().getScheduler().schedule(this, new ShopTask(this), 0, 10, TimeUnit.SECONDS);
 
         getProxy().getScheduler().schedule(this, new AnnouncementTask(), 1, 1, TimeUnit.SECONDS);
+    }
+
+    private void setupStopSchedule() {
+        getProxy().getScheduler().schedule(this, new Runnable() {
+            boolean nobody_here = false;
+
+            // Restarts the Bungee server if nobody is online
+            // during two consecutive checks
+
+            @Override
+            public void run() {
+                if (getProxy().getOnlineCount() == 0) {
+                    if (nobody_here) {
+                        getProxy().stop();
+                    }
+                    nobody_here = true;
+                } else {
+                    nobody_here = false;
+                }
+
+            }
+        }, 60, 3, TimeUnit.MINUTES);
     }
 
     @Override
