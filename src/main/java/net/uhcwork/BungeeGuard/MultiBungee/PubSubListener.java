@@ -140,7 +140,7 @@ public class PubSubListener implements Listener {
                     out.writeUTF(serverName);
                     out.writeUTF(Main.getPrettyServerName(serverName));
                     out.writeUTF(Main.getShortServerName(serverName));
-                    if (throwable != null) {
+                    if (throwable != null || serverPing == null) {
                         out.writeInt(-1);
                     } else {
                         out.writeInt(serverPing.getPlayers().getOnline());

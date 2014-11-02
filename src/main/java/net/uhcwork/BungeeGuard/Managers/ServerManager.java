@@ -69,7 +69,7 @@ public class ServerManager {
             };
             ProxyServer.getInstance().getServerInfo(serverName).ping(pingCallback);
         } else {
-            pingBack.done(SP.get(), null);
+            pingBack.done(SP.orNull(), null);
         }
     }
 
@@ -84,8 +84,9 @@ public class ServerManager {
                             @Override
                             public void done(ServerPing result, Throwable error) {
                                 Lobby lobby = new Lobby();
-                                lobby.setOnline(error == null);
-                                if (error == null) {
+                                boolean isError = (error != null) || (result == null);
+                                lobby.setOnline(isError);
+                                if (!isError) {
                                     lobby.setName(serverInfo.getName());
                                     lobby.setMaxPlayers(result.getPlayers().getMax());
                                     lobby.setOnlinePlayers(result.getPlayers().getOnline());
