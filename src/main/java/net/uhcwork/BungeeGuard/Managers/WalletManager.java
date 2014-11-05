@@ -3,12 +3,12 @@ package net.uhcwork.BungeeGuard.Managers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.WalletAccountModel;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -25,6 +25,7 @@ public class WalletManager {
 
     private final Main plugin;
     private final MultiBungee MB;
+    private final DecimalFormat df = new DecimalFormat("#.##");
     private final LoadingCache<UUID, WalletAccountModel> walletsCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .expireAfterWrite(60, TimeUnit.SECONDS)
@@ -75,10 +76,6 @@ public class WalletManager {
         return WAM;
     }
 
-    double getBalance(ProxiedPlayer p) {
-        return getBalance(p.getUniqueId());
-    }
-
     public double getBalance(UUID uniqueId) {
         return getAccount(uniqueId).getMoney();
     }
@@ -113,8 +110,8 @@ public class WalletManager {
         plugin.executePersistenceRunnable(new SaveRunner(WAM));
     }
 
-    public double getDisplayedBalance(UUID u) {
+    public String getDisplayedBalance(UUID u) {
         double balance = getBalance(u);
-        return Math.floor(balance * 4) / 4;
+        return df.format(Math.floor(balance * 4) / 4);
     }
 }
