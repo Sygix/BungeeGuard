@@ -27,10 +27,12 @@ public class CommandRegister extends Command {
 
     private final Main plugin;
     private final StringTemplate url;
+    boolean active = true;
 
     public CommandRegister(Main plugin) {
         super("register", "");
         this.plugin = plugin;
+        active = false;
         url = new StringTemplate("http://uhcgames.com/ajax/add_member_sv.php?pseudo=${pseudo}&uuid=${uuid}&email=${email}&v=${token}&ip=${ip}");
     }
 
@@ -42,6 +44,10 @@ public class CommandRegister extends Command {
         }
         if (!(sender instanceof ProxiedPlayer)) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu veux que je te " + ChatColor.YELLOW + "console " + ChatColor.RED + " ? >.<"));
+            return;
+        }
+        if (!active) {
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Bien trouvé ... Mais pas encore activé :("));
             return;
         }
         ProxiedPlayer p = (ProxiedPlayer) sender;
