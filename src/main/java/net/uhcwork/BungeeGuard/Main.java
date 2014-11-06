@@ -256,7 +256,7 @@ public class Main extends Plugin {
                 }
 
             }
-        }, 30, 2, TimeUnit.MINUTES);
+        }, 16 * 60, 1, TimeUnit.MINUTES);
     }
 
     @Override

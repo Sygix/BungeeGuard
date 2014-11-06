@@ -25,7 +25,7 @@ public class WalletManager {
 
     private final Main plugin;
     private final MultiBungee MB;
-    private final DecimalFormat df = new DecimalFormat("#.##");
+    private final DecimalFormat df = new DecimalFormat("## ###.##");
     private final LoadingCache<UUID, WalletAccountModel> walletsCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .expireAfterWrite(60, TimeUnit.SECONDS)
