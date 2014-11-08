@@ -46,7 +46,7 @@ public class CommandWallet extends Command {
                     sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inconnu"));
                     return;
                 }
-                sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le solde de " + ChatColor.AQUA + name + " " + ChatColor.GRAY + "est de " + ChatColor.GREEN + WM.getBalance(uuid) + ChatColor.GOLD + " UHCoins"));
+                sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le solde de " + ChatColor.AQUA + name + " " + ChatColor.GRAY + "est de " + ChatColor.GREEN + WM.getDisplayedBalance(uuid) + ChatColor.GOLD + " UHCoins"));
             }
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("reset")) {
@@ -58,20 +58,6 @@ public class CommandWallet extends Command {
                 }
                 WM.setBalance(uuid, 0);
                 sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le solde de " + ChatColor.AQUA + name + ChatColor.GRAY + " a été remis a zero !"));
-            } else if (args[0].equalsIgnoreCase("toggle")) {
-                name = args[1];
-                uuid = MB.getUuidFromName(name);
-                if (uuid == null) {
-                    sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inconnu"));
-                    return;
-                }
-                if (WM.isActive(uuid)) {
-                    WM.setInactive(uuid);
-                    sender.sendMessage(TextComponent.fromLegacyText(prefix + "§cLe compte du joueur " + name + " a été désactivé !"));
-                } else {
-                    WM.setActive(uuid);
-                    sender.sendMessage(TextComponent.fromLegacyText(prefix + "§aLe compte du joueur " + name + " a été activé !"));
-                }
             }
         } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase("set")) {
@@ -105,6 +91,5 @@ public class CommandWallet extends Command {
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet " + ChatColor.GRAY + "<player>"));
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet reset " + ChatColor.GRAY + "<player>"));
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet (set,add,sub) " + ChatColor.GRAY + "<player> <amount>"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "/wallet toggle " + ChatColor.GRAY + "<player>"));
     }
 }

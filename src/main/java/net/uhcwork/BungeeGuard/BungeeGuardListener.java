@@ -65,6 +65,10 @@ public class BungeeGuardListener implements Listener {
             .append(".UHCGames.com")
             .bold(true)
             .color(ChatColor.AQUA).create();
+    private String fullNotVIP = "" + ChatColor.YELLOW + ChatColor.BOLD + "Le serveur est plein" +
+            ChatColor.GOLD + ChatColor.BOLD + "\nVous pourrez le rejoindre en devenant VIP !" +
+            ChatColor.RED + ChatColor.BOLD + "\nAchetez-le sur " +
+            ChatColor.WHITE + ChatColor.BOLD + "https://store.uhcgames.com/";
     private Method handshakeMethod = null;
 
     public BungeeGuardListener(Main plugin) {
@@ -77,9 +81,17 @@ public class BungeeGuardListener implements Listener {
         }
     }
 
-
     @EventHandler
     public void onLogin(final LoginEvent event) {
+        event.registerIntent(plugin);
+        if (Main.getMB().getPlayerCount() > plugin.getConfig().getMaxPlayers()) {
+            if (!Permissions.hasPerm(event.getConnection().getName(), "bungee.join_full")) {
+                event.setCancelled(true);
+                event.setCancelReason(fullNotVIP);
+                event.completeIntent(plugin);
+                return;
+            }
+        }
         String hostString = event.getConnection().getVirtualHost().getHostString().toLowerCase();
         if (!Permissions.hasPerm(event.getConnection().getName(), "bungee.canBypassHost") &&
                 !plugin.getConfig().getForcedHosts().containsKey(hostString)) {
@@ -98,12 +110,14 @@ public class BungeeGuardListener implements Listener {
                 if (ban.isBanned()) {
                     event.setCancelled(true);
                     event.setCancelReason(ban.getBanMessage());
+                    event.completeIntent(plugin);
                     return;
                 }
                 plugin.getSanctionManager().unban(ban, "TimeEnd", "Automatique", true);
                 Main.getMB().unban(event.getConnection().getUniqueId());
             }
         }
+        event.completeIntent(plugin);
     }
 
     @EventHandler
@@ -200,11 +214,13 @@ public class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onProxyPing(ProxyPingEvent e) {
+        e.registerIntent(plugin);
         ServerPing sp = e.getResponse();
         sp.getPlayers().setMax(plugin.getConfig().getMaxPlayers());
         sp.getPlayers().setOnline(Main.getMB().getPlayerCount());
         sp.setDescription(plugin.getConfig().getMotd());
         e.getResponse().getPlayers().setSample(playersPing);
+        e.completeIntent(plugin);
     }
 
     @EventHandler

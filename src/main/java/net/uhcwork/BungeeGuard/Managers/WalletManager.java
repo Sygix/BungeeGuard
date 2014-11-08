@@ -8,7 +8,8 @@ import net.uhcwork.BungeeGuard.Models.WalletAccountModel;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -25,7 +26,6 @@ public class WalletManager {
 
     private final Main plugin;
     private final MultiBungee MB;
-    private final DecimalFormat df = new DecimalFormat("## ###.##");
     private final LoadingCache<UUID, WalletAccountModel> walletsCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .expireAfterWrite(60, TimeUnit.SECONDS)
@@ -44,10 +44,10 @@ public class WalletManager {
                     return x.get();
                 }
             });
+    NumberFormat nf = NumberFormat.getNumberInstance(Locale.FRANCE);
 
     public WalletManager(Main main) {
         MB = Main.getMB();
-
         this.plugin = main;
     }
 
@@ -69,7 +69,6 @@ public class WalletManager {
         WalletAccountModel WAM = new WalletAccountModel();
         WAM.setUUID(u);
         WAM.setMoney(0);
-        WAM.setActive(true);
         WAM.setPlayerName(userName);
         plugin.executePersistenceRunnable(new SaveRunner(WAM));
         walletsCache.put(u, WAM);
@@ -92,26 +91,8 @@ public class WalletManager {
         plugin.executePersistenceRunnable(new SaveRunner(WAM));
     }
 
-    public boolean isActive(UUID uuid) {
-        return getAccount(uuid).isActive();
-    }
-
-    public void setInactive(UUID uuid) {
-        setActive(uuid, false);
-    }
-
-    public void setActive(UUID uuid) {
-        setActive(uuid, true);
-    }
-
-    void setActive(UUID uuid, boolean active) {
-        final WalletAccountModel WAM = getAccount(uuid);
-        WAM.setActive(active);
-        plugin.executePersistenceRunnable(new SaveRunner(WAM));
-    }
-
     public String getDisplayedBalance(UUID u) {
         double balance = getBalance(u);
-        return df.format(Math.floor(balance * 4) / 4);
+        return nf.format(Math.floor(balance * 4) / 4);
     }
 }

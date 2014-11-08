@@ -140,7 +140,6 @@ public class Main extends Plugin {
         plugin = this;
         startTime = System.currentTimeMillis();
 
-
         Properties prop = null;
         try {
             File configFile = new File("config.properties");
