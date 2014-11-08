@@ -32,7 +32,9 @@ public class PermissionManager {
     final
     Map<String, Group> groups = new HashMap<>();
     private final Main plugin;
-    private final Cache<UUID, User> playersCache = CacheBuilder.newBuilder().maximumSize(750).expireAfterWrite(10, TimeUnit.MINUTES).build();
+    private final Cache<UUID, User> playersCache = CacheBuilder.newBuilder()
+            .maximumSize(750)
+            .expireAfterWrite(15, TimeUnit.MINUTES).build();
 
     public PermissionManager(Main plugin) {
         this.plugin = plugin;
