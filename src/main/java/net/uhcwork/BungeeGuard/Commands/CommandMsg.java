@@ -65,11 +65,11 @@ public class CommandMsg extends Command {
             }
             UUID receiverUUID = Main.getMB().getUuidFromName(args[0]);
             boolean isReply = plugin.isReply(p.getUniqueId(), receiverUUID);
-            if (Permissions.hasPerm(args[0], "bungee.moremsg") && !p.hasPermission("bungee.moremsg") && !isReply) {
+            if (Permissions.hasPerm(receiverUUID, "bungee.moremsg") && !p.hasPermission("bungee.moremsg") && !isReply) {
                 p.sendMessage(new ComponentBuilder("Vous n'avez pas la permission de parler à ce joueur !").color(ChatColor.RED).create());
                 return;
             }
-            if (plugin.getIgnoreManager().playerIgnores(receiverUUID, p.getUniqueId()) && !Permissions.hasPerm(args[0], "bungee.ignore.ignore")) {
+            if (plugin.getIgnoreManager().playerIgnores(receiverUUID, p.getUniqueId()) && !Permissions.hasPerm(receiverUUID, "bungee.ignore.ignore")) {
                 p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
                 return;
             }
