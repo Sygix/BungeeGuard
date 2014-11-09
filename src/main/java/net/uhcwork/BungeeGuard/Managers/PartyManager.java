@@ -142,7 +142,7 @@ public class PartyManager {
         }
 
         private boolean canJoin(UUID uniqueId) {
-            if (getSize() < 10) {
+            if (getSize() < 20) {
                 if (isPublique() || isInvited(uniqueId)) {
                     invitations.remove(uniqueId);
                     return true;
