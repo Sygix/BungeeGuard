@@ -44,7 +44,7 @@ public class CommandIgnore extends Command {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne."));
             return;
         }
-        if (Permissions.hasPerm(args[0], "bungeeguard.ignore.ignore")) {
+        if (Permissions.hasPerm(toIgnore, "bungeeguard.ignore.ignore")) {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous n'avez pas la permission d'ignorer ce joueur."));
             return;
         }

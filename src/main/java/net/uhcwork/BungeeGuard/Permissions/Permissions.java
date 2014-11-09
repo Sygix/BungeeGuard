@@ -16,8 +16,12 @@ import java.util.UUID;
 public class Permissions {
     // Works even with offline players !
     public static boolean hasPerm(String player, String permission) {
-        PermissionManager PM = Main.plugin.getPermissionManager();
         UUID uuid = Main.getMB().getUuidFromName(player);
+        return hasPerm(uuid, permission);
+    }
+
+    public static boolean hasPerm(UUID uuid, String permission) {
+        PermissionManager PM = Main.plugin.getPermissionManager();
         User u = PM.getUser(uuid);
         boolean allowed;
         for (Group g : PM.getGroups(u)) {

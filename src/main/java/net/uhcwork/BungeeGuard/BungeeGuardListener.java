@@ -84,8 +84,9 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onLogin(final LoginEvent event) {
         event.registerIntent(plugin);
+        System.out.println(event.getConnection().getUniqueId());
         if (Main.getMB().getPlayerCount() > plugin.getConfig().getMaxPlayers()) {
-            if (!Permissions.hasPerm(event.getConnection().getName(), "bungee.join_full")) {
+            if (!Permissions.hasPerm(event.getConnection().getUniqueId(), "bungee.join_full")) {
                 event.setCancelled(true);
                 event.setCancelReason(fullNotVIP);
                 event.completeIntent(plugin);
@@ -93,7 +94,7 @@ public class BungeeGuardListener implements Listener {
             }
         }
         String hostString = event.getConnection().getVirtualHost().getHostString().toLowerCase();
-        if (!Permissions.hasPerm(event.getConnection().getName(), "bungee.canBypassHost") &&
+        if (!Permissions.hasPerm(event.getConnection().getUniqueId(), "bungee.canBypassHost") &&
                 !plugin.getConfig().getForcedHosts().containsKey(hostString)) {
             event.setCancelled(true);
             event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
@@ -283,7 +284,10 @@ public class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onPermCheck(PermissionCheckEvent e) {
-        e.setHasPermission(Permissions.hasPerm(e.getSender().getName(), e.getPermission()));
+        if (e.getSender() instanceof ProxiedPlayer) {
+            ProxiedPlayer p = (ProxiedPlayer) e.getSender();
+            e.setHasPermission(Permissions.hasPerm(p.getUniqueId(), e.getPermission()));
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
