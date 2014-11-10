@@ -221,41 +221,29 @@ public class Main extends Plugin {
                 e.printStackTrace();
             }
         }
-
+        final ShopTask shopTask = new ShopTask(this);
         getProxy().getScheduler().schedule(this, new Runnable() {
             @Override
             public void run() {
                 new ReloadConfHandler().handle(plugin);
+                shopTask.run();
             }
-        }, 0, 20, TimeUnit.SECONDS);
+        }, 0, 10, TimeUnit.SECONDS);
 
         setupStopSchedule();
-
-        getProxy().getScheduler().schedule(this, new ShopTask(this), 0, 10, TimeUnit.SECONDS);
 
         getProxy().getScheduler().schedule(this, new AnnouncementTask(), 1, 1, TimeUnit.SECONDS);
     }
 
     private void setupStopSchedule() {
+        // Auto reboot après 6 heures, dès que plus personne n'est connecté.
         getProxy().getScheduler().schedule(this, new Runnable() {
-            boolean nobody_here = false;
-
-            // Restarts the Bungee server if nobody is online
-            // during two consecutive checks
-
             @Override
             public void run() {
-                if (getProxy().getOnlineCount() == 0) {
-                    if (nobody_here) {
-                        getProxy().stop();
-                    }
-                    nobody_here = true;
-                } else {
-                    nobody_here = false;
-                }
-
+                if (getProxy().getOnlineCount() == 0)
+                    getProxy().stop();
             }
-        }, 16 * 60, 1, TimeUnit.MINUTES);
+        }, 6 * 60, 1, TimeUnit.MINUTES);
     }
 
     @Override

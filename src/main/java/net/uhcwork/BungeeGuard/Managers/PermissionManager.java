@@ -34,7 +34,7 @@ public class PermissionManager {
     private final Main plugin;
     private final Cache<UUID, User> playersCache = CacheBuilder.newBuilder()
             .maximumSize(750)
-            .expireAfterWrite(15, TimeUnit.MINUTES).build();
+            .expireAfterWrite(10, TimeUnit.HOURS).build();
 
     public PermissionManager(Main plugin) {
         this.plugin = plugin;
