@@ -8,6 +8,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Ordering;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import lombok.Data;
 import lombok.Getter;
 import net.md_5.bungee.api.Callback;
@@ -17,9 +19,11 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,12 +49,16 @@ public class ServerManager {
             .maximumSize(300)
             .expireAfterWrite(1, TimeUnit.SECONDS)
             .build();
+    Type mapType = new TypeToken<List<Map<String, Object>>>() {
+    }.getType();
+    Gson gson;
     @Getter
     private List<Lobby> lobbies = new ArrayList<>();
 
 
     public ServerManager(Main main) {
         this.plugin = main;
+        gson = main.getGson();
     }
 
     public void ping(final String serverName, final Callback<ServerPing> pingBack) {
@@ -92,10 +100,20 @@ public class ServerManager {
                                     lobby.setOnlinePlayers(result.getPlayers().getOnline());
                                     if (!serverInfo.getName().startsWith("limbo")) {
                                         double tps;
-                                        try {
-                                            tps = Double.parseDouble(result.getDescription());
-                                        } catch (NumberFormatException e) {
-                                            tps = 10;
+                                        String motd = result.getDescription();
+                                        if (motd.startsWith("{")) {
+                                            Map<String, String> data = gson.fromJson(motd, mapType);
+                                            if (data.containsKey("tps")) {
+                                                tps = Double.parseDouble(data.get("tps"));
+                                            } else {
+                                                tps = 10;
+                                            }
+                                        } else {
+                                            try {
+                                                tps = Double.parseDouble(result.getDescription());
+                                            } catch (NumberFormatException e) {
+                                                tps = 10;
+                                            }
                                         }
                                         lobby.setTps(tps);
                                     }
