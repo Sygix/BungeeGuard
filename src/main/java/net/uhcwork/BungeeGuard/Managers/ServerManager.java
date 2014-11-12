@@ -104,7 +104,12 @@ public class ServerManager {
                                         if (motd.startsWith("{")) {
                                             Map<String, String> data = gson.fromJson(motd, mapType);
                                             if (data.containsKey("tps")) {
-                                                tps = Double.parseDouble(data.get("tps"));
+                                                try {
+
+                                                    tps = Double.parseDouble(data.get("tps"));
+                                                } catch (NumberFormatException e) {
+                                                    tps = 10;
+                                                }
                                             } else {
                                                 tps = 10;
                                             }
