@@ -29,9 +29,7 @@ public class StaffChatHandler {
         String senderName = e.getArg(1);
         System.out.println(senderName);
         Group g = plugin.getPermissionManager().getMainGroup(senderName);
-        System.out.println(g.getName());
-        System.out.println(g.getColor() + "lol");
-        String displayName = g.getColor() + senderName + ChatColor.RESET;
+        String displayName = g.getColor() + "•" + ChatColor.RESET + senderName + ChatColor.RED;
         String message = ChatColor.translateAlternateColorCodes('&', e.getArg(2));
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (player.hasPermission("bungee.staffchat")) {
