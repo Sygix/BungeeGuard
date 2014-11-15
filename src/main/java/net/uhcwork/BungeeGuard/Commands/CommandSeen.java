@@ -39,7 +39,7 @@ public class CommandSeen extends Command {
                         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "En ligne."));
                     else
                         sender.sendMessage(TextComponent.fromLegacyText("Dernière connexion il y a " + ChatColor.GREEN + DateUtil.formatDateDiff(lastOnline)));
-                    long presence = Long.valueOf(String.valueOf(Base.firstCell("SELECT SUM(leaved_at - joined_at) FROM bungeelitycs WHERE uuid = ? AND leaved_at IS NOT NULL", "" + u)));
+                    long presence = Long.valueOf(String.valueOf(Base.firstCell("SELECT SUM(TIME_TO_SEC(TIMEDIFF(leaved_at, joined_at))) FROM bungeelitycs WHERE uuid = ? AND leaved_at IS NOT NULL", "" + u)));
                     sender.sendMessage(TextComponent.fromLegacyText("Temps en ligne : " + ChatColor.GREEN + DateUtil.formatDateDiff(System.currentTimeMillis() + 1000 * presence)));
 
                 }
