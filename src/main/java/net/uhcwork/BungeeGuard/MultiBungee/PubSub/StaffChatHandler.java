@@ -27,13 +27,12 @@ public class StaffChatHandler {
     public void staffChat(Main plugin, PubSubMessageEvent e) {
         String serverName = e.getArg(0);
         String senderName = e.getArg(1);
-        System.out.println(senderName);
-        Group g = plugin.getPermissionManager().getMainGroup(senderName);
-        String displayName = g.getColor() + "•" + ChatColor.RESET + senderName + ChatColor.RED;
         String message = ChatColor.translateAlternateColorCodes('&', e.getArg(2));
+        Group g = plugin.getPermissionManager().getMainGroup(senderName);
+        String displayName = g.getColor() + senderName + ChatColor.RESET + ChatColor.RED;
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (player.hasPermission("bungee.staffchat")) {
-                player.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.RED + "[" + Main.getPrettyServerName(serverName) + ChatColor.RESET + ChatColor.RED + "] " + displayName + ": " + message));
+                player.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.RED + "[" + Main.getPrettyServerName(serverName) + ChatColor.RESET + ChatColor.RED + "]" + displayName + ": " + message));
             }
         }
     }
