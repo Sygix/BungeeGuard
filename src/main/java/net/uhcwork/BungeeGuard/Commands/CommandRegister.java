@@ -27,12 +27,10 @@ public class CommandRegister extends Command {
 
     private final Main plugin;
     private final StringTemplate url;
-    boolean active = true;
 
     public CommandRegister(Main plugin) {
         super("register", "");
         this.plugin = plugin;
-        active = false;
         url = new StringTemplate("http://uhcgames.com/ajax/add_member_sv.php?pseudo=${pseudo}&uuid=${uuid}&email=${email}&v=${token}&ip=${ip}");
     }
 
@@ -42,14 +40,12 @@ public class CommandRegister extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Usage: /register <email>"));
             return;
         }
+
         if (!(sender instanceof ProxiedPlayer)) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu veux que je te " + ChatColor.YELLOW + "console " + ChatColor.RED + " ? >.<"));
             return;
         }
-        if (!active) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Bien trouvé ... Mais pas encore activé :("));
-            return;
-        }
+
         ProxiedPlayer p = (ProxiedPlayer) sender;
         String email = args[0];
         String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -84,6 +80,9 @@ public class CommandRegister extends Command {
                             break;
                         case "4":
                             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous possédez déjà un compte."));
+                            break;
+                        case "5":
+                            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Les inscriptions sont actuellement fermées."));
                             break;
                         default:
                             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Une erreur est survenue. :("));
