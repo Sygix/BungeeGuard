@@ -166,7 +166,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
             plugin.addShortServerName(name, shortName);
 
             InetSocketAddress address = Util.getAddr(addr);
-            ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, "", false);
+            ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, "", true);
             servers_new.put(name, info);
         }
         setServers(servers_new);
