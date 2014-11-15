@@ -30,9 +30,12 @@ public class StaffChatHandler {
         String message = ChatColor.translateAlternateColorCodes('&', e.getArg(2));
         Group g = plugin.getPermissionManager().getMainGroup(senderName);
         String displayName = g.getColor() + senderName + ChatColor.RESET + ChatColor.RED;
+        String displayPunkName = g.getColor() + " • " + ChatColor.RESET + ChatColor.RED + senderName;
+        String dname;
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (player.hasPermission("bungee.staffchat")) {
-                player.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.RED + "[" + Main.getPrettyServerName(serverName) + ChatColor.RESET + ChatColor.RED + "]" + displayName + ": " + message));
+                dname = (player.getName().equals("punkeel") || player.getName().equals("Stornitz") || player.getName().equals("Greenns")) ? displayPunkName : displayName;
+                player.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.RED + "[" + Main.getPrettyServerName(serverName) + ChatColor.RESET + ChatColor.RED + "]" + dname + ": " + message));
             }
         }
     }
