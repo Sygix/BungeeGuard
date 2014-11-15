@@ -10,6 +10,7 @@ import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubHandler;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
+import net.uhcwork.BungeeGuard.Permissions.Group;
 import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
 import java.util.concurrent.TimeUnit;
@@ -23,13 +24,18 @@ import java.util.concurrent.TimeUnit;
 public class StaffChatHandler {
 
     @PubSubHandler("staffChat")
-    public void staffChat(PubSubMessageEvent e) {
+    public void staffChat(Main plugin, PubSubMessageEvent e) {
         String serverName = e.getArg(0);
         String senderName = e.getArg(1);
+        System.out.println(senderName);
+        Group g = plugin.getPermissionManager().getMainGroup(senderName);
+        System.out.println(g.getName());
+        System.out.println(g.getColor() + "lol");
+        String displayName = g.getColor() + senderName + ChatColor.RESET;
         String message = ChatColor.translateAlternateColorCodes('&', e.getArg(2));
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (player.hasPermission("bungee.staffchat")) {
-                player.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.RED + "[" + Main.getPrettyServerName(serverName) + ChatColor.RESET + ChatColor.RED + "] " + senderName + ": " + message));
+                player.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.RED + "[" + Main.getPrettyServerName(serverName) + ChatColor.RESET + ChatColor.RED + "] " + displayName + ": " + message));
             }
         }
     }

@@ -33,7 +33,6 @@ public class CommandServer extends Command implements TabExecutor {
 
     public CommandServer(Main plugin) {
         super("server", "bungeecord.command.server");
-        Main plugin1 = plugin;
     }
 
     @Override
@@ -44,8 +43,8 @@ public class CommandServer extends Command implements TabExecutor {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         Map<String, ServerInfo> servers = ProxyServer.getInstance().getServers();
         if (args.length == 0) {
-            player.sendMessage(new TextComponent(ProxyServer.getInstance().getTranslation("current_server") + player.getServer().getInfo().getName()));
-            TextComponent serverList = new TextComponent(ProxyServer.getInstance().getTranslation("server_list"));
+            player.sendMessage(new TextComponent(ChatColor.GOLD + "Vous êtes actuellement sur " + player.getServer().getInfo().getName()));
+            TextComponent serverList = new TextComponent("Liste des Serveurs");
             serverList.setColor(ChatColor.GOLD);
             boolean first = true;
             for (ServerInfo server : servers.values()) {
@@ -53,9 +52,9 @@ public class CommandServer extends Command implements TabExecutor {
                     TextComponent serverTextComponent = new TextComponent(TextComponent.fromLegacyText((first ? "" : ", ") + Main.getPrettyServerName(server.getName()) + ChatColor.RESET));
                     int count = Main.getMB().getPlayersOnServer(server.getName()).size();
                     serverTextComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                            new ComponentBuilder(count + (count == 1 ? " player" : " players") + "\n")
-                                    .append("Click to connect to the server").italic(true)
-                                    .append("\nNom interne: " + server.getName()).color(ChatColor.DARK_AQUA)
+                            new ComponentBuilder(count + " joueur" + s(count) + "\n")
+                                    .append("Clic pour rejoindre").italic(true)
+                                    .append("\nNom interne: " + ChatColor.GREEN + server.getName()).color(ChatColor.DARK_AQUA)
                                     .create()));
                     serverTextComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + server.getName()));
                     serverList.addExtra(serverTextComponent);
@@ -88,5 +87,9 @@ public class CommandServer extends Command implements TabExecutor {
                 return input.getName();
             }
         });
+    }
+
+    private String s(int n) {
+        return n > 1 ? "s" : "";
     }
 }

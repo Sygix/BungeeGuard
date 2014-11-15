@@ -119,4 +119,12 @@ public class PermissionManager {
     public User getUser(String playerName) {
         return getUser(Main.getMB().getUuidFromName(playerName));
     }
+
+    public Group getMainGroup(UUID u) {
+        return getGroups(getUser(u)).get(0);
+    }
+
+    public Group getMainGroup(String user) {
+        return getGroups(getUser(user)).get(0);
+    }
 }
