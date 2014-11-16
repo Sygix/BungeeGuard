@@ -1,5 +1,7 @@
 package net.uhcwork.BungeeGuard.Models;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.javalite.activejdbc.Model;
@@ -16,12 +18,15 @@ import java.util.UUID;
  */
 @Table("bungeelitycs")
 public class BungeeLitycs extends Model {
-    public void setUUID(UUID uniqueId) {
-        setString("uuid", "" + uniqueId);
+    public static byte[] toBytes(UUID uuid) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput(16);
+        out.writeLong(uuid.getMostSignificantBits());
+        out.writeLong(uuid.getLeastSignificantBits());
+        return out.toByteArray();
     }
 
-    public void setPlayerName(String name) {
-        setString("player_name", name);
+    public void setUUID(UUID u) {
+        set("uuid", toBytes(u));
     }
 
     public void setServerID(String name) {
@@ -36,13 +41,8 @@ public class BungeeLitycs extends Model {
         setTimestamp("leaved_at", leavedAt);
     }
 
-    public int getID() {
-        return (int) getId();
-    }
-
     public void join(ProxiedPlayer p, ServerInfo target) {
         setUUID(p.getUniqueId());
-        setPlayerName(p.getName());
         setServerID(target.getName());
         setJoinedAt(new Timestamp(System.currentTimeMillis()));
     }
