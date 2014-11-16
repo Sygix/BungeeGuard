@@ -16,7 +16,7 @@ import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
+ * Part of net.uhcwork.BungeeGuard.MultiBungee.PubSub (bungeeguard)
  * Date: 07/09/2014
  * Time: 18:46
  * May be open-source & be sold (by mguerreiro, of course !)

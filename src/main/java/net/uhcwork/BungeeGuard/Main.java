@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.uhcwork.BungeeGuard.Announces.AnnouncementManager;
@@ -236,14 +237,21 @@ public class Main extends Plugin {
     }
 
     private void setupStopSchedule() {
-        // Auto reboot après 6 heures, dès que plus personne n'est connecté.
+        // Auto reboot après 6 heures, dès qu'il y a peu de joueurs
         getProxy().getScheduler().schedule(this, new Runnable() {
             @Override
             public void run() {
-                if (getProxy().getOnlineCount() == 0)
-                    getProxy().stop();
+                if (getProxy().getOnlineCount() <= 4) {
+                    getProxy().broadcast(TextComponent.fromLegacyText(ChatColor.DARK_RED + "Redémarrage du serveur dans 3 secondes ..."));
+                    getProxy().getScheduler().schedule(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                            getProxy().stop();
+                        }
+                    }, 3, TimeUnit.SECONDS);
+                }
             }
-        }, 6 * 60, 1, TimeUnit.MINUTES);
+        }, 6 * 60 * 60, 30, TimeUnit.SECONDS);
     }
 
     @Override
