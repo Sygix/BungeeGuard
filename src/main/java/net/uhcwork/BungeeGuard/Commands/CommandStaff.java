@@ -62,8 +62,7 @@ public class CommandStaff extends Command {
         if (isStaffOnline) {
             for (String groupeName : groupes.keySet()) {
                 for (String playerName : staff.get(groupeName)) {
-                    ComponentBuilder TC = new ComponentBuilder(playerName)
-                            .color(groupes.get(groupeName));
+                    ComponentBuilder TC = new ComponentBuilder(playerName).color(groupes.get(groupeName));
                     if (sender.hasPermission("bungee.staff.see")) {
                         TC.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 new ComponentBuilder("Serveur: ")
@@ -78,8 +77,7 @@ public class CommandStaff extends Command {
                                         .color(ChatColor.RED)
                                         .create()));
                     }
-                    TC.append(" ").underlined(false).color(null).bold(false)
-                            .italic(false).strikethrough(false).obfuscated(false);
+                    TC.append(" ").underlined(false).color(null).bold(false).italic(false).strikethrough(false).obfuscated(false);
                     message = ObjectArrays.concat(message, TC.create(), BaseComponent.class);
                 }
             }

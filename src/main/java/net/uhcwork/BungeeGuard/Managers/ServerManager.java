@@ -33,6 +33,9 @@ import java.util.concurrent.TimeUnit;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class ServerManager {
+    static final Type mapType = new TypeToken<List<Map<String, Object>>>() {
+    }.getType();
+    static Gson gson;
     private final Main plugin;
     private final Predicate<Lobby> isOnline = new Predicate<Lobby>() {
         public boolean apply(Lobby lobby) {
@@ -46,19 +49,16 @@ public class ServerManager {
     };
     @Getter
     Cache<String, Optional<ServerPing>> serversCache = CacheBuilder.newBuilder()
-            .maximumSize(300)
+            .maximumSize(500)
             .expireAfterWrite(1, TimeUnit.SECONDS)
             .build();
-    Type mapType = new TypeToken<List<Map<String, Object>>>() {
-    }.getType();
-    Gson gson;
     @Getter
     private List<Lobby> lobbies = new ArrayList<>();
 
 
     public ServerManager(Main main) {
         this.plugin = main;
-        gson = main.getGson();
+        gson = Main.getGson();
     }
 
     public void ping(final String serverName, final Callback<ServerPing> pingBack) {
@@ -91,38 +91,8 @@ public class ServerManager {
                         Callback<ServerPing> pingBack = new Callback<ServerPing>() {
                             @Override
                             public void done(ServerPing result, Throwable error) {
-                                Lobby lobby = new Lobby();
                                 boolean isError = (error != null) || (result == null);
-                                lobby.setOnline(!isError);
-                                if (!isError) {
-                                    lobby.setName(serverInfo.getName());
-                                    lobby.setMaxPlayers(result.getPlayers().getMax());
-                                    lobby.setOnlinePlayers(result.getPlayers().getOnline());
-                                    if (!serverInfo.getName().startsWith("limbo")) {
-                                        double tps;
-                                        String motd = result.getDescription();
-                                        if (motd.startsWith("{")) {
-                                            Map<String, String> data = gson.fromJson(motd, mapType);
-                                            if (data.containsKey("tps")) {
-                                                try {
-
-                                                    tps = Double.parseDouble(data.get("tps"));
-                                                } catch (NumberFormatException e) {
-                                                    tps = 10;
-                                                }
-                                            } else {
-                                                tps = 10;
-                                            }
-                                        } else {
-                                            try {
-                                                tps = Double.parseDouble(result.getDescription());
-                                            } catch (NumberFormatException e) {
-                                                tps = 10;
-                                            }
-                                        }
-                                        lobby.setTps(tps);
-                                    }
-                                }
+                                Lobby lobby = new Lobby(isError, serverInfo, result);
                                 new_lobbies.add(lobby);
                             }
                         };
@@ -131,7 +101,7 @@ public class ServerManager {
                 }
                 lobbies = new_lobbies;
             }
-        }, 1, 3, TimeUnit.SECONDS);
+        }, 1, 1, TimeUnit.SECONDS);
     }
 
     @SuppressWarnings("UnusedParameters")
@@ -161,7 +131,7 @@ public class ServerManager {
         return Collections2.transform(Collections2.filter(getLobbies(), new Predicate<Lobby>() {
             @Override
             public boolean apply(Lobby lobby) {
-                return lobby.isOnline();
+                return lobby != null && lobby.isOnline();
             }
         }), new Function<Lobby, ServerInfo>() {
             @Override
@@ -178,10 +148,41 @@ public class ServerManager {
         private String name = "";
         private int onlinePlayers = 0;
         private int maxPlayers = 10;
-        private double tps = 0;
+        private double tps = 10;
         private boolean isOnline = false;
 
-        public Lobby() {
+        public Lobby(boolean isError, ServerInfo serverInfo, ServerPing result) {
+            isOnline = !isError;
+            if (isError) {
+                return;
+            }
+            name = serverInfo.getName();
+            onlinePlayers = result.getPlayers().getOnline();
+            maxPlayers = result.getPlayers().getMax();
+
+            if (!isLimboName(serverInfo.getName())) {
+                tps = getTps(serverInfo.getMotd());
+            }
+        }
+
+        private static boolean isLimboName(String name) {
+            return name.startsWith("limbo");
+        }
+
+        private double getTps(String motd) {
+            if (motd.startsWith("{")) {
+                Map<String, String> data = gson.fromJson(motd, mapType);
+                if (data.containsKey("tps")) {
+                    motd = data.get("tps");
+                } else {
+                    return 10;
+                }
+            }
+            try {
+                return Double.parseDouble(motd);
+            } catch (NumberFormatException e) {
+                return 10;
+            }
         }
 
         @Override
