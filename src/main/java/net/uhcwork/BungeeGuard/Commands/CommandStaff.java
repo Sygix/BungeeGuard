@@ -30,6 +30,8 @@ public class CommandStaff extends Command {
         MB = Main.getMB();
         PM = plugin.getPermissionManager();
         groupes.put("admin", ChatColor.RED);
+        groupes.put("dev", ChatColor.AQUA);
+        groupes.put("builder", ChatColor.YELLOW);
         groupes.put("modo", ChatColor.BLUE);
         groupes.put("modotest", ChatColor.BLUE);
         groupes.put("yt", ChatColor.GOLD);
