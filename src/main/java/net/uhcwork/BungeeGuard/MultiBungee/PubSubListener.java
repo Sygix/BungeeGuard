@@ -59,6 +59,9 @@ public class PubSubListener implements Listener {
                 out.writeUTF("ALL");
                 out.writeInt(MB.getPlayerCount());
             } else {
+                if (ProxyServer.getInstance().getServerInfo(target) == null)
+                    // Server does not exist.
+                    return;
                 out.writeUTF(target);
                 out.writeInt(MB.getPlayersOnServer(target).size());
             }
@@ -76,6 +79,9 @@ public class PubSubListener implements Listener {
                 out.writeUTF("ALL");
                 out.writeUTF(Util.csv(MB.getPlayersOnline()));
             } else {
+                if (ProxyServer.getInstance().getServerInfo(target) == null)
+                    // Server does not exist.
+                    return;
                 out.writeUTF(target);
                 out.writeUTF(Util.csv(MB.getPlayersOnServer(target)));
             }
