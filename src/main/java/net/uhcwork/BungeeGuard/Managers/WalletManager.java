@@ -8,7 +8,6 @@ import net.uhcwork.BungeeGuard.Models.WalletAccountModel;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
-import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -44,7 +43,6 @@ public class WalletManager {
                     return x.get();
                 }
             });
-    NumberFormat nf = NumberFormat.getNumberInstance(Locale.FRANCE);
 
     public WalletManager(Main main) {
         MB = Main.getMB();
@@ -93,6 +91,10 @@ public class WalletManager {
 
     public String getDisplayedBalance(UUID u) {
         double balance = getBalance(u);
-        return nf.format(Math.floor(balance * 4) / 4);
+        return getDisplayedBalance(balance);
+    }
+
+    public String getDisplayedBalance(Double balance) {
+        return String.format(Locale.FRENCH, "%,.2f", Math.floor(balance * 4) / 4);
     }
 }

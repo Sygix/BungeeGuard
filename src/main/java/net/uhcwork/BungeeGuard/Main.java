@@ -47,6 +47,7 @@ public class Main extends Plugin {
     private static final Map<UUID, UUID> reply = new HashMap<>();
     private static final List<UUID> spy = new ArrayList<>();
     private static final Map<String, String> prettyServerNames = new HashMap<>();
+    private static final String REDUCTION_PEINE = " &r(&eRéduction de peine&r)";
     public static Main plugin;
     @Getter
     public static Gson gson = new Gson();
@@ -299,11 +300,19 @@ public class Main extends Plugin {
     }
 
     public boolean isPremadeMessage(String slug) {
-        return premadeMessages.containsKey(slug.toLowerCase());
+        String lowerSlug = slug.toLowerCase();
+        if (lowerSlug.startsWith("r:"))
+            lowerSlug = lowerSlug.substring(1);
+        return premadeMessages.containsKey(lowerSlug);
     }
 
     public String getPremadeMessage(String slug) {
-        return premadeMessages.get(slug.toLowerCase());
+        String lowerSlug = slug.toLowerCase();
+        boolean reduction = lowerSlug.startsWith("r:");
+        if (reduction)
+            lowerSlug = lowerSlug.substring(1);
+
+        return premadeMessages.get(lowerSlug) + (reduction ? REDUCTION_PEINE : "");
     }
 
     public long getUptime() {
