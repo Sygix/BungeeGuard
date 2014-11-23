@@ -150,11 +150,17 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onChat(ChatEvent e) {
         ProxiedPlayer p = (ProxiedPlayer) e.getSender();
-
-        if (!p.hasPermission("bungee.admin")) {
+        String message = e.getMessage();
+        String lowerMessage = message.toLowerCase();
+        if (lowerMessage.startsWith("connected with") && lowerMessage.endsWith("minechat")) {
+            e.setCancelled(true);
+            return;
+        }
+        if (!p.hasPermission("bungee.can.repeat_message")) {
             plugin.getAntiSpamListener().onChat(e);
-
-            if (Permissions.miniglob(plugin.getForbiddenCommands(), e.getMessage().toLowerCase())) {
+        }
+        if (!p.hasPermission("bungee.admin")) {
+            if (Permissions.miniglob(plugin.getForbiddenCommands(), lowerMessage)) {
                 e.setMessage("");
                 e.setCancelled(true);
                 return;
@@ -162,8 +168,7 @@ public class BungeeGuardListener implements Listener {
         }
         if (e.isCancelled())
             return;
-        if (!e.getMessage().startsWith("/") && (e.getSender() instanceof ProxiedPlayer)) {
-
+        if (!lowerMessage.startsWith("/") && (e.getSender() instanceof ProxiedPlayer)) {
             if (e.isCommand()) {
                 return;
             }

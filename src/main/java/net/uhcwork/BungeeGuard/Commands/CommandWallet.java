@@ -69,7 +69,7 @@ public class CommandWallet extends Command {
                 }
                 double amount = Double.parseDouble(args[2]);
                 WM.setBalance(uuid, amount);
-                sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le compte du joueur " + ChatColor.AQUA + name + ChatColor.GRAY + " a été defini à " + ChatColor.GREEN + amount + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
+                sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le compte du joueur " + ChatColor.AQUA + name + ChatColor.GRAY + " a été defini à " + ChatColor.GREEN + WM.getDisplayedBalance(amount) + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
             } else if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("sub")) {
                 name = args[1];
                 uuid = MB.getUuidFromName(name);
@@ -80,8 +80,8 @@ public class CommandWallet extends Command {
                 double amount = Double.parseDouble(args[2]);
                 amount *= (args[0].equalsIgnoreCase("sub") ? -1 : 1);
                 WM.addToBalance(uuid, amount);
-                sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le compte du joueur " + ChatColor.AQUA + name + ChatColor.GRAY + " a été crédité de " + ChatColor.GREEN + amount + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
-                sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le nouveau solde de " + ChatColor.AQUA + name + ChatColor.GRAY + " est de " + ChatColor.GREEN + WM.getBalance(uuid) + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
+                sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le compte du joueur " + ChatColor.AQUA + name + ChatColor.GRAY + " a été crédité de " + ChatColor.GREEN + WM.getDisplayedBalance(amount) + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
+                sender.sendMessage(TextComponent.fromLegacyText(prefix + ChatColor.GRAY + "Le nouveau solde de " + ChatColor.AQUA + name + ChatColor.GRAY + " est de " + ChatColor.GREEN + WM.getDisplayedBalance(uuid) + ChatColor.GOLD + " UHCoins " + ChatColor.GRAY + "!"));
             }
         }
     }
