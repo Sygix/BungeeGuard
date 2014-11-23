@@ -95,6 +95,7 @@ public class WalletManager {
     }
 
     public String getDisplayedBalance(Double balance) {
-        return String.format(Locale.FRENCH, "%,.2f", Math.floor(balance * 4) / 4);
+        // \u00a0 est le code pour le &nbsp;
+        return String.format(Locale.FRENCH, "%,.2f", Math.floor(balance * 4) / 4).replaceAll("\u00a0", " ");
     }
 }
