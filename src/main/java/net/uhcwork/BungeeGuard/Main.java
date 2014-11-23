@@ -167,11 +167,10 @@ public class Main extends Plugin {
         }
 
         new BungeeGuardUtils(this);
-        System.out.println("Welcome to MultiBungee ~ With ORM ~ Crafted with love, and Intellij Idea.");
+        System.out.println("Welcome to MultiBungee ~ With ORM ~ Crafted with love, and a small cache.");
         getProxy().setReconnectHandler(new MyReconnectHandler());
         config = new MysqlConfigAdapter(this);
         getProxy().setConfigurationAdapter(config);
-
     }
 
     private void fetchParties() {

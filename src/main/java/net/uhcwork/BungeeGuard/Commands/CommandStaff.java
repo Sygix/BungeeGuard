@@ -34,7 +34,7 @@ public class CommandStaff extends Command {
         groupes.put("builder", ChatColor.YELLOW);
         groupes.put("modo", ChatColor.BLUE);
         groupes.put("modotest", ChatColor.BLUE);
-        groupes.put("yt", ChatColor.GOLD);
+        groupes.put("youtuber", ChatColor.GOLD);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CommandStaff extends Command {
         playersBoucle:
         for (UUID playerUUID : MB.getPlayersOnline()) {
             for (String groupeName : groupes.keySet()) {
-                if (PM.getUser(playerUUID).inGroup(groupeName)) {
+                if (PM.inGroup(playerUUID, groupeName)) {
                     isStaffOnline = true;
                     staff.put(groupeName, MB.getNameFromUuid(playerUUID));
                     continue playersBoucle;
@@ -73,7 +73,7 @@ public class CommandStaff extends Command {
                                         .append(MB.getProxy(playerName))
                                         .color(ChatColor.DARK_AQUA)
                                         .append("\nGroupes: ")
-                                        .append(Joiner.on(", ").join(PM.getUser(playerName).getGroups()))
+                                        .append(Joiner.on(", ").join(PM.getGroupes(MB.getUuidFromName(playerName))))
                                         .color(ChatColor.RED)
                                         .create()));
                     }

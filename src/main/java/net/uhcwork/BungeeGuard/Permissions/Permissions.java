@@ -4,6 +4,7 @@ import com.google.common.base.Splitter;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.PermissionManager;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,9 +23,9 @@ public class Permissions {
 
     public static boolean hasPerm(UUID uuid, String permission) {
         PermissionManager PM = Main.plugin.getPermissionManager();
-        User u = PM.getUser(uuid);
+        Collection<Group> groups = PM.getGroupsWithInherits(uuid);
         boolean allowed;
-        for (Group g : PM.getGroups(u)) {
+        for (Group g : groups) {
             if (g == null)
                 continue;
             for (String perm : g.getPermissions()) {
