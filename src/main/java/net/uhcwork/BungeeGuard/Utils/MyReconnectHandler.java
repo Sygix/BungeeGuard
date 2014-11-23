@@ -16,7 +16,6 @@ import net.uhcwork.BungeeGuard.Main;
 public class MyReconnectHandler implements ReconnectHandler {
     @Override
     public ServerInfo getServer(ProxiedPlayer p) {
-        System.out.println(p.getPendingConnection());
         PendingConnection con = p.getPendingConnection();
         if (con.getVirtualHost() == null)
             return null;
