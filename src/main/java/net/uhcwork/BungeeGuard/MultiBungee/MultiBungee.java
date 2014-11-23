@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Part of net.uhcwork.BungeeGuard.utils
@@ -90,7 +91,7 @@ public class MultiBungee {
 
     /**
      * Get a combined list of players on this network.
-     * <p/>
+     * <p>
      * <strong>Note that this function returns an immutable {@link java.util.Set}.</strong>
      *
      * @return a Set with all players found
@@ -101,7 +102,7 @@ public class MultiBungee {
 
     /**
      * Get a combined list of players on this network, as a collection of usernames.
-     * <p/>
+     * <p>
      * <strong>Note that this function returns an immutable {@link java.util.Collection}, and usernames
      * are lazily calculated (but cached, see the contract of {@link #getNameFromUuid(java.util.UUID)}).</strong>
      *
@@ -273,10 +274,10 @@ public class MultiBungee {
     /**
      * Fetch a name from the specified UUID. UUIDs are cached locally and in Redis. This function falls back to Mojang
      * as a last resort, so calls <strong>may</strong> be blocking.
-     * <p/>
+     * <p>
      * For the common use case of translating a list of UUIDs into names, use {@link #getHumanPlayersOnline()}
      * as the efficiency of that function is slightly greater as the names are calculated lazily.
-     * <p/>
+     * <p>
      * If performance is a concern, use {@link #getNameFromUuid(java.util.UUID, boolean)} as this allows you to disable Mojang lookups.
      *
      * @param uuid the UUID to fetch the name for
@@ -290,10 +291,10 @@ public class MultiBungee {
     /**
      * Fetch a name from the specified UUID. UUIDs are cached locally and in Redis. This function can fall back to Mojang
      * as a last resort if {@code expensiveLookups} is true, so calls <strong>may</strong> be blocking.
-     * <p/>
+     * <p>
      * For the common use case of translating the list of online players into names, use {@link #getHumanPlayersOnline()}
      * as the efficiency of that function is slightly greater as the names are calculated lazily.
-     * <p/>
+     * <p>
      * If performance is a concern, set {@code expensiveLookups} to false as this will disable lookups via Mojang.
      *
      * @param uuid             the UUID to fetch the name for
@@ -311,7 +312,7 @@ public class MultiBungee {
     /**
      * Fetch a UUID from the specified name. Names are cached locally and in Redis. This function falls back to Mojang
      * as a last resort, so calls <strong>may</strong> be blocking.
-     * <p/>
+     * <p>
      * If performance is a concern, see {@link #getUuidFromName(String, boolean)}, which disables the following functions:
      * <ul>
      * <li>Searching local entries case-insensitively</li>
@@ -330,7 +331,7 @@ public class MultiBungee {
     /**
      * Fetch a UUID from the specified name. Names are cached locally and in Redis. This function falls back to Mojang
      * as a last resort if {@code expensiveLookups} is true, so calls <strong>may</strong> be blocking.
-     * <p/>
+     * <p>
      * If performance is a concern, set {@code expensiveLookups} to false to disable searching Mojang and searching for usernames
      * case-insensitively.
      *
@@ -476,8 +477,13 @@ public class MultiBungee {
         sendChannelMessage("disbandParty", name);
     }
 
-    public void invalidatePermissionUser(UUID u) {
-        sendChannelMessage("invalidatePermissionUser", "" + u);
+    public void invalidatePermissionUser(final UUID u) {
+        ProxyServer.getInstance().getScheduler().schedule(Main.plugin, new Runnable() {
+            @Override
+            public void run() {
+                sendChannelMessage("invalidatePermissionUser", "" + u);
+            }
+        }, 10, TimeUnit.MILLISECONDS);
     }
 
     public void mutePlayer(UUID muteUUID, String muteName, long muteUntilTime, String reason, String adminName, UUID adminUUID) {

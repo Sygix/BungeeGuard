@@ -9,12 +9,12 @@ import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.PermissionManager;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.Permissions.Group;
-import net.uhcwork.BungeeGuard.Permissions.User;
 import net.uhcwork.BungeeGuard.Permissions.UserModel;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import net.uhcwork.BungeeGuard.Utils.DateUtil;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -49,17 +49,19 @@ public class CommandUser extends Command {
             sender.sendMessage(TextComponent.fromLegacyText("Joueur inconnu."));
             return;
         }
-        final User u = PM.getUser(uuid);
+        final Collection<UserModel> groupes = PM.getUserModels(uuid);
         sender.sendMessage(TextComponent.fromLegacyText("Joueur " + ChatColor.GREEN + playerName));
         if (args.length == 1) {
-            if (u == null) {
+            if (groupes.isEmpty()) {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Groupe : ... Aucun :("));
                 return;
             }
             plugin.executePersistenceRunnable(new VoidRunner() {
                 @Override
                 protected void run() {
-                    for (UserModel g : u.getGroupes()) {
+                    for (UserModel g : groupes) {
+                        if (!g.isValid())
+                            continue;
                         Timestamp until = g.getUntil();
                         Group groupe = PM.getGroup(g.getGroup());
                         if (until != null && until.getTime() > 0) {
@@ -84,26 +86,16 @@ public class CommandUser extends Command {
             }
             final String duration = (args.length == 4) ? args[3] : "";
             if (action.equalsIgnoreCase("add")) {
-                plugin.executePersistenceRunnable(new VoidRunner() {
-                    @Override
-                    protected void run() {
-                        if (duration.isEmpty())
-                            u.addGroup(groupe, null);
-                        else
-                            u.addGroup(groupe, BungeeGuardUtils.parseDuration(duration));
-                    }
-                });
-                MB.invalidatePermissionUser(u.getUuid());
+                if (duration.isEmpty())
+                    PM.addGroup(uuid, groupe, null);
+                else
+                    PM.addGroup(uuid, groupe, BungeeGuardUtils.parseDuration(duration));
+                MB.invalidatePermissionUser(uuid);
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Groupe ajouté"));
             }
             if (action.equalsIgnoreCase("del")) {
-                plugin.executePersistenceRunnable(new VoidRunner() {
-                    @Override
-                    protected void run() {
-                        u.removeGroup(groupe);
-                    }
-                });
-                MB.invalidatePermissionUser(u.getUuid());
+                PM.removeGroup(uuid, groupe);
+                MB.invalidatePermissionUser(uuid);
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Groupe supprimé"));
             }
 
