@@ -223,10 +223,11 @@ public class Main extends Plugin {
             }
         }
         final ShopTask shopTask = new ShopTask(this);
+        final ReloadConfHandler reloadConfHandler = new ReloadConfHandler();
         getProxy().getScheduler().schedule(this, new Runnable() {
             @Override
             public void run() {
-                new ReloadConfHandler().handle(plugin);
+                reloadConfHandler.handle(plugin);
                 shopTask.run();
             }
         }, 0, 10, TimeUnit.SECONDS);

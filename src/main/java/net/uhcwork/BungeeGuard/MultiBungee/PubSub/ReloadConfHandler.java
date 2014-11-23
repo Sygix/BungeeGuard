@@ -28,7 +28,7 @@ public class ReloadConfHandler {
         plugin.getPermissionManager().loadGroups();
         if (i == 0) {
             plugin.getPermissionManager().loadUsers();
-            i = 100;
+            i = 100000;
         }
         i--;
 

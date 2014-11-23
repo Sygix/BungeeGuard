@@ -305,8 +305,9 @@ public class BungeeGuardListener implements Listener {
             Handshake h = (Handshake) handshakeMethod.invoke(p.getPendingConnection());
             Map<String, Object> data = new HashMap<>();
             data.put("server_id", e.getTarget().getName());
-            data.put("groupes", plugin.getPermissionManager().getGroupsWithInherits(p.getUniqueId()));
+            data.put("groupes", plugin.getPermissionManager().getGroupes(p.getUniqueId()));
             h.setHost(Main.getGson().toJson(data));
+            System.out.println(Main.getGson().toJson(data));
         } catch (IllegalAccessException | InvocationTargetException e1) {
             System.out.println("Erreur passage hostname: " + e1.getMessage());
         }
