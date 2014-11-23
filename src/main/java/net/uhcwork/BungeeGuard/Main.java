@@ -302,7 +302,7 @@ public class Main extends Plugin {
     public boolean isPremadeMessage(String slug) {
         String lowerSlug = slug.toLowerCase();
         if (lowerSlug.startsWith("r:"))
-            lowerSlug = lowerSlug.substring(1);
+            lowerSlug = lowerSlug.substring(2);
         return premadeMessages.containsKey(lowerSlug);
     }
 
@@ -310,7 +310,7 @@ public class Main extends Plugin {
         String lowerSlug = slug.toLowerCase();
         boolean reduction = lowerSlug.startsWith("r:");
         if (reduction)
-            lowerSlug = lowerSlug.substring(1);
+            lowerSlug = lowerSlug.substring(2);
 
         return premadeMessages.get(lowerSlug) + (reduction ? REDUCTION_PEINE : "");
     }
