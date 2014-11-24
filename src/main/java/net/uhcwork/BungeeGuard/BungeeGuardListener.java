@@ -44,7 +44,7 @@ public class BungeeGuardListener implements Listener {
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.BLUE + "Rush");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.AQUA + "Fatality");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.LIGHT_PURPLE + "Tower");
-        lines.add(ChatColor.GRAY + "➟ " + ChatColor.GREEN + "FightOnFaces");
+        lines.add(ChatColor.GRAY + "➟ " + ChatColor.GREEN + "Monster Defense");
         lines.add(ChatColor.GRAY + "Et bien d'autres jeux ...");
 
 
