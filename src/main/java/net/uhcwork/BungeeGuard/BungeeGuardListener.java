@@ -94,7 +94,7 @@ public class BungeeGuardListener implements Listener {
             }
         }
         String hostString = event.getConnection().getVirtualHost().getHostString().toLowerCase();
-        if (!Permissions.hasPerm(event.getConnection().getUniqueId(), "bungee.canBypassHost") &&
+        if (!Permissions.hasPerm(event.getConnection().getUniqueId(), "bungee.can.bypass_host") &&
                 !plugin.getConfig().getForcedHosts().containsKey(hostString)) {
             event.setCancelled(true);
             event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
