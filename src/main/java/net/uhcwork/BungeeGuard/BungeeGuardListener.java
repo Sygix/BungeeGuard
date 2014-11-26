@@ -84,7 +84,6 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onLogin(final LoginEvent event) {
         event.registerIntent(plugin);
-        System.out.println(event.getConnection().getUniqueId());
         if (Main.getMB().getPlayerCount() > plugin.getConfig().getMaxPlayers()) {
             if (!Permissions.hasPerm(event.getConnection().getUniqueId(), "bungee.join_full")) {
                 event.setCancelled(true);
@@ -291,7 +290,13 @@ public class BungeeGuardListener implements Listener {
     public void onPermCheck(PermissionCheckEvent e) {
         if (e.getSender() instanceof ProxiedPlayer) {
             ProxiedPlayer p = (ProxiedPlayer) e.getSender();
-            e.setHasPermission(Permissions.hasPerm(p.getUniqueId(), e.getPermission()));
+            boolean hasPerm;
+            if (e.getPermission().startsWith("bungeecord.server.")) {
+                String serverName = e.getPermission().substring("bungeecord.server.".length());
+                hasPerm = !plugin.isRestricted(serverName) || p.hasPermission("bungee.server." + serverName);
+            } else
+                hasPerm = Permissions.hasPerm(p.getUniqueId(), e.getPermission());
+            e.setHasPermission(hasPerm);
         }
     }
 
@@ -307,7 +312,6 @@ public class BungeeGuardListener implements Listener {
             data.put("server_id", e.getTarget().getName());
             data.put("groupes", plugin.getPermissionManager().getGroupes(p.getUniqueId()));
             h.setHost(Main.getGson().toJson(data));
-            System.out.println(Main.getGson().toJson(data));
         } catch (IllegalAccessException | InvocationTargetException e1) {
             System.out.println("Erreur passage hostname: " + e1.getMessage());
         }

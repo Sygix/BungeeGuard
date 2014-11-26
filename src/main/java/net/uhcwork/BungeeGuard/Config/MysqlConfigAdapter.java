@@ -161,12 +161,14 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
             String addr = serveur.getAddress();
             String prettyName = ChatColor.translateAlternateColorCodes('&', serveur.getPrettyName());
             String shortName = ChatColor.translateAlternateColorCodes('&', serveur.getShortName());
+            boolean restricted = serveur.isRestricted();
 
             plugin.addPrettyServerName(name, prettyName);
             plugin.addShortServerName(name, shortName);
+            plugin.setRestricted(name, restricted);
 
             InetSocketAddress address = Util.getAddr(addr);
-            ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, "", false);
+            ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, "", true);
             servers_new.put(name, info);
         }
         setServers(servers_new);
