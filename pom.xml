@@ -29,6 +29,10 @@
             <id>spigot-repo</id>
             <url>http://repo.md-5.net/content/repositories/releases/</url>
         </repository>
+        <repository>
+            <id>spigot-repo-snapshot</id>
+            <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -53,7 +57,7 @@
         <dependency>
             <groupId>com.imaginarycode.minecraft</groupId>
             <artifactId>RedisBungee</artifactId>
-            <version>0.3.3</version>
+            <version>0.3.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.javalite</groupId>

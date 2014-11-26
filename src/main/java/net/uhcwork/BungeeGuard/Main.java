@@ -73,6 +73,7 @@ public class Main extends Plugin {
     @Getter
     private WalletManager walletManager = new WalletManager(this);
     private String MYSQL_USER, MYSQL_HOST, MYSQL_DATABASE, MYSQL_PASS;
+    private Set<String> restrictedServers = new HashSet<>();
 
     public static String getPrettyServerName(String name) {
         return prettyServerNames.containsKey(name) ? prettyServerNames.get(name) : name;
@@ -335,4 +336,25 @@ public class Main extends Plugin {
         shortServerNames.put(name, shortName);
     }
 
+    public boolean isRestricted(String serverName) {
+        return restrictedServers.contains(serverName);
+    }
+
+    public void setRestricted(String name, boolean restricted) {
+        if (!restricted ^ isRestricted(name))
+            return;
+        /*
+        !restricted  | contenu   | return
+        0           | 0         | 0 -> Si deja pas dans la liste, ne rien faire
+        0           | 1         | 1 | Sinon, ajouter.
+        1           | 0         | 1 |
+        1           | 1         | 0 -> Si deja blacklist, ne rien faire
+
+         */
+
+        if (restricted)
+            restrictedServers.add(name);
+        else
+            restrictedServers.remove(name);
+    }
 }

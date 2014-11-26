@@ -27,4 +27,8 @@ public class BungeeServer extends Model {
     public String getShortName() {
         return getString("short_name");
     }
+
+    public boolean isRestricted() {
+        return getBoolean("restricted");
+    }
 }
