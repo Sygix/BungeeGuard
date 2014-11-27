@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import lombok.Data;
 import lombok.Getter;
 import net.md_5.bungee.api.Callback;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -37,11 +38,6 @@ public class ServerManager {
     }.getType();
     static Gson gson;
     private final Main plugin;
-    private final Predicate<Lobby> isOnline = new Predicate<Lobby>() {
-        public boolean apply(Lobby lobby) {
-            return lobby != null && lobby.isOnline();
-        }
-    };
     private final Function<Lobby, Double> getScoreFunction = new Function<Lobby, Double>() {
         public Double apply(Lobby lobby) {
             return lobby.getScore();
@@ -55,10 +51,17 @@ public class ServerManager {
     @Getter
     private List<Lobby> lobbies = new ArrayList<>();
 
-
     public ServerManager(Main main) {
         this.plugin = main;
         gson = Main.getGson();
+    }
+
+    private Predicate<Lobby> isOnline(final ProxiedPlayer p) {
+        return new Predicate<Lobby>() {
+            public boolean apply(Lobby lobby) {
+                return lobby != null && lobby.isOnline() && lobby.getServerInfo().canAccess(p);
+            }
+        };
     }
 
     public void ping(final String serverName, final Callback<ServerPing> pingBack) {
@@ -70,6 +73,10 @@ public class ServerManager {
             final Callback<ServerPing> pingCallback = new Callback<ServerPing>() {
                 @Override
                 public void done(ServerPing serverPing, Throwable throwable) {
+                    if (plugin.isRestricted(serverName)) {
+                        serverPing.setDescription(ChatColor.RED + "En maintenance");
+                        serverPing.setPlayers(new ServerPing.Players(0, 0, null));
+                    }
                     Optional<ServerPing> serverPingOptional = Optional.fromNullable(serverPing);
                     getServersCache().put(serverName, serverPingOptional);
                     pingBack.done(serverPing, throwable);
@@ -105,8 +112,8 @@ public class ServerManager {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public String getBestLobbyFor(ProxiedPlayer p) {
-        Collection<Lobby> lobbies = Collections2.filter(getLobbies(), isOnline);
+    public String getBestLobbyFor(final ProxiedPlayer p) {
+        Collection<Lobby> lobbies = Collections2.filter(getLobbies(), isOnline(p));
         Ordering<Lobby> scoreOrdering = Ordering.natural().onResultOf(getScoreFunction);
         ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(scoreOrdering).addAll(lobbies).build().descendingSet();
         return sortedLobbies.first().getName();
