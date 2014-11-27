@@ -57,7 +57,7 @@ public class CommandRegister extends Command {
         final Map<String, String> valeurs = new HashMap<>();
         valeurs.put("token", "m82A6FZ56pd5tZmT");
         valeurs.put("pseudo", p.getName());
-        valeurs.put("uuid", p.getUniqueId().toString().replace("-", ""));
+        valeurs.put("uuid", p.getUniqueId().toString());
         valeurs.put("email", args[0]);
         valeurs.put("ip", p.getAddress().getAddress().getHostAddress());
 
