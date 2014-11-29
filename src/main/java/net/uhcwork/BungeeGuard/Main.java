@@ -48,6 +48,8 @@ public class Main extends Plugin {
     private static final List<UUID> spy = new ArrayList<>();
     private static final Map<String, String> prettyServerNames = new HashMap<>();
     private static final String REDUCTION_PEINE = " &r(&eRéduction de peine&r)";
+    @Getter
+    private static final Random random = new Random();
     public static Main plugin;
     @Getter
     public static Gson gson = new Gson();
@@ -181,6 +183,9 @@ public class Main extends Plugin {
             if (!s.equals(MB.getServerId())) {
                 System.out.println("RequestParties: " + s);
                 MB.requestParties(s);
+
+                System.out.println("RequestIgnores: " + s);
+                MB.requestIgnores(s);
                 return;
             }
         }

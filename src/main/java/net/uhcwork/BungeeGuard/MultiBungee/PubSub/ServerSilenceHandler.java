@@ -12,7 +12,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
  */
 public class ServerSilenceHandler {
     @PubSubHandler("silenceServer")
-    public void silence(Main plugin, PubSubMessageEvent e) {
+    public static void silence(Main plugin, PubSubMessageEvent e) {
         String serverName = e.getArg(0);
         boolean state = Boolean.parseBoolean(e.getArg(1));
         if (state) {

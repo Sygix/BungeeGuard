@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public class PermissionHandler {
     @PubSubHandler("invalidatePermissionUser")
-    public void invalidatePermissionUser(Main plugin, PubSubMessageEvent e) {
+    public static void invalidatePermissionUser(Main plugin, PubSubMessageEvent e) {
         UUID u = UUID.fromString(e.getArg(0));
         plugin.getPermissionManager().invalidateUser(u);
     }
