@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class BroadcastHandler {
     @PubSubHandler("broadcast")
-    public void broadcast(PubSubMessageEvent e) {
+    public static void broadcast(PubSubMessageEvent e) {
         Set<String> servers;
         if (e.getArg(0).equalsIgnoreCase("*")) {
             servers = ProxyServer.getInstance().getServers().keySet();

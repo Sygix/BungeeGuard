@@ -502,4 +502,18 @@ public class MultiBungee {
     public void runCommand(String playerName, String command) {
         sendChannelMessage("runCommand", playerName, command);
     }
+
+    public void replyIgnores(String server, String data) {
+        sendChannelMessage("@" + server + "/ignoresReply", data);
+    }
+
+    public void requestIgnores(String server) {
+        sendChannelMessage("@" + server + "/ignoresRequest", getServerId());
+    }
+
+    public void registerPubSubChannels(Set<String> channels) {
+        for (String channel : channels) {
+            registerPubSubChannels(channel);
+        }
+    }
 }

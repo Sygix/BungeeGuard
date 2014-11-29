@@ -125,7 +125,6 @@ public class BungeeGuardListener implements Listener {
         final ProxiedPlayer p = e.getPlayer();
 
         p.setTabHeader(header, footer);
-
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
             System.out.println("Recuperation du meilleur lobby pour " + p.getName());
             String l = plugin.getServerManager().getBestLobbyFor(p);
@@ -143,6 +142,9 @@ public class BungeeGuardListener implements Listener {
             if (party != null && party.isOwner(p)) {
                 Main.getMB().summonParty(party.getName(), e.getTarget().getName());
             }
+        }
+        if (p.getServer().getInfo().equals(e.getTarget()) || !e.getTarget().canAccess(p)) {
+            e.setCancelled(true);
         }
     }
 
@@ -296,6 +298,7 @@ public class BungeeGuardListener implements Listener {
                 hasPerm = !plugin.isRestricted(serverName) || p.hasPermission("bungee.server." + serverName);
             } else
                 hasPerm = Permissions.hasPerm(p.getUniqueId(), e.getPermission());
+            System.out.println(e.getPermission() + "->" + hasPerm);
             e.setHasPermission(hasPerm);
         }
     }

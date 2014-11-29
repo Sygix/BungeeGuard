@@ -10,7 +10,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
-import net.uhcwork.BungeeGuard.Permissions.Permissions;
 import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
 import java.util.UUID;
@@ -51,10 +50,6 @@ public class CommandMsg extends Command {
         }
 
         if (args.length >= 1) {
-            if (args[0].equalsIgnoreCase(p.getName())) {
-                p.sendMessage(new ComponentBuilder("Vous ne pouvez pas envoyer un message à vous-même !").color(ChatColor.RED).create());
-                return;
-            }
             if (!Main.getMB().isPlayerOnline(args[0])) {
                 p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());
                 return;
@@ -64,12 +59,13 @@ public class CommandMsg extends Command {
                 return;
             }
             UUID receiverUUID = Main.getMB().getUuidFromName(args[0]);
-            boolean isReply = plugin.isReply(p.getUniqueId(), receiverUUID);
-            if (Permissions.hasPerm(receiverUUID, "bungee.moremsg") && !p.hasPermission("bungee.moremsg") && !isReply) {
-                p.sendMessage(new ComponentBuilder("Vous n'avez pas la permission de parler à ce joueur !").color(ChatColor.RED).create());
+
+            if (plugin.getIgnoreManager().playerIgnores(receiverUUID, null) && !p.hasPermission("bungee.ignore.ignore")) {
+                p.sendMessage(new ComponentBuilder("Ce joueur ne souhaite pas être contacté.").color(ChatColor.RED).create());
                 return;
             }
-            if (plugin.getIgnoreManager().playerIgnores(receiverUUID, p.getUniqueId()) && !Permissions.hasPerm(receiverUUID, "bungee.ignore.ignore")) {
+
+            if (plugin.getIgnoreManager().playerIgnores(receiverUUID, p.getUniqueId()) && !p.hasPermission("bungee.ignore.ignore")) {
                 p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
                 return;
             }
@@ -77,6 +73,7 @@ public class CommandMsg extends Command {
                 p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
                 return;
             }
+
             String text = "";
             for (int i = 1; i < args.length; i++)
                 text += args[i] + " ";

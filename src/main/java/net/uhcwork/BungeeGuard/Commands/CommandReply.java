@@ -29,11 +29,8 @@ public class CommandReply extends Command {
             sender.sendMessage(new ComponentBuilder("Vous devez être un joueur pour exécuter cette commande !").color(ChatColor.RED).create());
             return;
         }
-        ProxiedPlayer p = (ProxiedPlayer) sender;
 
-        if (!p.hasPermission("bungee.reply")) {
-            return;
-        }
+        ProxiedPlayer p = (ProxiedPlayer) sender;
 
         BungeeMute mute = plugin.getSanctionManager().findMute(p.getUniqueId());
         if (mute != null) {
@@ -64,6 +61,12 @@ public class CommandReply extends Command {
             p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());
             return;
         }
+
+        if (plugin.getIgnoreManager().playerIgnores(destinataire, null) && !p.hasPermission("bungee.ignore.ignore")) {
+            p.sendMessage(new ComponentBuilder("Ce joueur ne souhaite pas être contacté.").color(ChatColor.RED).create());
+            return;
+        }
+
         if (plugin.getIgnoreManager().playerIgnores(destinataire, p.getUniqueId()) && !p.hasPermission("bungee.ignore.ignore")) {
             p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
             return;
