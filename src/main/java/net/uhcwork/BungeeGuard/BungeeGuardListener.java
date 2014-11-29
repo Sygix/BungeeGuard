@@ -298,7 +298,6 @@ public class BungeeGuardListener implements Listener {
                 hasPerm = !plugin.isRestricted(serverName) || p.hasPermission("bungee.server." + serverName);
             } else
                 hasPerm = Permissions.hasPerm(p.getUniqueId(), e.getPermission());
-            System.out.println(e.getPermission() + "->" + hasPerm);
             e.setHasPermission(hasPerm);
         }
     }
