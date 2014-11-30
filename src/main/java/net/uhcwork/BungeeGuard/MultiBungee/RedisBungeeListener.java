@@ -1,13 +1,13 @@
 package net.uhcwork.BungeeGuard.MultiBungee;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.*;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Part of net.uhcwork.BungeeGuard.MultiBungee (bungeeguard)
@@ -17,23 +17,29 @@ import java.lang.reflect.Method;
  */
 public class RedisBungeeListener implements Listener {
     private final Main plugin;
-    private final Multimap<String, Method> handlers = HashMultimap.create();
+    private final Collection<Object> handlers = new ArrayList<>();
 
     public RedisBungeeListener(Main plugin) {
         this.plugin = plugin;
-        addHandler(BroadcastHandler.class);
-        addHandler(IgnoreHandler.class);
-        addHandler(KickHandler.class);
-        addHandler(MessageHandler.class);
-        addHandler(SanctionHandler.class);
-        addHandler(ReloadConfHandler.class);
-        addHandler(ServerSilenceHandler.class);
-        addHandler(StaffChatHandler.class);
-        addHandler(SummonHandler.class);
-        addHandler(PermissionHandler.class);
-        addHandler(PartyHandler.class);
-        Main.getMB().registerPubSubChannels(handlers.keySet());
-
+        addHandler(new BroadcastHandler());
+        addHandler(new IgnoreHandler());
+        addHandler(new KickHandler());
+        addHandler(new MessageHandler());
+        addHandler(new SanctionHandler());
+        addHandler(new ReloadConfHandler());
+        addHandler(new ServerSilenceHandler());
+        addHandler(new StaffChatHandler());
+        addHandler(new SummonHandler());
+        addHandler(new PermissionHandler());
+        addHandler(new PartyHandler());
+        for (Object handler : handlers) {
+            Method[] methods = handler.getClass().getDeclaredMethods();
+            for (Method method : methods) {
+                if (getEventName(method).isEmpty())
+                    continue;
+                Main.getMB().registerPubSubChannels(getEventName(method));
+            }
+        }
     }
 
     @EventHandler
@@ -46,19 +52,32 @@ public class RedisBungeeListener implements Listener {
         dispatchEvent(new PubSubMessageEvent(channel, e.getMessage()));
     }
 
-    void addHandler(Class<?> handler) {
-        this.handlers.putAll(findMatchingEventHandlerMethods(handler));
+    void addHandler(Object handler) {
+        this.handlers.add(handler);
+    }
+
+    public void removeHandler(Object handler) {
+        this.handlers.remove(handler);
     }
 
     void dispatchEvent(PubSubMessageEvent event) {
-        for (Method method : handlers.get(event.getChannel())) {
+        for (Object handler : handlers) {
+            dispatchEventTo(event, handler);
+        }
+    }
+
+    void dispatchEventTo(PubSubMessageEvent event, Object handler) {
+        Collection<Method> methods = findMatchingEventHandlerMethods(handler, event.getChannel());
+        for (Method method : methods) {
             try {
+                method.setAccessible(true);
+
                 if (method.getParameterTypes().length == 0)
-                    method.invoke(null);
+                    method.invoke(handler);
                 if (method.getParameterTypes().length == 1)
-                    method.invoke(null, event);
+                    method.invoke(handler, event);
                 if (method.getParameterTypes().length == 2)
-                    method.invoke(null, plugin, event);
+                    method.invoke(handler, plugin, event);
             } catch (Exception e) {
                 System.err.println("Could not invoke event handler!");
                 e.printStackTrace(System.err);
@@ -66,18 +85,15 @@ public class RedisBungeeListener implements Listener {
         }
     }
 
-    Multimap<String, Method> findMatchingEventHandlerMethods(Class<?> handler) {
-        Multimap<String, Method> _handlers = HashMultimap.create();
-        Method[] methods = handler.getDeclaredMethods();
-        String eventName;
+    Collection<Method> findMatchingEventHandlerMethods(Object handler, String eventName) {
+        Method[] methods = handler.getClass().getDeclaredMethods();
+        Collection<Method> result = new ArrayList<>();
         for (Method method : methods) {
-            eventName = getEventName(method);
-            if (!eventName.isEmpty()) {
-                method.setAccessible(true);
-                _handlers.put(eventName, method);
+            if (getEventName(method).equals(eventName)) {
+                result.add(method);
             }
         }
-        return _handlers;
+        return result;
     }
 
     String getEventName(Method method) {

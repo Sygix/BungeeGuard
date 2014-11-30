@@ -22,8 +22,9 @@ import java.util.concurrent.TimeUnit;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class StaffChatHandler {
+
     @PubSubHandler("staffChat")
-    public static void staffChat(Main plugin, PubSubMessageEvent e) {
+    public void staffChat(Main plugin, PubSubMessageEvent e) {
         String serverName = e.getArg(0);
         String senderName = e.getArg(1);
         String message = ChatColor.translateAlternateColorCodes('&', e.getArg(2));
@@ -37,7 +38,7 @@ public class StaffChatHandler {
     }
 
     @PubSubHandler("notifyStaff")
-    public static void notifyStaff(Main plugin, PubSubMessageEvent e) {
+    public void notifyStaff(Main plugin, PubSubMessageEvent e) {
         for (ProxiedPlayer p : plugin.getProxy().getPlayers()) {
             if (p.hasPermission("bungee.notify")) {
                 p.sendMessage(TextComponent.fromLegacyText(e.getMessage()));
@@ -46,7 +47,7 @@ public class StaffChatHandler {
     }
 
     @PubSubHandler("gtp")
-    public static void gtp(final Main plugin, PubSubMessageEvent e) {
+    public void gtp(final Main plugin, PubSubMessageEvent e) {
         String playerName = e.getArg(0);
         final String to_player = e.getArg(1);
 
@@ -78,7 +79,7 @@ public class StaffChatHandler {
     }
 
     @PubSubHandler("runCommand")
-    public static void runCommand(final Main plugin, PubSubMessageEvent e) {
+    public void runCommand(final Main plugin, PubSubMessageEvent e) {
         String playerName = e.getArg(0);
         final String command = e.getArg(1);
 

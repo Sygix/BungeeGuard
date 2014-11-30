@@ -17,7 +17,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
  */
 public class SummonHandler {
     @PubSubHandler("summon")
-    public static void summon(PubSubMessageEvent e) {
+    public void summon(PubSubMessageEvent e) {
         String playerName = e.getArg(0);
         String server_target = e.getArg(1);
         String sender = e.getArg(2);
@@ -39,7 +39,7 @@ public class SummonHandler {
         }
     }
 
-    private static void summon(ProxiedPlayer player, ServerInfo target, String senderName) {
+    private void summon(ProxiedPlayer player, ServerInfo target, String senderName) {
         if (player.getServer() != null && !player.getServer().getInfo().equals(target)) {
             player.connect(target);
             if (!senderName.isEmpty())

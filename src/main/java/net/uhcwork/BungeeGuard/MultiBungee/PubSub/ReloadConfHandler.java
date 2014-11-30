@@ -20,13 +20,17 @@ import java.util.Map;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class ReloadConfHandler {
+    int i = 0;
+
     @PubSubHandler("reloadConf")
-    public static void reloadConf(Main plugin, PubSubMessageEvent e) {
+    public void reloadConf(Main plugin, PubSubMessageEvent e) {
         plugin.getLogger().info("Reloading groups & permissions");
         plugin.getPermissionManager().loadGroups();
-        if (plugin.getRandom().nextInt(1000) == 5) {
+        if (i == 0) {
             plugin.getPermissionManager().loadUsers();
+            i = 100000;
         }
+        i--;
 
         plugin.getLogger().info("Saving current configuration");
         @SuppressWarnings("deprecation")

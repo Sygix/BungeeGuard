@@ -1,7 +1,5 @@
 package net.uhcwork.BungeeGuard.Managers;
 
-import lombok.AccessLevel;
-import lombok.Getter;
 import net.uhcwork.BungeeGuard.Main;
 
 import java.util.*;
@@ -14,8 +12,6 @@ import java.util.*;
  */
 public class IgnoreManager {
     private final Main plugin;
-    @Getter(AccessLevel.PUBLIC)
-    // null value means "ignore all"
     private final Map<UUID, List<UUID>> ignoreList = new HashMap<>();
 
     public IgnoreManager(Main plugin) {
@@ -42,10 +38,5 @@ public class IgnoreManager {
 
     public boolean playerIgnores(UUID uniqueId, UUID toIgnore) {
         return getIgnoreList(uniqueId).contains(toIgnore);
-    }
-
-    public void setIgnoreList(Map<UUID, List<UUID>> ignoresList) {
-        ignoreList.clear();
-        ignoreList.putAll(ignoresList);
     }
 }

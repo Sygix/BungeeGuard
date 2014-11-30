@@ -23,7 +23,7 @@ import java.util.UUID;
  */
 public class MessageHandler {
     @PubSubHandler("message")
-    public static void message(PubSubMessageEvent e) {
+    public void message(PubSubMessageEvent e) {
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(e.getArg(0));
         if (p == null)
             return;
@@ -31,7 +31,7 @@ public class MessageHandler {
     }
 
     @PubSubHandler("privateMessage")
-    public static void privateMessage(Main plugin, PubSubMessageEvent e) {
+    public void privateMessage(Main plugin, PubSubMessageEvent e) {
         String sender = e.getArg(0);
         UUID receiver = UUID.fromString(e.getArg(1));
         String message = e.getArg(2);
