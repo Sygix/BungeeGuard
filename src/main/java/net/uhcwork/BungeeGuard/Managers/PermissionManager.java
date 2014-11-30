@@ -143,7 +143,6 @@ public class PermissionManager {
 
     public Set<String> getGroupes(UUID user) {
         Set<String> _groupes = new HashSet<>();
-        _groupes.add("default");
         UserModel _um;
         Iterator<UserModel> i = getUserModels(user).iterator();
         while (i.hasNext()) {

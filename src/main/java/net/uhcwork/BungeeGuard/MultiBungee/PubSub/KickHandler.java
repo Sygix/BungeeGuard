@@ -14,7 +14,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
  */
 public class KickHandler {
     @PubSubHandler("kick")
-    public static void kick(PubSubMessageEvent e) {
+    public void kick(PubSubMessageEvent e) {
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(e.getArg(0));
         if (p == null)
             return;

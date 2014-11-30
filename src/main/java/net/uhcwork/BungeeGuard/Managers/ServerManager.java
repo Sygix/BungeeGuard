@@ -5,12 +5,15 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.*;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Ordering;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import lombok.Data;
 import lombok.Getter;
 import net.md_5.bungee.api.Callback;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -18,7 +21,10 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,7 +48,6 @@ public class ServerManager {
             .maximumSize(500)
             .expireAfterWrite(1, TimeUnit.SECONDS)
             .build();
-    Multimap<String, Callback<ServerPing>> pingBacks = HashMultimap.create();
     @Getter
     private List<Lobby> lobbies = new ArrayList<>();
 
@@ -65,25 +70,16 @@ public class ServerManager {
         final Optional<ServerPing> SP = getServersCache().getIfPresent(serverName);
 
         if (SP == null) {
-            pingBacks.put(serverName, pingBack);
-            if (pingBacks.get(serverName).size() != 1) {
-                return;
-            }
-
             final Callback<ServerPing> pingCallback = new Callback<ServerPing>() {
                 @Override
                 public void done(ServerPing serverPing, Throwable throwable) {
                     if (plugin.isRestricted(serverName)) {
-                        serverPing.setDescription("{'state': 'maintenance'}");
+                        serverPing.setDescription(ChatColor.RED + "En maintenance");
                         serverPing.setPlayers(new ServerPing.Players(0, 0, null));
                     }
                     Optional<ServerPing> serverPingOptional = Optional.fromNullable(serverPing);
                     getServersCache().put(serverName, serverPingOptional);
-                    Iterator<Callback<ServerPing>> i = pingBacks.get(serverName).iterator();
-                    while (i.hasNext()) {
-                        i.next().done(serverPing, throwable);
-                        i.remove();
-                    }
+                    pingBack.done(serverPing, throwable);
                 }
             };
             ProxyServer.getInstance().getServerInfo(serverName).ping(pingCallback);
