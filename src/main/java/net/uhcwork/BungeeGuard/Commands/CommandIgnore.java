@@ -36,7 +36,8 @@ public class CommandIgnore extends Command {
         ProxiedPlayer p = (ProxiedPlayer) sender;
         MultiBungee MB = Main.getMB();
         if (args.length != 1) {
-            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Utilisation: /ignore <joueur>"));
+            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Utilisation: /ignore <joueur>" + ChatColor.GRAY + "| " + ChatColor.RED + "Empêche le joueur de vous contacter"));
+            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "/ignore * " + ChatColor.GRAY + "| " + ChatColor.RED + "Bloque tous les messages privés"));
             return;
         }
         UUID toIgnore = null;
@@ -51,11 +52,18 @@ public class CommandIgnore extends Command {
                 return;
             }
         }
+
         if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), toIgnore)) {
-            p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous n'ignorez plus " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
+            if (toIgnore == null)
+                p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous n'ignorez plus " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
+            else
+                p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous venez de débloquer les " + ChatColor.GREEN + "messages privés" + ChatColor.GRAY + "."));
             MB.ignorePlayer(p.getUniqueId(), '-', toIgnore);
         } else {
-            p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous ignorez maintenant " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
+            if (toIgnore == null)
+                p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous n'ignorez plus " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
+            else
+                p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous venez de bloquer les " + ChatColor.GREEN + "messages privés" + ChatColor.GRAY + "."));
             MB.ignorePlayer(p.getUniqueId(), '+', toIgnore);
         }
     }

@@ -39,10 +39,6 @@ public class RedisBungeeListener implements Listener {
     @EventHandler
     public void onPubSubmessageEvent(com.imaginarycode.minecraft.redisbungee.events.PubSubMessageEvent e) {
         String channel = e.getChannel();
-        if (channel.startsWith("@" + Main.getMB().getServerId() + "/")) {
-            // Si channel ressemble à @serveur/commande, on retire le préfixe :]
-            channel = channel.replace("@" + Main.getMB().getServerId() + "/", "@");
-        }
         dispatchEvent(new PubSubMessageEvent(channel, e.getMessage()));
     }
 
@@ -74,6 +70,9 @@ public class RedisBungeeListener implements Listener {
             eventName = getEventName(method);
             if (!eventName.isEmpty()) {
                 method.setAccessible(true);
+                if (eventName.startsWith("@")) {
+                    eventName = "@" + Main.getMB().getServerId() + "/" + eventName.substring(1);
+                }
                 _handlers.put(eventName, method);
             }
         }

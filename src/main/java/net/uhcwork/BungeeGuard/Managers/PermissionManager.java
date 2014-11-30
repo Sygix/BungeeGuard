@@ -213,4 +213,23 @@ public class PermissionManager {
     public List<Group> getGroupsWithInherits(UUID user) {
         return getGroupsWithInherits(getGroupes(user));
     }
+
+    public Set<UUID> getUsersInGroup(String group) {
+        Set<UUID> _users = new HashSet<>();
+        UserModel _um;
+        for (UUID u : user_groups.keySet()) {
+            Iterator<UserModel> i = getUserModels(u).iterator();
+            while (i.hasNext()) {
+                _um = i.next();
+                if (!_um.isValid()) {
+                    i.remove();
+                    plugin.executePersistenceRunnable(new DeleteRunner(_um));
+                }
+                if (_um.getGroup().equalsIgnoreCase(group)) {
+                    _users.add(u);
+                }
+            }
+        }
+        return _users;
+    }
 }
