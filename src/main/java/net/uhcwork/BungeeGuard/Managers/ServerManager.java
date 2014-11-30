@@ -54,7 +54,7 @@ public class ServerManager {
     private Predicate<Lobby> isOnline(final ProxiedPlayer p) {
         return new Predicate<Lobby>() {
             public boolean apply(Lobby lobby) {
-                return lobby != null && lobby.isOnline() && lobby.getServerInfo().canAccess(p);
+                return lobby != null && lobby.isOnline(); // && lobby.getServerInfo().canAccess(p);
             }
         };
     }
