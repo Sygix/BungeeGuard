@@ -30,7 +30,7 @@ public class CommandPoints extends Command {
             ProxiedPlayer p = (ProxiedPlayer) sender;
 
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Vous avez " + ChatColor.GOLD + WM.getDisplayedBalance(p.getUniqueId()) + ChatColor.AQUA + " UHCoins !"));
-            p.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.GRAY + "Vous n'avez pas de multiplicateur ! " + ChatColor.AQUA + "(" + ChatColor.RED + " https://STORE.UHCGames.com/ " + ChatColor.AQUA + ")"));
+            p.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.GRAY + "Vous n'avez pas de multiplicateur ! " + ChatColor.RED + "https://store.uhcgames.com/"));
         } else {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous n'etes pas un joueur !"));
         }
