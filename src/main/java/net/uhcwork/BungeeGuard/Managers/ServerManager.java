@@ -8,7 +8,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Ordering;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import lombok.Data;
 import lombok.Getter;
@@ -20,8 +19,10 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeServer;
 
-import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,8 +32,6 @@ import java.util.concurrent.TimeUnit;
  * May be open-source & be sold (by mguerreiro, of course !)
  */
 public class ServerManager {
-    static final Type mapType = new TypeToken<List<Map<String, Object>>>() {
-    }.getType();
     static Gson gson;
     private final Main plugin;
     private final Function<Lobby, Double> getScoreFunction = new Function<Lobby, Double>() {

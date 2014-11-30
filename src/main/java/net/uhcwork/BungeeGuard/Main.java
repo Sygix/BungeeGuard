@@ -285,10 +285,6 @@ public class Main extends Plugin {
             spy.add(uniqueId);
     }
 
-    public boolean isReply(UUID sender, UUID receiverUUID) {
-        return reply.containsKey(sender) && reply.get(sender).equals(receiverUUID);
-    }
-
     public void setReply(UUID receiver, UUID sender) {
         reply.put(receiver, sender);
     }
