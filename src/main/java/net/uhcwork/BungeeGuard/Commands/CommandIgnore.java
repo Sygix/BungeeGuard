@@ -39,14 +39,17 @@ public class CommandIgnore extends Command {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Utilisation: /ignore <joueur>"));
             return;
         }
-        UUID toIgnore = MB.getUuidFromName(args[0]);
-        if (!MB.isPlayerOnline(toIgnore)) {
-            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne."));
-            return;
-        }
-        if (Permissions.hasPerm(toIgnore, "bungeeguard.ignore.ignore")) {
-            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous n'avez pas la permission d'ignorer ce joueur."));
-            return;
+        UUID toIgnore = null;
+        if (!args[0].equals("*")) {
+            toIgnore = MB.getUuidFromName(args[0]);
+            if (!MB.isPlayerOnline(toIgnore)) {
+                p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne."));
+                return;
+            }
+            if (Permissions.hasPerm(toIgnore, "bungeeguard.ignore.ignore")) {
+                p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous n'avez pas la permission d'ignorer ce joueur."));
+                return;
+            }
         }
         if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), toIgnore)) {
             p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous n'ignorez plus " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));

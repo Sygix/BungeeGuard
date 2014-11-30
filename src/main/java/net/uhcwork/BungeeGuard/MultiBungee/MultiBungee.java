@@ -393,7 +393,10 @@ public class MultiBungee {
     }
 
     public void ignorePlayer(UUID uniqueId, char c, UUID toIgnore) {
-        sendChannelMessage("ignore", "" + uniqueId, "" + c, "" + toIgnore);
+        if (toIgnore == null)
+            sendChannelMessage("ignore", "" + uniqueId, "" + c, "*");
+        else
+            sendChannelMessage("ignore", "" + uniqueId, "" + c, "" + toIgnore);
     }
 
     public void requestParties(String server) {
