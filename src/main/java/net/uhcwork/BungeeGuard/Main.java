@@ -228,6 +228,9 @@ public class Main extends Plugin {
                 e.printStackTrace();
             }
         }
+
+        plugin.getPermissionManager().loadUsers();
+
         final ShopTask shopTask = new ShopTask(this);
         final ReloadConfHandler reloadConfHandler = new ReloadConfHandler();
         getProxy().getScheduler().schedule(this, new Runnable() {
