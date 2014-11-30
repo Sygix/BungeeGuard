@@ -41,7 +41,6 @@ public class CommandGroups extends Command {
         }
         if (args.length == 1) {
             String group = args[0];
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Liste des membres de " + group));
             Set<UUID> _users = plugin.getPermissionManager().getUsersInGroup(group);
             Collection<String> users = Collections2.transform(_users, new Function<UUID, String>() {
                 @Override
@@ -49,7 +48,9 @@ public class CommandGroups extends Command {
                     return Main.getMB().getNameFromUuid(uuid);
                 }
             });
-            sender.sendMessage(TextComponent.fromLegacyText(Joiner.on(", ").join(users)));
+
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Liste des membres de " + ChatColor.BOLD + group + ChatColor.GRAY + "(" + _users.size() + ")"));
+            sender.sendMessage(TextComponent.fromLegacyText(Joiner.on(", ").skipNulls().join(users)));
         } else {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Liste des groupes"));
             for (Group g : PM.getGroups().values()) {

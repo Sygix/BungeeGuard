@@ -217,7 +217,7 @@ public class PermissionManager {
     public Set<UUID> getUsersInGroup(String group) {
         Set<UUID> _users = new HashSet<>();
         UserModel _um;
-        for (UUID u : user_groups.keySet()) {
+        for (UUID u : new HashSet<>(user_groups.keySet())) {
             Iterator<UserModel> i = getUserModels(u).iterator();
             while (i.hasNext()) {
                 _um = i.next();
