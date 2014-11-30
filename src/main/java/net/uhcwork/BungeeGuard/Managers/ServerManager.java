@@ -5,7 +5,9 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.*;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Ordering;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import lombok.Data;
@@ -42,7 +44,6 @@ public class ServerManager {
             .maximumSize(500)
             .expireAfterWrite(1, TimeUnit.SECONDS)
             .build();
-    Multimap<String, Callback<ServerPing>> pingBacks = HashMultimap.create();
     @Getter
     private Map<String, Lobby> lobbies = new HashMap<>();
 
@@ -65,11 +66,6 @@ public class ServerManager {
         final Optional<ServerPing> SP = getServersCache().getIfPresent(serverName);
 
         if (SP == null) {
-            pingBacks.put(serverName, pingBack);
-            if (pingBacks.get(serverName).size() != 1) {
-                return;
-            }
-
             final Callback<ServerPing> pingCallback = new Callback<ServerPing>() {
                 @Override
                 public void done(ServerPing serverPing, Throwable throwable) {
@@ -79,11 +75,7 @@ public class ServerManager {
                     }
                     Optional<ServerPing> serverPingOptional = Optional.fromNullable(serverPing);
                     getServersCache().put(serverName, serverPingOptional);
-                    Iterator<Callback<ServerPing>> i = pingBacks.get(serverName).iterator();
-                    while (i.hasNext()) {
-                        i.next().done(serverPing, throwable);
-                        i.remove();
-                    }
+                    pingBack.done(serverPing, throwable);
                 }
             };
             ProxyServer.getInstance().getServerInfo(serverName).ping(pingCallback);
