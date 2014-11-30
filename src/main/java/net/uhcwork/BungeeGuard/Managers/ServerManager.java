@@ -5,15 +5,12 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Ordering;
+import com.google.common.collect.*;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import lombok.Data;
 import lombok.Getter;
 import net.md_5.bungee.api.Callback;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -21,10 +18,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,8 +42,9 @@ public class ServerManager {
             .maximumSize(500)
             .expireAfterWrite(1, TimeUnit.SECONDS)
             .build();
+    Multimap<String, Callback<ServerPing>> pingBacks = HashMultimap.create();
     @Getter
-    private List<Lobby> lobbies = new ArrayList<>();
+    private Map<String, Lobby> lobbies = new HashMap<>();
 
     public ServerManager(Main main) {
         this.plugin = main;
@@ -70,16 +65,25 @@ public class ServerManager {
         final Optional<ServerPing> SP = getServersCache().getIfPresent(serverName);
 
         if (SP == null) {
+            pingBacks.put(serverName, pingBack);
+            if (pingBacks.get(serverName).size() != 1) {
+                return;
+            }
+
             final Callback<ServerPing> pingCallback = new Callback<ServerPing>() {
                 @Override
                 public void done(ServerPing serverPing, Throwable throwable) {
                     if (plugin.isRestricted(serverName)) {
-                        serverPing.setDescription(ChatColor.RED + "En maintenance");
+                        serverPing.setDescription("{'state': 'maintenance'}");
                         serverPing.setPlayers(new ServerPing.Players(0, 0, null));
                     }
                     Optional<ServerPing> serverPingOptional = Optional.fromNullable(serverPing);
                     getServersCache().put(serverName, serverPingOptional);
-                    pingBack.done(serverPing, throwable);
+                    Iterator<Callback<ServerPing>> i = pingBacks.get(serverName).iterator();
+                    while (i.hasNext()) {
+                        i.next().done(serverPing, throwable);
+                        i.remove();
+                    }
                 }
             };
             ProxyServer.getInstance().getServerInfo(serverName).ping(pingCallback);
@@ -92,7 +96,6 @@ public class ServerManager {
         ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                final List<Lobby> new_lobbies = new ArrayList<>();
                 for (final ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
                     if (isLobbyName(serverInfo.getName())) {
                         Callback<ServerPing> pingBack = new Callback<ServerPing>() {
@@ -100,20 +103,25 @@ public class ServerManager {
                             public void done(ServerPing result, Throwable error) {
                                 boolean isError = (error != null) || (result == null);
                                 Lobby lobby = new Lobby(isError, serverInfo, result);
-                                new_lobbies.add(lobby);
+                                lobbies.put(serverInfo.getName(), lobby);
                             }
                         };
                         plugin.getServerManager().ping(serverInfo.getName(), pingBack);
                     }
                 }
-                lobbies = new_lobbies;
+                Iterator<String> i = lobbies.keySet().iterator();
+                while (i.hasNext()) {
+                    // Supprime les lobbies qui ont été supprimés de la liste des serveurs
+                    if (plugin.getProxy().getServerInfo(i.next()) == null)
+                        i.remove();
+                }
             }
         }, 1, 1, TimeUnit.SECONDS);
     }
 
     @SuppressWarnings("UnusedParameters")
     public String getBestLobbyFor(final ProxiedPlayer p) {
-        Collection<Lobby> lobbies = Collections2.filter(getLobbies(), isOnline(p));
+        Collection<Lobby> lobbies = Collections2.filter(getLobbies().values(), isOnline(p));
         Ordering<Lobby> scoreOrdering = Ordering.natural().onResultOf(getScoreFunction);
         ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(scoreOrdering).addAll(lobbies).build().descendingSet();
         return sortedLobbies.first().getName();
@@ -121,12 +129,8 @@ public class ServerManager {
 
     public void setOffline(String name) {
         getServersCache().put(name, Optional.<ServerPing>absent());
-        if (isLobbyName(name)) {
-            for (Lobby l : getLobbies()) {
-                if (l.getName().equals(name)) {
-                    l.setOnline(false);
-                }
-            }
+        if (isLobbyName(name) && lobbies.containsKey(name)) {
+            lobbies.get(name).setOnline(false);
         }
     }
 
@@ -135,7 +139,7 @@ public class ServerManager {
     }
 
     public Collection<ServerInfo> getOnlineLobbies() {
-        return Collections2.transform(Collections2.filter(getLobbies(), new Predicate<Lobby>() {
+        return Collections2.transform(Collections2.filter(getLobbies().values(), new Predicate<Lobby>() {
             @Override
             public boolean apply(Lobby lobby) {
                 return lobby != null && lobby.isOnline();

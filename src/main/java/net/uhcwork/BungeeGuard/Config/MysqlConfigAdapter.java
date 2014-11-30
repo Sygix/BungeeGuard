@@ -1,5 +1,6 @@
 package net.uhcwork.BungeeGuard.Config;
 
+import lombok.Getter;
 import net.md_5.bungee.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -19,6 +20,8 @@ import java.util.concurrent.Future;
 public class MysqlConfigAdapter implements ConfigurationAdapter {
     private final Main plugin;
     private final HashMap<String, ServerInfo> servers = new HashMap<>();
+    @Getter
+    String motd;
     private String host;
     private ListenerInfo listener = null;
     private Map<String, String> forced_hosts;
@@ -132,12 +135,10 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         return options.getMaxPlayers();
     }
 
-    public String getMotd() {
-        return options.getMotd();
-    }
 
     void loadConf() {
         options = BungeeConfig.findById(1);
+        motd = options.getMotd();
         BungeeInstance instance = BungeeInstance.findFirst("server_id = ?", BungeeGuardUtils.getServerID());
 
         host = instance.getBindAddress();

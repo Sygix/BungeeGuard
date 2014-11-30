@@ -125,7 +125,6 @@ public class BungeeGuardListener implements Listener {
         final ProxiedPlayer p = e.getPlayer();
 
         p.setTabHeader(header, footer);
-
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
             System.out.println("Recuperation du meilleur lobby pour " + p.getName());
             String l = plugin.getServerManager().getBestLobbyFor(p);
@@ -143,6 +142,9 @@ public class BungeeGuardListener implements Listener {
             if (party != null && party.isOwner(p)) {
                 Main.getMB().summonParty(party.getName(), e.getTarget().getName());
             }
+        }
+        if ((p.getServer() != null && p.getServer().getInfo().equals(e.getTarget())) || !e.getTarget().canAccess(p)) {
+            e.setCancelled(true);
         }
     }
 
@@ -219,13 +221,12 @@ public class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onProxyPing(ProxyPingEvent e) {
-        e.registerIntent(plugin);
         ServerPing sp = e.getResponse();
         sp.getPlayers().setMax(plugin.getConfig().getMaxPlayers());
         sp.getPlayers().setOnline(Main.getMB().getPlayerCount());
         sp.setDescription(plugin.getConfig().getMotd());
         e.getResponse().getPlayers().setSample(playersPing);
-        e.completeIntent(plugin);
+        e.setResponse(sp);
     }
 
     @EventHandler
