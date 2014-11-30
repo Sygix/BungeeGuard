@@ -55,6 +55,8 @@ public class BungeeGuardListener implements Listener {
         playersPing = players;
     }
 
+    private static final String BASE_MOTD = "           §f§l» §b§lUHCGames§6§l.com §a§l[BETA] §f§l«\n";
+
     private final Main plugin;
     private final BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
             .color(ChatColor.GOLD)
@@ -224,13 +226,13 @@ public class BungeeGuardListener implements Listener {
         ServerPing sp = e.getResponse();
         sp.getPlayers().setMax(plugin.getConfig().getMaxPlayers());
         sp.getPlayers().setOnline(Main.getMB().getPlayerCount());
-        sp.setDescription(plugin.getConfig().getMotd());
+        sp.setDescription(BASE_MOTD + plugin.getConfig().getMotd());
         e.getResponse().getPlayers().setSample(playersPing);
         e.setResponse(sp);
     }
 
     @EventHandler
-    public void onServerTurnOff(final ServerKickEvent e) {
+    public void onKick(final ServerKickEvent e) {
         ProxiedPlayer p = e.getPlayer();
         String reason = "";
         ServerInfo kickedFrom = e.getKickedFrom();
