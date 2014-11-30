@@ -124,7 +124,7 @@ public class PermissionManager {
     }
 
     public Group getMainGroup(UUID user) {
-        return getGroups(user).iterator().next();
+        return getGroupsWithInherits(user).iterator().next();
     }
 
     public Group getMainGroup(String user) {
