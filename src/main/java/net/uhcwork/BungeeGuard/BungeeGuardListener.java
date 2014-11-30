@@ -143,7 +143,7 @@ public class BungeeGuardListener implements Listener {
                 Main.getMB().summonParty(party.getName(), e.getTarget().getName());
             }
         }
-        if (p.getServer().getInfo().equals(e.getTarget()) || !e.getTarget().canAccess(p)) {
+        if ((p.getServer() != null && p.getServer().getInfo().equals(e.getTarget())) || !e.getTarget().canAccess(p)) {
             e.setCancelled(true);
         }
     }
