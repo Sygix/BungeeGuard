@@ -26,6 +26,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     private ListenerInfo listener = null;
     private Map<String, String> forced_hosts;
     private BungeeConfig options;
+    private Map<String, BungeeServer> _servers = new HashMap<>();
 
     public MysqlConfigAdapter(Main plugin) {
         this.plugin = plugin;
@@ -92,9 +93,12 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         return servers;
     }
 
-    void setServers(HashMap<String, ServerInfo> _servers) {
+    void setServers(HashMap<String, ServerInfo> new_servers, HashMap<String, BungeeServer> _new_servers) {
         servers.clear();
-        servers.putAll(_servers);
+        servers.putAll(new_servers);
+
+        _servers.clear();
+        _servers.putAll(_new_servers);
     }
 
     @Override
@@ -157,6 +161,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     void loadServers() {
         List<BungeeServer> _s = BungeeServer.findAll();
         HashMap<String, ServerInfo> servers_new = new HashMap<>();
+        HashMap<String, BungeeServer> _servers_new = new HashMap<>();
         for (BungeeServer serveur : _s) {
             String name = serveur.getName();
             String addr = serveur.getAddress();
@@ -167,12 +172,13 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
             plugin.addPrettyServerName(name, prettyName);
             plugin.addShortServerName(name, shortName);
             plugin.setRestricted(name, restricted);
+            _servers_new.put(name, serveur);
 
             InetSocketAddress address = Util.getAddr(addr);
             ServerInfo info = ProxyServer.getInstance().constructServerInfo(name, address, "", true);
             servers_new.put(name, info);
         }
-        setServers(servers_new);
+        setServers(servers_new, _servers_new);
     }
 
     void loadListener() {
@@ -205,5 +211,9 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
             forced_hosts2.put(bf.getIp().toLowerCase(), bf.getServer());
         }
         forced_hosts = forced_hosts2;
+    }
+
+    public BungeeServer getServer(String serverName) {
+        return _servers.get(serverName);
     }
 }

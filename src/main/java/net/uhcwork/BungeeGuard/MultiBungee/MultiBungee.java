@@ -519,4 +519,8 @@ public class MultiBungee {
             registerPubSubChannels(channel);
         }
     }
+
+    public void setMaintenance(String serverName, boolean isRestricted) {
+        sendChannelMessage("maintenance", serverName, isRestricted ? "+" : "-");
+    }
 }

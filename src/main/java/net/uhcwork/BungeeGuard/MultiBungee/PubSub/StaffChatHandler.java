@@ -90,4 +90,11 @@ public class StaffChatHandler {
 
         p.chat(command);
     }
+
+    @PubSubHandler("maintenance")
+    public static void setMaintenance(final Main plugin, PubSubMessageEvent e) {
+        String serverName = e.getArg(0);
+        boolean restricted = e.getArg(1).equals("+");
+        plugin.setRestricted(serverName, restricted);
+    }
 }
