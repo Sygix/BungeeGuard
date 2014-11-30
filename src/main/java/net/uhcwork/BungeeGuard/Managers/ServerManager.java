@@ -165,7 +165,6 @@ public class ServerManager {
         private String name = "";
         private int onlinePlayers = 0;
         private int maxPlayers = 10;
-        private double tps = 10;
         private boolean isOnline = false;
 
         public Lobby(boolean isError, ServerInfo serverInfo, ServerPing result) {
@@ -176,30 +175,10 @@ public class ServerManager {
             name = serverInfo.getName();
             onlinePlayers = result.getPlayers().getOnline();
             maxPlayers = result.getPlayers().getMax();
-
-            if (!isLimboName(serverInfo.getName())) {
-                tps = getTps(serverInfo.getMotd());
-            }
         }
 
         private static boolean isLimboName(String name) {
             return name.startsWith("limbo");
-        }
-
-        private double getTps(String motd) {
-            if (motd.startsWith("{")) {
-                Map<String, String> data = gson.fromJson(motd, mapType);
-                if (data.containsKey("tps")) {
-                    motd = data.get("tps");
-                } else {
-                    return 10;
-                }
-            }
-            try {
-                return Double.parseDouble(motd);
-            } catch (NumberFormatException e) {
-                return 10;
-            }
         }
 
         @Override
@@ -209,7 +188,6 @@ public class ServerManager {
                     ", onlinePlayers=" + onlinePlayers +
                     ", maxPlayers=" + maxPlayers +
                     ", isOnline=" + isOnline +
-                    ", tps=" + tps +
                     '}';
         }
 
@@ -222,14 +200,10 @@ public class ServerManager {
         }
 
         public double score() {
-            if (getName().startsWith("limbo")) {
+            if (isLimboName(name)) {
                 return -Double.MAX_VALUE;
             }
-            double _score = (1 + getOnlinePlayers()) * (getMaxPlayers() / 2 - getOnlinePlayers());
-            if (_score > 0)
-                return _score * getTps();
-            else
-                return _score * (20 - getTps());
+            return (1 + getOnlinePlayers()) * (getMaxPlayers() / 2 - getOnlinePlayers());
         }
     }
 }
