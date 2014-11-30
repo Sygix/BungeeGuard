@@ -218,6 +218,7 @@ public class Main extends Plugin {
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
                 CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
                 CommandPoints.class, CommandWallet.class, CommandFind.class, CommandStaff.class, CommandSeen.class,
+                CommandMaintenance.class,
                 CommandUser.class, CommandGroups.class, CommandGtpHere.class, CommandRegister.class);
 
         for (Class<? extends Command> commande : commandes) {

@@ -18,6 +18,7 @@ import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Models.BungeeServer;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -144,6 +145,10 @@ public class ServerManager {
                 return lobby.getServerInfo();
             }
         });
+    }
+
+    public BungeeServer getServerModel(String serverName) {
+        return plugin.getConfig().getServer(serverName);
     }
 
     @Data
