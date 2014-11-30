@@ -101,6 +101,7 @@ public class ServerManager {
                         Callback<ServerPing> pingBack = new Callback<ServerPing>() {
                             @Override
                             public void done(ServerPing result, Throwable error) {
+                                System.out.println("Ping result " + serverInfo.getName());
                                 boolean isError = (error != null) || (result == null);
                                 Lobby lobby = new Lobby(isError, serverInfo, result);
                                 lobbies.put(serverInfo.getName(), lobby);
