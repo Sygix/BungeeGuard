@@ -54,7 +54,7 @@ public class ServerManager {
     private Predicate<Lobby> isOnline(final ProxiedPlayer p) {
         return new Predicate<Lobby>() {
             public boolean apply(Lobby lobby) {
-                return lobby != null && lobby.isOnline(); // && lobby.getServerInfo().canAccess(p);
+                return lobby != null && lobby.isOnline() && lobby.getServerInfo().canAccess(p);
             }
         };
     }
@@ -121,9 +121,15 @@ public class ServerManager {
 
     @SuppressWarnings("UnusedParameters")
     public String getBestLobbyFor(final ProxiedPlayer p) {
+        if (p.getName().equals("punkeel"))
+            System.out.println(getLobbies());
         Collection<Lobby> lobbies = Collections2.filter(getLobbies().values(), isOnline(p));
+        if (p.getName().equals("punkeel"))
+            System.out.println(lobbies);
         Ordering<Lobby> scoreOrdering = Ordering.natural().onResultOf(getScoreFunction);
         ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(scoreOrdering).addAll(lobbies).build().descendingSet();
+        if (sortedLobbies.size() == 0)
+            return "lobby1";
         return sortedLobbies.first().getName();
     }
 
