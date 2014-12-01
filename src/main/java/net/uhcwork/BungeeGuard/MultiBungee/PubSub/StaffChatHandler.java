@@ -3,7 +3,7 @@ package net.uhcwork.BungeeGuard.MultiBungee.PubSub;
 import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
@@ -11,9 +11,10 @@ import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubHandler;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 import net.uhcwork.BungeeGuard.Permissions.Group;
-import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
 import java.util.concurrent.TimeUnit;
+
+import static net.uhcwork.BungeeGuard.Utils.ArraysUtils.concat;
 
 /**
  * Part of net.uhcwork.BungeeGuard.MultiBungee.PubSub (bungeeguard)
@@ -28,10 +29,20 @@ public class StaffChatHandler {
         String senderName = e.getArg(1);
         String message = ChatColor.translateAlternateColorCodes('&', e.getArg(2));
         Group g = plugin.getPermissionManager().getMainGroup(senderName);
-        String displayName = g.getColor() + " ■ " + ChatColor.RESET + ChatColor.RED + senderName;
+
+        BaseComponent[] tag = new ComponentBuilder("[").color(ChatColor.RED)
+                .append(Main.getPrettyServerName(serverName))
+                .append("]").color(ChatColor.RED).create();
+        BaseComponent[] square = new ComponentBuilder(g.getColor() + " ■ ")
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(g.getColor() + g.getName())))
+                .create();
+        BaseComponent[] wholeMessage = new ComponentBuilder(senderName + ": ").color(ChatColor.RED)
+                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ""))
+                .append(message).color(ChatColor.RED)
+                .create();
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (player.hasPermission("bungee.staffchat")) {
-                player.sendMessage(PrettyLinkComponent.fromLegacyText(ChatColor.RED + "[" + Main.getPrettyServerName(serverName) + ChatColor.RESET + ChatColor.RED + "]" + displayName + ": " + message));
+                player.sendMessage(concat(tag, square, wholeMessage));
             }
         }
     }
