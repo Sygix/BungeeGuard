@@ -32,7 +32,7 @@ public class CommandMaintenance extends Command {
         boolean isRestricted = !plugin.isRestricted(serverName);
         MB.setMaintenance(serverName, isRestricted);
         if (isRestricted) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.DARK_RED + "Maintenance activée pour " + Main.getPrettyServerName(serverName)));
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Maintenance activée pour " + Main.getPrettyServerName(serverName)));
         } else {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Maintenance désactivée pour " + Main.getPrettyServerName(serverName)));
         }
