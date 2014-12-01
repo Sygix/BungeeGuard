@@ -224,8 +224,7 @@ public class PermissionManager {
                 if (!_um.isValid()) {
                     i.remove();
                     plugin.executePersistenceRunnable(new DeleteRunner(_um));
-                }
-                if (_um.getGroup().equalsIgnoreCase(group)) {
+                } else if (_um.getGroup().equalsIgnoreCase(group)) {
                     _users.add(u);
                 }
             }

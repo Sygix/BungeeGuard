@@ -59,19 +59,20 @@ public class CommandMsg extends Command {
                 return;
             }
             UUID receiverUUID = Main.getMB().getUuidFromName(args[0]);
+            if (!p.hasPermission("bungee.ignore.ignore")) {
+                if (plugin.getIgnoreManager().playerIgnores(receiverUUID, null)) {
+                    p.sendMessage(new ComponentBuilder("Ce joueur ne souhaite pas être contacté.").color(ChatColor.RED).create());
+                    return;
+                }
 
-            if (plugin.getIgnoreManager().playerIgnores(receiverUUID, null) && !p.hasPermission("bungee.ignore.ignore")) {
-                p.sendMessage(new ComponentBuilder("Ce joueur ne souhaite pas être contacté.").color(ChatColor.RED).create());
-                return;
-            }
-
-            if (plugin.getIgnoreManager().playerIgnores(receiverUUID, p.getUniqueId()) && !p.hasPermission("bungee.ignore.ignore")) {
-                p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
-                return;
-            }
-            if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), receiverUUID) && !p.hasPermission("bungee.ignore.ignore")) {
-                p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
-                return;
+                if (plugin.getIgnoreManager().playerIgnores(receiverUUID, p.getUniqueId())) {
+                    p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
+                    return;
+                }
+                if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), receiverUUID)) {
+                    p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
+                    return;
+                }
             }
 
             String text = "";
