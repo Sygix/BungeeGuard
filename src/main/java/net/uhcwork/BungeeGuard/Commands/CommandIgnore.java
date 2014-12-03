@@ -30,6 +30,7 @@ public class CommandIgnore extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof ProxiedPlayer)) {
+            sender.sendMessage(TextComponent.fromLegacyText(String.valueOf(plugin.getIgnoreManager().getIgnoreList())));
             sender.sendMessage(new ComponentBuilder("Vous devez etre un joueur pour executer cette commande !").color(ChatColor.RED).create());
             return;
         }
