@@ -54,13 +54,13 @@ public class CommandIgnore extends Command {
         }
 
         if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), toIgnore)) {
-            if (toIgnore == null)
+            if (toIgnore != null)
                 p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous n'ignorez plus " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
             else
                 p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous venez de débloquer les " + ChatColor.GREEN + "messages privés" + ChatColor.GRAY + "."));
             MB.ignorePlayer(p.getUniqueId(), '-', toIgnore);
         } else {
-            if (toIgnore == null)
+            if (toIgnore != null)
                 p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous n'ignorez plus " + ChatColor.AQUA + args[0] + ChatColor.GRAY + "."));
             else
                 p.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous venez de bloquer les " + ChatColor.GREEN + "messages privés" + ChatColor.GRAY + "."));
