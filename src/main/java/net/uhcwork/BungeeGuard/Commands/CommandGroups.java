@@ -45,7 +45,7 @@ public class CommandGroups extends Command {
             Collection<String> users = Collections2.transform(_users, new Function<UUID, String>() {
                 @Override
                 public String apply(UUID uuid) {
-                    return Main.getMB().getNameFromUuid(uuid);
+                    return Main.getMB().getNameFromUuid(uuid, true);
                 }
             });
 
