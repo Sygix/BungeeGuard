@@ -2,9 +2,10 @@ package net.uhcwork.BungeeGuard.Utils;
 
 import net.uhcwork.BungeeGuard.Main;
 
-import java.io.OutputStreamWriter;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,16 @@ public class SlackUtils {
         data.put("channel", channel);
         data.put("username", username);
         data.put("text", message);
-        data.put("icon_emoji", ":microscope:");
+        String emoji;
+        switch (username) {
+            case "BungeeCord":
+                emoji = ":rotating_light:";
+                break;
+            default:
+                emoji = ":microscope:";
+                break;
+        }
+        data.put("icon_emoji", emoji);
         doPost(data);
     }
 
@@ -30,23 +40,30 @@ public class SlackUtils {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                OutputStreamWriter writer = null;
                 try {
                     String req = "payload=" + URLEncoder.encode(Main.getGson().toJson(data), "UTF-8");
                     URL url = new URL(HOOK_URL);
-                    URLConnection conn = url.openConnection();
-                    conn.setDoOutput(true);
-                    writer = new OutputStreamWriter(conn.getOutputStream());
-                    writer.write(req);
-                    writer.flush();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        assert writer != null;
-                        writer.close();
-                    } catch (Exception ignored) {
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setDoOutput(true);
+                    connection.setDoInput(true);
+                    connection.setInstanceFollowRedirects(false);
+                    connection.setRequestMethod("POST");
+                    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    connection.setRequestProperty("charset", "utf-8");
+                    connection.setRequestProperty("Content-Length", "" + Integer.toString(req.getBytes().length));
+                    connection.setUseCaches(false);
+
+                    DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+                    wr.writeBytes(req);
+                    wr.flush();
+                    wr.close();
+                    int responseCode = connection.getResponseCode();
+                    if (responseCode != 200) {
+                        System.out.println("[Slack] Non 200 return code: " + responseCode);
                     }
+                    connection.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
             }
