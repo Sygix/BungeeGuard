@@ -24,6 +24,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubListener;
 import net.uhcwork.BungeeGuard.MultiBungee.RedisBungeeListener;
 import net.uhcwork.BungeeGuard.Utils.MyReconnectHandler;
 import net.uhcwork.BungeeGuard.Utils.ShopTask;
+import net.uhcwork.BungeeGuard.Utils.SlackUtils;
 import org.javalite.activejdbc.Base;
 
 import java.io.BufferedReader;
@@ -39,6 +40,8 @@ import java.util.concurrent.TimeUnit;
 public class Main extends Plugin {
 
     public static final String ADMIN_TAG = ChatColor.RED + "[BungeeGuard] " + ChatColor.RESET;
+    @Getter
+    static final SlackUtils slack = new SlackUtils();
     private static final Map<String, String> shortServerNames = new HashMap<>();
     private static final Map<String, String> premadeMessages = new HashMap<>();
     private static final List<String> forbiddenCommands = new ArrayList<>();
@@ -346,7 +349,7 @@ public class Main extends Plugin {
     }
 
     public void setRestricted(String name, boolean restricted) {
-        if (!restricted ^ isRestricted(name))
+        if (restricted == isRestricted(name))
             return;
         /*
         !restricted  | contenu   | return

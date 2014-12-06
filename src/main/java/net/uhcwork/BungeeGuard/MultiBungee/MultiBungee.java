@@ -8,6 +8,7 @@ import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.imaginarycode.minecraft.redisbungee.internal.jedis.Jedis;
 import com.imaginarycode.minecraft.redisbungee.internal.jedis.JedisPool;
 import com.imaginarycode.minecraft.redisbungee.internal.jedis.exceptions.JedisConnectionException;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -349,6 +350,7 @@ public class MultiBungee {
 
     public final void notifyStaff(String message) {
         sendChannelMessage("notifyStaff", message);
+        Main.getSlack().staffChat("Bungeecord", ChatColor.stripColor(message));
     }
 
     public void sendPlayerMessage(UUID player, String message) {
@@ -385,6 +387,7 @@ public class MultiBungee {
     }
 
     public void staffChat(String server, String sender, String message) {
+        Main.getSlack().staffChat(sender, message);
         sendChannelMessage("staffChat", server, sender, message);
     }
 
