@@ -365,4 +365,8 @@ public class Main extends Plugin {
         else
             restrictedServers.remove(name);
     }
+
+    public void executeRunnable(Runnable runnable) {
+        getProxy().getScheduler().runAsync(this, runnable);
+    }
 }
