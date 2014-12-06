@@ -2,11 +2,13 @@ package net.uhcwork.BungeeGuard.Commands;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeServer;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
+import net.uhcwork.BungeeGuard.Permissions.Permissions;
 import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
 public class CommandMaintenance extends Command {
@@ -23,21 +25,27 @@ public class CommandMaintenance extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Usage: /maintenance <serveur_name>"));
             return;
         }
-        String serverName = args[0];
+        boolean notFound = true;
+        String pattern = args[0];
         MultiBungee MB = Main.getMB();
-        if (plugin.getProxy().getServerInfo(serverName) == null) {
+        for (String name : ProxyServer.getInstance().getServers().keySet()) {
+            if (!Permissions.miniglob(pattern, name))
+                continue;
+
+            boolean isRestricted = !plugin.isRestricted(name);
+            MB.setMaintenance(name, isRestricted);
+            if (isRestricted) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Maintenance activée pour " + Main.getPrettyServerName(name)));
+            } else {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Maintenance désactivée pour " + Main.getPrettyServerName(name)));
+            }
+            BungeeServer server = plugin.getServerManager().getServerModel(name);
+            server.setRestricted(isRestricted);
+            plugin.executePersistenceRunnable(new SaveRunner(server));
+            notFound = false;
+        }
+        if (notFound) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Serveur ... inconnu u.u"));
-            return;
         }
-        boolean isRestricted = !plugin.isRestricted(serverName);
-        MB.setMaintenance(serverName, isRestricted);
-        if (isRestricted) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Maintenance activée pour " + Main.getPrettyServerName(serverName)));
-        } else {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Maintenance désactivée pour " + Main.getPrettyServerName(serverName)));
-        }
-        BungeeServer server = plugin.getServerManager().getServerModel(serverName);
-        server.setRestricted(isRestricted);
-        plugin.executePersistenceRunnable(new SaveRunner(server));
     }
 }
