@@ -153,8 +153,7 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onChat(ChatEvent e) {
         ProxiedPlayer p = (ProxiedPlayer) e.getSender();
-        String message = e.getMessage();
-        String lowerMessage = message.toLowerCase();
+        String lowerMessage = e.getMessage().toLowerCase();
         if (lowerMessage.startsWith("connected with") && lowerMessage.endsWith("minechat")) {
             e.setCancelled(true);
             return;
@@ -188,17 +187,22 @@ public class BungeeGuardListener implements Listener {
             }
             if (p.hasPermission("bungee.staffchat")) {
                 boolean isDefault = p.hasPermission("bungee.staffchat.default") && p.getServer().getInfo().getName().startsWith("lobby");
-                if (message.startsWith("!!") != isDefault) {
+                if (e.getMessage().startsWith("!!") != isDefault) {
                     // Active staffchat si "!!message" et pas sur lobby
                     // ou si "message" et sur lobby (équivaut à un XOR mais en plus propre)l
                     e.setCancelled(true);
+                    String message;
                     if (!isDefault)
-                        message = message.substring(2);
+                        message = e.getMessage().substring(2);
+                    else
+                        message = e.getMessage();
                     Main.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), message);
                     e.setMessage("");
 
                     return;
                 }
+                if (isDefault)
+                    e.setMessage(e.getMessage().substring(2));
             }
 
             PartyManager.Party party = plugin.getPartyManager().getPartyByPlayer(p);

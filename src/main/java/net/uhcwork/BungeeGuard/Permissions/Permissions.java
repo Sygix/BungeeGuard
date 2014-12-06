@@ -59,7 +59,7 @@ public class Permissions {
 
     }
 
-    private static boolean miniglob(String pattern, String line) {
+    public static boolean miniglob(String pattern, String line) {
         // miniglob : parseur de permissions, avec support léger pour les wildcard :)
         // ("a.b.c", "a.b.c") -> true
         // ("a.*", "a.b.c") -> true
