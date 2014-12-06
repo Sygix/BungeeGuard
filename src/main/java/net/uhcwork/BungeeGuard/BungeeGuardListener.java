@@ -186,13 +186,21 @@ public class BungeeGuardListener implements Listener {
                     Main.getMB().unmutePlayer(p.getUniqueId());
                 }
             }
-            if ((p.hasPermission("bungee.staffchat")) && (e.getMessage().startsWith("!!"))) {
-                e.setCancelled(true);
-                Main.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), e.getMessage().substring(2));
-                e.setMessage("");
+            if (p.hasPermission("bungee.staffchat")) {
+                boolean isDefault = p.hasPermission("bungee.staffchat.default") && p.getServer().getInfo().getName().startsWith("lobby");
+                if (message.startsWith("!!") != isDefault) {
+                    // Active staffchat si "!!message" et pas sur lobby
+                    // ou si "message" et sur lobby (équivaut à un XOR mais en plus propre)l
+                    e.setCancelled(true);
+                    if (!isDefault)
+                        message = message.substring(2);
+                    Main.getMB().staffChat(p.getServer().getInfo().getName(), p.getName(), message);
+                    e.setMessage("");
 
-                return;
+                    return;
+                }
             }
+
             PartyManager.Party party = plugin.getPartyManager().getPartyByPlayer(p);
             if (party != null && party.isPartyChat(p)) {
                 Main.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage());

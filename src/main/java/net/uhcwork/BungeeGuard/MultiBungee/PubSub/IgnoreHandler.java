@@ -6,7 +6,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubHandler;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 
 import java.lang.reflect.Type;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -39,15 +39,15 @@ public class IgnoreHandler {
     @PubSubHandler("@ignoresReply")
     public static void ignoresReply(Main plugin, PubSubMessageEvent e) {
         String data = e.getArg(0);
-        Type type = new TypeToken<Map<UUID, List<UUID>>>() {
+        Type type = new TypeToken<Map<UUID, Collection<UUID>>>() {
         }.getType();
         System.out.println("[MB] Ignores: received" + data);
-        plugin.getIgnoreManager().setIgnoreList(Main.getGson().<Map<UUID, List<UUID>>>fromJson(data, type));
+        plugin.getIgnoreManager().setIgnoreList(Main.getGson().<Map<UUID, Collection<UUID>>>fromJson(data, type));
     }
 
     @PubSubHandler("@ignoresRequest")
     public static void ignoresRequest(Main plugin, PubSubMessageEvent e) {
         String serveur = e.getArg(0);
-        Main.getMB().replyIgnores(serveur, Main.getGson().toJson(plugin.getIgnoreManager().getIgnoreList()));
+        Main.getMB().replyIgnores(serveur, Main.getGson().toJson(plugin.getIgnoreManager().getIgnoreList().asMap()));
     }
 }
