@@ -9,7 +9,6 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Ordering;
 import com.google.gson.Gson;
-import lombok.Data;
 import lombok.Getter;
 import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ProxyServer;
@@ -160,23 +159,23 @@ public class ServerManager {
         players.setOnline(players.getOnline() + count);
     }
 
-    @Data
     public static class Lobby {
-        @Getter(lazy = true)
-        private final Double score = score();
+        private final ServerPing result;
+        @Getter
         private String name = "";
-        private int onlinePlayers = 0;
-        private int maxPlayers = 10;
+        @Getter
         private boolean isOnline = false;
+        private int maxPlayers = 10;
 
         public Lobby(boolean isError, ServerInfo serverInfo, ServerPing result) {
             isOnline = !isError;
             if (isError) {
+                this.result = null;
                 return;
             }
             name = serverInfo.getName();
-            onlinePlayers = result.getPlayers().getOnline();
             maxPlayers = result.getPlayers().getMax();
+            this.result = result;
         }
 
         private static boolean isLimboName(String name) {
@@ -187,7 +186,6 @@ public class ServerManager {
         public String toString() {
             return "Lobby{" +
                     "name='" + name + '\'' +
-                    ", onlinePlayers=" + onlinePlayers +
                     ", maxPlayers=" + maxPlayers +
                     ", isOnline=" + isOnline +
                     '}';
@@ -201,11 +199,12 @@ public class ServerManager {
             this.isOnline = isOnline;
         }
 
-        public double score() {
+        public double getScore() {
             if (isLimboName(name)) {
                 return -Double.MAX_VALUE;
             }
-            return (1 + getOnlinePlayers()) * (getMaxPlayers() / 2 - getOnlinePlayers());
+            int onlinePlayers = result.getPlayers().getOnline();
+            return (1 + onlinePlayers) * (maxPlayers / 2 - onlinePlayers);
         }
     }
 }
