@@ -43,7 +43,7 @@ public class PartyManager {
             while (joueurs.hasNext()) {
                 u = joueurs.next();
                 if (!MB.isPlayerOnline(u)) {
-                    p.removeMember(u);
+                    joueurs.remove();
                 }
             }
             if (p.getSize() == 0) {
