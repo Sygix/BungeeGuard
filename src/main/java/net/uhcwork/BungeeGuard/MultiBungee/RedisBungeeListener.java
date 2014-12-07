@@ -86,4 +86,12 @@ public class RedisBungeeListener implements Listener {
         }
         return "";
     }
+
+    @EventHandler
+    public void onNetworkPlayerServerChangeEvent(com.imaginarycode.minecraft.redisbungee.events.PlayerChangedServerNetworkEvent e) {
+        String previousServer = e.getPreviousServer();
+        String targetServer = e.getServer();
+        plugin.getServerManager().addPlayer(previousServer, -1);
+        plugin.getServerManager().addPlayer(targetServer, 1);
+    }
 }
