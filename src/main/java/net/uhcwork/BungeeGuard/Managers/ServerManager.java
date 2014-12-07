@@ -150,6 +150,16 @@ public class ServerManager {
         return plugin.getConfig().getServer(serverName);
     }
 
+    public void addPlayer(String server, int count) {
+        if (server == null)
+            return;
+        Optional<ServerPing> ping = getServersCache().getIfPresent(server);
+        if (ping == null || !ping.isPresent())
+            return;
+        ServerPing.Players players = ping.get().getPlayers();
+        players.setOnline(players.getOnline() + count);
+    }
+
     @Data
     public static class Lobby {
         @Getter(lazy = true)
