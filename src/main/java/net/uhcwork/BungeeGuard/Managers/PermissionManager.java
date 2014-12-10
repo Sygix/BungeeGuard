@@ -134,7 +134,7 @@ public class PermissionManager {
                 out.writeUTF(uuid.toString());
                 out.writeUTF(Main.getGson().toJson(data));
 
-                pp.sendData("UHCGames", out.toByteArray());
+                pp.getServer().sendData("UHCGames", out.toByteArray());
             }
         });
     }
