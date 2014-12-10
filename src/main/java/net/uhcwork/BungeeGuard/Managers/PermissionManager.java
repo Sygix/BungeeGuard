@@ -2,8 +2,12 @@ package net.uhcwork.BungeeGuard.Managers;
 
 import com.google.common.base.Function;
 import com.google.common.collect.*;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.google.common.primitives.Ints;
 import lombok.Getter;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Permissions.Group;
 import net.uhcwork.BungeeGuard.Permissions.GroupModel;
@@ -119,6 +123,18 @@ public class PermissionManager {
                 user_groups.removeAll(uuid);
                 List<UserModel> um = UserModel.find("uuid=?", uuid.toString());
                 user_groups.putAll(uuid, um);
+
+                ProxiedPlayer pp = ProxyServer.getInstance().getPlayer(uuid);
+                if (pp == null)
+                    return;
+                Map<String, Object> data = new HashMap<>();
+                data.put("groupes", getGroupes(uuid));
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("UserGroups");
+                out.writeUTF(uuid.toString());
+                out.writeUTF(Main.getGson().toJson(data));
+
+                pp.sendData("UHCGames", out.toByteArray());
             }
         });
     }
