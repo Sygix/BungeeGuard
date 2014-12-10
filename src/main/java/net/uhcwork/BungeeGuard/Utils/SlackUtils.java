@@ -23,6 +23,7 @@ public class SlackUtils {
         data.put("channel", channel);
         data.put("username", username);
         data.put("text", message);
+        data.put("parse", "full");
         String emoji;
         switch (username) {
             case "BungeeCord":
