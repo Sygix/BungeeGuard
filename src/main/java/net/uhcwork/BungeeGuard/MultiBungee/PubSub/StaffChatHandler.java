@@ -3,7 +3,10 @@ package net.uhcwork.BungeeGuard.MultiBungee.PubSub;
 import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
@@ -13,8 +16,6 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 import net.uhcwork.BungeeGuard.Permissions.Group;
 
 import java.util.concurrent.TimeUnit;
-
-import static net.uhcwork.BungeeGuard.Utils.ArraysUtils.concat;
 
 /**
  * Part of net.uhcwork.BungeeGuard.MultiBungee.PubSub (bungeeguard)
@@ -30,19 +31,17 @@ public class StaffChatHandler {
         String message = ChatColor.translateAlternateColorCodes('&', e.getArg(2));
         Group g = plugin.getPermissionManager().getMainGroup(senderName);
 
-        BaseComponent[] tag = new ComponentBuilder("[").color(ChatColor.RED)
+        BaseComponent[] wholeMessage = new ComponentBuilder("[").color(ChatColor.RED)
                 .append(Main.getPrettyServerName(serverName))
-                .append("]").color(ChatColor.RED).create();
-        BaseComponent[] square = new ComponentBuilder(g.getColor() + " ■ ")
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(g.getColor() + g.getName())))
-                .create();
-        BaseComponent[] wholeMessage = new ComponentBuilder(senderName + ": ").color(ChatColor.RED)
-                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ""))
+                .append("]").color(ChatColor.RED)
+                .append(g.getColor() + " ■ ").event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(g.getColor() + g.getName())))
+                .append(senderName + ": ").color(ChatColor.RED)
                 .append(message).color(ChatColor.RED)
                 .create();
+
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             if (player.hasPermission("bungee.staffchat")) {
-                player.sendMessage(concat(tag, square, wholeMessage));
+                player.sendMessage(wholeMessage);
             }
         }
     }
