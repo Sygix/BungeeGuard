@@ -3,12 +3,6 @@ package net.uhcwork.BungeeGuard.Models;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Models (BungeeGuard)
- * Date: 12/10/2014
- * Time: 20:11
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 @Table("bungee_cheats")
 public class BungeeCheat extends Model {
     public void setPlayerName(String playerName) {

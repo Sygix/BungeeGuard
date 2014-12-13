@@ -1,12 +1,5 @@
 package net.uhcwork.BungeeGuard.Commands;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Wallet (bungeeguard)
- * Date: 27/09/2014
- * Time: 21:34
- * May be open-source & be sold (by mguerreiro, of course !)
- */
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;

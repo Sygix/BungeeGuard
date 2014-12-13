@@ -9,12 +9,6 @@ import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubHandler;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 
-/**
- * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
- * Date: 07/09/2014
- * Time: 18:46
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class SummonHandler {
     @PubSubHandler("summon")
     public static void summon(PubSubMessageEvent e) {

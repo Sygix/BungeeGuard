@@ -13,12 +13,6 @@ import java.net.InetSocketAddress;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
- * Date: 07/09/2014
- * Time: 18:22
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class ReloadConfHandler {
     @PubSubHandler("reloadConf")
     public static void reloadConf(Main plugin, PubSubMessageEvent e) {

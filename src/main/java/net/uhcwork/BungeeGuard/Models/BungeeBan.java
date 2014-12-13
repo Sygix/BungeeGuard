@@ -8,12 +8,6 @@ import org.javalite.activejdbc.annotations.Table;
 
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Models (bungeeguard)
- * Date: 20/09/2014
- * Time: 21:19
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 @Table("BungeeGuard_Ban")
 public class BungeeBan extends Model {
     public void setAdminUUID(String adminUUID) {

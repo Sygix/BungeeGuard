@@ -15,12 +15,6 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Permissions (bungeeguard)
- * Date: 20/10/2014
- * Time: 17:53
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class CommandGroups extends Command {
 
     private final Main plugin;

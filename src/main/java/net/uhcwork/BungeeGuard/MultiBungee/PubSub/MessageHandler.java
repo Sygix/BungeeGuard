@@ -15,12 +15,6 @@ import net.uhcwork.BungeeGuard.Utils.PrettyLinkComponent;
 
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.MultiBungee.PubSub
- * Date: 30/08/2014
- * Time: 00:18
- * May be open-source & be sold (by PunKeel, of course !)
- */
 public class MessageHandler {
     @PubSubHandler("message")
     public static void message(PubSubMessageEvent e) {

@@ -12,12 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Utils (BungeeGuard)
- * Date: 22/10/2014
- * Time: 24:25
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class ShopTask implements Runnable {
     private final Main plugin;
 
@@ -74,7 +68,7 @@ public class ShopTask implements Runnable {
         String message = (String) params.get("message");
         List<String> serversList = new ArrayList<>();
 
-        for (ServerInfo server : plugin.getServerManager().getOnlineLobbies()) {
+        for (ServerInfo server : Main.getServerManager().getOnlineLobbies()) {
             serversList.add(server.getName());
         }
         Main.getMB().broadcastServers(serversList, message);

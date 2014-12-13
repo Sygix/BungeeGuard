@@ -7,12 +7,6 @@ import org.javalite.activejdbc.annotations.Table;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Permissions (BungeeGuard)
- * Date: 20/10/2014
- * Time: 24:48
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 @Table("uhgestion_users")
 @BelongsTo(parent = GroupModel.class, foreignKeyName = "group_id")
 public class UserModel extends Model {

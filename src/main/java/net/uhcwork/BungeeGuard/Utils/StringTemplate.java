@@ -4,12 +4,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Utils (BungeeGuard)
- * Date: 11/10/2014
- * Time: 17:55
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class StringTemplate {
 
     static final private Pattern keyPattern =

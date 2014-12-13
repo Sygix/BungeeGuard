@@ -14,12 +14,6 @@ import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import java.io.Serializable;
 import java.util.*;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Party (bungeeguard)
- * Date: 10/09/2014
- * Time: 18:43
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class PartyManager {
     private Map<String, Party> parties = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 

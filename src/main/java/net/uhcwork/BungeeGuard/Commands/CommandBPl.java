@@ -11,12 +11,6 @@ import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.uhcwork.BungeeGuard.Main;
 
-/**
- * Part of net.uhcwork.BungeeGuard.commands (bungeeguard)
- * Date: 27/09/2014
- * Time: 15:08
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class CommandBPl extends Command {
     private final Main plugin;
 

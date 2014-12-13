@@ -10,12 +10,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.MultiBungee.PubSub (bungeeguard)
- * Date: 10/09/2014
- * Time: 17:57
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class IgnoreHandler {
     @PubSubHandler("ignore")
     public static void ignore(Main plugin, PubSubMessageEvent e) {

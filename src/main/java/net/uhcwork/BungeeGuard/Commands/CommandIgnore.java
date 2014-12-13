@@ -12,12 +12,6 @@ import net.uhcwork.BungeeGuard.Permissions.Permissions;
 
 import java.util.UUID;
 
-/**
- * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
- * Date: 07/07/14
- * Time: 18:45
- * May be open-source & be sold (by Greenns, of course !)
- */
 public class CommandIgnore extends Command {
 
     private final Main plugin;

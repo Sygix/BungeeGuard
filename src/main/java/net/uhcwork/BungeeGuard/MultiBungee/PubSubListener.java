@@ -20,12 +20,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-/**
- * Part of net.uhcwork.BungeeGuard.MultiBungee (bungeeguard)
- * Date: 14/09/2014
- * Time: 21:09
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class PubSubListener implements Listener {
     private final Main plugin;
     private final MultiBungee MB;

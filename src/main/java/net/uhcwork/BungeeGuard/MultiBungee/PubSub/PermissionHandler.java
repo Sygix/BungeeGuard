@@ -6,12 +6,6 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.MultiBungee.PubSub (BungeeGuard)
- * Date: 22/10/2014
- * Time: 23:05
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class PermissionHandler {
     @PubSubHandler("invalidatePermissionUser")
     public static void invalidatePermissionUser(Main plugin, PubSubMessageEvent e) {

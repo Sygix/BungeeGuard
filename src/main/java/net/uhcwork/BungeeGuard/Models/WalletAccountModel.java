@@ -5,12 +5,6 @@ import org.javalite.activejdbc.annotations.Table;
 
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Wallet (bungeeguard)
- * Date: 27/09/2014
- * Time: 21:44
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 @Table("Wallet_Accounts")
 public class WalletAccountModel extends Model {
     public String getUUID() {
@@ -39,13 +33,5 @@ public class WalletAccountModel extends Model {
 
     public void setMoney(double money) {
         setDouble("money", money);
-    }
-
-    public boolean isActive() {
-        return getBoolean("active");
-    }
-
-    public void setActive(boolean active) {
-        setBoolean("active", active);
     }
 }

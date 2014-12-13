@@ -16,16 +16,6 @@ import net.uhcwork.BungeeGuard.Main;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * Part of net.uhcwork.BungeeGuard.commands (bungeeguard)
- * Date: 14/09/2014
- * Time: 18:57
- * May be open-source & be sold (by mguerreiro, of course !)
- */
-
-/**
- * Command to list and switch a player between available servers.
- */
 public class CommandServer extends Command implements TabExecutor {
 
     public CommandServer(Main plugin) {

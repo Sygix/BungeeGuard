@@ -12,12 +12,6 @@ import org.javalite.activejdbc.Base;
 
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Commands (BungeeGuard)
- * Date: 02/11/2014
- * Time: 12:11
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class CommandSeen extends Command {
     private final Main plugin;
 

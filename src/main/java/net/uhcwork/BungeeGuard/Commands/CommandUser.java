@@ -17,12 +17,6 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Permissions (bungeeguard)
- * Date: 20/10/2014
- * Time: 16:47
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class CommandUser extends Command {
 
     private final Main plugin;

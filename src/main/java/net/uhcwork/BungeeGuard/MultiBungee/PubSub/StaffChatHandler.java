@@ -17,12 +17,6 @@ import net.uhcwork.BungeeGuard.Utils.MyBuilder;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Part of net.uhcwork.BungeeGuard.MultiBungee.PubSub (bungeeguard)
- * Date: 07/09/2014
- * Time: 18:46
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class StaffChatHandler {
     @PubSubHandler("staffChat")
     public static void staffChat(Main plugin, PubSubMessageEvent e) {

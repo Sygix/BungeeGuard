@@ -10,12 +10,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Ignore (bungeeguard)
- * Date: 20/09/2014
- * Time: 23:15
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class IgnoreManager {
     private final Main plugin;
     // null = ignore *

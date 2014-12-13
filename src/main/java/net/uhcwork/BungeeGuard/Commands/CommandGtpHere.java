@@ -1,12 +1,5 @@
 package net.uhcwork.BungeeGuard.Commands;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Commands (BungeeGuard)
- * Date: 29/10/2014
- * Time: 24:11
- * May be open-source & be sold (by mguerreiro, of course !)
- */
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;

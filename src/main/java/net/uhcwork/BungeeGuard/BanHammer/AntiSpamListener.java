@@ -7,12 +7,6 @@ import net.md_5.bungee.api.plugin.Listener;
 import java.util.HashMap;
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.AntiSpam (bungeeguard)
- * Date: 21/09/2014
- * Time: 18:42
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class AntiSpamListener implements Listener {
     private final HashMap<UUID, String> lastMessage = new HashMap<>();
     private final HashMap<UUID, Integer> duplicateCount = new HashMap<>();
