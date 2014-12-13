@@ -58,17 +58,18 @@ public class CommandStaff extends Command {
             return;
         }
         TextComponent TC;
-        String playerName;
+        String playerName, serverName;
         Group g;
         for (UUID uuid : staffMembers) {
             playerName = MB.getNameFromUuid(uuid);
             g = PM.getMainGroup(uuid);
             TC = new TextComponent(TextComponent.fromLegacyText(" " + g.getColor() + playerName));
             if (sender.hasPermission("bungee.staff.see")) {
+                serverName = MB.getServerFor(uuid).getName();
                 TC.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new ComponentBuilder("Serveur: ")
-                                .append(SM.getPrettyName(MB.getServerFor(uuid).getName() + ChatColor.RESET)
-                                        + " (" + MB.getServerFor(uuid).getName() + ")")
+                                .append(SM.getPrettyName(serverName) + ChatColor.RESET
+                                        + " (" + serverName + ")")
                                 .color(ChatColor.BLUE)
                                 .append("\nProxy: ")
                                 .append(MB.getProxy(playerName))
