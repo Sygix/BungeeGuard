@@ -66,7 +66,7 @@ public class Permissions {
         return do_miniglob(Splitter.on('*').splitToList(pattern), line);
     }
 
-    public static boolean miniglob(List<String> patterns, String line) {
+    public static boolean miniglob(Collection<String> patterns, String line) {
         if (patterns.contains(line))
             return true;
         for (String pattern : patterns) {

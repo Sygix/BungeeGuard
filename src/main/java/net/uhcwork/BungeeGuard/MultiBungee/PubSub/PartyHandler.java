@@ -224,7 +224,7 @@ public class PartyHandler {
                 && !player.getServer().getInfo().equals(target)
                 && player.getServer().getInfo().getName().startsWith("lobby")) {
             player.connect(target);
-            player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Envoi sur le serveur " + Main.getPrettyServerName(target.getName()) + ChatColor.RESET + ChatColor.GOLD + " ..."));
+            player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Envoi sur le serveur " + Main.getServerManager().getPrettyName(target.getName()) + ChatColor.RESET + ChatColor.GOLD + " ..."));
         }
     }
 }

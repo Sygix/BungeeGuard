@@ -8,14 +8,15 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Managers.ServerManager;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 public class CommandGtp extends Command {
-    private final Main plugin;
+    private final ServerManager SM;
 
     public CommandGtp(Main plugin) {
         super("gtp", "bungee.gtp");
-        this.plugin = plugin;
+        SM = Main.getServerManager();
     }
 
     @Override
@@ -33,7 +34,7 @@ public class CommandGtp extends Command {
         MultiBungee MB = Main.getMB();
         if (MB.isPlayerOnline(playerName)) {
             ServerInfo server = MB.getServerFor(playerName);
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Téléportation vers " + ChatColor.BLUE + playerName + ChatColor.GREEN + " dans le monde " + ChatColor.GOLD + Main.getPrettyServerName(server.getName()) + ChatColor.RESET + ChatColor.GOLD + "(" + server.getName() + ")" + ChatColor.GREEN + "..."));
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Téléportation vers " + ChatColor.BLUE + playerName + ChatColor.GREEN + " dans le monde " + ChatColor.GOLD + SM.getPrettyName(server.getName()) + ChatColor.RESET + ChatColor.GOLD + "(" + server.getName() + ")" + ChatColor.GREEN + "..."));
             if (server.getName().equalsIgnoreCase(((ProxiedPlayer) sender).getServer().getInfo().getName())) {
                 p.chat("/tp " + playerName);
             } else {

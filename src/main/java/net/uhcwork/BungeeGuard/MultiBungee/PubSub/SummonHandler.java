@@ -43,7 +43,7 @@ public class SummonHandler {
         if (player.getServer() != null && !player.getServer().getInfo().equals(target)) {
             player.connect(target);
             if (!senderName.isEmpty())
-                player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Envoyé sur " + Main.getPrettyServerName(target.getName()) + ChatColor.RESET + ChatColor.GOLD + " par " + senderName));
+                player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Envoyé sur " + Main.getServerManager().getPrettyName(target.getName()) + ChatColor.RESET + ChatColor.GOLD + " par " + senderName));
         }
     }
 }

@@ -129,7 +129,7 @@ public class BungeeGuardListener implements Listener {
         p.setTabHeader(header, footer);
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
             System.out.println("Recuperation du meilleur lobby pour " + p.getName());
-            String l = plugin.getServerManager().getBestLobbyFor(p);
+            String l = Main.getServerManager().getBestLobbyFor(p);
             if (l != null) {
                 e.setTarget(plugin.getProxy().getServerInfo(l));
                 System.out.println("Lobby selectionné: " + l);
@@ -260,15 +260,16 @@ public class BungeeGuardListener implements Listener {
                 reason.contains("kick") || reason.contains("VIP"))) {
 
             if (reason.contains("closed")) {
-                plugin.getServerManager().setOffline(kickedFrom.getName());
+                Main.getServerManager().setOffline(kickedFrom.getName());
             }
 
-            String l = plugin.getServerManager().getBestLobbyFor(p);
+            String l = Main.getServerManager().getBestLobbyFor(p);
             ServerInfo server = plugin.getProxy().getServerInfo(l);
 
 
             ProxyServer.getInstance().getConsole().sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + e.getState().toString() + " - " + reason + ")"));
-            ProxyServer.getInstance().getConsole().sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "[BungeeGuard] " + p.getName() + " Redirigé vers " + Main.getPrettyServerName(server.getName())));
+            ProxyServer.getInstance().getConsole().sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "[BungeeGuard] " + p.getName() + " Redirigé vers " + Main.getServerManager().getPrettyName(server.getName())));
+
             p.setReconnectServer(server);
             e.setCancelled(true);
             e.setCancelServer(server);
@@ -308,7 +309,7 @@ public class BungeeGuardListener implements Listener {
             boolean hasPerm;
             if (e.getPermission().startsWith("bungeecord.server.")) {
                 String serverName = e.getPermission().substring("bungeecord.server.".length());
-                hasPerm = !plugin.isRestricted(serverName) || p.hasPermission("bungee.server." + serverName);
+                hasPerm = !Main.getServerManager().isRestricted(serverName) || Permissions.hasPerm(p.getUniqueId(), "bungee.server." + serverName);
             } else
                 hasPerm = Permissions.hasPerm(p.getUniqueId(), e.getPermission());
             e.setHasPermission(hasPerm);

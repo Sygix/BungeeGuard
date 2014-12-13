@@ -26,15 +26,15 @@ public class CommandLobby extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(new ComponentBuilder("Vous devez etre un joueur pour executer cette command !").color(ChatColor.RED).create());
+            sender.sendMessage(new ComponentBuilder("Pong").color(ChatColor.RED).create());
+            return;
+        }
+        ProxiedPlayer p = (ProxiedPlayer) sender;
+        if (Main.getServerManager().isLobby(p.getServer().getInfo())) {
+            p.sendMessage(new ComponentBuilder("Vous êtes déjà au lobby :(").color(ChatColor.RED).create());
         } else {
-            ProxiedPlayer p = (ProxiedPlayer) sender;
-            if (p.getServer().getInfo().getName().equalsIgnoreCase("lobby")) {
-                p.sendMessage(new ComponentBuilder("Vous etes déjà connecté a ce serveur !").color(ChatColor.RED).create());
-            } else {
-                p.connect(ProxyServer.getInstance().getServerInfo("hub"));
-                p.sendMessage(new ComponentBuilder("Connexion vers le lobby ...").color(ChatColor.GREEN).create());
-            }
+            p.connect(ProxyServer.getInstance().getServerInfo("hub"));
+            p.sendMessage(new ComponentBuilder("Connexion vers le lobby ...").color(ChatColor.GREEN).create());
         }
 
     }
