@@ -1,6 +1,5 @@
 package net.uhcwork.BungeeGuard.Commands;
 
-
 import com.google.common.io.Resources;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -17,12 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Commands (BungeeGuard)
- * Date: 11/10/2014
- * Time: 16:42
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class CommandRegister extends Command {
 
     private final Main plugin;

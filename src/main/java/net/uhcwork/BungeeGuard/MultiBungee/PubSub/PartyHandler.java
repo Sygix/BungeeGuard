@@ -17,12 +17,6 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.MultiBungee.PubSub (BungeeGuard)
- * Date: 22/10/2014
- * Time: 19:06
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class PartyHandler {
     @PubSubHandler("addPartyMember")
     public static void addPartyMember(Main plugin, PubSubMessageEvent e) {

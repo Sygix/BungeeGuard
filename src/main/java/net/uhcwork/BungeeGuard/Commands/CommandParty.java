@@ -14,12 +14,6 @@ import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.commands (bungeeguard)
- * Date: 10/09/2014
- * Time: 20:02
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class CommandParty extends Command {
     private final Main plugin;
     private final PartyManager PM;

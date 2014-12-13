@@ -20,12 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/**
- * Part of net.uhcwork.BungeeGuard (bungeeguard)
- * Date: 27/09/2014
- * Time: 16:38
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class AnnouncementTask implements Runnable {
     private final Map<String, Integer> index = Maps.newHashMap();
     private final LoadingCache<String, Pattern> regexCache = CacheBuilder.newBuilder().build(new CacheLoader<String, Pattern>() {

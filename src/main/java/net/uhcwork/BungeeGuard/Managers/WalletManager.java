@@ -15,12 +15,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Wallet (bungeeguard)
- * Date: 27/09/2014
- * Time: 21:35
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class WalletManager {
 
     private final Main plugin;

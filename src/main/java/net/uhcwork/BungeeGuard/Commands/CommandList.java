@@ -9,12 +9,6 @@ import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
-/**
- * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
- * Date: 15/07/14
- * Time: 18:46
- * May be open-source & be sold (by Greenns, of course !)
- */
 public class CommandList extends Command {
 
     private final Main plugin;

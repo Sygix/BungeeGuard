@@ -13,12 +13,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Part of net.uhcwork.BungeeGuard.commands
- * Date: 30/08/2014
- * Time: 00:24
- * May be open-source & be sold (by PunKeel, of course !)
- */
 public class BroadcastHandler {
     @PubSubHandler("broadcast")
     public static void broadcast(PubSubMessageEvent e) {

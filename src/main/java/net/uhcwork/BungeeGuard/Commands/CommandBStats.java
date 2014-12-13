@@ -9,12 +9,6 @@ import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import net.uhcwork.BungeeGuard.Utils.DateUtil;
 import org.javalite.activejdbc.Base;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Commands (BungeeGuard)
- * Date: 02/11/2014
- * Time: 12:39
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class CommandBStats extends Command {
     Main plugin;
 

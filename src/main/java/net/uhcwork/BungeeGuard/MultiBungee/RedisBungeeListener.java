@@ -9,12 +9,6 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSub.*;
 
 import java.lang.reflect.Method;
 
-/**
- * Part of net.uhcwork.BungeeGuard.MultiBungee (bungeeguard)
- * Date: 14/09/2014
- * Time: 21:09
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class RedisBungeeListener implements Listener {
     private final Main plugin;
     private final Multimap<String, Method> handlers = HashMultimap.create();
@@ -91,7 +85,7 @@ public class RedisBungeeListener implements Listener {
     public void onNetworkPlayerServerChangeEvent(com.imaginarycode.minecraft.redisbungee.events.PlayerChangedServerNetworkEvent e) {
         String previousServer = e.getPreviousServer();
         String targetServer = e.getServer();
-        plugin.getServerManager().addPlayer(previousServer, -1);
-        plugin.getServerManager().addPlayer(targetServer, 1);
+        Main.getServerManager().addPlayer(previousServer, -1);
+        Main.getServerManager().addPlayer(targetServer, 1);
     }
 }

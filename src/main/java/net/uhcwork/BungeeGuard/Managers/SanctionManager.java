@@ -14,12 +14,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Ban (bungeeguard)
- * Date: 20/09/2014
- * Time: 22:40
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class SanctionManager {
     private final List<BungeeBan> banList = new ArrayList<>();
     private final List<BungeeMute> muteList = new ArrayList<>();

@@ -7,12 +7,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 
-/**
- * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
- * Date: 07/07/14
- * Time: 18:46
- * May be open-source & be sold (by Greenns, of course !)
- */
 public class CommandSpychat extends Command {
 
     private final Main plugin;

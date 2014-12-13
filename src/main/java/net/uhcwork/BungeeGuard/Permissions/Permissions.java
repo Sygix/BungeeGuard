@@ -8,12 +8,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.utils
- * Date: 30/08/2014
- * Time: 14:16
- * May be open-source & be sold (by PunKeel, of course !)
- */
 public class Permissions {
     // Works even with offline players !
     public static boolean hasPerm(String player, String permission) {

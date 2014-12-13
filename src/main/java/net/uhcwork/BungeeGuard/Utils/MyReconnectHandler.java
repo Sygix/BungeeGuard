@@ -7,12 +7,6 @@ import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Utils (BungeeGuard)
- * Date: 24/10/2014
- * Time: 01:03
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class MyReconnectHandler implements ReconnectHandler {
     @Override
     public ServerInfo getServer(ProxiedPlayer p) {

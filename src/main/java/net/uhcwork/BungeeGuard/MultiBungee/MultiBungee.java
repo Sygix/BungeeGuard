@@ -22,12 +22,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Part of net.uhcwork.BungeeGuard.utils
- * Date: 29/08/2014
- * Time: 23:00
- * May be open-source & be sold (by PunKeel, of course !)
- */
 @SuppressWarnings("UnusedDeclaration")
 public class MultiBungee {
     public static final String SEPARATOR = "|\uFAE3|";

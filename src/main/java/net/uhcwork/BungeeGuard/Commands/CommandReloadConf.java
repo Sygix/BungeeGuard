@@ -7,16 +7,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
 
-/**
- * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
- * Date: 07/09/2014
- * Time: 22:02
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class CommandReloadConf extends Command {
-    /* reloadConf */
-
-
     private final Main plugin;
 
     public CommandReloadConf(Main plugin) {
@@ -33,6 +24,5 @@ public class CommandReloadConf extends Command {
         }
         new ReloadConfHandler().handle(plugin);
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Reload : en cours …"));
-        Main.getMB().notifyStaff(ChatColor.DARK_RED + "/b:rl par " + sender.getName());
     }
 }

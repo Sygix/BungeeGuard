@@ -15,12 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * Part of ${PACKAGE_NAME} (${PROJECT_NAME})
- * Date: 07/09/2014
- * Time: 18:26
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class CommandSend extends Command implements TabExecutor {
 
 

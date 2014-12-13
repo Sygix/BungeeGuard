@@ -21,12 +21,6 @@ import org.javalite.activejdbc.LazyList;
 import java.sql.Timestamp;
 import java.util.*;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Permissions (BungeeGuard)
- * Date: 20/10/2014
- * Time: 24:41
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class PermissionManager {
     private static final Ordering<Group> groupOrderer = new Ordering<Group>() {
         public int compare(Group left, Group right) {

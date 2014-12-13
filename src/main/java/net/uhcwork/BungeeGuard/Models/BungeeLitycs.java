@@ -10,12 +10,6 @@ import org.javalite.activejdbc.annotations.Table;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Models (BungeeGuard)
- * Date: 02/11/2014
- * Time: 03:32
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 @Table("bungeelitycs")
 public class BungeeLitycs extends Model {
     public static byte[] toBytes(UUID uuid) {
