@@ -186,7 +186,7 @@ public class BungeeGuardListener implements Listener {
                 }
             }
             if (p.hasPermission("bungee.staffchat")) {
-                boolean isDefault = p.hasPermission("bungee.staffchat.default") && p.getServer().getInfo().getName().startsWith("lobby");
+                boolean isDefault = p.hasPermission("bungee.staffchat.default");
                 if (e.getMessage().startsWith("!!") != isDefault) {
                     // Active staffchat si "!!message" et pas sur lobby
                     // ou si "message" et sur lobby (équivaut à un XOR mais en plus propre)l
