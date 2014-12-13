@@ -12,6 +12,7 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Managers.ServerManager;
 import net.uhcwork.BungeeGuard.Models.BungeeCheat;
 import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
@@ -28,10 +29,12 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class PubSubListener implements Listener {
     private final Main plugin;
     private final MultiBungee MB;
+    private final ServerManager SM;
 
     public PubSubListener(Main plugin) {
         this.plugin = plugin;
         this.MB = Main.getMB();
+        SM = Main.getServerManager();
     }
 
     @EventHandler
@@ -144,8 +147,8 @@ public class PubSubListener implements Listener {
                     out = ByteStreams.newDataOutput();
                     out.writeUTF("PingServers");
                     out.writeUTF(serverName);
-                    out.writeUTF(Main.getPrettyServerName(serverName));
-                    out.writeUTF(Main.getShortServerName(serverName));
+                    out.writeUTF(SM.getPrettyName(serverName));
+                    out.writeUTF(SM.getShortName(serverName));
                     if (throwable != null || serverPing == null) {
                         out.writeInt(-1);
                     } else {
@@ -158,7 +161,7 @@ public class PubSubListener implements Listener {
                         sender.sendData("UHCGames", data);
                 }
             };
-            plugin.getServerManager().ping(serverName, pingBack);
+            Main.getServerManager().ping(serverName, pingBack);
         }
     }
 }

@@ -7,12 +7,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Part of net.uhcwork.BungeeGuard.utils (BungeeGuard)
- * Date: 04/10/2014
- * Time: 20:08
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class PrettyLinkComponent extends TextComponent {
     private static final Pattern url = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 

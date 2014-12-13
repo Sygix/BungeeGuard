@@ -4,7 +4,6 @@ import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -14,6 +13,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubHandler;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 import net.uhcwork.BungeeGuard.Permissions.Group;
+import net.uhcwork.BungeeGuard.Utils.MyBuilder;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,12 +31,12 @@ public class StaffChatHandler {
         String message = ChatColor.translateAlternateColorCodes('&', e.getArg(2));
         Group g = plugin.getPermissionManager().getMainGroup(senderName);
 
-        BaseComponent[] wholeMessage = new ComponentBuilder("[").color(ChatColor.RED)
-                .append(Main.getPrettyServerName(serverName))
-                .append("]").color(ChatColor.RED)
+        BaseComponent[] wholeMessage = new MyBuilder(ChatColor.RED + "[")
+                .append(ChatColor.RED + Main.getServerManager().getPrettyName(serverName))
+                .append(ChatColor.RED + "]")
                 .append(g.getColor() + " ■ ").event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(g.getColor() + g.getName())))
-                .append(senderName + ": ").color(ChatColor.RED)
-                .append(message).color(ChatColor.RED)
+                .append(ChatColor.RED + senderName + ": ")
+                .append(ChatColor.RED + message)
                 .create();
 
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
@@ -105,6 +105,6 @@ public class StaffChatHandler {
     public static void setMaintenance(final Main plugin, PubSubMessageEvent e) {
         String serverName = e.getArg(0);
         boolean restricted = e.getArg(1).equals("+");
-        plugin.setRestricted(serverName, restricted);
+        Main.getServerManager().setRestricted(serverName, restricted);
     }
 }

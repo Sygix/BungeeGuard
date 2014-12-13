@@ -41,4 +41,8 @@ public class Group {
             permissions.add(PM.getPermission());
         }
     }
+
+    public boolean hasPermission(String perm) {
+        return Permissions.miniglob(permissions, perm);
+    }
 }

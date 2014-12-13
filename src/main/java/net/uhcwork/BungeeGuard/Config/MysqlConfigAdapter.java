@@ -2,7 +2,6 @@ package net.uhcwork.BungeeGuard.Config;
 
 import lombok.Getter;
 import net.md_5.bungee.Util;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ConfigurationAdapter;
 import net.md_5.bungee.api.config.ListenerInfo;
@@ -165,13 +164,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         for (BungeeServer serveur : _s) {
             String name = serveur.getName();
             String addr = serveur.getAddress();
-            String prettyName = ChatColor.translateAlternateColorCodes('&', serveur.getPrettyName());
-            String shortName = ChatColor.translateAlternateColorCodes('&', serveur.getShortName());
-            boolean restricted = serveur.isRestricted();
-
-            plugin.addPrettyServerName(name, prettyName);
-            plugin.addShortServerName(name, shortName);
-            plugin.setRestricted(name, restricted);
+            
             _servers_new.put(name, serveur);
 
             InetSocketAddress address = Util.getAddr(addr);

@@ -2,6 +2,7 @@ package net.uhcwork.BungeeGuard.Managers;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -24,12 +25,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Part of net.uhcwork.BungeeGuard.Lobbies (BungeeGuard)
- * Date: 12/10/2014
- * Time: 13:55
- * May be open-source & be sold (by mguerreiro, of course !)
- */
 public class ServerManager {
     static Gson gson;
     private final Main plugin;
@@ -38,6 +33,7 @@ public class ServerManager {
             return lobby.getScore();
         }
     };
+    Ordering<Lobby> scoreOrdering = Ordering.natural().onResultOf(getScoreFunction).reverse();
     @Getter
     Cache<String, Optional<ServerPing>> serversCache = CacheBuilder.newBuilder()
             .maximumSize(500)
@@ -45,10 +41,16 @@ public class ServerManager {
             .build();
     @Getter
     private Map<String, Lobby> lobbies = new HashMap<>();
+    private ServerPing restrictedPing;
 
     public ServerManager(Main main) {
         this.plugin = main;
         gson = Main.getGson();
+        restrictedPing = new ServerPing(
+                new ServerPing.Protocol("0", 0),
+                new ServerPing.Players(0, 0, null),
+                "{'state': 'maintenance'}",
+                ProxyServer.getInstance().getConfig().getFaviconObject());
     }
 
     private Predicate<Lobby> isOnline(final ProxiedPlayer p) {
@@ -65,13 +67,13 @@ public class ServerManager {
         final Optional<ServerPing> SP = getServersCache().getIfPresent(serverName);
 
         if (SP == null) {
+            if (isRestricted(serverName)) {
+                pingBack.done(restrictedPing, null);
+                return;
+            }
             final Callback<ServerPing> pingCallback = new Callback<ServerPing>() {
                 @Override
                 public void done(ServerPing serverPing, Throwable throwable) {
-                    if (plugin.isRestricted(serverName)) {
-                        serverPing.setDescription("{'state': 'maintenance'}");
-                        serverPing.setPlayers(new ServerPing.Players(0, 0, null));
-                    }
                     Optional<ServerPing> serverPingOptional = Optional.fromNullable(serverPing);
                     getServersCache().put(serverName, serverPingOptional);
                     pingBack.done(serverPing, throwable);
@@ -81,6 +83,21 @@ public class ServerManager {
         } else {
             pingBack.done(SP.orNull(), null);
         }
+    }
+
+    public boolean isRestricted(String serverName) {
+        Preconditions.checkArgument(ProxyServer.getInstance().getServerInfo(serverName) != null, "Server does not exist");
+        return getServerModel(serverName).isRestricted();
+    }
+
+    public String getShortName(String serverName) {
+        Preconditions.checkArgument(ProxyServer.getInstance().getServerInfo(serverName) != null, "Server does not exist");
+        return getServerModel(serverName).getShortName();
+    }
+
+    public String getPrettyName(String serverName) {
+        Preconditions.checkArgument(ProxyServer.getInstance().getServerInfo(serverName) != null, "Server does not exist");
+        return getServerModel(serverName).getPrettyName();
     }
 
     public void setupPingTask() {
@@ -97,7 +114,7 @@ public class ServerManager {
                                 lobbies.put(serverInfo.getName(), lobby);
                             }
                         };
-                        plugin.getServerManager().ping(serverInfo.getName(), pingBack);
+                        Main.getServerManager().ping(serverInfo.getName(), pingBack);
                     }
                 }
                 Iterator<String> i = lobbies.keySet().iterator();
@@ -113,9 +130,8 @@ public class ServerManager {
     @SuppressWarnings("UnusedParameters")
     public String getBestLobbyFor(final ProxiedPlayer p) {
         Collection<Lobby> lobbies = Collections2.filter(getLobbies().values(), isOnline(p));
-        Ordering<Lobby> scoreOrdering = Ordering.natural().onResultOf(getScoreFunction);
-        ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(scoreOrdering).addAll(lobbies).build().descendingSet();
-        if (sortedLobbies.size() == 0)
+        ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(scoreOrdering).addAll(lobbies).build();
+        if (sortedLobbies.isEmpty())
             return null;
         return sortedLobbies.first().getName();
     }
@@ -157,6 +173,23 @@ public class ServerManager {
             return;
         ServerPing.Players players = ping.get().getPlayers();
         players.setOnline(players.getOnline() + count);
+    }
+
+    public Collection<String> getServersInMaintenance() {
+        return Collections2.filter(ProxyServer.getInstance().getServers().keySet(), new Predicate<String>() {
+            @Override
+            public boolean apply(String serverName) {
+                return isRestricted(serverName);
+            }
+        });
+    }
+
+    public void setRestricted(String serverName, boolean restricted) {
+        getServerModel(serverName).setRestricted(restricted);
+    }
+
+    public boolean isLobby(ServerInfo info) {
+        return isLobbyName(info.getName());
     }
 
     public static class Lobby {

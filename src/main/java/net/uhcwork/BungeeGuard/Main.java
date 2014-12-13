@@ -38,31 +38,28 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends Plugin {
-
     public static final String ADMIN_TAG = ChatColor.RED + "[BungeeGuard] " + ChatColor.RESET;
     @Getter
     static final SlackUtils slack = new SlackUtils();
-    private static final Map<String, String> shortServerNames = new HashMap<>();
     private static final Map<String, String> premadeMessages = new HashMap<>();
     private static final List<String> forbiddenCommands = new ArrayList<>();
     @Getter
     private static final MultiBungee MB = new MultiBungee();
     private static final Map<UUID, UUID> reply = new HashMap<>();
     private static final List<UUID> spy = new ArrayList<>();
-    private static final Map<String, String> prettyServerNames = new HashMap<>();
     private static final String REDUCTION_PEINE = " &r(&eRéduction de peine&r)";
     @Getter
     private static final Random random = new Random();
     public static Main plugin;
     @Getter
     public static Gson gson = new Gson();
+    @Getter
+    static ServerManager serverManager;
     private final List<String> silencedServers = new ArrayList<>();
     @Getter
     private final SanctionManager sanctionManager = new SanctionManager(this);
     @Getter
     PermissionManager permissionManager = new PermissionManager(this);
-    @Getter
-    ServerManager serverManager = new ServerManager(this);
     @Getter
     MysqlConfigAdapter config;
     private long startTime;
@@ -78,15 +75,6 @@ public class Main extends Plugin {
     @Getter
     private WalletManager walletManager = new WalletManager(this);
     private String MYSQL_USER, MYSQL_HOST, MYSQL_DATABASE, MYSQL_PASS;
-    private Set<String> restrictedServers = new HashSet<>();
-
-    public static String getPrettyServerName(String name) {
-        return prettyServerNames.containsKey(name) ? prettyServerNames.get(name) : name;
-    }
-
-    public static String getShortServerName(String serverName) {
-        return shortServerNames.containsKey(serverName) ? shortServerNames.get(serverName) : serverName;
-    }
 
     public void setPremadeMessages(List<BungeePremadeMessage> all) {
         premadeMessages.clear();
@@ -147,7 +135,7 @@ public class Main extends Plugin {
     public void onLoad() {
         plugin = this;
         startTime = System.currentTimeMillis();
-
+        serverManager = new ServerManager(this);
         Properties prop = null;
         try {
             File configFile = new File("config.properties");
@@ -334,36 +322,6 @@ public class Main extends Plugin {
 
     public void setBroadcastDelay(int broadcastDelay) {
         this.broadcastDelay = broadcastDelay;
-    }
-
-    public void addPrettyServerName(String name, String prettyName) {
-        prettyServerNames.put(name, prettyName);
-    }
-
-    public void addShortServerName(String name, String shortName) {
-        shortServerNames.put(name, shortName);
-    }
-
-    public boolean isRestricted(String serverName) {
-        return restrictedServers.contains(serverName);
-    }
-
-    public void setRestricted(String name, boolean restricted) {
-        if (restricted == isRestricted(name))
-            return;
-        /*
-        !restricted  | contenu   | return
-        0           | 0         | 0 -> Si deja pas dans la liste, ne rien faire
-        0           | 1         | 1 | Sinon, ajouter.
-        1           | 0         | 1 |
-        1           | 1         | 0 -> Si deja blacklist, ne rien faire
-
-         */
-
-        if (restricted)
-            restrictedServers.add(name);
-        else
-            restrictedServers.remove(name);
     }
 
     public void executeRunnable(Runnable runnable) {

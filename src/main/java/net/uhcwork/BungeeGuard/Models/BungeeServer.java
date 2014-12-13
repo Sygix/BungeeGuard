@@ -1,5 +1,6 @@
 package net.uhcwork.BungeeGuard.Models;
 
+import net.md_5.bungee.api.ChatColor;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
@@ -21,11 +22,11 @@ public class BungeeServer extends Model {
     }
 
     public String getPrettyName() {
-        return getString("pretty_name");
+        return ChatColor.translateAlternateColorCodes('&', getString("pretty_name"));
     }
 
     public String getShortName() {
-        return getString("short_name");
+        return ChatColor.translateAlternateColorCodes('&', getString("short_name"));
     }
 
     public boolean isRestricted() {

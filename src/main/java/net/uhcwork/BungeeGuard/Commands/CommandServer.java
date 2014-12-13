@@ -6,9 +6,6 @@ import com.google.common.collect.Iterables;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -44,24 +41,6 @@ public class CommandServer extends Command implements TabExecutor {
         Map<String, ServerInfo> servers = ProxyServer.getInstance().getServers();
         if (args.length == 0) {
             player.sendMessage(new TextComponent(ChatColor.GOLD + "Vous êtes actuellement sur " + player.getServer().getInfo().getName()));
-            TextComponent serverList = new TextComponent("Liste des Serveurs");
-            serverList.setColor(ChatColor.GOLD);
-            boolean first = true;
-            for (ServerInfo server : servers.values()) {
-                if (server.canAccess(player)) {
-                    TextComponent serverTextComponent = new TextComponent(TextComponent.fromLegacyText((first ? "" : ", ") + Main.getPrettyServerName(server.getName()) + ChatColor.RESET));
-                    int count = Main.getMB().getPlayersOnServer(server.getName()).size();
-                    serverTextComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                            new ComponentBuilder(count + " joueur" + s(count) + "\n")
-                                    .append("Clic pour rejoindre").italic(true)
-                                    .append("\nNom interne: " + ChatColor.GREEN + server.getName()).color(ChatColor.DARK_AQUA)
-                                    .create()));
-                    serverTextComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + server.getName()));
-                    serverList.addExtra(serverTextComponent);
-                    first = false;
-                }
-            }
-            player.sendMessage(serverList);
         } else {
             ServerInfo server = servers.get(args[0]);
             if (server == null) {
@@ -87,9 +66,5 @@ public class CommandServer extends Command implements TabExecutor {
                 return input.getName();
             }
         });
-    }
-
-    private String s(int n) {
-        return n > 1 ? "s" : "";
     }
 }
