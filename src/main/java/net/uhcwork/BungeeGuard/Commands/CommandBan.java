@@ -11,19 +11,19 @@ import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.SanctionManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
+import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 import java.util.Arrays;
 import java.util.UUID;
 
 public class CommandBan extends PlayerCommand {
-
-    private final Main plugin;
-    private final SanctionManager BM;
+    private final SanctionManager SM;
+    private final MultiBungee MB;
 
     public CommandBan(Main plugin) {
         super("ban", "bungee.ban");
-        this.plugin = plugin;
-        this.BM = plugin.getSanctionManager();
+        SM = plugin.getSanctionManager();
+        MB = Main.getMB();
     }
 
     @Override
@@ -33,37 +33,37 @@ public class CommandBan extends PlayerCommand {
 
         if (args.length == 0) {
             sender.sendMessage(new ComponentBuilder("Usage: /ban <pseudo> [duration] [reason]").color(ChatColor.RED).create());
-        } else {
-            boolean duration = false;
-            long bannedUntilTime;
-            Long bannedTime = 0l;
-            if (args.length > 1) {
-                bannedTime = BungeeGuardUtils.parseDuration(args[1]);
-                duration = (bannedTime != null && bannedTime > 0);
-            }
-
-            String reason = Joiner.on(" ").join(Arrays.copyOfRange(args, duration ? 2 : 1, args.length)).trim();
-
-            if (plugin.isPremadeMessage(reason))
-                reason = plugin.getPremadeMessage(reason);
-
-            reason = ChatColor.translateAlternateColorCodes('&', reason);
-
-            bannedUntilTime = duration ? System.currentTimeMillis() + bannedTime + 1 : -1; // Une seconde de ban gratuite :D
-
-            String bannedName = args[0];
-            UUID bannedUUID = Main.getMB().getUuidFromName(bannedName);
-            if (bannedUUID == null) {
-                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inexistant."));
-                return;
-            }
-
-            BungeeBan ban = BM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, true);
-
-            Main.getMB().kickPlayer(bannedName, ban.getBanMessage());
-
-            Main.getMB().banPlayer(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
-            Main.getMB().notifyStaff(ban.getAdminNotification());
+            return;
         }
+        boolean duration = false;
+        long bannedUntilTime;
+        Long bannedTime = 0l;
+        if (args.length > 1) {
+            bannedTime = BungeeGuardUtils.parseDuration(args[1]);
+            duration = (bannedTime != null && bannedTime > 0);
+        }
+
+        String reason = Joiner.on(" ").join(Arrays.copyOfRange(args, duration ? 2 : 1, args.length)).trim();
+
+        if (SM.isPremadeMessage(reason))
+            reason = SM.getPremadeMessage(reason);
+
+        reason = ChatColor.translateAlternateColorCodes('&', reason);
+
+        bannedUntilTime = duration ? System.currentTimeMillis() + bannedTime + 1 : -1; // Une seconde de ban gratuite :D
+
+        String bannedName = args[0];
+        UUID bannedUUID = MB.getUuidFromName(bannedName);
+        if (bannedUUID == null) {
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inexistant."));
+            return;
+        }
+
+        BungeeBan ban = SM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, true);
+
+        MB.kickPlayer(bannedName, ban.getBanMessage());
+
+        MB.banPlayer(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
+        MB.notifyStaff(ban.getAdminNotification());
     }
 }

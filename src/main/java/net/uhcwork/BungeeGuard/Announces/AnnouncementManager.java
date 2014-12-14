@@ -1,21 +1,18 @@
 package net.uhcwork.BungeeGuard.Announces;
 
 import lombok.Getter;
-import net.uhcwork.BungeeGuard.Main;
+import lombok.Setter;
 import net.uhcwork.BungeeGuard.Models.BungeeAnnouncements;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AnnouncementManager {
-    private final Main plugin;
     @Getter
     private final List<Announcement> announcements = new ArrayList<>();
-
-    public AnnouncementManager(Main main) {
-        this.plugin = main;
-    }
-
+    @Setter
+    @Getter
+    private int broadcastDelay = 180;
 
     public void setAnnouncements(List<BungeeAnnouncements> _announcements) {
         announcements.clear();

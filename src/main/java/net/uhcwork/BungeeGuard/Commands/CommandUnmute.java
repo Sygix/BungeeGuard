@@ -9,6 +9,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.SanctionManager;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
+import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -16,12 +17,14 @@ import java.util.UUID;
 public class CommandUnmute extends Command {
 
     private final Main plugin;
-    private final SanctionManager MM;
+    private final SanctionManager SM;
+    private final MultiBungee MB;
 
     public CommandUnmute(Main plugin) {
         super("unmute", "bungee.mute");
         this.plugin = plugin;
-        this.MM = plugin.getSanctionManager();
+        this.SM = plugin.getSanctionManager();
+        MB = Main.getMB();
     }
 
     @Override
@@ -36,25 +39,25 @@ public class CommandUnmute extends Command {
 
             String muteName = args[0];
 
-            if (plugin.isPremadeMessage(reason))
-                reason = plugin.getPremadeMessage(reason);
+            if (SM.isPremadeMessage(reason))
+                reason = SM.getPremadeMessage(reason);
             reason = ChatColor.translateAlternateColorCodes('&', reason);
 
-            UUID muteUUID = Main.getMB().getUuidFromName(muteName);
+            UUID muteUUID = MB.getUuidFromName(muteName);
 
-            BungeeMute mute = MM.findMute(muteUUID);
+            BungeeMute mute = SM.findMute(muteUUID);
             if (mute == null) {
                 sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas mute.").color(ChatColor.RED).create());
             } else {
-                MM.unmute(mute, sender.getName(), reason, true);
-                Main.getMB().unmutePlayer(muteUUID);
+                SM.unmute(mute, sender.getName(), reason, true);
+                MB.unmutePlayer(muteUUID);
 
                 String adminMessage = ChatColor.AQUA + unmuteName + ChatColor.RED + " a démute " + ChatColor.GREEN + muteName + ChatColor.RED;
 
                 if (!reason.isEmpty())
                     adminMessage += " avec la raison:" + ChatColor.AQUA + reason + ChatColor.RED;
 
-                Main.getMB().notifyStaff(adminMessage + ".");
+                MB.notifyStaff(adminMessage + ".");
             }
         }
     }

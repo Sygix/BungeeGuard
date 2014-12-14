@@ -157,14 +157,14 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         host = instance.getBindAddress();
 
         List<BungeePremadeMessage> premadeMessages = BungeePremadeMessage.findAll();
-        plugin.setPremadeMessages(premadeMessages);
+        plugin.getSanctionManager().setPremadeMessages(premadeMessages);
 
         List<BungeeBlockedCommands> blockedCommands = BungeeBlockedCommands.findAll();
         plugin.setForbiddenCommands(blockedCommands);
 
         List<BungeeAnnouncements> announcements = BungeeAnnouncements.findAll();
         plugin.getAnnouncementManager().setAnnouncements(announcements);
-        plugin.setBroadcastDelay(options.getBroadcastDelay());
+        plugin.getAnnouncementManager().setBroadcastDelay(options.getBroadcastDelay());
     }
 
     void loadServers() {

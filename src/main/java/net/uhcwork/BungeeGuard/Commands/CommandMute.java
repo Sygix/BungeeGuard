@@ -11,19 +11,19 @@ import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.SanctionManager;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
+import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 import java.util.Arrays;
 import java.util.UUID;
 
 public class CommandMute extends Command {
-
-    private final Main plugin;
-    private final SanctionManager MM;
+    private final SanctionManager SM;
+    private final MultiBungee MB;
 
     public CommandMute(Main plugin) {
         super("mute", "bungee.mute");
-        this.plugin = plugin;
-        this.MM = plugin.getSanctionManager();
+        this.SM = plugin.getSanctionManager();
+        MB = Main.getMB();
     }
 
     @Override
@@ -48,8 +48,8 @@ public class CommandMute extends Command {
 
         String reason = Joiner.on(" ").join(Arrays.copyOfRange(args, duration ? 2 : 1, args.length)).trim();
 
-        if (plugin.isPremadeMessage(reason))
-            reason = plugin.getPremadeMessage(reason);
+        if (SM.isPremadeMessage(reason))
+            reason = SM.getPremadeMessage(reason);
         reason = ChatColor.translateAlternateColorCodes('&', reason);
 
         String muteName = args[0];
@@ -59,12 +59,12 @@ public class CommandMute extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inexistant."));
             return;
         }
-        BungeeMute mute = MM.mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID, true);
+        BungeeMute mute = SM.mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID, true);
 
-        Main.getMB().sendPlayerMessage(muteUUID, mute.getMuteMessage());
+        MB.sendPlayerMessage(muteUUID, mute.getMuteMessage());
 
-        Main.getMB().mutePlayer(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
+        MB.mutePlayer(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
 
-        Main.getMB().notifyStaff(mute.getAdminNotification());
+        MB.notifyStaff(mute.getAdminNotification());
     }
 }

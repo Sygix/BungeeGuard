@@ -7,16 +7,19 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Managers.SanctionManager;
+import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 import java.util.Arrays;
 
 public class CommandKick extends Command {
-
-    private final Main plugin;
+    private final SanctionManager SM;
+    private final MultiBungee MB;
 
     public CommandKick(Main plugin) {
         super("kick", "bungee.kick");
-        this.plugin = plugin;
+        MB = Main.getMB();
+        SM = plugin.getSanctionManager();
     }
 
     @Override
@@ -27,8 +30,8 @@ public class CommandKick extends Command {
             sender.sendMessage(new ComponentBuilder("Usage: /kick <pseudo> [reason]").color(ChatColor.RED).create());
         } else {
             String reason = Joiner.on(" ").join(Arrays.copyOfRange(args, 1, args.length)).trim();
-            if (plugin.isPremadeMessage(reason))
-                reason = plugin.getPremadeMessage(reason);
+            if (SM.isPremadeMessage(reason))
+                reason = SM.getPremadeMessage(reason);
 
             reason = ChatColor.translateAlternateColorCodes('&', reason);
 
@@ -43,11 +46,11 @@ public class CommandKick extends Command {
             kickMessage += ".";
             adminNotification += ".";
 
-            Main.getMB().kickPlayer(kickedName, kickMessage);
+            MB.kickPlayer(kickedName, kickMessage);
 
             sender.sendMessage(new ComponentBuilder("Joueur expulsé.").color(ChatColor.RED).create());
 
-            Main.getMB().notifyStaff(adminNotification);
+            MB.notifyStaff(adminNotification);
         }
     }
 }

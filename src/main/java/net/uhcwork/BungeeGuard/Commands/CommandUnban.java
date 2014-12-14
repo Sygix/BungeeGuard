@@ -10,19 +10,19 @@ import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.SanctionManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
+import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 import java.util.Arrays;
 import java.util.UUID;
 
 public class CommandUnban extends Command {
-
-    private final Main plugin;
-    private final SanctionManager BM;
+    private final SanctionManager SM;
+    private final MultiBungee MB;
 
     public CommandUnban(Main plugin) {
         super("unban", "bungee.ban");
-        this.plugin = plugin;
-        this.BM = plugin.getSanctionManager();
+        this.SM = plugin.getSanctionManager();
+        this.MB = Main.getMB();
     }
 
     @Override
@@ -37,31 +37,31 @@ public class CommandUnban extends Command {
 
         String reason = Joiner.on(" ").join(Arrays.copyOfRange(args, 1, args.length)).trim();
 
-        if (plugin.isPremadeMessage(reason))
-            reason = plugin.getPremadeMessage(reason);
+        if (SM.isPremadeMessage(reason))
+            reason = SM.getPremadeMessage(reason);
         reason = ChatColor.translateAlternateColorCodes('&', reason);
 
         String bannedName = args[0];
 
-        UUID bannedUUID = Main.getMB().getUuidFromName(bannedName);
+        UUID bannedUUID = MB.getUuidFromName(bannedName);
         if (bannedUUID == null) {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Erreur: joueur inconnu."));
             return;
         }
 
-        BungeeBan ban = BM.findBan(bannedUUID);
+        BungeeBan ban = SM.findBan(bannedUUID);
         if (ban == null) {
             sender.sendMessage(new ComponentBuilder("Erreur: Ce joueur n'est pas banni.").color(ChatColor.RED).create());
         } else {
-            BM.unban(ban, sender.getName(), reason, true);
-            Main.getMB().unban(bannedUUID);
+            SM.unban(ban, sender.getName(), reason, true);
+            MB.unban(bannedUUID);
 
 
             String adminMessage = ChatColor.AQUA + unbanName + ChatColor.RED + " a débanni " + ChatColor.GREEN + bannedName + ChatColor.RED;
             if (!reason.isEmpty()) {
                 adminMessage += " avec la raison:" + ChatColor.AQUA + reason + ChatColor.RED;
             }
-            Main.getMB().notifyStaff(adminMessage + ".");
+            MB.notifyStaff(adminMessage + ".");
         }
 
     }

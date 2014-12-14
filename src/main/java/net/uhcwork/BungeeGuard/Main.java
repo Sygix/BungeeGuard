@@ -17,7 +17,6 @@ import net.uhcwork.BungeeGuard.Commands.*;
 import net.uhcwork.BungeeGuard.Config.MysqlConfigAdapter;
 import net.uhcwork.BungeeGuard.Managers.*;
 import net.uhcwork.BungeeGuard.Models.BungeeBlockedCommands;
-import net.uhcwork.BungeeGuard.Models.BungeePremadeMessage;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubListener;
@@ -41,13 +40,11 @@ public class Main extends Plugin {
     public static final String ADMIN_TAG = ChatColor.RED + "[BungeeGuard] " + ChatColor.RESET;
     @Getter
     static final SlackUtils slack = new SlackUtils();
-    private static final Map<String, String> premadeMessages = new HashMap<>();
     private static final List<String> forbiddenCommands = new ArrayList<>();
     @Getter
     private static final MultiBungee MB = new MultiBungee();
     private static final Map<UUID, UUID> reply = new HashMap<>();
     private static final List<UUID> spy = new ArrayList<>();
-    private static final String REDUCTION_PEINE = " &r(&eRéduction de peine&r)";
     @Getter
     private static final Random random = new Random();
     public static Main plugin;
@@ -70,18 +67,11 @@ public class Main extends Plugin {
     @Getter
     private AntiSpamListener antiSpamListener = new AntiSpamListener();
     @Getter
-    private AnnouncementManager announcementManager = new AnnouncementManager(this);
-    private int broadcastDelay = 180;
+    private AnnouncementManager announcementManager = new AnnouncementManager();
     @Getter
     private WalletManager walletManager = new WalletManager(this);
     private String MYSQL_USER, MYSQL_HOST, MYSQL_DATABASE, MYSQL_PASS;
 
-    public void setPremadeMessages(List<BungeePremadeMessage> all) {
-        premadeMessages.clear();
-        for (BungeePremadeMessage message : all) {
-            premadeMessages.put(message.getSlug().toLowerCase(), message.getText());
-        }
-    }
 
     public List<String> getForbiddenCommands() {
         return forbiddenCommands;
@@ -238,6 +228,10 @@ public class Main extends Plugin {
         getProxy().getScheduler().schedule(this, new AnnouncementTask(), 1, 1, TimeUnit.SECONDS);
     }
 
+    public void executeRunnable(Runnable runnable) {
+        getProxy().getScheduler().runAsync(this, runnable);
+    }
+
     private void setupStopSchedule() {
         // Auto reboot après 6 heures, dès qu'il y a peu de joueurs
         getProxy().getScheduler().schedule(this, new Runnable() {
@@ -296,35 +290,7 @@ public class Main extends Plugin {
         return reply.containsKey(uniqueId) ? reply.get(uniqueId) : null;
     }
 
-    public boolean isPremadeMessage(String slug) {
-        String lowerSlug = slug.toLowerCase();
-        if (lowerSlug.startsWith("r:"))
-            lowerSlug = lowerSlug.substring(2);
-        return premadeMessages.containsKey(lowerSlug);
-    }
-
-    public String getPremadeMessage(String slug) {
-        String lowerSlug = slug.toLowerCase();
-        boolean reduction = lowerSlug.startsWith("r:");
-        if (reduction)
-            lowerSlug = lowerSlug.substring(2);
-
-        return premadeMessages.get(lowerSlug) + (reduction ? REDUCTION_PEINE : "");
-    }
-
     public long getUptime() {
         return (System.currentTimeMillis() - startTime) / 1000;
-    }
-
-    public int getBroadcastDelay() {
-        return broadcastDelay;
-    }
-
-    public void setBroadcastDelay(int broadcastDelay) {
-        this.broadcastDelay = broadcastDelay;
-    }
-
-    public void executeRunnable(Runnable runnable) {
-        getProxy().getScheduler().runAsync(this, runnable);
     }
 }

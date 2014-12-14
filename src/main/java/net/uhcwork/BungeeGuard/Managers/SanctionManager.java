@@ -5,16 +5,17 @@ import com.google.common.collect.Collections2;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
+import net.uhcwork.BungeeGuard.Models.BungeePremadeMessage;
 import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import org.javalite.activejdbc.LazyList;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SanctionManager {
+    private static final String REDUCTION_PEINE = " &r(&eRéduction de peine&r)";
+    private static final Map<String, String> premadeMessages = new HashMap<>();
     private final List<BungeeBan> banList = new ArrayList<>();
     private final List<BungeeMute> muteList = new ArrayList<>();
     private final Main plugin;
@@ -155,5 +156,28 @@ public class SanctionManager {
         removeMute(mute);
         if (saveToBdd)
             plugin.executePersistenceRunnable(new SaveRunner(mute));
+    }
+
+    public boolean isPremadeMessage(String slug) {
+        String lowerSlug = slug.toLowerCase();
+        if (lowerSlug.startsWith("r:"))
+            lowerSlug = lowerSlug.substring(2);
+        return premadeMessages.containsKey(lowerSlug);
+    }
+
+    public String getPremadeMessage(String slug) {
+        String lowerSlug = slug.toLowerCase();
+        boolean reduction = lowerSlug.startsWith("r:");
+        if (reduction)
+            lowerSlug = lowerSlug.substring(2);
+
+        return premadeMessages.get(lowerSlug) + (reduction ? REDUCTION_PEINE : "");
+    }
+
+    public void setPremadeMessages(List<BungeePremadeMessage> all) {
+        premadeMessages.clear();
+        for (BungeePremadeMessage message : all) {
+            premadeMessages.put(message.getSlug().toLowerCase(), message.getText());
+        }
     }
 }
