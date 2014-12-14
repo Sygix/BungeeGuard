@@ -19,21 +19,13 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeServer;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class ServerManager {
+    private static final Map<UUID, String> lastLobby = new HashMap<>();
     static Gson gson;
     private final Main plugin;
-    private final Function<Lobby, Double> getScoreFunction = new Function<Lobby, Double>() {
-        public Double apply(Lobby lobby) {
-            return lobby.getScore();
-        }
-    };
-    Ordering<Lobby> scoreOrdering = Ordering.natural().onResultOf(getScoreFunction).reverse();
     @Getter
     Cache<String, Optional<ServerPing>> serversCache = CacheBuilder.newBuilder()
             .maximumSize(500)
@@ -51,6 +43,10 @@ public class ServerManager {
                 new ServerPing.Players(0, 0, null),
                 "{'state': 'maintenance'}",
                 ProxyServer.getInstance().getConfig().getFaviconObject());
+    }
+
+    private static String getLastLobby(ProxiedPlayer p) {
+        return lastLobby.containsKey(p.getUniqueId()) ? lastLobby.get(p.getUniqueId()) : "";
     }
 
     private Predicate<Lobby> isOnline(final ProxiedPlayer p) {
@@ -130,10 +126,21 @@ public class ServerManager {
     @SuppressWarnings("UnusedParameters")
     public String getBestLobbyFor(final ProxiedPlayer p) {
         Collection<Lobby> lobbies = Collections2.filter(getLobbies().values(), isOnline(p));
-        ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(scoreOrdering).addAll(lobbies).build();
+        ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(getScoreOrdering(p)).addAll(lobbies).build();
         if (sortedLobbies.isEmpty())
             return null;
-        return sortedLobbies.first().getName();
+        String serverName = sortedLobbies.first().getName();
+        lastLobby.put(p.getUniqueId(), serverName);
+        return serverName;
+    }
+
+    private Ordering<Lobby> getScoreOrdering(final ProxiedPlayer p) {
+        final Function<Lobby, Double> getScoreFunction = new Function<Lobby, Double>() {
+            public Double apply(Lobby lobby) {
+                return lobby.getScore(p);
+            }
+        };
+        return Ordering.natural().onResultOf(getScoreFunction).reverse();
     }
 
     public void setOffline(String name) {
@@ -232,12 +239,16 @@ public class ServerManager {
             this.isOnline = isOnline;
         }
 
-        public double getScore() {
+        public double getScore(ProxiedPlayer p) {
+            double bonus = 0;
+            if (p != null && getLastLobby(p) != null)
+                if (getLastLobby(p).equals(name))
+                    bonus = 1000;
             if (isLimboName(name)) {
                 return -Double.MAX_VALUE;
             }
             int onlinePlayers = result.getPlayers().getOnline();
-            return (1 + onlinePlayers) * (maxPlayers / 2 - onlinePlayers);
+            return (1 + onlinePlayers) * (maxPlayers / 2 - onlinePlayers) + bonus;
         }
     }
 }

@@ -262,10 +262,9 @@ public class BungeeGuardListener implements Listener {
             if (reason.contains("closed")) {
                 Main.getServerManager().setOffline(kickedFrom.getName());
             }
-
             String l = Main.getServerManager().getBestLobbyFor(p);
             ServerInfo server = plugin.getProxy().getServerInfo(l);
-
+            p.setReconnectServer(server);
 
             ProxyServer.getInstance().getConsole().sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + e.getState().toString() + " - " + reason + ")"));
             ProxyServer.getInstance().getConsole().sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "[BungeeGuard] " + p.getName() + " Redirigé vers " + Main.getServerManager().getPrettyName(server.getName())));
@@ -327,6 +326,7 @@ public class BungeeGuardListener implements Listener {
             Map<String, Object> data = new HashMap<>();
             data.put("server_id", e.getTarget().getName());
             data.put("groupes", plugin.getPermissionManager().getGroupes(p.getUniqueId()));
+            data.put("first_join", e.getPlayer().getServer() == null);
             h.setHost(Main.getGson().toJson(data));
         } catch (IllegalAccessException | InvocationTargetException e1) {
             System.out.println("Erreur passage hostname: " + e1.getMessage());
