@@ -67,6 +67,7 @@ public class BungeeGuardListener implements Listener {
         }
         playersPing = players;
     }
+
     private String fullNotVIP = "" + ChatColor.YELLOW + ChatColor.BOLD + "Le serveur est plein" +
             ChatColor.GOLD + ChatColor.BOLD + "\nVous pourrez le rejoindre en devenant VIP !" +
             ChatColor.RED + ChatColor.BOLD + "\nAchetez-le sur " +
@@ -232,6 +233,7 @@ public class BungeeGuardListener implements Listener {
             plugin.executePersistenceRunnable(new SaveRunner(old_bl));
             bungeelitycs.remove(p.getUniqueId());
         }
+        SM.resetLastLobby(p.getUniqueId());
     }
 
     @EventHandler

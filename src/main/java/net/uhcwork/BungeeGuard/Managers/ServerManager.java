@@ -204,6 +204,10 @@ public class ServerManager {
         return true;
     }
 
+    public void resetLastLobby(UUID uuid) {
+        lastLobby.remove(uuid);
+    }
+
     public static class Lobby {
         private final ServerPing result;
         @Getter
