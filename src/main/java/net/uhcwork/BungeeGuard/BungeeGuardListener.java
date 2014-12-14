@@ -14,6 +14,7 @@ import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import net.md_5.bungee.protocol.packet.Handshake;
 import net.uhcwork.BungeeGuard.Managers.PartyManager;
+import net.uhcwork.BungeeGuard.Managers.ServerManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeLitycs;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
@@ -30,6 +31,18 @@ import java.util.concurrent.TimeUnit;
 public class BungeeGuardListener implements Listener {
     private static final ServerPing.PlayerInfo[] playersPing;
     private static final Map<UUID, BungeeLitycs> bungeelitycs = new ConcurrentHashMap<>();
+    private static final String BASE_MOTD = "           §f§l» §b§lUHCGames§6§l.com §a§l[BETA] §f§l«\n";
+    private final Main plugin;
+    private final BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
+            .color(ChatColor.GOLD)
+            .bold(true).create();
+    private final BaseComponent[] footer = new ComponentBuilder("Store")
+            .color(ChatColor.RED)
+            .bold(true)
+            .append(".UHCGames.com")
+            .bold(true)
+            .color(ChatColor.AQUA).create();
+    ServerManager SM;
 
     static {
         List<String> lines = new ArrayList<>();
@@ -54,19 +67,6 @@ public class BungeeGuardListener implements Listener {
         }
         playersPing = players;
     }
-
-    private static final String BASE_MOTD = "           §f§l» §b§lUHCGames§6§l.com §a§l[BETA] §f§l«\n";
-
-    private final Main plugin;
-    private final BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
-            .color(ChatColor.GOLD)
-            .bold(true).create();
-    private final BaseComponent[] footer = new ComponentBuilder("Store")
-            .color(ChatColor.RED)
-            .bold(true)
-            .append(".UHCGames.com")
-            .bold(true)
-            .color(ChatColor.AQUA).create();
     private String fullNotVIP = "" + ChatColor.YELLOW + ChatColor.BOLD + "Le serveur est plein" +
             ChatColor.GOLD + ChatColor.BOLD + "\nVous pourrez le rejoindre en devenant VIP !" +
             ChatColor.RED + ChatColor.BOLD + "\nAchetez-le sur " +
@@ -81,6 +81,7 @@ public class BungeeGuardListener implements Listener {
         } catch (NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+        SM = Main.getServerManager();
     }
 
     @EventHandler
@@ -326,7 +327,8 @@ public class BungeeGuardListener implements Listener {
             Map<String, Object> data = new HashMap<>();
             data.put("server_id", e.getTarget().getName());
             data.put("groupes", plugin.getPermissionManager().getGroupes(p.getUniqueId()));
-            data.put("first_join", e.getPlayer().getServer() == null);
+            if (SM.isLobby(e.getTarget()))
+                data.put("first-join", SM.setLastLobby(p.getUniqueId(), e.getTarget()));
             h.setHost(Main.getGson().toJson(data));
         } catch (IllegalAccessException | InvocationTargetException e1) {
             System.out.println("Erreur passage hostname: " + e1.getMessage());

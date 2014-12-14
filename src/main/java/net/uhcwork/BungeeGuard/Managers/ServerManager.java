@@ -45,8 +45,8 @@ public class ServerManager {
                 ProxyServer.getInstance().getConfig().getFaviconObject());
     }
 
-    private static String getLastLobby(ProxiedPlayer p) {
-        return lastLobby.containsKey(p.getUniqueId()) ? lastLobby.get(p.getUniqueId()) : "";
+    private static String getLastLobby(UUID uuid) {
+        return lastLobby.containsKey(uuid) ? lastLobby.get(uuid) : "";
     }
 
     private Predicate<Lobby> isOnline(final ProxiedPlayer p) {
@@ -129,9 +129,7 @@ public class ServerManager {
         ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(getScoreOrdering(p)).addAll(lobbies).build();
         if (sortedLobbies.isEmpty())
             return null;
-        String serverName = sortedLobbies.first().getName();
-        lastLobby.put(p.getUniqueId(), serverName);
-        return serverName;
+        return sortedLobbies.first().getName();
     }
 
     private Ordering<Lobby> getScoreOrdering(final ProxiedPlayer p) {
@@ -199,6 +197,13 @@ public class ServerManager {
         return isLobbyName(info.getName());
     }
 
+    public boolean setLastLobby(UUID uniqueId, ServerInfo target) {
+        if (target.getName().equals(getLastLobby(uniqueId)))
+            return false;
+        lastLobby.put(uniqueId, target.getName());
+        return true;
+    }
+
     public static class Lobby {
         private final ServerPing result;
         @Getter
@@ -241,8 +246,8 @@ public class ServerManager {
 
         public double getScore(ProxiedPlayer p) {
             double bonus = 0;
-            if (p != null && getLastLobby(p) != null)
-                if (getLastLobby(p).equals(name))
+            if (p != null && getLastLobby(p.getUniqueId()) != null)
+                if (getLastLobby(p.getUniqueId()).equals(name))
                     bonus = 1000;
             if (isLimboName(name)) {
                 return -Double.MAX_VALUE;
