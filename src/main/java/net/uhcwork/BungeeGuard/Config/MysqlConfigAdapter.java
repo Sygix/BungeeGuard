@@ -1,7 +1,10 @@
 package net.uhcwork.BungeeGuard.Config;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import lombok.Getter;
 import net.md_5.bungee.Util;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ConfigurationAdapter;
 import net.md_5.bungee.api.config.ListenerInfo;
@@ -26,6 +29,12 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     private Map<String, String> forced_hosts;
     private BungeeConfig options;
     private Map<String, BungeeServer> _servers = new HashMap<>();
+    @Getter
+    private String[] welcomeSubtitles = {
+            ChatColor.GOLD + "Des pommes, " + ChatColor.WHITE + "du hardcore, " + ChatColor.RED + "du fun !",
+            ChatColor.AQUA + "Le meilleur de l'" + ChatColor.RED + "UltraHardCore " + ChatColor.AQUA + "!",
+            ChatColor.AQUA + "La " + ChatColor.GOLD + "pomme d'or" + ChatColor.AQUA + " est votre seule alliée !",
+            ChatColor.AQUA + "Le serveur totalement en " + ChatColor.RED + "UltraHardCore " + ChatColor.AQUA + "!"};
 
     public MysqlConfigAdapter(Main plugin) {
         this.plugin = plugin;
@@ -41,6 +50,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
                 loadListener();
                 loadServers();
                 loadForcedHosts();
+                loadWelcomeTitles();
             }
         });
         try {
@@ -164,7 +174,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
         for (BungeeServer serveur : _s) {
             String name = serveur.getName();
             String addr = serveur.getAddress();
-            
+
             _servers_new.put(name, serveur);
 
             InetSocketAddress address = Util.getAddr(addr);
@@ -204,6 +214,16 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
             forced_hosts2.put(bf.getIp().toLowerCase(), bf.getServer());
         }
         forced_hosts = forced_hosts2;
+    }
+
+    void loadWelcomeTitles() {
+        List<BungeeWelcomeTitle> subtitles = BungeeWelcomeTitle.findAll().load();
+        welcomeSubtitles = Collections2.transform(subtitles, new Function<BungeeWelcomeTitle, String>() {
+            @Override
+            public String apply(BungeeWelcomeTitle bungeeWelcomeTitle) {
+                return bungeeWelcomeTitle.getMessage();
+            }
+        }).toArray(new String[]{""});
     }
 
     public BungeeServer getServer(String serverName) {

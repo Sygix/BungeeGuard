@@ -3,6 +3,7 @@ package net.uhcwork.BungeeGuard;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -21,6 +22,7 @@ import net.uhcwork.BungeeGuard.Models.BungeeMute;
 import net.uhcwork.BungeeGuard.Permissions.Permissions;
 import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
+import net.uhcwork.BungeeGuard.Utils.ArrayUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -73,6 +75,7 @@ public class BungeeGuardListener implements Listener {
             ChatColor.RED + ChatColor.BOLD + "\nAchetez-le sur " +
             ChatColor.WHITE + ChatColor.BOLD + "https://store.uhcgames.com/";
     private Method handshakeMethod = null;
+    private Set<UUID> firstJoin = new HashSet<>();
 
     public BungeeGuardListener(Main plugin) {
         this.plugin = plugin;
@@ -87,7 +90,6 @@ public class BungeeGuardListener implements Listener {
 
     @EventHandler
     public void onLogin(final LoginEvent event) {
-        event.registerIntent(plugin);
         if (Main.getMB().getPlayerCount() > plugin.getConfig().getMaxPlayers()) {
             if (!Permissions.hasPerm(event.getConnection().getUniqueId(), "bungee.join_full")) {
                 event.setCancelled(true);
@@ -114,20 +116,30 @@ public class BungeeGuardListener implements Listener {
                 if (ban.isBanned()) {
                     event.setCancelled(true);
                     event.setCancelReason(ban.getBanMessage());
-                    event.completeIntent(plugin);
                     return;
                 }
                 plugin.getSanctionManager().unban(ban, "TimeEnd", "Automatique", true);
                 Main.getMB().unban(event.getConnection().getUniqueId());
             }
         }
-        event.completeIntent(plugin);
+        firstJoin.add(event.getConnection().getUniqueId());
+    }
+
+    private void showWelcomeTitle(ProxiedPlayer p) {
+        Title title = ProxyServer.getInstance().createTitle();
+        title.fadeOut(25);
+        title.title(TextComponent.fromLegacyText(ChatColor.GOLD + "UHCGames"));
+        title.subTitle(TextComponent.fromLegacyText(ArrayUtils.rand(plugin.getConfig().getWelcomeSubtitles())));
+        title.send(p);
     }
 
     @EventHandler
     public void onServerConnect(final ServerConnectEvent e) {
         final ProxiedPlayer p = e.getPlayer();
-
+        if (firstJoin.contains(p.getUniqueId())) {
+            showWelcomeTitle(p);
+            firstJoin.remove(p.getUniqueId());
+        }
         p.setTabHeader(header, footer);
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
             System.out.println("Recuperation du meilleur lobby pour " + p.getName());
