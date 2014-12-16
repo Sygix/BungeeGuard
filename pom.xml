@@ -23,7 +23,7 @@
     <repositories>
         <repository>
             <id>bungee-repo</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
+            <url>https://oss.sonatype.org/content/repositories/public/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
@@ -127,7 +127,7 @@
             <plugin>
                 <groupId>org.javalite</groupId>
                 <artifactId>activejdbc-instrumentation</artifactId>
-                <version>1.4.9</version>
+                <version>1.4.10-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <phase>process-classes</phase>
