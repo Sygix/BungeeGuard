@@ -25,10 +25,10 @@ public class CommandLobby extends Command {
         }
         ProxiedPlayer p = (ProxiedPlayer) sender;
         if (Main.getServerManager().isLobby(p.getServer().getInfo())) {
-            p.sendMessage(new ComponentBuilder("Vous êtes déjà au lobby :(").color(ChatColor.RED).create());
+            p.sendMessage(new ComponentBuilder("Vous êtes déjà au lobby.").color(ChatColor.RED).create());
         } else {
             p.connect(ProxyServer.getInstance().getServerInfo("hub"));
-            p.sendMessage(new ComponentBuilder("Connexion vers le lobby ...").color(ChatColor.GREEN).create());
+            p.sendMessage(new ComponentBuilder("Connexion vers le lobby.").color(ChatColor.GREEN).create());
         }
 
     }
