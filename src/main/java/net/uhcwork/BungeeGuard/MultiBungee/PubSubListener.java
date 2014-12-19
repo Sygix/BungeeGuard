@@ -13,8 +13,6 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.ServerManager;
-import net.uhcwork.BungeeGuard.Models.BungeeCheat;
-import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
 import java.util.Set;
 import java.util.UUID;
@@ -91,13 +89,13 @@ public class PubSubListener implements Listener {
             out.writeUTF("" + MB.getUuidFromName(playerName));
         }
 
-        if (subchannel.equals("Message")) {
+        if (subchannel.equalsIgnoreCase("Message")) {
             String playerName = in.readUTF();
             UUID u = MB.getUuidFromName(playerName);
             MB.sendPlayerMessage(u, in.readUTF());
         }
 
-        if (subchannel.equals("KickPlayer")) {
+        if (subchannel.equalsIgnoreCase("KickPlayer")) {
             String playerName = in.readUTF();
             String reason = in.readUTF();
             MB.kickPlayer(playerName, reason);
@@ -108,19 +106,19 @@ public class PubSubListener implements Listener {
             double amount = in.readDouble();
             plugin.getWalletManager().addToBalance(uuid, amount);
         }
-        if (subchannel.equals("cheat")) {
+        if (subchannel.equalsIgnoreCase("cheat")) {
             String playerName = in.readUTF();
             String cheatName = in.readUTF();
             double score = in.readDouble();
             if (cheatName.length() > 3) {
                 return;
             }
-            BungeeCheat BC = new BungeeCheat();
-            BC.setPlayerName(playerName);
-            BC.setServerName(sender.getInfo().getName());
-            BC.setCheatType(cheatName);
-            BC.setCheatScore(score);
-            plugin.executePersistenceRunnable(new SaveRunner(BC));
+            plugin.getCheatManager().addCheat(sender.getInfo().getName(), playerName, cheatName, score);
+        }
+
+        if (subchannel.equalsIgnoreCase("BanCheat")) {
+            String playerName = in.readUTF().replaceAll("\\s+", "");
+            ProxyServer.getInstance().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), "ban " + playerName + " 1mo cheat");
         }
 
         byte[] data = out.toByteArray();

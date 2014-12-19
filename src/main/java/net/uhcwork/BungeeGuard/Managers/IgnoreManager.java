@@ -25,7 +25,7 @@ public class IgnoreManager {
     }
 
     public void unIgnore(UUID joueur, UUID toIgnore) {
-        ignoreList.asMap().remove(joueur, toIgnore);
+        ignoreList.remove(joueur, toIgnore);
     }
 
     public void ignore(UUID joueur, UUID toIgnore) {

@@ -58,6 +58,8 @@ public class Main extends Plugin {
     @Getter
     PermissionManager permissionManager = new PermissionManager(this);
     @Getter
+    CheatManager cheatManager = new CheatManager(this);
+    @Getter
     MysqlConfigAdapter config;
     private long startTime;
     @Getter
@@ -65,7 +67,7 @@ public class Main extends Plugin {
     @Getter
     private IgnoreManager ignoreManager = new IgnoreManager(this);
     @Getter
-    private AntiSpamListener antiSpamListener = new AntiSpamListener();
+    private AntiSpamListener antiSpamListener = new AntiSpamListener(this);
     @Getter
     private AnnouncementManager announcementManager = new AnnouncementManager();
     @Getter

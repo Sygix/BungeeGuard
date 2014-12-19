@@ -94,7 +94,6 @@ public class BungeeGuardListener implements Listener {
             if (!Permissions.hasPerm(event.getConnection().getUniqueId(), "bungee.join_full")) {
                 event.setCancelled(true);
                 event.setCancelReason(fullNotVIP);
-                event.completeIntent(plugin);
                 return;
             }
         }
