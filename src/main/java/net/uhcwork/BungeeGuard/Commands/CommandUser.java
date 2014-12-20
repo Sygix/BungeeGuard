@@ -85,12 +85,12 @@ public class CommandUser extends Command {
                 else
                     PM.addGroup(uuid, groupe, BungeeGuardUtils.parseDuration(duration));
                 MB.invalidatePermissionUser(uuid);
-                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Groupe ajouté"));
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Groupe ajouté [" + groupe.getColor() + groupe.getName() + ChatColor.GREEN + "] "));
             }
             if (action.equalsIgnoreCase("del")) {
                 PM.removeGroup(uuid, groupe);
                 MB.invalidatePermissionUser(uuid);
-                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Groupe supprimé"));
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Groupe supprimé [" + groupe.getColor() + groupe.getName() + ChatColor.GREEN + "]"));
             }
 
 

@@ -1,5 +1,6 @@
 package net.uhcwork.BungeeGuard.Utils;
 
+import com.google.common.util.concurrent.RateLimiter;
 import net.uhcwork.BungeeGuard.Main;
 
 import java.io.DataOutputStream;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 public class SlackUtils {
     static final String HOOK_URL = "https://hooks.slack.com/services/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";
-
+    final RateLimiter rateLimiter = RateLimiter.create(1.5);
 
     public void staffChat(String username, String message) {
         sendMessage(username, "#staffchat", message);
@@ -24,16 +25,12 @@ public class SlackUtils {
         data.put("username", username);
         data.put("text", message);
         data.put("parse", "full");
-        String emoji;
-        switch (username) {
-            case "BungeeCord":
-                emoji = ":rotating_light:";
-                break;
-            default:
-                emoji = ":microscope:";
-                break;
+
+        if (username.equals("BungeeCord")) {
+            data.put("icon_emoji", ":rotating_light:");
+        } else {
+            data.put("icon_url", "https://cravatar.eu/helmhead/" + username + "/100.png");
         }
-        data.put("icon_emoji", emoji);
         doPost(data);
     }
 
@@ -41,6 +38,7 @@ public class SlackUtils {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                rateLimiter.acquire(1);
                 try {
                     String req = "payload=" + URLEncoder.encode(Main.getGson().toJson(data), "UTF-8");
                     URL url = new URL(HOOK_URL);
