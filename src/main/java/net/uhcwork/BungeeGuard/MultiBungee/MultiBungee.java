@@ -8,7 +8,6 @@ import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.imaginarycode.minecraft.redisbungee.internal.jedis.Jedis;
 import com.imaginarycode.minecraft.redisbungee.internal.jedis.JedisPool;
 import com.imaginarycode.minecraft.redisbungee.internal.jedis.exceptions.JedisConnectionException;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -86,7 +85,7 @@ public class MultiBungee {
 
     /**
      * Get a combined list of players on this network.
-     * <p>
+     * <p/>
      * <strong>Note that this function returns an immutable {@link java.util.Set}.</strong>
      *
      * @return a Set with all players found
@@ -97,7 +96,7 @@ public class MultiBungee {
 
     /**
      * Get a combined list of players on this network, as a collection of usernames.
-     * <p>
+     * <p/>
      * <strong>Note that this function returns an immutable {@link java.util.Collection}, and usernames
      * are lazily calculated (but cached, see the contract of {@link #getNameFromUuid(java.util.UUID)}).</strong>
      *
@@ -269,10 +268,10 @@ public class MultiBungee {
     /**
      * Fetch a name from the specified UUID. UUIDs are cached locally and in Redis. This function falls back to Mojang
      * as a last resort, so calls <strong>may</strong> be blocking.
-     * <p>
+     * <p/>
      * For the common use case of translating a list of UUIDs into names, use {@link #getHumanPlayersOnline()}
      * as the efficiency of that function is slightly greater as the names are calculated lazily.
-     * <p>
+     * <p/>
      * If performance is a concern, use {@link #getNameFromUuid(java.util.UUID, boolean)} as this allows you to disable Mojang lookups.
      *
      * @param uuid the UUID to fetch the name for
@@ -286,10 +285,10 @@ public class MultiBungee {
     /**
      * Fetch a name from the specified UUID. UUIDs are cached locally and in Redis. This function can fall back to Mojang
      * as a last resort if {@code expensiveLookups} is true, so calls <strong>may</strong> be blocking.
-     * <p>
+     * <p/>
      * For the common use case of translating the list of online players into names, use {@link #getHumanPlayersOnline()}
      * as the efficiency of that function is slightly greater as the names are calculated lazily.
-     * <p>
+     * <p/>
      * If performance is a concern, set {@code expensiveLookups} to false as this will disable lookups via Mojang.
      *
      * @param uuid             the UUID to fetch the name for
@@ -307,7 +306,7 @@ public class MultiBungee {
     /**
      * Fetch a UUID from the specified name. Names are cached locally and in Redis. This function falls back to Mojang
      * as a last resort, so calls <strong>may</strong> be blocking.
-     * <p>
+     * <p/>
      * If performance is a concern, see {@link #getUuidFromName(String, boolean)}, which disables the following functions:
      * <ul>
      * <li>Searching local entries case-insensitively</li>
@@ -326,7 +325,7 @@ public class MultiBungee {
     /**
      * Fetch a UUID from the specified name. Names are cached locally and in Redis. This function falls back to Mojang
      * as a last resort if {@code expensiveLookups} is true, so calls <strong>may</strong> be blocking.
-     * <p>
+     * <p/>
      * If performance is a concern, set {@code expensiveLookups} to false to disable searching Mojang and searching for usernames
      * case-insensitively.
      *
@@ -344,7 +343,6 @@ public class MultiBungee {
 
     public final void notifyStaff(String message) {
         sendChannelMessage("notifyStaff", message);
-        Main.getSlack().staffChat("Bungeecord", ChatColor.stripColor(message));
     }
 
     public void sendPlayerMessage(UUID player, String message) {
@@ -381,7 +379,6 @@ public class MultiBungee {
     }
 
     public void staffChat(String server, String sender, String message) {
-        Main.getSlack().staffChat(sender, message);
         sendChannelMessage("staffChat", server, sender, message);
     }
 

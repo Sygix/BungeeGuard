@@ -18,6 +18,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeServer;
+import net.uhcwork.BungeeGuard.Permissions.Permissions;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -55,6 +56,16 @@ public class ServerManager {
                 return lobby != null && lobby.isOnline() && lobby.getServerInfo().canAccess(p);
             }
         };
+    }
+
+    public Collection<String> matchServer(final String serverName) {
+        Collection<String> serverNames = new ArrayList<>();
+        for (String _name : plugin.getConfig().getServers().keySet()) {
+            if (Permissions.miniglob(serverName, _name)) {
+                serverNames.add(_name);
+            }
+        }
+        return serverNames;
     }
 
     public void ping(final String serverName, final Callback<ServerPing> pingBack) {

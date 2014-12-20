@@ -57,12 +57,12 @@ public class CommandBan extends PlayerCommand {
             return;
         }
 
-        bannedUntilTime = duration ? System.currentTimeMillis() + bannedTime : -1; // Une seconde de ban gratuite :D
-
+        long now = System.currentTimeMillis();
+        bannedUntilTime = duration ? now + bannedTime : -1;
         BungeeBan ban = SM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, true);
-        String adminNotification = ban.getAdminNotification();
+        String adminNotification = ban.getAdminNotification(now);
 
-        MB.kickPlayer(bannedName, ban.getBanMessage());
+        MB.kickPlayer(bannedName, ban.getBanMessage(now));
 
         MB.banPlayer(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
         MB.notifyStaff(adminNotification);

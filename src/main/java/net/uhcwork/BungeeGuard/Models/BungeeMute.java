@@ -1,8 +1,8 @@
 package net.uhcwork.BungeeGuard.Models;
 
 import net.md_5.bungee.api.ChatColor;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Utils.DateUtil;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
@@ -74,15 +74,25 @@ public class BungeeMute extends Model {
     }
 
     public String getMuteMessage() {
+        return getMuteMessage(System.currentTimeMillis());
+    }
+
+    public String getMuteMessage(Long now) {
         String reason = (getReason().isEmpty()) ? "." : " avec la raison: " + ChatColor.AQUA + getReason() + ChatColor.RED + ".";
-        String duration = "pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
-        return ChatColor.RED + "Vous avez été mute " + ChatColor.RED + duration + reason;
+        return ChatColor.RED + "Vous avez été mute " + ChatColor.RED + getDuration(now) + reason;
+    }
+
+    public String getDuration(long now) {
+        return " pendant " + ChatColor.AQUA + DateUtil.formatDateDiff(getUntilTimestamp() - now, true) + ChatColor.RED;
     }
 
     public String getAdminNotification() {
+        return getAdminNotification(System.currentTimeMillis());
+    }
+
+    public String getAdminNotification(Long now) {
         String reason = (getReason().isEmpty()) ? "." : " avec la raison: " + ChatColor.AQUA + getReason() + ChatColor.RED + ".";
-        String duration = " pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
-        return Main.ADMIN_TAG + ChatColor.AQUA + getAdminName() + ChatColor.RED + " a mute " + ChatColor.GREEN + getMutedName() + ChatColor.RED + duration + reason;
+        return Main.ADMIN_TAG + ChatColor.AQUA + getAdminName() + ChatColor.RED + " a mute " + ChatColor.GREEN + getMutedName() + ChatColor.RED + getDuration(now) + reason;
     }
 
     String getMutedName() {

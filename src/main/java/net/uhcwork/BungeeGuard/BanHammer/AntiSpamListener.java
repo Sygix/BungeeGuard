@@ -1,7 +1,6 @@
 package net.uhcwork.BungeeGuard.BanHammer;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -18,6 +17,7 @@ public class AntiSpamListener implements Listener {
     private final Map<UUID, Long> lastMessageTime = new HashMap<>();
     private final Map<UUID, Integer> fastMessageCount = new HashMap<>();
     private final Map<UUID, Integer> duplicateCount = new HashMap<>();
+    private final Map<UUID, Long> mutes = new HashMap<>();
 
     public AntiSpamListener(Main plugin) {
         this.plugin = plugin;
@@ -28,10 +28,20 @@ public class AntiSpamListener implements Listener {
             return;
         ProxiedPlayer p = (ProxiedPlayer) e.getSender();
         String message = e.getMessage();
+        if (mutes.containsKey(p.getUniqueId())) {
+            if (mutes.get(p.getUniqueId()) > System.currentTimeMillis()) {
+                p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Spam détecté."));
+                e.setCancelled(true);
+                return;
+            } else {
+                mutes.remove(p.getUniqueId());
+            }
+        }
         if (antiFlood(p.getUniqueId())) {
+            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Spam détecté. Vous avez été réduit au silence pour une minute."));
+            mutes.put(p.getUniqueId(), System.currentTimeMillis() + 1000 * 60 * 1);
+            // mute une minute
             e.setCancelled(true);
-            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Spam détecté."));
-            ProxyServer.getInstance().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), "mute " + p.getName() + " 5m spam");
             return;
         }
         if (antiSpam(p.getUniqueId(), message)) {
@@ -63,7 +73,6 @@ public class AntiSpamListener implements Listener {
         // Anti répétition
         if (lastMessage.containsKey(uuid)
                 && LevenshteinDistance.similarity(lastMessage.get(uuid), message) >= 0.6) {
-            System.out.println(LevenshteinDistance.similarity(lastMessage.get(uuid), message));
             if (!duplicateCount.containsKey(uuid))
                 duplicateCount.put(uuid, 0);
             duplicateCount.put(uuid, duplicateCount.get(uuid) + 1);

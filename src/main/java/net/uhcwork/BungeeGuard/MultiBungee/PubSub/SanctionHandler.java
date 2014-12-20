@@ -1,6 +1,5 @@
 package net.uhcwork.BungeeGuard.MultiBungee.PubSub;
 
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.SanctionManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
@@ -13,7 +12,7 @@ import java.util.UUID;
 public class SanctionHandler {
     @PubSubHandler("mute")
     public static void mute(Main plugin, PubSubMessageEvent e) {
-        if (e.getArg(0).equals(BungeeGuardUtils.getServerID()))
+        if (e.getArg(0).equals(Main.getMB().getServerId()))
             return;
         plugin.getSanctionManager().mute(UUID.fromString(e.getArg(1)), e.getArg(2), Long.parseLong(e.getArg(3)), e.getArg(4),
                 e.getArg(5), UUID.fromString(e.getArg(6)), false);
@@ -22,7 +21,7 @@ public class SanctionHandler {
 
     @PubSubHandler("unmute")
     public static void handle(Main plugin, PubSubMessageEvent e) {
-        if (e.getArg(0).equals(BungeeGuardUtils.getServerID()))
+        if (e.getArg(0).equals(Main.getMB().getServerId()))
             return;
         UUID muteUUID = UUID.fromString(e.getArg(1));
         SanctionManager MM = plugin.getSanctionManager();
@@ -35,7 +34,7 @@ public class SanctionHandler {
      */
     @PubSubHandler("ban")
     public static void ban(PubSubMessageEvent e) {
-        if (e.getArg(0).equals(BungeeGuardUtils.getServerID()))
+        if (e.getArg(0).equals(Main.getMB().getServerId()))
             return;
         SanctionManager BM = Main.plugin.getSanctionManager();
         BM.ban(UUID.fromString(e.getArg(1)), e.getArg(2), Long.parseLong(e.getArg(3)), e.getArg(4), e.getArg(5),
@@ -47,7 +46,7 @@ public class SanctionHandler {
      */
     @PubSubHandler("unban")
     public static void unban(PubSubMessageEvent event) {
-        if (event.getArg(0).equals(BungeeGuardUtils.getServerID()))
+        if (event.getArg(0).equals(Main.getMB().getServerId()))
             return;
         UUID muteUUID = UUID.fromString(event.getArg(1));
         SanctionManager BM = Main.plugin.getSanctionManager();

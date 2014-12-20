@@ -52,6 +52,7 @@ public class CommandMute extends Command {
         reason = ChatColor.translateAlternateColorCodes('&', reason);
 
         String muteName = args[0];
+        long now = System.currentTimeMillis();
 
         UUID muteUUID = Main.getMB().getUuidFromName(muteName);
         if (muteUUID == null) {
@@ -59,12 +60,12 @@ public class CommandMute extends Command {
             return;
         }
 
-        long muteUntilTime = System.currentTimeMillis() + muteTime; // 1 seconde de mute gratuite !
+        long muteUntilTime = now + muteTime;
 
         BungeeMute mute = SM.mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID, true);
-        String adminNotification = mute.getAdminNotification();
+        String adminNotification = mute.getAdminNotification(now);
 
-        MB.sendPlayerMessage(muteUUID, mute.getMuteMessage());
+        MB.sendPlayerMessage(muteUUID, mute.getMuteMessage(now));
 
         MB.mutePlayer(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
 

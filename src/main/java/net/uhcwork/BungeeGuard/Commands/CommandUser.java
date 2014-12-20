@@ -60,7 +60,7 @@ public class CommandUser extends Command {
                         Group groupe = PM.getGroup(g.getGroup());
                         if (until != null && until.getTime() > 0) {
                             sender.sendMessage(TextComponent.fromLegacyText("- " + groupe.getColor() + groupe.getName() + ChatColor.RESET + " pour encore " + ChatColor.GOLD +
-                                    DateUtil.formatDateDiff(until.getTime())));
+                                    DateUtil.formatDateDiff(until.getTime(), false)));
                         } else {
                             sender.sendMessage(TextComponent.fromLegacyText("- " + groupe.getColor() + groupe.getName() + ChatColor.RESET + " à vie."));
                         }

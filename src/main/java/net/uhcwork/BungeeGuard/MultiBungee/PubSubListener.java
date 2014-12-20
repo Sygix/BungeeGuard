@@ -118,6 +118,8 @@ public class PubSubListener implements Listener {
 
         if (subchannel.equalsIgnoreCase("BanCheat")) {
             String playerName = in.readUTF().replaceAll("\\s+", "");
+            if (plugin.getSanctionManager().findBan(MB.getUuidFromName(playerName)) != null)
+                return;
             ProxyServer.getInstance().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), "ban " + playerName + " 1mo cheat");
         }
 

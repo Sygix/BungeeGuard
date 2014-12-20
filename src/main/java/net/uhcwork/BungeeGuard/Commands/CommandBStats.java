@@ -28,7 +28,7 @@ public class CommandBStats extends Command {
             protected void run() {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + " -- Statistiques -- "));
                 long presence = Long.valueOf(String.valueOf(Base.firstCell("SELECT SUM(TIME_TO_SEC(TIMEDIFF(leaved_at, joined_at))) FROM bungeelitycs WHERE leaved_at IS NOT NULL;")));
-                sender.sendMessage(TextComponent.fromLegacyText("Temps " + ChatColor.BOLD + "total" + ChatColor.RESET + " en jeu: " + ChatColor.GREEN + DateUtil.formatDateDiff(System.currentTimeMillis() + 1000 * presence)));
+                sender.sendMessage(TextComponent.fromLegacyText("Temps " + ChatColor.BOLD + "total" + ChatColor.RESET + " en jeu: " + ChatColor.GREEN + DateUtil.formatDateDiff(1000 * presence, true)));
                 Integer users = Integer.valueOf(String.valueOf(Base.firstCell("SELECT COUNT(DISTINCT uuid) FROM bungeelitycs;")));
                 sender.sendMessage(TextComponent.fromLegacyText("Il y a eu " + ChatColor.GOLD + ChatColor.BOLD + users + ChatColor.RESET + " joueurs différents"));
 

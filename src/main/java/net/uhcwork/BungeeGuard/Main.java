@@ -23,7 +23,6 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubListener;
 import net.uhcwork.BungeeGuard.MultiBungee.RedisBungeeListener;
 import net.uhcwork.BungeeGuard.Utils.MyReconnectHandler;
 import net.uhcwork.BungeeGuard.Utils.ShopTask;
-import net.uhcwork.BungeeGuard.Utils.SlackUtils;
 import org.javalite.activejdbc.Base;
 
 import java.io.BufferedReader;
@@ -38,8 +37,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Main extends Plugin {
     public static final String ADMIN_TAG = ChatColor.RED + "[BungeeGuard] " + ChatColor.RESET;
-    @Getter
-    static final SlackUtils slack = new SlackUtils();
     private static final List<String> forbiddenCommands = new ArrayList<>();
     @Getter
     private static final MultiBungee MB = new MultiBungee();
@@ -183,10 +180,7 @@ public class Main extends Plugin {
         sanctionManager.loadMutes();
         serverManager.setupPingTask();
 
-        BungeeGuardListener BGListener = new BungeeGuardListener(this);
-
-        getProxy().getPluginManager().registerListener(this, BGListener);
-
+        getProxy().getPluginManager().registerListener(this, new BungeeGuardListener(this));
         getProxy().getPluginManager().registerListener(this, new RedisBungeeListener(this));
 
         getProxy().registerChannel("UHCGames");
@@ -200,8 +194,7 @@ public class Main extends Plugin {
                 CommandCheck.class, CommandMute.class, CommandUnmute.class, CommandSilence.class, CommandSay.class,
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
                 CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
-                CommandPoints.class, CommandWallet.class, CommandFind.class, CommandStaff.class, CommandSeen.class,
-                CommandMaintenance.class,
+                CommandWallet.class, CommandFind.class, CommandStaff.class, CommandSeen.class, CommandMaintenance.class,
                 CommandUser.class, CommandGroups.class, CommandGtpHere.class, CommandRegister.class);
 
         for (Class<? extends Command> commande : commandes) {
@@ -220,6 +213,8 @@ public class Main extends Plugin {
         getProxy().getScheduler().schedule(this, new Runnable() {
             @Override
             public void run() {
+                if (isMaintenance())
+                    return;
                 reloadConfHandler.handle(plugin);
                 shopTask.run();
             }
@@ -294,5 +289,9 @@ public class Main extends Plugin {
 
     public long getUptime() {
         return (System.currentTimeMillis() - startTime) / 1000;
+    }
+
+    boolean isMaintenance() {
+        return serverManager.isRestricted("hub");
     }
 }

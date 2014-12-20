@@ -21,7 +21,7 @@ public class WalletManager {
     private final MultiBungee MB;
     private final LoadingCache<UUID, WalletAccountModel> walletsCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
-            .expireAfterWrite(60, TimeUnit.SECONDS)
+            .expireAfterWrite(30, TimeUnit.SECONDS)
             .build(new CacheLoader<UUID, WalletAccountModel>() {
                 @Override
                 public WalletAccountModel load(final UUID u) throws Exception {

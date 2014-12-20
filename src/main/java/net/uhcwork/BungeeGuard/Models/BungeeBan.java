@@ -1,8 +1,8 @@
 package net.uhcwork.BungeeGuard.Models;
 
 import net.md_5.bungee.api.ChatColor;
-import net.uhcwork.BungeeGuard.BungeeGuardUtils;
 import net.uhcwork.BungeeGuard.Main;
+import net.uhcwork.BungeeGuard.Utils.DateUtil;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
@@ -81,15 +81,25 @@ public class BungeeBan extends Model {
     }
 
     public String getBanMessage() {
+        return getBanMessage(System.currentTimeMillis());
+    }
+
+    public String getBanMessage(Long now) {
         String reason = (getReason().isEmpty()) ? "." : " avec la raison:\n" + getReason();
-        String duration = isDefBanned() ? "définitivement" : "pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
-        return ChatColor.RED + "Vous avez été banni " + ChatColor.RED + duration + reason;
+        return ChatColor.RED + "Vous avez été banni " + ChatColor.RED + getDuration(now) + reason;
+    }
+
+    public String getDuration(Long now) {
+        return isDefBanned() ? " définitivement" : " pendant " + ChatColor.AQUA + DateUtil.formatDateDiff(getUntilTimestamp() - now, true) + ChatColor.RED;
     }
 
     public String getAdminNotification() {
+        return getAdminNotification(System.currentTimeMillis());
+    }
+
+    public String getAdminNotification(Long now) {
         String reason = (getReason().isEmpty()) ? "." : " avec la raison " + getReason();
-        String duration = isDefBanned() ? " définitivement" : " pendant " + ChatColor.AQUA + BungeeGuardUtils.getDuration(getUntilTimestamp()) + ChatColor.RED;
-        return Main.ADMIN_TAG + ChatColor.AQUA + getAdminName() + ChatColor.RED + " a banni " + ChatColor.GREEN + getBannedName() + ChatColor.RED + duration + reason;
+        return Main.ADMIN_TAG + ChatColor.AQUA + getAdminName() + ChatColor.RED + " a banni " + ChatColor.GREEN + getBannedName() + ChatColor.RED + getDuration(now) + reason;
     }
 
     public Long getUnban() {

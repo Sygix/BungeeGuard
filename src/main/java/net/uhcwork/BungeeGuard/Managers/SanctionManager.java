@@ -64,7 +64,6 @@ public class SanctionManager {
         BungeeBan ban;
         ban = findBan(bannedUUID);
         unban(ban, adminName, "ReBan", saveToBdd);
-
         ban = new BungeeBan();
         ban.setBannedUUID(bannedUUID.toString());
         ban.setBannedName(bannedName);

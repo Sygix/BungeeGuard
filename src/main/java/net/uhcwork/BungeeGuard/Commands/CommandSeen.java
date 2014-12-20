@@ -37,12 +37,12 @@ public class CommandSeen extends Command {
                         if (lastOnline == 0)
                             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "En ligne."));
                         else
-                            sender.sendMessage(TextComponent.fromLegacyText("Dernière connexion il y a " + ChatColor.GREEN + DateUtil.formatDateDiff(lastOnline)));
+                            sender.sendMessage(TextComponent.fromLegacyText("Dernière connexion il y a " + ChatColor.GREEN + DateUtil.formatDateDiff(lastOnline, false)));
                     } else {
                         serverNameCondition = "AND server_name LIKE 'lobby%'";
                     }
                     long presence = Long.valueOf(String.valueOf(Base.firstCell("SELECT SUM(TIME_TO_SEC(TIMEDIFF(leaved_at, joined_at))) FROM bungeelitycs WHERE uuid = ? AND leaved_at IS NOT NULL " + serverNameCondition, BungeeLitycs.toBytes(u))));
-                    sender.sendMessage(TextComponent.fromLegacyText("Temps en ligne " + (onlyLobby ? "(sur lobby)" : "") + ": " + ChatColor.GREEN + DateUtil.formatDateDiff(System.currentTimeMillis() + 1000 * presence)));
+                    sender.sendMessage(TextComponent.fromLegacyText("Temps en ligne " + (onlyLobby ? "(sur lobby)" : "") + ": " + ChatColor.GREEN + DateUtil.formatDateDiff(1000 * presence, true)));
 
                 }
             });

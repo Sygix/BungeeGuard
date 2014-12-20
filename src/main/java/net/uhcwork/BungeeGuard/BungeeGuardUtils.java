@@ -30,7 +30,7 @@ public class BungeeGuardUtils {
             return "";
         if (futureTimestamp < 0)
             return "-" + getDuration(-futureTimestamp);
-        return DateUtil.formatDateDiff(futureTimestamp);
+        return DateUtil.formatDateDiff(futureTimestamp, false);
     }
 
     public static String getServerID() {

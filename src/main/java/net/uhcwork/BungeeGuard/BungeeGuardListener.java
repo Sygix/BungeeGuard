@@ -34,18 +34,25 @@ public class BungeeGuardListener implements Listener {
     private static final ServerPing.PlayerInfo[] playersPing;
     private static final Map<UUID, BungeeLitycs> bungeelitycs = new ConcurrentHashMap<>();
     private static final String BASE_MOTD = "           §f§l» §b§lUHCGames§6§l.com §a§l[BETA] §f§l«\n";
-    private final Main plugin;
-    private final BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
+    private static final BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
             .color(ChatColor.GOLD)
             .bold(true).create();
-    private final BaseComponent[] footer = new ComponentBuilder("Store")
+    private static final BaseComponent[] footer = new ComponentBuilder("Store")
             .color(ChatColor.RED)
             .bold(true)
             .append(".UHCGames.com")
             .bold(true)
             .color(ChatColor.AQUA).create();
-    ServerManager SM;
-
+    private static final String fullNotVIP = "" + ChatColor.YELLOW + ChatColor.BOLD + "Le serveur est plein" +
+            ChatColor.GOLD + ChatColor.BOLD + "\nVous pourrez le rejoindre en devenant VIP !" +
+            ChatColor.RED + ChatColor.BOLD + "\nAchetez-le sur " +
+            ChatColor.WHITE + ChatColor.BOLD + "https://store.uhcgames.com/";
+    private static final String maintenance = ChatColor.RED + "Une maintenance est actuellement en cours.\n" +
+            ChatColor.RED + "Merci de repasser plus tard.\n" +
+            ChatColor.GOLD + "UHCGames";
+    private final Main plugin;
+    private final Method handshakeMethod;
+    private final Set<UUID> firstJoin = new HashSet<>();
     static {
         List<String> lines = new ArrayList<>();
         lines.add(ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "         " + ChatColor.RESET + "" + ChatColor.BOLD + "«" + ChatColor.GOLD + "" + ChatColor.BOLD + " UHC " + ChatColor.AQUA + "" + ChatColor.BOLD + "Network " + ChatColor.RESET + "" + ChatColor.BOLD + "»" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "         ");
@@ -70,21 +77,19 @@ public class BungeeGuardListener implements Listener {
         playersPing = players;
     }
 
-    private String fullNotVIP = "" + ChatColor.YELLOW + ChatColor.BOLD + "Le serveur est plein" +
-            ChatColor.GOLD + ChatColor.BOLD + "\nVous pourrez le rejoindre en devenant VIP !" +
-            ChatColor.RED + ChatColor.BOLD + "\nAchetez-le sur " +
-            ChatColor.WHITE + ChatColor.BOLD + "https://store.uhcgames.com/";
-    private Method handshakeMethod = null;
-    private Set<UUID> firstJoin = new HashSet<>();
+    ServerManager SM;
 
-    public BungeeGuardListener(Main plugin) {
+    public BungeeGuardListener(final Main plugin) {
         this.plugin = plugin;
+        Method handshake;
         try {
             Class<?> initialHandler = Class.forName("net.md_5.bungee.connection.InitialHandler");
-            handshakeMethod = initialHandler.getDeclaredMethod("getHandshake");
+            handshake = initialHandler.getDeclaredMethod("getHandshake");
         } catch (NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
+            handshake = null;
         }
+        handshakeMethod = handshake;
         SM = Main.getServerManager();
     }
 
@@ -96,6 +101,11 @@ public class BungeeGuardListener implements Listener {
                 event.setCancelReason(fullNotVIP);
                 return;
             }
+        }
+        if (plugin.isMaintenance() && !Permissions.hasPerm(event.getConnection().getUniqueId(), "bungee.can.join_maintenance")) {
+            event.setCancelled(true);
+            event.setCancelReason(maintenance);
+            return;
         }
         String hostString = event.getConnection().getVirtualHost().getHostString().toLowerCase();
         if (!Permissions.hasPerm(event.getConnection().getUniqueId(), "bungee.can.bypass_host") &&
@@ -112,13 +122,9 @@ public class BungeeGuardListener implements Listener {
 
             BungeeBan ban = plugin.getSanctionManager().findBan(event.getConnection().getUniqueId());
             if (ban != null) {
-                if (ban.isBanned()) {
-                    event.setCancelled(true);
-                    event.setCancelReason(ban.getBanMessage());
-                    return;
-                }
-                plugin.getSanctionManager().unban(ban, "TimeEnd", "Automatique", true);
-                Main.getMB().unban(event.getConnection().getUniqueId());
+                event.setCancelled(true);
+                event.setCancelReason(ban.getBanMessage());
+                return;
             }
         }
         firstJoin.add(event.getConnection().getUniqueId());
@@ -174,14 +180,9 @@ public class BungeeGuardListener implements Listener {
         if (!e.isCommand()) {
             BungeeMute mute = plugin.getSanctionManager().findMute(p.getUniqueId());
             if (mute != null) {
-                if (mute.isMute()) {
-                    p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
-                    e.setCancelled(true);
-                    return;
-                } else {
-                    plugin.getSanctionManager().unmute(mute, "TimeEnd", "Automatique", true);
-                    Main.getMB().unmutePlayer(p.getUniqueId());
-                }
+                p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
+                e.setCancelled(true);
+                return;
             }
         }
         if (!p.hasPermission("bungee.can.repeat_message")) {
@@ -249,10 +250,17 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onProxyPing(ProxyPingEvent e) {
         ServerPing sp = e.getResponse();
-        sp.getPlayers().setMax(plugin.getConfig().getMaxPlayers());
-        sp.getPlayers().setOnline(Main.getMB().getPlayerCount());
-        sp.setDescription(BASE_MOTD + plugin.getConfig().getMotd());
-        e.getResponse().getPlayers().setSample(playersPing);
+        if (plugin.isMaintenance()) {
+            sp.getPlayers().setMax(0);
+            sp.getPlayers().setOnline(0);
+            sp.getPlayers().setSample(new ServerPing.PlayerInfo[]{});
+            sp.setDescription(BASE_MOTD + ChatColor.RED + ChatColor.BOLD + "~ En maintenance ~");
+        } else {
+            sp.getPlayers().setMax(plugin.getConfig().getMaxPlayers());
+            sp.getPlayers().setOnline(Main.getMB().getPlayerCount());
+            sp.setDescription(BASE_MOTD + plugin.getConfig().getMotd());
+            e.getResponse().getPlayers().setSample(playersPing);
+        }
         e.setResponse(sp);
     }
 

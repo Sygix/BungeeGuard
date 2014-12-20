@@ -99,10 +99,16 @@ public class DateUtil {
         return diff;
     }
 
-    public static String formatDateDiff(long date) {
-        Calendar c = new GregorianCalendar();
-        c.setTimeInMillis(date);
+    public static String formatDateDiff(long date, boolean delta) {
+        // Delta: si true, date est considéré comme une différence de temps (3000 millisecondes, par exemple)
+        // au lieu d'une date.
         Calendar now = new GregorianCalendar();
+        Calendar c = new GregorianCalendar();
+        if (delta) {
+            c.setTimeInMillis(now.getTimeInMillis() + date);
+        } else {
+            c.setTimeInMillis(date);
+        }
         return DateUtil.formatDateDiff(now, c);
     }
 
