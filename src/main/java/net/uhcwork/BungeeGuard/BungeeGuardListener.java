@@ -171,6 +171,19 @@ public class BungeeGuardListener implements Listener {
             e.setCancelled(true);
             return;
         }
+        if (!e.isCommand()) {
+            BungeeMute mute = plugin.getSanctionManager().findMute(p.getUniqueId());
+            if (mute != null) {
+                if (mute.isMute()) {
+                    p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
+                    e.setCancelled(true);
+                    return;
+                } else {
+                    plugin.getSanctionManager().unmute(mute, "TimeEnd", "Automatique", true);
+                    Main.getMB().unmutePlayer(p.getUniqueId());
+                }
+            }
+        }
         if (!p.hasPermission("bungee.can.repeat_message")) {
             plugin.getAntiSpamListener().onChat(e);
         }
@@ -183,21 +196,7 @@ public class BungeeGuardListener implements Listener {
         }
         if (e.isCancelled())
             return;
-        if (!lowerMessage.startsWith("/") && (e.getSender() instanceof ProxiedPlayer)) {
-            if (e.isCommand()) {
-                return;
-            }
-            BungeeMute mute = plugin.getSanctionManager().findMute(p.getUniqueId());
-            if (mute != null) {
-                if (mute.isMute()) {
-                    p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
-                    e.setCancelled(true);
-                    return;
-                } else {
-                    plugin.getSanctionManager().unmute(mute, "TimeEnd", "Automatique", true);
-                    Main.getMB().unmutePlayer(p.getUniqueId());
-                }
-            }
+        if (!e.isCommand()) {
             if (p.hasPermission("bungee.staffchat")) {
                 boolean isDefault = p.hasPermission("bungee.staffchat.default");
                 if (e.getMessage().startsWith("!!") != isDefault) {
