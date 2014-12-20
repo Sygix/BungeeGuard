@@ -44,7 +44,6 @@ public class CommandMute extends Command {
         if (!duration || muteTime > 604800000L || muteTime < 1)
             muteTime = 604800000L;
 
-        long muteUntilTime = System.currentTimeMillis() + muteTime + 1; // 1 seconde de mute gratuite !
 
         String reason = Joiner.on(" ").join(Arrays.copyOfRange(args, duration ? 2 : 1, args.length)).trim();
 
@@ -59,12 +58,16 @@ public class CommandMute extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inexistant."));
             return;
         }
+
+        long muteUntilTime = System.currentTimeMillis() + muteTime; // 1 seconde de mute gratuite !
+
         BungeeMute mute = SM.mute(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID, true);
+        String adminNotification = mute.getAdminNotification();
 
         MB.sendPlayerMessage(muteUUID, mute.getMuteMessage());
 
         MB.mutePlayer(muteUUID, muteName, muteUntilTime, reason, adminName, adminUUID);
 
-        MB.notifyStaff(mute.getAdminNotification());
+        MB.notifyStaff(adminNotification);
     }
 }

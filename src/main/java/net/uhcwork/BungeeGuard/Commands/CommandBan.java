@@ -50,8 +50,6 @@ public class CommandBan extends PlayerCommand {
 
         reason = ChatColor.translateAlternateColorCodes('&', reason);
 
-        bannedUntilTime = duration ? System.currentTimeMillis() + bannedTime + 1 : -1; // Une seconde de ban gratuite :D
-
         String bannedName = args[0];
         UUID bannedUUID = MB.getUuidFromName(bannedName);
         if (bannedUUID == null) {
@@ -59,11 +57,14 @@ public class CommandBan extends PlayerCommand {
             return;
         }
 
+        bannedUntilTime = duration ? System.currentTimeMillis() + bannedTime : -1; // Une seconde de ban gratuite :D
+
         BungeeBan ban = SM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, true);
+        String adminNotification = ban.getAdminNotification();
 
         MB.kickPlayer(bannedName, ban.getBanMessage());
 
         MB.banPlayer(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
-        MB.notifyStaff(ban.getAdminNotification());
+        MB.notifyStaff(adminNotification);
     }
 }
