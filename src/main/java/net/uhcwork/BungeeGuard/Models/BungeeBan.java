@@ -105,4 +105,10 @@ public class BungeeBan extends Model {
     public Long getUnban() {
         return getLong("unban");
     }
+
+    public void setIp(String ip) {
+        if (ip == null)
+            return;
+        setString("ip", ip);
+    }
 }

@@ -12,18 +12,22 @@ import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.SanctionManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
+import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 
+import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.UUID;
 
 public class CommandBan extends PlayerCommand {
     private final SanctionManager SM;
+    private final Main plugin;
     private final MultiBungee MB;
 
     public CommandBan(Main plugin) {
         super("ban", "bungee.ban");
         SM = plugin.getSanctionManager();
         MB = Main.getMB();
+        this.plugin = plugin;
     }
 
     @Override
@@ -59,7 +63,11 @@ public class CommandBan extends PlayerCommand {
 
         long now = System.currentTimeMillis();
         bannedUntilTime = duration ? now + bannedTime : -1;
-        BungeeBan ban = SM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, true);
+        InetAddress ipA = MB.getPlayerIp(bannedUUID);
+        String ip = (ipA == null ? null : ipA.getHostAddress());
+        BungeeBan ban = SM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, false);
+        ban.setIp(ip);
+        plugin.executePersistenceRunnable(new SaveRunner(ban));
         String adminNotification = ban.getAdminNotification(now);
 
         MB.kickPlayer(bannedName, ban.getBanMessage(now));

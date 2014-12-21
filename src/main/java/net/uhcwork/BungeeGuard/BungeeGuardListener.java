@@ -34,6 +34,18 @@ public class BungeeGuardListener implements Listener {
     private static final ServerPing.PlayerInfo[] playersPing;
     private static final Map<UUID, BungeeLitycs> bungeelitycs = new ConcurrentHashMap<>();
     private static final String BASE_MOTD = "           §f§l» §b§lUHCGames§6§l.com §a§l[BETA] §f§l«\n";
+    private static final String maintenance
+            = ChatColor.RED + "Une maintenance est actuellement en cours.\n" +
+            ChatColor.RED + "Merci de repasser plus tard.\n" +
+            ChatColor.GOLD + "UHCGames";
+    private static final String MOTD_FULL = "" + ChatColor.RED + ChatColor.BOLD + "[Serveur PLEIN] " +
+            ChatColor.YELLOW + ChatColor.BOLD + "Accessible aux VIP et plus !";
+
+    private static final String fullNotVIP = "" + ChatColor.YELLOW + ChatColor.BOLD + "Le serveur est plein" +
+            ChatColor.GOLD + ChatColor.BOLD + "\nVous pourrez le rejoindre en devenant VIP !" +
+            ChatColor.RED + ChatColor.BOLD + "\nAchetez-le sur " +
+            ChatColor.WHITE + ChatColor.BOLD + "https://store.uhcgames.com/";
+
     private static final BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
             .color(ChatColor.GOLD)
             .bold(true).create();
@@ -43,16 +55,15 @@ public class BungeeGuardListener implements Listener {
             .append(".UHCGames.com")
             .bold(true)
             .color(ChatColor.AQUA).create();
-    private static final String fullNotVIP = "" + ChatColor.YELLOW + ChatColor.BOLD + "Le serveur est plein" +
-            ChatColor.GOLD + ChatColor.BOLD + "\nVous pourrez le rejoindre en devenant VIP !" +
-            ChatColor.RED + ChatColor.BOLD + "\nAchetez-le sur " +
-            ChatColor.WHITE + ChatColor.BOLD + "https://store.uhcgames.com/";
-    private static final String maintenance = ChatColor.RED + "Une maintenance est actuellement en cours.\n" +
-            ChatColor.RED + "Merci de repasser plus tard.\n" +
-            ChatColor.GOLD + "UHCGames";
+    private static final String MOTD_MAINTENANCE = ChatColor.BLACK + "        " +
+            ChatColor.WHITE + ChatColor.BOLD + "» " +
+            ChatColor.RED + ChatColor.UNDERLINE + ChatColor.BOLD + "Serveur en maintenance" +
+            ChatColor.WHITE + ChatColor.BOLD + " «";
+
     private final Main plugin;
     private final Method handshakeMethod;
     private final Set<UUID> firstJoin = new HashSet<>();
+
     static {
         List<String> lines = new ArrayList<>();
         lines.add(ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "         " + ChatColor.RESET + "" + ChatColor.BOLD + "«" + ChatColor.GOLD + "" + ChatColor.BOLD + " UHC " + ChatColor.AQUA + "" + ChatColor.BOLD + "Network " + ChatColor.RESET + "" + ChatColor.BOLD + "»" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "         ");
@@ -254,11 +265,15 @@ public class BungeeGuardListener implements Listener {
             sp.getPlayers().setMax(0);
             sp.getPlayers().setOnline(0);
             sp.getPlayers().setSample(new ServerPing.PlayerInfo[]{});
-            sp.setDescription(BASE_MOTD + ChatColor.RED + ChatColor.BOLD + "~ En maintenance ~");
+            sp.setDescription(BASE_MOTD + MOTD_MAINTENANCE);
+            sp.setVersion(new ServerPing.Protocol(ChatColor.BOLD + "En maintenance", -42));
         } else {
             sp.getPlayers().setMax(plugin.getConfig().getMaxPlayers());
             sp.getPlayers().setOnline(Main.getMB().getPlayerCount());
-            sp.setDescription(BASE_MOTD + plugin.getConfig().getMotd());
+            if (sp.getPlayers().getOnline() >= sp.getPlayers().getMax())
+                sp.setDescription(BASE_MOTD + MOTD_FULL);
+            else
+                sp.setDescription(BASE_MOTD + plugin.getConfig().getMotd());
             e.getResponse().getPlayers().setSample(playersPing);
         }
         e.setResponse(sp);
