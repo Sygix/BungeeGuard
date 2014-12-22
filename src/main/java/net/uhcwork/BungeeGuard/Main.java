@@ -195,7 +195,7 @@ public class Main extends Plugin {
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
                 CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
                 CommandWallet.class, CommandFind.class, CommandStaff.class, CommandSeen.class, CommandMaintenance.class,
-                CommandUser.class, CommandGroups.class, CommandGtpHere.class, CommandRegister.class);
+                CommandUser.class, CommandGroups.class, CommandGtpHere.class, CommandRegister.class, CommandPings.class);
 
         for (Class<? extends Command> commande : commandes) {
             try {
@@ -223,10 +223,6 @@ public class Main extends Plugin {
         setupStopSchedule();
 
         getProxy().getScheduler().schedule(this, new AnnouncementTask(), 1, 1, TimeUnit.SECONDS);
-    }
-
-    public void executeRunnable(Runnable runnable) {
-        getProxy().getScheduler().runAsync(this, runnable);
     }
 
     private void setupStopSchedule() {

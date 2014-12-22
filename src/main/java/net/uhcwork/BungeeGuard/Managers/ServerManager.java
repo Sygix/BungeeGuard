@@ -121,7 +121,7 @@ public class ServerManager {
                                 lobbies.put(serverInfo.getName(), lobby);
                             }
                         };
-                        Main.getServerManager().ping(serverInfo.getName(), pingBack);
+                        ping(serverInfo.getName(), pingBack);
                     }
                 }
                 Iterator<String> i = lobbies.keySet().iterator();
