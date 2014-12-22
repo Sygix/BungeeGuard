@@ -87,7 +87,7 @@ public class ShopTask implements Runnable {
         Preconditions.checkArgument(params.containsKey("duration"));
         Preconditions.checkArgument(params.containsKey("rank"));
         String pseudo = (String) params.get("pseudo");
-        String duration = (String) params.get("time");
+        String duration = (String) params.get("duration");
         String rank = (String) params.get("rank");
         plugin.getProxy().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), "user " + pseudo + " add " + rank + " " + duration);
     }
