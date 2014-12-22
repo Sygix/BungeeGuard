@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.Models.ShopActionModel;
+import net.uhcwork.BungeeGuard.Models.BungeeCommandModel;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 
 import java.lang.reflect.Type;
@@ -23,8 +23,8 @@ public class ShopTask implements Runnable {
         plugin.executePersistenceRunnable(new VoidRunner() {
             @Override
             protected void run() {
-                List<ShopActionModel> actions = ShopActionModel.findAll();
-                for (ShopActionModel action : actions) {
+                List<BungeeCommandModel> actions = BungeeCommandModel.findAll();
+                for (BungeeCommandModel action : actions) {
                     String todo = action.getAction();
                     if (action.delete()) {
                         doTask(todo);
@@ -84,7 +84,7 @@ public class ShopTask implements Runnable {
 
     private void addRank(Map<String, Object> params) {
         Preconditions.checkArgument(params.containsKey("pseudo"));
-        Preconditions.checkArgument(params.containsKey("time"));
+        Preconditions.checkArgument(params.containsKey("duration"));
         Preconditions.checkArgument(params.containsKey("rank"));
         String pseudo = (String) params.get("pseudo");
         String duration = (String) params.get("time");
