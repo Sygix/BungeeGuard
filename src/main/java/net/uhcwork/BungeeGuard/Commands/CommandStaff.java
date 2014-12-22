@@ -35,7 +35,7 @@ public class CommandStaff extends Command {
     }.reverse();
 
     public CommandStaff(Main plugin) {
-        super("staff");
+        super("staff", "bungee.command.staff");
         MB = Main.getMB();
         SM = Main.getServerManager();
         PM = plugin.getPermissionManager();
