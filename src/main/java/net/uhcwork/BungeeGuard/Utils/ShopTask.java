@@ -45,8 +45,8 @@ public class ShopTask implements Runnable {
                     case "broadcast":
                         broadcast(params);
                         break;
-                    case "vip":
-                        vip(params);
+                    case "add_rank":
+                        addRank(params);
                         break;
                     case "say":
                         say(params);
@@ -82,12 +82,14 @@ public class ShopTask implements Runnable {
 
     }
 
-    private void vip(Map<String, Object> params) {
+    private void addRank(Map<String, Object> params) {
         Preconditions.checkArgument(params.containsKey("pseudo"));
         Preconditions.checkArgument(params.containsKey("time"));
+        Preconditions.checkArgument(params.containsKey("rank"));
         String pseudo = (String) params.get("pseudo");
         String duration = (String) params.get("time");
-        plugin.getProxy().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), "user " + pseudo + " add vip " + duration);
+        String rank = (String) params.get("rank");
+        plugin.getProxy().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), "user " + pseudo + " add " + rank + " " + duration);
     }
 
     private void wallet(Map<String, Object> params) {
