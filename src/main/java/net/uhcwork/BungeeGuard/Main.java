@@ -193,6 +193,7 @@ public class Main extends Plugin {
                 CommandSpychat.class, CommandSend.class, CommandBan.class, CommandUnban.class, CommandList.class,
                 CommandCheck.class, CommandMute.class, CommandUnmute.class, CommandSilence.class, CommandSay.class,
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
+                CommandFriendVIP.class,
                 CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
                 CommandWallet.class, CommandFind.class, CommandStaff.class, CommandSeen.class, CommandMaintenance.class,
                 CommandUser.class, CommandGroups.class, CommandGtpHere.class, CommandRegister.class, CommandPings.class);
@@ -218,7 +219,7 @@ public class Main extends Plugin {
                 reloadConfHandler.handle(plugin);
                 shopTask.run();
             }
-        }, 0, 10, TimeUnit.SECONDS);
+        }, 2, 10, TimeUnit.SECONDS);
 
         setupStopSchedule();
 

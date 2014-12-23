@@ -18,10 +18,12 @@ import java.util.UUID;
 public class MessageHandler {
     @PubSubHandler("message")
     public static void message(PubSubMessageEvent e) {
-        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(e.getArg(0));
+        UUID uuid = UUID.fromString(e.getArg(0));
+        String message = e.getArg(1);
+        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(uuid);
         if (p == null)
             return;
-        p.sendMessage(PrettyLinkComponent.fromLegacyText(e.getArg(1)));
+        p.sendMessage(PrettyLinkComponent.fromLegacyText(message));
     }
 
     @PubSubHandler("privateMessage")
