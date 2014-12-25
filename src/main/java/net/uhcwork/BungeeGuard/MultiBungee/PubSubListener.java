@@ -7,6 +7,7 @@ import net.md_5.bungee.Util;
 import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -87,6 +88,12 @@ public class PubSubListener implements Listener {
             out.writeUTF("UUIDOther");
             out.writeUTF(playerName);
             out.writeUTF("" + MB.getUuidFromName(playerName));
+        }
+
+        if (subchannel.equals("ignore")) {
+            ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
+            boolean new_state = in.readBoolean();
+            MB.ignorePlayer(p.getUniqueId(), new_state ? '+' : '-', null);
         }
 
         if (subchannel.equalsIgnoreCase("Message")) {

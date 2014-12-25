@@ -193,7 +193,7 @@ public class Main extends Plugin {
                 CommandSpychat.class, CommandSend.class, CommandBan.class, CommandUnban.class, CommandList.class,
                 CommandCheck.class, CommandMute.class, CommandUnmute.class, CommandSilence.class, CommandSay.class,
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
-                CommandFriendVIP.class, CommandToken.class,
+                CommandFriendVIP.class, CommandToken.class, CommandId.class, CommandPwd.class,
                 CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
                 CommandWallet.class, CommandFind.class, CommandStaff.class, CommandSeen.class, CommandMaintenance.class,
                 CommandUser.class, CommandGroups.class, CommandGtpHere.class, CommandRegister.class, CommandPings.class);

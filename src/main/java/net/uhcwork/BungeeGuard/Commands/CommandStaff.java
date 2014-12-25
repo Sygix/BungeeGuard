@@ -69,11 +69,9 @@ public class CommandStaff extends Command {
                 TC.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new ComponentBuilder("Serveur: ")
                                 .append(SM.getPrettyName(serverName) + ChatColor.RESET
-                                        + " (" + serverName + ")")
-                                .color(ChatColor.BLUE)
+                                        + " (" + serverName + ")").color(ChatColor.BLUE)
                                 .append("\nProxy: ")
-                                .append(MB.getProxy(playerName))
-                                .color(ChatColor.DARK_AQUA)
+                                .append("" + MB.getProxy(uuid)).color(ChatColor.DARK_AQUA)
                                 .append("\nGroupes: ")
                                 .append(Joiner.on(", ").join(PM.getGroupes(uuid)))
                                 .color(ChatColor.RED)
