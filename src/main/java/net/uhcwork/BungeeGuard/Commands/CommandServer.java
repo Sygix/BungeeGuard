@@ -23,7 +23,7 @@ public class CommandServer extends Command implements TabExecutor {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(final CommandSender sender, final String[] args) {
         if (!(sender instanceof ProxiedPlayer)) {
             return;
         }
@@ -44,11 +44,13 @@ public class CommandServer extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSender sender, String[] args) {
-        return (args.length != 0) ? Collections.<String>emptyList() : Iterables.transform(Iterables.filter(ProxyServer.getInstance().getServers().values(), new Predicate<ServerInfo>() {
+    public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
+        return (args.length > 1) ? Collections.<String>emptyList() : Iterables.transform(Iterables.filter(ProxyServer.getInstance().getServers().values(), new Predicate<ServerInfo>() {
+            private final String lower = args[0].toLowerCase();
+
             @Override
             public boolean apply(ServerInfo input) {
-                return input.canAccess(sender);
+                return input.getName().toLowerCase().startsWith(lower) && input.canAccess(sender);
             }
         }), new Function<ServerInfo, String>() {
             @Override

@@ -330,6 +330,10 @@ public class BungeeGuardListener implements Listener {
         String[] args = e.getCursor().split(" ");
 
         final String checked = (args.length > 0 ? args[args.length - 1] : e.getCursor()).toLowerCase();
+
+        if (checked.length() <= 2)
+            return;
+
         for (String playerName : Main.getMB().getHumanPlayersOnline()) {
             if (playerName.toLowerCase().startsWith(checked)) {
                 e.getSuggestions().add(playerName);
