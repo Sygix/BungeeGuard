@@ -58,6 +58,8 @@ public class Main extends Plugin {
     CheatManager cheatManager = new CheatManager(this);
     @Getter
     MysqlConfigAdapter config;
+    @Getter
+    FriendManager friendManager = new FriendManager(this);
     private long startTime;
     @Getter
     private PartyManager partyManager = new PartyManager();
@@ -178,6 +180,7 @@ public class Main extends Plugin {
 
         sanctionManager.loadBans();
         sanctionManager.loadMutes();
+        friendManager.loadFriends();
         serverManager.setupPingTask();
 
         getProxy().getPluginManager().registerListener(this, new BungeeGuardListener(this));
@@ -193,7 +196,7 @@ public class Main extends Plugin {
                 CommandSpychat.class, CommandSend.class, CommandBan.class, CommandUnban.class, CommandList.class,
                 CommandCheck.class, CommandMute.class, CommandUnmute.class, CommandSilence.class, CommandSay.class,
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
-                CommandFriendVIP.class, CommandToken.class, CommandId.class, CommandPwd.class,
+                CommandFriendVIP.class, CommandToken.class, CommandId.class, CommandPwd.class, CommandFriend.class,
                 CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
                 CommandWallet.class, CommandFind.class, CommandStaff.class, CommandSeen.class, CommandMaintenance.class,
                 CommandUser.class, CommandGroups.class, CommandGtpHere.class, CommandRegister.class, CommandPings.class);

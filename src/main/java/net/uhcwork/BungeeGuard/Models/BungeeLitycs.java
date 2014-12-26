@@ -1,9 +1,8 @@
 package net.uhcwork.BungeeGuard.Models;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.uhcwork.BungeeGuard.Utils.UUIDUtils;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
@@ -12,15 +11,8 @@ import java.util.UUID;
 
 @Table("bungeelitycs")
 public class BungeeLitycs extends Model {
-    public static byte[] toBytes(UUID uuid) {
-        ByteArrayDataOutput out = ByteStreams.newDataOutput(16);
-        out.writeLong(uuid.getMostSignificantBits());
-        out.writeLong(uuid.getLeastSignificantBits());
-        return out.toByteArray();
-    }
-
     public void setUUID(UUID u) {
-        set("uuid", toBytes(u));
+        set("uuid", UUIDUtils.toBytes(u));
     }
 
     public void setServerID(String name) {

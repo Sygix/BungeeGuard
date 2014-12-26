@@ -16,16 +16,17 @@ public class RedisBungeeListener implements Listener {
     public RedisBungeeListener(Main plugin) {
         this.plugin = plugin;
         addHandler(BroadcastHandler.class);
+        addHandler(FriendHandler.class);
         addHandler(IgnoreHandler.class);
         addHandler(KickHandler.class);
         addHandler(MessageHandler.class);
-        addHandler(SanctionHandler.class);
+        addHandler(PartyHandler.class);
+        addHandler(PermissionHandler.class);
         addHandler(ReloadConfHandler.class);
+        addHandler(SanctionHandler.class);
         addHandler(ServerSilenceHandler.class);
         addHandler(StaffChatHandler.class);
         addHandler(SummonHandler.class);
-        addHandler(PermissionHandler.class);
-        addHandler(PartyHandler.class);
         Main.getMB().registerPubSubChannels(handlers.keySet());
 
     }

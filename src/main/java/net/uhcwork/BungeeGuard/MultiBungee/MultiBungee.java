@@ -1,6 +1,8 @@
 package net.uhcwork.BungeeGuard.MultiBungee;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.Ints;
 import com.imaginarycode.minecraft.redisbungee.RedisBungee;
@@ -527,5 +529,22 @@ public class MultiBungee {
 
     public void setMaintenance(String serverName, boolean isRestricted) {
         sendChannelMessage("maintenance", serverName, isRestricted ? "+" : "-");
+    }
+
+    public Collection<String> getNamesFromUuid(Collection<UUID> uuids) {
+        return Collections2.transform(uuids, new Function<UUID, String>() {
+            @Override
+            public String apply(UUID uuid) {
+                return getNameFromUuid(uuid);
+            }
+        });
+    }
+
+    public void addFriend(UUID userA, UUID userB) {
+        sendChannelMessage("+friend", "" + userA, "" + userB);
+    }
+
+    public void delFriend(UUID userA, UUID userB) {
+        sendChannelMessage("-friend", "" + userA, "" + userB);
     }
 }
