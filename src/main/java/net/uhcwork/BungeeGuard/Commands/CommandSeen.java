@@ -5,9 +5,9 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
-import net.uhcwork.BungeeGuard.Models.BungeeLitycs;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 import net.uhcwork.BungeeGuard.Utils.DateUtil;
+import net.uhcwork.BungeeGuard.Utils.UUIDUtils;
 import org.javalite.activejdbc.Base;
 
 import java.util.UUID;
@@ -41,7 +41,7 @@ public class CommandSeen extends Command {
                     } else {
                         serverNameCondition = "AND server_name LIKE 'lobby%'";
                     }
-                    long presence = Long.valueOf(String.valueOf(Base.firstCell("SELECT SUM(TIME_TO_SEC(TIMEDIFF(leaved_at, joined_at))) FROM bungeelitycs WHERE uuid = ? AND leaved_at IS NOT NULL " + serverNameCondition, BungeeLitycs.toBytes(u))));
+                    long presence = Long.valueOf(String.valueOf(Base.firstCell("SELECT SUM(TIME_TO_SEC(TIMEDIFF(leaved_at, joined_at))) FROM bungeelitycs WHERE uuid = ? AND leaved_at IS NOT NULL " + serverNameCondition, UUIDUtils.toBytes(u))));
                     sender.sendMessage(TextComponent.fromLegacyText("Temps en ligne " + (onlyLobby ? "(sur lobby)" : "") + ": " + ChatColor.GREEN + DateUtil.formatDateDiff(1000 * presence, true)));
 
                 }
