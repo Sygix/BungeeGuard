@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
@@ -30,8 +31,12 @@ public class CommandKick extends Command {
             sender.sendMessage(new ComponentBuilder("Usage: /kick <pseudo> [reason]").color(ChatColor.RED).create());
         } else {
             String reason = Joiner.on(" ").join(Arrays.copyOfRange(args, 1, args.length)).trim();
-            if (SM.isPremadeMessage(reason))
-                reason = SM.getPremadeMessage(reason);
+
+            if (!SM.isPremadeMessage(reason)) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Raison invalide."));
+                return;
+            }
+            reason = SM.getPremadeMessage(reason);
 
             reason = ChatColor.translateAlternateColorCodes('&', reason);
 

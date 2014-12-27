@@ -39,8 +39,11 @@ public class CommandUnmute extends Command {
 
             String muteName = args[0];
 
-            if (SM.isPremadeMessage(reason))
-                reason = SM.getPremadeMessage(reason);
+            if (!SM.isPremadeMessage(reason)) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Raison invalide."));
+                return;
+            }
+            reason = SM.getPremadeMessage(reason);
             reason = ChatColor.translateAlternateColorCodes('&', reason);
 
             UUID muteUUID = MB.getUuidFromName(muteName);

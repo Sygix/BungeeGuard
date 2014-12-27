@@ -47,8 +47,11 @@ public class CommandMute extends Command {
 
         String reason = Joiner.on(" ").join(Arrays.copyOfRange(args, duration ? 2 : 1, args.length)).trim();
 
-        if (SM.isPremadeMessage(reason))
-            reason = SM.getPremadeMessage(reason);
+        if (!SM.isPremadeMessage(reason)) {
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Raison invalide."));
+            return;
+        }
+        reason = SM.getPremadeMessage(reason);
         reason = ChatColor.translateAlternateColorCodes('&', reason);
 
         String muteName = args[0];
