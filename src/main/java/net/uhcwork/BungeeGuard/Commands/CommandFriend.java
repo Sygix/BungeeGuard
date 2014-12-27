@@ -23,7 +23,7 @@ public class CommandFriend extends Command {
 
     public CommandFriend(final Main plugin) {
         super("friend", "bungee.command.friend", "friends");
-        this.FM = plugin.getFriendManager();
+        FM = plugin.getFriendManager();
         MB = Main.getMB();
     }
 
@@ -46,6 +46,13 @@ public class CommandFriend extends Command {
             return;
         }
         String playerName = args[1];
+        if (playerName.equals(p.getName())) {
+            if (Main.getRandom().nextInt(10) == 5)
+                p.sendMessage(fromLegacyText(ChatColor.GOLD + "Vous venez de gagner 1000 UHCoins. Ou pas."));
+            else
+                p.sendMessage(fromLegacyText(ChatColor.RED + "Vous ne pouvez pas vous ajouter en ami."));
+            return;
+        }
         UUID playerUuid = MB.getUuidFromName(playerName);
         if (playerUuid == null || !MB.isPlayerOnline(playerUuid)) {
             p.sendMessage(fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne."));
@@ -71,10 +78,10 @@ public class CommandFriend extends Command {
         FM.addFriend(userA, userB, true);
         MB.addFriend(userA, userB);
         switch (FM.getFriendship(userA, userB)) {
-            case PENDING_OTHER:
+            case MUTUAL:
                 p.sendMessage(fromLegacyText(ChatColor.GREEN + "Vous êtes désormais mutuellement amis."));
                 break;
-            case NONE:
+            case PENDING:
                 p.sendMessage(fromLegacyText(ChatColor.GREEN + "Ce joueur a bien été ajouté à votre liste d'amis."));
                 p.sendMessage(fromLegacyText(ChatColor.GREEN + "Vous serez officiellement amis si celui-ci vous ajoute à son tour."));
                 break;

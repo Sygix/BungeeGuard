@@ -35,7 +35,7 @@ public class CommandGtp extends Command {
         if (MB.isPlayerOnline(playerName)) {
             ServerInfo server = MB.getServerFor(playerName);
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Téléportation vers " + ChatColor.BLUE + playerName + ChatColor.GREEN + " dans le monde " + ChatColor.GOLD + SM.getPrettyName(server.getName()) + ChatColor.RESET + ChatColor.GOLD + "(" + server.getName() + ")" + ChatColor.GREEN + "..."));
-            if (server.getName().equalsIgnoreCase(((ProxiedPlayer) sender).getServer().getInfo().getName())) {
+            if (server.getName().equalsIgnoreCase(p.getServer().getInfo().getName())) {
                 p.chat("/tp " + playerName);
             } else {
                 MB.gtp(p.getName(), playerName);

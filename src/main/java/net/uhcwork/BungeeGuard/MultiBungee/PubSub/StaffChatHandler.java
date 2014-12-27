@@ -13,6 +13,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubHandler;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 import net.uhcwork.BungeeGuard.Permissions.Group;
+import net.uhcwork.BungeeGuard.Permissions.Permissions;
 import net.uhcwork.BungeeGuard.Utils.MyBuilder;
 
 import java.util.concurrent.TimeUnit;
@@ -62,23 +63,27 @@ public class StaffChatHandler {
         }
         ServerInfo SI = MB.getServerFor(to_player);
         p.connect(SI, new Callback<Boolean>() {
-            @Override
-            public void done(Boolean success, Throwable throwable) {
-                if (!success) {
-                    return;
-                }
-                ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
                     @Override
-                    public void run() {
-                        if (p.hasPermission("bukkit.command.teleport") || p.hasPermission("minecraft.command.tp")) {
-                            p.chat("/tp " + p.getName() + " " + to_player);
-                        } else {
-                            MB.runCommand(to_player, "/tp " + p.getName() + " " + to_player);
+                    public void done(Boolean success, Throwable throwable) {
+                        if (!success) {
+                            return;
                         }
+                        ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
+                            @Override
+                            public void run() {
+                                if (p.hasPermission("bukkit.command.teleport") || p.hasPermission("minecraft.command.tp")) {
+                                    p.chat("/tp " + p.getName() + " " + to_player);
+                                } else if (Permissions.hasPerm(to_player, "bukkit.command.teleport") || Permissions.hasPerm(to_player, "minecraft.command.tp")) {
+                                    {
+                                        MB.runCommand(to_player, "/tp " + p.getName() + " " + to_player);
+                                    }
+                                }
+                            }
+                        }, 100, TimeUnit.MILLISECONDS);
                     }
-                }, 100, TimeUnit.MILLISECONDS);
-            }
-        });
+                }
+
+        );
     }
 
     @PubSubHandler("runCommand")
