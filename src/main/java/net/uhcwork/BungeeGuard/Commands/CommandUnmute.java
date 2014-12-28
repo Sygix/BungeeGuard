@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
@@ -40,10 +41,14 @@ public class CommandUnmute extends Command {
             String muteName = args[0];
 
             if (!SM.isPremadeMessage(reason)) {
-                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Raison invalide."));
-                return;
+                if (sender.hasPermission("bungee.can.custom_sanction_message")) {
+                    sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Raison invalide."));
+                    return;
+                }
+            } else {
+                reason = SM.getPremadeMessage(reason);
             }
-            reason = SM.getPremadeMessage(reason);
+
             reason = ChatColor.translateAlternateColorCodes('&', reason);
 
             UUID muteUUID = MB.getUuidFromName(muteName);
