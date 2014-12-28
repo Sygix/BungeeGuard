@@ -164,9 +164,6 @@ public class BungeeGuardListener implements Listener {
                 e.setTarget(plugin.getProxy().getServerInfo(l));
                 System.out.println("Lobby selectionné: " + l);
             } else {
-                if (ProxyServer.getInstance().getServerInfo("limbo").getPlayers().size() < 70) {
-                    e.setTarget(ProxyServer.getInstance().getServerInfo("limbo"));
-                }
                 e.getPlayer().disconnect(new ComponentBuilder(ChatColor.RED + "Nos services sont momentanément indisponibles" + '\n' + ChatColor.RED + "Veuillez réessayer dans quelques instants").create());
             }
         } else if (!e.getTarget().getName().startsWith("lobby")) {

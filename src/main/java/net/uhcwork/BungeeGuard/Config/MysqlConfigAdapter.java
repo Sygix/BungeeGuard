@@ -191,7 +191,7 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
 
         Map<String, String> forced = new HashMap<>();
         String defaultServer = "hub";
-        String fallbackServer = "limbo";
+        String fallbackServer = "hub";
         boolean forceDefault = true;
         int tabListSize = 60;
         boolean setLocalAddress = false; // On laisse debian s'en occuper :}
