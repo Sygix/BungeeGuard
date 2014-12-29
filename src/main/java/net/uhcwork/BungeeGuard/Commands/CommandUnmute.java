@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class CommandUnmute extends Command {
-
     private final Main plugin;
     private final SanctionManager SM;
     private final MultiBungee MB;
