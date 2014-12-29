@@ -1,6 +1,10 @@
 package net.uhcwork.BungeeGuard.MultiBungee.PubSub;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.google.gson.reflect.TypeToken;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubHandler;
 import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
@@ -18,6 +22,14 @@ public class IgnoreHandler {
         UUID toIgnore = null;
         if (!e.getArg(2).equals("*")) {
             toIgnore = UUID.fromString(e.getArg(2));
+            ProxiedPlayer p = ProxyServer.getInstance().getPlayer(joueur);
+            if (p != null && p.getServer().getInfo().getName().startsWith("lobby")) {
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("ignore");
+                out.writeBoolean(action.equals("+"));
+                byte[] data = out.toByteArray();
+                p.sendData("UHCGames", data);
+            }
         }
 
         switch (action) {

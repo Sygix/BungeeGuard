@@ -363,8 +363,10 @@ public class BungeeGuardListener implements Listener {
             Map<String, Object> data = new HashMap<>();
             data.put("server_id", e.getTarget().getName());
             data.put("groupes", plugin.getPermissionManager().getGroupes(p.getUniqueId()));
-            if (SM.isLobby(e.getTarget()))
+            if (SM.isLobby(e.getTarget()) || e.getTarget().getName().startsWith("dev")) {
                 data.put("first-join", SM.setLastLobby(p.getUniqueId(), e.getTarget()));
+                data.put("disabled_mp", plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), null));
+            }
             h.setHost(Main.getGson().toJson(data));
         } catch (IllegalAccessException | InvocationTargetException e1) {
             System.out.println("Erreur passage hostname: " + e1.getMessage());
