@@ -30,7 +30,9 @@ public class CommandToken extends Command {
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
-        boolean canCreate = sender.hasPermission("bungee.token.create");
+        final boolean canCreate = sender.hasPermission("bungee.token.create");
+        final boolean canDelete = sender.hasPermission("bungee.token.delete");
+        boolean canList = sender.hasPermission("bungee.token.list");
         if (args.length == 0 || (!canCreate && args.length != 1)) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Usage: /token <token>"));
             if (canCreate) {
@@ -39,49 +41,50 @@ public class CommandToken extends Command {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Pour un token valide 10 fois, pendant 10 jours, et qui donne 1 mois de vip"));
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Exemple: /token + noel2014 1000c 30 3h"));
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Pour un token valide 30 fois, pendant 3 heures, et qui donne 1000 uhcoins"));
-                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Usage: /token - noel2014"));
-                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Usage: /token list"));
             }
+            if (canDelete)
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Usage: /token - noel2014"));
+            if (canList)
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Usage: /token list"));
             return;
         }
         if (args.length == 1) {
-            if (args[0].equals("list")) {
-                if (canCreate) {
-                    plugin.executePersistenceRunnable(new VoidRunner() {
-                        @Override
-                        protected void run() {
-                            LazyList<BungeeToken> tokens = BungeeToken.findAll().include(BungeeTokenUse.class);
+            if (args[0].equals("list") && canList) {
+                plugin.executePersistenceRunnable(new VoidRunner() {
+                    @Override
+                    protected void run() {
+                        LazyList<BungeeToken> tokens = BungeeToken.findAll().include(BungeeTokenUse.class);
 
-                            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Liste des tokens " + ChatColor.GRAY + "(chut, c'est un secret !)"));
+                        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Liste des tokens " + ChatColor.GRAY + "(chut, c'est un secret !)"));
 
-                            ComponentBuilder message = new ComponentBuilder("");
-                            BaseComponent[] description;
-                            long count;
-                            boolean first = true;
+                        ComponentBuilder message = new ComponentBuilder("");
+                        BaseComponent[] description;
+                        long count;
+                        boolean first = true;
 
-                            for (BungeeToken token : tokens) {
-                                if (first)
-                                    first = false;
-                                else
-                                    message.append(", ")
-                                            .event((HoverEvent) null)
-                                            .color(ChatColor.WHITE)
-                                            .strikethrough(false);
-                                count = token.getAll(BungeeTokenUse.class).size();
-                                String lifetime = DateUtil.formatDateDiff(token.getLifetime(), false);
+                        for (BungeeToken token : tokens) {
+                            if (first)
+                                first = false;
+                            else
+                                message.append(", ")
+                                        .event((HoverEvent) null)
+                                        .color(ChatColor.WHITE)
+                                        .strikethrough(false);
+                            count = token.getAll(BungeeTokenUse.class).size();
+                            String lifetime = DateUtil.formatDateDiff(token.getLifetime(), false);
 
-                                description = TextComponent.fromLegacyText(String.format(DESCRIPTION_MSG, token.getAction(), token.getUtilisations(), lifetime, token.getCreatedBy()));
+                            description = TextComponent.fromLegacyText(String.format(DESCRIPTION_MSG, token.getAction(), token.getUtilisations(), lifetime, token.getCreatedBy()));
 
-                                message.append(token.getToken())
-                                        .color(ChatColor.GOLD)
-                                        .strikethrough(token.hasExpired() || token.isBroken(count))
-                                        .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, description));
-                            }
-                            sender.sendMessage(message.create());
+                            message.append(token.getToken())
+                                    .color(ChatColor.GOLD)
+                                    .strikethrough(token.hasExpired() || token.isBroken(count))
+                                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, description));
                         }
-                    });
-                    return;
-                }
+                        sender.sendMessage(message.create());
+                    }
+                });
+                return;
+
             }
             if (!(sender instanceof ProxiedPlayer))
                 return;
@@ -121,7 +124,7 @@ public class CommandToken extends Command {
             });
             return;
         }
-        if (!args[0].equals("+") && !args[0].equals("-")) {
+        if ((!args[0].equals("+") || !canCreate) && (!args[0].equals("-") || !canDelete)) {
             sender.sendMessage(TextComponent.fromLegacyText("Action inconnue ..."));
             return;
         }
@@ -140,7 +143,7 @@ public class CommandToken extends Command {
             @Override
             protected void run() {
                 long count = BungeeToken.count("token = ?", token);
-                if (args[0].equals("+")) {
+                if (args[0].equals("+") && canCreate) {
                     if (count != 0) {
                         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Nom de token déjà utilisé"));
                         return;
@@ -156,7 +159,7 @@ public class CommandToken extends Command {
                     bt.setCreatedBy(sender.getName());
                     bt.saveIt();
                     sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Token ajouté ! " + ChatColor.RED + "<3"));
-                } else {
+                } else if (args[0].equals("-") && canDelete) {
                     if (count == 0) {
                         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Nom de token déjà ... inconnu :'("));
                         return;
