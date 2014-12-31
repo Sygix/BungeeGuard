@@ -7,8 +7,20 @@ import java.sql.Timestamp;
 
 @Table("bungee_tokens")
 public class BungeeToken extends Model {
+    public String getIdentifier() {
+        return getToken();
+    }
+
+    public String getToken() {
+        return getString("token");
+    }
+
     public void setToken(String token) {
         setString("token", token);
+    }
+
+    public Integer getUtilisations() {
+        return getInteger("usages");
     }
 
     public void setUtilisations(Integer usages) {
@@ -17,10 +29,21 @@ public class BungeeToken extends Model {
         setInteger("usages", usages);
     }
 
+    public Long getLifetime() {
+        Timestamp t = getTimestamp("valid_until");
+        if (t == null)
+            return null;
+        return t.getTime();
+    }
+
     public void setLifetime(Long lifetime) {
         if (lifetime == null)
             return;
         setTimestamp("valid_until", new Timestamp(System.currentTimeMillis() + lifetime));
+    }
+
+    public String getCreatedBy() {
+        return getString("created_by");
     }
 
     public void setCreatedBy(String createdBy) {
@@ -44,4 +67,6 @@ public class BungeeToken extends Model {
     public void setAction(String action) {
         setString("action", action);
     }
+
+
 }
