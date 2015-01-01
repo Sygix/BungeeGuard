@@ -328,7 +328,7 @@ public class BungeeGuardListener implements Listener {
 
         final String checked = (args.length > 0 ? args[args.length - 1] : e.getCursor()).toLowerCase();
 
-        if (checked.length() <= 2)
+        if (checked.length() <= 1)
             return;
 
         for (String playerName : Main.getMB().getHumanPlayersOnline()) {
