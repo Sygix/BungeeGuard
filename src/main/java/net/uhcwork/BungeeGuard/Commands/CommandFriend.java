@@ -56,7 +56,7 @@ public class CommandFriend extends Command {
             return;
         }
         UUID playerUuid = MB.getUuidFromName(playerName);
-        if (playerUuid == null || !MB.isPlayerOnline(playerUuid)) {
+        if (playerUuid == null) {
             p.sendMessage(fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne."));
             return;
         }
@@ -73,6 +73,10 @@ public class CommandFriend extends Command {
 
     private void addFriend(ProxiedPlayer p, UUID userB) {
         UUID userA = p.getUniqueId();
+        if (!MB.isPlayerOnline(userB)) {
+            p.sendMessage(fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne."));
+            return;
+        }
         if (FM.askedFriend(userA, userB)) {
             p.sendMessage(fromLegacyText(ChatColor.RED + "Vous avez déjà ajouté ce joueur à votre liste d'amis."));
             return;
