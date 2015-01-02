@@ -541,10 +541,10 @@ public class MultiBungee {
     }
 
     public void addFriend(UUID userA, UUID userB) {
-        sendChannelMessage("+friend", "" + userA, "" + userB);
+        sendChannelMessage("addfriend", "" + userA, "" + userB);
     }
 
     public void delFriend(UUID userA, UUID userB) {
-        sendChannelMessage("-friend", "" + userA, "" + userB);
+        sendChannelMessage("delfriend", "" + userA, "" + userB);
     }
 }

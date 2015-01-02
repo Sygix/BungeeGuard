@@ -18,6 +18,7 @@ import net.uhcwork.BungeeGuard.Managers.ServerManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
 import net.uhcwork.BungeeGuard.Models.BungeeLitycs;
 import net.uhcwork.BungeeGuard.Models.BungeeMute;
+import net.uhcwork.BungeeGuard.Permissions.Group;
 import net.uhcwork.BungeeGuard.Permissions.Permissions;
 import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
@@ -59,6 +60,14 @@ public class BungeeGuardListener implements Listener {
             ChatColor.WHITE + ChatColor.BOLD + "» " +
             ChatColor.RED + ChatColor.UNDERLINE + ChatColor.BOLD + "Serveur en maintenance" +
             ChatColor.WHITE + ChatColor.BOLD + " «";
+    private static final String EMPTY_MESSAGE = " ";
+    private static final String WELCOME_MSG_1 = ChatColor.GOLD + "Bienvenue sur UHCGames, %s";
+    private static final String WELCOME_MSG_2 = ChatColor.YELLOW + "IP: " + ChatColor.GREEN + "mc.uhcgames.com" +
+            ChatColor.GRAY + " | " +
+            ChatColor.YELLOW + "TeamSpeak: " + ChatColor.GREEN + "ts.uhcgames.com";
+    private static final String WELCOME_MSG_3 = ChatColor.YELLOW + "Site: " + ChatColor.GREEN + "www.uhcgames.com" +
+            ChatColor.GRAY + " | " +
+            ChatColor.YELLOW + "Boutique: " + ChatColor.GREEN + "store.uhcgames.com";
 
     private final Main plugin;
     private final Method handshakeMethod;
@@ -147,6 +156,12 @@ public class BungeeGuardListener implements Listener {
         title.title(TextComponent.fromLegacyText(ChatColor.GOLD + "UHCGames"));
         title.subTitle(TextComponent.fromLegacyText(ArrayUtils.rand(plugin.getConfig().getWelcomeSubtitles())));
         title.send(p);
+        p.sendMessage(TextComponent.fromLegacyText(EMPTY_MESSAGE));
+        Group g = plugin.getPermissionManager().getMainGroup(p.getUniqueId());
+        p.sendMessage(TextComponent.fromLegacyText(String.format(WELCOME_MSG_1, g.getChatPrefix() + p.getName())));
+        p.sendMessage(TextComponent.fromLegacyText(WELCOME_MSG_2));
+        p.sendMessage(TextComponent.fromLegacyText(WELCOME_MSG_3));
+        p.sendMessage(TextComponent.fromLegacyText(EMPTY_MESSAGE));
     }
 
     @EventHandler

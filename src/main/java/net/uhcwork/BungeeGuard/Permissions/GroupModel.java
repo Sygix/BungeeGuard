@@ -33,4 +33,12 @@ public class GroupModel extends Model {
     public String getInherit() {
         return getString("inherit");
     }
+
+    public String getChatPrefix() {
+        return ChatColor.translateAlternateColorCodes('&', getString("chat_prefix"));
+    }
+
+    public String getChatSuffix() {
+        return ChatColor.translateAlternateColorCodes('&', getString("chat_suffix"));
+    }
 }

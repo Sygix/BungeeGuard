@@ -101,7 +101,6 @@ public class FriendManager {
         return Collections2.filter(collection.get(user), new Predicate<UUID>() {
             @Override
             public boolean apply(final UUID uuid) {
-                System.out.println(getFriendship(user, uuid));
                 return getFriendship(user, uuid).equals(finalstate);
             }
         });
@@ -131,13 +130,13 @@ public class FriendManager {
                 return Main.getMB().getNameFromUuid(uuid);
             }
         });
-        System.out.println(friends_other_pending);
-        if (online_friends.size() + friends_other_pending.size() != 0) {
+        if (friends.size() + friends_other_pending.size() != 0) {
             p.sendMessage(TextComponent.fromLegacyText(SEPARATOR));
 
             if (online_friends.size() != 0)
                 p.sendMessage(TextComponent.fromLegacyText(String.format(FRIENDS_LIST, online_friends.size(), friends.size(), joiner.join(online_friends))));
-
+            else if (friends.size() != 0)
+                p.sendMessage(TextComponent.fromLegacyText(String.format(FRIENDS_LIST, online_friends.size(), friends.size(), ChatColor.YELLOW + "Aucun :(")));
             if (friends_other_pending.size() != 0) {
                 String _s = s(friends_other_pending.size());
                 p.sendMessage(TextComponent.fromLegacyText(String.format(PENDING_COUNT, friends_other_pending.size(), _s, _s)));

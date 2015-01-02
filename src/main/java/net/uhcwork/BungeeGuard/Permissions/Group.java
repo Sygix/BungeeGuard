@@ -12,13 +12,8 @@ import java.util.Set;
 @EqualsAndHashCode
 @ToString
 public class Group {
-    final String id;
-    final String name;
-    final String prefix;
-    final String suffix;
-    final String color;
-    final String inherit;
-    final Integer weight;
+    final String id, name, prefix, suffix, color, inherit, chatPrefix, chatSuffix;
+    final int weight;
     final Set<String> permissions = new HashSet<>();
 
     public Group(GroupModel model) {
@@ -29,6 +24,8 @@ public class Group {
         color = model.getColor();
         inherit = model.getInherit();
         weight = model.getWeight();
+        chatPrefix = model.getChatPrefix();
+        chatSuffix = model.getChatSuffix();
         permissions.clear();
         List<PermissionModel> _permissions = model.get(PermissionModel.class, null);
         for (PermissionModel PM : _permissions) {

@@ -7,7 +7,7 @@ import net.uhcwork.BungeeGuard.MultiBungee.PubSubMessageEvent;
 import java.util.UUID;
 
 public class FriendHandler {
-    @PubSubHandler("+friend")
+    @PubSubHandler("addfriend")
     public void onFriendAdd(Main plugin, PubSubMessageEvent e) {
         UUID userA = UUID.fromString(e.getArg(0));
         UUID userB = UUID.fromString(e.getArg(1));
@@ -15,7 +15,7 @@ public class FriendHandler {
         plugin.getFriendManager().addFriend(userA, userB, false);
     }
 
-    @PubSubHandler("-friend")
+    @PubSubHandler("delfriend")
     public void onFriendDel(Main plugin, PubSubMessageEvent e) {
         UUID userA = UUID.fromString(e.getArg(0));
         UUID userB = UUID.fromString(e.getArg(1));

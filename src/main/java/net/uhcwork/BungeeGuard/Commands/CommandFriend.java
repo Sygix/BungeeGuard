@@ -119,7 +119,7 @@ public class CommandFriend extends Command {
                 if (first)
                     first = false;
                 else
-                    friendList.append(ChatColor.WHITE + ",");
+                    friendList.append(ChatColor.WHITE + ", ");
                 boolean isOnline = Main.getMB().isPlayerOnline(_u);
                 friendList.append(ChatColor.YELLOW + (isOnline ? "" + ChatColor.ITALIC : "") + name);
                 if (isOnline) {
@@ -140,7 +140,7 @@ public class CommandFriend extends Command {
                 if (first)
                     first = false;
                 else
-                    friendList.append(ChatColor.WHITE + ",");
+                    friendList.append(ChatColor.WHITE + ", ");
                 boolean isOnline = Main.getMB().isPlayerOnline(_u);
                 friendList.append(ChatColor.YELLOW + (isOnline ? "" + ChatColor.ITALIC : "") + name);
                 if (isOnline) {
@@ -160,7 +160,7 @@ public class CommandFriend extends Command {
                 if (first)
                     first = false;
                 else
-                    friendList.append(ChatColor.WHITE + ",");
+                    friendList.append(ChatColor.WHITE + ", ");
                 friendList.append(ChatColor.YELLOW + name)
                         .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, fromLegacyText(ChatColor.GREEN + "Cliquez pour ajouter en ami")))
                         .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend + " + name));
