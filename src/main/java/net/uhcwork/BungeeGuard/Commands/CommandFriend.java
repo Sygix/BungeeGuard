@@ -3,18 +3,20 @@ package net.uhcwork.BungeeGuard.Commands;
 import com.google.common.base.Joiner;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Managers.FriendManager;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
+import net.uhcwork.BungeeGuard.Utils.MyBuilder;
 
 import java.util.Collection;
 import java.util.UUID;
 
 import static net.md_5.bungee.api.chat.TextComponent.fromLegacyText;
-import static net.uhcwork.BungeeGuard.Managers.FriendManager.STATE.MUTUAL;
-import static net.uhcwork.BungeeGuard.Managers.FriendManager.STATE.PENDING;
+import static net.uhcwork.BungeeGuard.Managers.FriendManager.STATE.*;
 
 public class CommandFriend extends Command {
     FriendManager FM;
@@ -102,17 +104,74 @@ public class CommandFriend extends Command {
     }
 
     private void listFriends(ProxiedPlayer p) {
+        boolean first;
+        MyBuilder friendList;
+
         p.sendMessage(fromLegacyText(ChatColor.GREEN + "Votre liste d'amis"));
         Collection<UUID> friendsMutual = FM.getFriends(p.getUniqueId(), MUTUAL);
         Collection<UUID> friendsPending = FM.getFriends(p.getUniqueId(), PENDING);
-        if (!friendsMutual.isEmpty())
-            p.sendMessage(fromLegacyText(ChatColor.GREEN + "Amis: " + joiner.join(MB.getNamesFromUuid(friendsMutual))));
-        if (!friendsPending.isEmpty())
-            p.sendMessage(fromLegacyText(ChatColor.GREEN + "Demandes en attente: " + ChatColor.YELLOW + joiner.join(MB.getNamesFromUuid(friendsPending))));
+        Collection<UUID> friendsInvitations = FM.getFriends(p.getUniqueId(), PENDING_OTHER);
+        if (!friendsMutual.isEmpty()) {
+            friendList = new MyBuilder(ChatColor.GREEN + "Amis ");
+            first = true;
+            for (UUID _u : friendsMutual) {
+                String name = Main.getMB().getNameFromUuid(_u);
+                if (first)
+                    first = false;
+                else
+                    friendList.append(ChatColor.WHITE + ",");
+                boolean isOnline = Main.getMB().isPlayerOnline(_u);
+                friendList.append(ChatColor.YELLOW + (isOnline ? "" + ChatColor.ITALIC : "") + name);
+                if (isOnline) {
+                    friendList.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, fromLegacyText(ChatColor.GREEN + "Cliquez pour envoyer un message privé")));
+                    friendList.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/mp " + name + " "));
+                } else {
+                    friendList.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, fromLegacyText(ChatColor.RED + "Actuellement déconnecté")));
+                }
+            }
+            p.sendMessage(friendList.create());
+        }
+
+        if (!friendsPending.isEmpty()) {
+            friendList = new MyBuilder(ChatColor.GREEN + "Demandes en attente: ");
+            first = true;
+            for (UUID _u : friendsPending) {
+                String name = Main.getMB().getNameFromUuid(_u);
+                if (first)
+                    first = false;
+                else
+                    friendList.append(ChatColor.WHITE + ",");
+                boolean isOnline = Main.getMB().isPlayerOnline(_u);
+                friendList.append(ChatColor.YELLOW + (isOnline ? "" + ChatColor.ITALIC : "") + name);
+                if (isOnline) {
+                    friendList.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, fromLegacyText(ChatColor.GREEN + "Cliquez pour envoyer un message privé")));
+                    friendList.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/mp " + name + " "));
+                } else {
+                    friendList.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, fromLegacyText(ChatColor.RED + "Actuellement déconnecté")));
+                }
+            }
+            p.sendMessage(friendList.create());
+        }
+        if (!friendsInvitations.isEmpty()) {
+            friendList = new MyBuilder(ChatColor.GREEN + "Invitations en attente: ");
+            first = true;
+            for (UUID _u : friendsInvitations) {
+                String name = Main.getMB().getNameFromUuid(_u);
+                if (first)
+                    first = false;
+                else
+                    friendList.append(ChatColor.WHITE + ",");
+                friendList.append(ChatColor.YELLOW + name)
+                        .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, fromLegacyText(ChatColor.GREEN + "Cliquez pour ajouter en ami")))
+                        .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend + " + name));
+            }
+            p.sendMessage(friendList.create());
+        }
         if (friendsMutual.isEmpty() && friendsPending.isEmpty()) {
             p.sendMessage(fromLegacyText(ChatColor.RED + "Vous n'avez aucun ami ... Pour le moment."));
             p.sendMessage(fromLegacyText(ChatColor.RED + "Pour ajouter un ami: " + ChatColor.GREEN + "/friend add " + ChatColor.ITALIC + "pseudo"));
         }
+
     }
 
     private void showHelp(CommandSender sender) {

@@ -1,19 +1,30 @@
 package net.uhcwork.BungeeGuard.Managers;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
 import net.uhcwork.BungeeGuard.Models.BungeeFriend;
 import net.uhcwork.BungeeGuard.Persistence.SaveRunner;
 import net.uhcwork.BungeeGuard.Persistence.VoidRunner;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
 public class FriendManager {
+    private static final String TAG = "[" + ChatColor.RED + "❤" + ChatColor.WHITE + "]";
+    private static final String SEPARATOR = ChatColor.YELLOW + "-----------------------------------------------------";
+    private static final String FRIENDS_LIST = TAG + ChatColor.AQUA + " Amis en ligne " + ChatColor.WHITE +
+            "[" + ChatColor.GOLD + "%d" + ChatColor.WHITE + "/" + ChatColor.AQUA + "%d" + ChatColor.WHITE + "] " +
+            ChatColor.AQUA + ": " + ChatColor.GOLD + "%s";
+    private static final String PENDING_COUNT = TAG + ChatColor.AQUA + " Vous avez " + ChatColor.GOLD + "%d" + ChatColor.AQUA + " nouvelle%s invitation%s. Faites " + ChatColor.ITALIC + "/friends list" + ChatColor.AQUA + " pour les afficher";
+    private static final Joiner joiner = Joiner.on(ChatColor.WHITE + ", " + ChatColor.GOLD);
     final Multimap<UUID, UUID> friendships = HashMultimap.create();
     Main plugin;
 
@@ -81,13 +92,63 @@ public class FriendManager {
         plugin.executePersistenceRunnable(new SaveRunner(bf));
     }
 
-    public Collection<UUID> getFriends(final UUID user, final STATE state) {
-        return Collections2.filter(friendships.get(user), new Predicate<UUID>() {
+    public Collection<UUID> getFriends(final UUID user, STATE state) {
+        Multimap<UUID, UUID> collection = friendships;
+        if (state.equals(STATE.PENDING_OTHER)) {
+            collection = Multimaps.invertFrom(collection, ArrayListMultimap.<UUID, UUID>create());
+        }
+        final STATE finalstate = state;
+        return Collections2.filter(collection.get(user), new Predicate<UUID>() {
             @Override
             public boolean apply(final UUID uuid) {
-                return getFriendship(user, uuid).equals(state);
+                System.out.println(getFriendship(user, uuid));
+                return getFriendship(user, uuid).equals(finalstate);
             }
         });
+    }
+
+    public Collection<UUID> getFriends(final UUID user, STATE... state) {
+        Collection<UUID> friends = new HashSet<>();
+        for (STATE _state : state) {
+            friends.addAll(getFriends(user, _state));
+        }
+        return friends;
+    }
+
+    public void sendJoinMessage(ProxiedPlayer p) {
+        UUID user = p.getUniqueId();
+        Collection<UUID> friends = getFriends(user, STATE.MUTUAL);
+        // Collection<UUID> friends_pending = getFriends(user, STATE.PENDING);
+        Collection<UUID> friends_other_pending = getFriends(user, STATE.PENDING_OTHER);
+        Collection<String> online_friends = Collections2.transform(Collections2.filter(friends, new Predicate<UUID>() {
+            @Override
+            public boolean apply(UUID uuid) {
+                return Main.getMB().isPlayerOnline(uuid);
+            }
+        }), new Function<UUID, String>() {
+            @Override
+            public String apply(UUID uuid) {
+                return Main.getMB().getNameFromUuid(uuid);
+            }
+        });
+        System.out.println(friends_other_pending);
+        if (online_friends.size() + friends_other_pending.size() != 0) {
+            p.sendMessage(TextComponent.fromLegacyText(SEPARATOR));
+
+            if (online_friends.size() != 0)
+                p.sendMessage(TextComponent.fromLegacyText(String.format(FRIENDS_LIST, online_friends.size(), friends.size(), joiner.join(online_friends))));
+
+            if (friends_other_pending.size() != 0) {
+                String _s = s(friends_other_pending.size());
+                p.sendMessage(TextComponent.fromLegacyText(String.format(PENDING_COUNT, friends_other_pending.size(), _s, _s)));
+            }
+
+            p.sendMessage(TextComponent.fromLegacyText(SEPARATOR));
+        }
+    }
+
+    private String s(int size) {
+        return (size > 1) ? "s" : "";
     }
 
     public enum STATE {PENDING, PENDING_OTHER, MUTUAL, NONE}

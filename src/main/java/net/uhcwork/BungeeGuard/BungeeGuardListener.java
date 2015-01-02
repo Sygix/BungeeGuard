@@ -1,9 +1,7 @@
 package net.uhcwork.BungeeGuard;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.ServerPing;
-import net.md_5.bungee.api.Title;
+import com.imaginarycode.minecraft.redisbungee.events.PlayerJoinedNetworkEvent;
+import net.md_5.bungee.api.*;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -14,6 +12,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import net.md_5.bungee.protocol.packet.Handshake;
+import net.uhcwork.BungeeGuard.Managers.FriendManager;
 import net.uhcwork.BungeeGuard.Managers.PartyManager;
 import net.uhcwork.BungeeGuard.Managers.ServerManager;
 import net.uhcwork.BungeeGuard.Models.BungeeBan;
@@ -46,6 +45,7 @@ public class BungeeGuardListener implements Listener {
             ChatColor.RED + ChatColor.BOLD + "\nAchetez-le sur " +
             ChatColor.WHITE + ChatColor.BOLD + "https://store.uhcgames.com/";
 
+    private static final String FRIEND_LOGIN = ChatColor.AQUA + "[" + ChatColor.RED + "❤" + ChatColor.AQUA + "] " + ChatColor.YELLOW + "%s" + ChatColor.AQUA + " vient de se connecter.";
     private static final BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
             .color(ChatColor.GOLD)
             .bold(true).create();
@@ -154,6 +154,7 @@ public class BungeeGuardListener implements Listener {
         final ProxiedPlayer p = e.getPlayer();
         if (firstJoin.contains(p.getUniqueId())) {
             showWelcomeTitle(p);
+            plugin.getFriendManager().sendJoinMessage(p);
             firstJoin.remove(p.getUniqueId());
         }
         p.setTabHeader(header, footer);
@@ -180,6 +181,7 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onChat(ChatEvent e) {
         ProxiedPlayer p = (ProxiedPlayer) e.getSender();
+
         String lowerMessage = e.getMessage().toLowerCase();
         if (lowerMessage.startsWith("connected with") && lowerMessage.endsWith("minechat")) {
             e.setCancelled(true);
@@ -390,5 +392,18 @@ public class BungeeGuardListener implements Listener {
                 bungeelitycs.put(p.getUniqueId(), bl);
             }
         });
+    }
+
+    @EventHandler
+    public void onConnect(PlayerJoinedNetworkEvent e) {
+        UUID u = e.getUuid();
+        String username = Main.getMB().getNameFromUuid(u);
+        ProxyServer server = plugin.getProxy();
+        for (UUID friend : plugin.getFriendManager().getFriends(u,
+                FriendManager.STATE.PENDING_OTHER,
+                FriendManager.STATE.MUTUAL)) {
+            ProxiedPlayer p = server.getPlayer(friend);
+            p.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.format(FRIEND_LOGIN, username)));
+        }
     }
 }
