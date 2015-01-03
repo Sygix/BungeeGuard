@@ -299,7 +299,7 @@ public class CommandParty extends Command {
     }
 
     private void help(CommandSender sender) {
-        sender.sendMessage(TextComponent.fromLegacyText("&e-----------------------------------------------------\n" +
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&e-----------------------------------------------------\n" +
                 "&r                              &a&nAide : Commande /party\n" +
                 "&r\n" +
                 "&6/party create [nom] &e: Créer une party avec un nom défini\n" +
@@ -311,6 +311,6 @@ public class CommandParty extends Command {
                 "&6/party kick [pseudo] &e: Expulse le joueur indiqué\n" +
                 "&6/party owner [pseudo] &e: Rend le joueur indiqué chef de la party\n" +
                 "&r\n" +
-                "&e-----------------------------------------------------"));
+                "&e-----------------------------------------------------")));
     }
 }
