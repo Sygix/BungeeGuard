@@ -299,13 +299,18 @@ public class CommandParty extends Command {
     }
 
     private void help(CommandSender sender) {
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Party: Usage"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "/party create <nom>"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "/party public"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "/party chat"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "/party invite <joueur>"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "/party leave"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "/party owner [joueur]"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "/party kick <joueur>"));
+        sender.sendMessage(TextComponent.fromLegacyText("&e-----------------------------------------------------\n" +
+                "&r                              &a&nAide : Commande /party\n" +
+                "&r\n" +
+                "&6/party create [nom] &e: Créer une party avec un nom défini\n" +
+                "&6/party invite [pseudo] &e: Inviter le joueur dans votre party\n" +
+                "&6/party join [nom] &e: Rejoindre une party publique avec le nom indiqué\n" +
+                "&6/party leave &e: Quitter la party \n" +
+                "&6/party public &e: Rend la party publique\n" +
+                "&6/party chat &e: Vous permet de parler en chat party\n" +
+                "&6/party kick [pseudo] &e: Expulse le joueur indiqué\n" +
+                "&6/party owner [pseudo] &e: Rend le joueur indiqué chef de la party\n" +
+                "&r\n" +
+                "&e-----------------------------------------------------"));
     }
 }

@@ -105,7 +105,10 @@ public class PubSubListener implements Listener {
         if (subchannel.equalsIgnoreCase("KickPlayer")) {
             String playerName = in.readUTF();
             String reason = in.readUTF();
-            MB.kickPlayer(playerName, reason);
+            if (playerName.length() > 16)
+                MB.kickPlayer(UUID.fromString(playerName), reason);
+            else
+                MB.kickPlayer(playerName, reason);
         }
 
         if (subchannel.equals("addCoins")) {

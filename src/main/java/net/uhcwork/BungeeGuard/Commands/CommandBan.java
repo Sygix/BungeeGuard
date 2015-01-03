@@ -75,7 +75,7 @@ public class CommandBan extends PlayerCommand {
         plugin.executePersistenceRunnable(new SaveRunner(ban));
         String adminNotification = ban.getAdminNotification(now);
 
-        MB.kickPlayer(bannedName, ban.getBanMessage(now));
+        MB.kickPlayer(bannedUUID, ban.getBanMessage(now));
 
         MB.banPlayer(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID);
         MB.notifyStaff(adminNotification);

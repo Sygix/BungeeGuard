@@ -355,6 +355,10 @@ public class MultiBungee {
         sendChannelMessage("kick", player, reason);
     }
 
+    public void kickPlayer(UUID player, String reason) {
+        sendChannelMessage("kick", "" + player, reason);
+    }
+
     public void sendPrivateMessage(String senderName, UUID receiverUUID, String message) {
         sendChannelMessage("privateMessage", senderName, "" + receiverUUID, message);
     }

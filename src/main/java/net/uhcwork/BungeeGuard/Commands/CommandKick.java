@@ -12,6 +12,7 @@ import net.uhcwork.BungeeGuard.Managers.SanctionManager;
 import net.uhcwork.BungeeGuard.MultiBungee.MultiBungee;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class CommandKick extends Command {
     private final SanctionManager SM;
@@ -44,7 +45,11 @@ public class CommandKick extends Command {
             reason = ChatColor.translateAlternateColorCodes('&', reason);
 
             String kickedName = args[0];
-
+            UUID kickedUuid = MB.getUuidFromName(kickedName);
+            if (kickedUuid == null) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Joueur inexistant :o"));
+                return;
+            }
             String kickMessage = ChatColor.RED + "Vous avez été kické du serveur";
             String adminNotification = ChatColor.AQUA + adminName + ChatColor.RED + " a kick " + ChatColor.GREEN + kickedName + ChatColor.RED;
             if (!reason.isEmpty()) {
@@ -54,7 +59,7 @@ public class CommandKick extends Command {
             kickMessage += ".";
             adminNotification += ".";
 
-            MB.kickPlayer(kickedName, kickMessage);
+            MB.kickPlayer(kickedUuid, kickMessage);
 
             sender.sendMessage(new ComponentBuilder("Joueur expulsé.").color(ChatColor.RED).create());
 

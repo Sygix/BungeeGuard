@@ -113,8 +113,14 @@ public class BungeeGuardListener implements Listener {
         SM = Main.getServerManager();
     }
 
+
     @EventHandler
     public void onLogin(final LoginEvent event) {
+        UUID user = event.getConnection().getUniqueId();
+        if (Main.getMB().isPlayerOnline(user) && Main.getMB().getServerFor(user) == null) {
+            Main.getMB().kickPlayer(user, "");
+        }
+
         if (Main.getMB().getPlayerCount() > plugin.getConfig().getMaxPlayers()) {
             if (!Permissions.hasPerm(event.getConnection().getUniqueId(), "bungee.join_full")) {
                 event.setCancelled(true);

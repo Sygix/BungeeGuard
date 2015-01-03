@@ -1,10 +1,13 @@
 package net.uhcwork.BungeeGuard.Commands;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Ordering;
+import com.google.common.primitives.Ints;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.uhcwork.BungeeGuard.Main;
@@ -19,6 +22,16 @@ import static net.md_5.bungee.api.chat.TextComponent.fromLegacyText;
 import static net.uhcwork.BungeeGuard.Managers.FriendManager.STATE.*;
 
 public class CommandFriend extends Command {
+    private final static String SEPARATOR = ChatColor.YELLOW + "-----------------------------------------------------";
+    private final static Ordering<UUID> orderer = new Ordering<UUID>() {
+        @Override
+        public int compare(UUID uuidA, UUID uuidB) {
+            // Orders, online first
+            int scoreA = Main.getMB().isPlayerOnline(uuidA) ? -1 : 0;
+            int scoreB = Main.getMB().isPlayerOnline(uuidB) ? -1 : 0;
+            return Ints.compare(scoreA, scoreB);
+        }
+    };
     FriendManager FM;
     MultiBungee MB;
     Joiner joiner = Joiner.on(ChatColor.RESET + ", " + ChatColor.YELLOW).skipNulls();
@@ -68,6 +81,10 @@ public class CommandFriend extends Command {
             delFriend(p, playerUuid);
             return;
         }
+        if (action.equals("tp") || action.equals("teleport") || action.equals(">") || action.equals("go")) {
+            tpFriend(p, playerUuid);
+            return;
+        }
         showHelp(sender);
     }
 
@@ -107,25 +124,46 @@ public class CommandFriend extends Command {
         p.sendMessage(fromLegacyText(ChatColor.GREEN + "Le joueur a été supprimé de votre liste d'amis."));
     }
 
+    private void tpFriend(ProxiedPlayer p, UUID userB) {
+        UUID userA = p.getUniqueId();
+        if (!FM.getFriendship(userA, userB).equals(FriendManager.STATE.MUTUAL)) {
+            p.sendMessage(fromLegacyText(ChatColor.RED + "Vous devez être mutuellement amis pour effectuer cette action."));
+            return;
+        }
+        ServerInfo SIA = Main.getMB().getServerFor(userA);
+        ServerInfo SIB = Main.getMB().getServerFor(userB);
+        if (SIA.equals(SIB)) {
+            p.sendMessage(fromLegacyText(ChatColor.RED + "Vous êtes sur le même serveur."));
+            return;
+        }
+        if (!SIB.canAccess(p)) {
+            p.sendMessage(fromLegacyText(ChatColor.RED + "Ce joueur est sur un serveur auquel vous n'avez pas accès"));
+            return;
+        }
+        p.connect(SIB);
+        p.sendMessage(fromLegacyText(ChatColor.GREEN + "Hop! Direction le serveur " + Main.getServerManager().getPrettyName(SIB.getName())));
+    }
+
     private void listFriends(ProxiedPlayer p) {
         boolean first;
         MyBuilder friendList;
-
-        p.sendMessage(fromLegacyText(ChatColor.GREEN + "Votre liste d'amis"));
-        Collection<UUID> friendsMutual = FM.getFriends(p.getUniqueId(), MUTUAL);
-        Collection<UUID> friendsPending = FM.getFriends(p.getUniqueId(), PENDING);
+        p.sendMessage(fromLegacyText(SEPARATOR));
+        p.sendMessage(fromLegacyText("                                   " + ChatColor.AQUA + ChatColor.UNDERLINE + "Votre liste d'amis"));
+        p.sendMessage(fromLegacyText(" "));
+        Collection<UUID> friendsMutual = orderer.sortedCopy(FM.getFriends(p.getUniqueId(), MUTUAL));
+        Collection<UUID> friendsPending = orderer.sortedCopy(FM.getFriends(p.getUniqueId(), PENDING));
         Collection<UUID> friendsInvitations = FM.getFriends(p.getUniqueId(), PENDING_OTHER);
         if (!friendsMutual.isEmpty()) {
-            friendList = new MyBuilder(ChatColor.GREEN + "Amis ");
+            friendList = new MyBuilder(ChatColor.RED + "Amis : ");
             first = true;
             for (UUID _u : friendsMutual) {
                 String name = Main.getMB().getNameFromUuid(_u);
                 if (first)
                     first = false;
                 else
-                    friendList.append(ChatColor.WHITE + ", ");
+                    friendList.append(ChatColor.GRAY + ", ");
                 boolean isOnline = Main.getMB().isPlayerOnline(_u);
-                friendList.append(ChatColor.YELLOW + (isOnline ? "" + ChatColor.ITALIC : "") + name);
+                friendList.append((isOnline ? ChatColor.GREEN : ChatColor.GRAY) + name);
                 if (isOnline) {
                     friendList.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, fromLegacyText(ChatColor.GREEN + "Cliquez pour envoyer un message privé")));
                     friendList.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/mp " + name + " "));
@@ -134,17 +172,18 @@ public class CommandFriend extends Command {
                 }
             }
             p.sendMessage(friendList.create());
+            p.sendMessage(fromLegacyText(""));
         }
 
         if (!friendsPending.isEmpty()) {
-            friendList = new MyBuilder(ChatColor.GREEN + "Demandes en attente: ");
+            friendList = new MyBuilder(ChatColor.GOLD + "Invitations envoyées : ");
             first = true;
             for (UUID _u : friendsPending) {
                 String name = Main.getMB().getNameFromUuid(_u);
                 if (first)
                     first = false;
                 else
-                    friendList.append(ChatColor.WHITE + ", ");
+                    friendList.append(ChatColor.GRAY + ", ");
                 boolean isOnline = Main.getMB().isPlayerOnline(_u);
                 friendList.append(ChatColor.YELLOW + (isOnline ? "" + ChatColor.ITALIC : "") + name);
                 if (isOnline) {
@@ -157,14 +196,14 @@ public class CommandFriend extends Command {
             p.sendMessage(friendList.create());
         }
         if (!friendsInvitations.isEmpty()) {
-            friendList = new MyBuilder(ChatColor.GREEN + "Invitations en attente: ");
+            friendList = new MyBuilder(ChatColor.GOLD + "Invitations reçues : ");
             first = true;
             for (UUID _u : friendsInvitations) {
                 String name = Main.getMB().getNameFromUuid(_u);
                 if (first)
                     first = false;
                 else
-                    friendList.append(ChatColor.WHITE + ", ");
+                    friendList.append(ChatColor.GRAY + ", ");
                 friendList.append(ChatColor.YELLOW + name)
                         .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, fromLegacyText(ChatColor.GREEN + "Cliquez pour ajouter en ami")))
                         .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend + " + name));
@@ -175,15 +214,18 @@ public class CommandFriend extends Command {
             p.sendMessage(fromLegacyText(ChatColor.RED + "Vous n'avez aucun ami ... Pour le moment."));
             p.sendMessage(fromLegacyText(ChatColor.RED + "Pour ajouter un ami: " + ChatColor.GREEN + "/friend add " + ChatColor.ITALIC + "pseudo"));
         }
-
+        p.sendMessage(fromLegacyText(SEPARATOR));
     }
 
     private void showHelp(CommandSender sender) {
-        sender.sendMessage(fromLegacyText(ChatColor.RED + "-- Liste d'amis --"));
-        sender.sendMessage(fromLegacyText(ChatColor.RED + "Commandes: "));
-        sender.sendMessage(fromLegacyText(ChatColor.RED + "/friend list"));
-        sender.sendMessage(fromLegacyText(ChatColor.RED + "/friend add " + ChatColor.ITALIC + "pseudo"));
-        sender.sendMessage(fromLegacyText(ChatColor.RED + "/friend del " + ChatColor.ITALIC + "pseudo"));
-
+        sender.sendMessage(fromLegacyText(SEPARATOR));
+        sender.sendMessage(fromLegacyText("                              " + ChatColor.GREEN + ChatColor.UNDERLINE + "Aide : Commandes /friend"));
+        sender.sendMessage(fromLegacyText(""));
+        sender.sendMessage(fromLegacyText(ChatColor.GOLD + "/friend list" + ChatColor.YELLOW + ": Afficher la liste de vos amis"));
+        sender.sendMessage(fromLegacyText(ChatColor.GOLD + "/friend add [pseudo]" + ChatColor.YELLOW + ": Ajouter un ami"));
+        sender.sendMessage(fromLegacyText(ChatColor.GOLD + "/friend del [pseudo]" + ChatColor.YELLOW + ": Retirer un ami"));
+        sender.sendMessage(fromLegacyText(ChatColor.GOLD + "/friend tp [pseudo]" + ChatColor.YELLOW + ": Permet de se téléporter à un ami"));
+        sender.sendMessage(fromLegacyText(""));
+        sender.sendMessage(fromLegacyText(SEPARATOR));
     }
 }
