@@ -300,7 +300,7 @@ public class CommandParty extends Command {
 
     private void help(CommandSender sender) {
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&e-----------------------------------------------------\n" +
-                "&r                              &a&nAide : Commande /party\n" +
+                "&a&nAide : Commande /party\n" +
                 "&r\n" +
                 "&6/party create [nom] &e: Créer une party avec un nom défini\n" +
                 "&6/party invite [pseudo] &e: Inviter le joueur dans votre party\n" +

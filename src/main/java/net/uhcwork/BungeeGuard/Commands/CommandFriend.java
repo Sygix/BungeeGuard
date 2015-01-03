@@ -218,14 +218,14 @@ public class CommandFriend extends Command {
     }
 
     private void showHelp(CommandSender sender) {
-        sender.sendMessage(fromLegacyText(SEPARATOR));
-        sender.sendMessage(fromLegacyText("                              " + ChatColor.GREEN + ChatColor.UNDERLINE + "Aide : Commandes /friend"));
-        sender.sendMessage(fromLegacyText(""));
-        sender.sendMessage(fromLegacyText(ChatColor.GOLD + "/friend list" + ChatColor.YELLOW + ": Afficher la liste de vos amis"));
-        sender.sendMessage(fromLegacyText(ChatColor.GOLD + "/friend add [pseudo]" + ChatColor.YELLOW + ": Ajouter un ami"));
-        sender.sendMessage(fromLegacyText(ChatColor.GOLD + "/friend del [pseudo]" + ChatColor.YELLOW + ": Retirer un ami"));
-        sender.sendMessage(fromLegacyText(ChatColor.GOLD + "/friend tp [pseudo]" + ChatColor.YELLOW + ": Permet de se téléporter à un ami"));
-        sender.sendMessage(fromLegacyText(""));
-        sender.sendMessage(fromLegacyText(SEPARATOR));
+        sender.sendMessage(fromLegacyText(SEPARATOR + "\n" +
+                ChatColor.GREEN + ChatColor.UNDERLINE + "Aide : Commandes /friend\n" +
+                "\n" +
+                ChatColor.GOLD + "/friend list" + ChatColor.YELLOW + ": Afficher la liste de vos amis\n" +
+                ChatColor.GOLD + "/friend add [pseudo]" + ChatColor.YELLOW + ": Ajouter un ami\n" +
+                ChatColor.GOLD + "/friend del [pseudo]" + ChatColor.YELLOW + ": Retirer un ami\n" +
+                ChatColor.GOLD + "/friend tp [pseudo]" + ChatColor.YELLOW + ": Permet de se téléporter à un ami\n" +
+                "\n" +
+                SEPARATOR));
     }
 }
