@@ -90,7 +90,7 @@ public class CommandFriend extends Command {
 
     private void addFriend(ProxiedPlayer p, UUID userB) {
         UUID userA = p.getUniqueId();
-        if (!MB.isPlayerOnline(userB)) {
+        if (!MB.isPlayerOnline(userB) && !FM.askedFriend(userB, userA)) {
             p.sendMessage(fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne."));
             return;
         }
