@@ -148,7 +148,7 @@ public class CommandFriend extends Command {
         boolean first;
         MyBuilder friendList;
         p.sendMessage(fromLegacyText(SEPARATOR));
-        p.sendMessage(fromLegacyText("                                   " + ChatColor.AQUA + ChatColor.UNDERLINE + "Votre liste d'amis"));
+        p.sendMessage(fromLegacyText("" + ChatColor.AQUA + ChatColor.UNDERLINE + "Votre liste d'amis"));
         p.sendMessage(fromLegacyText(" "));
         Collection<UUID> friendsMutual = orderer.sortedCopy(FM.getFriends(p.getUniqueId(), MUTUAL));
         Collection<UUID> friendsPending = orderer.sortedCopy(FM.getFriends(p.getUniqueId(), PENDING));
