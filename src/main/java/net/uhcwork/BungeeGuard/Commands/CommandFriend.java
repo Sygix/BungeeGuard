@@ -37,7 +37,7 @@ public class CommandFriend extends Command {
     Joiner joiner = Joiner.on(ChatColor.RESET + ", " + ChatColor.YELLOW).skipNulls();
 
     public CommandFriend(final Main plugin) {
-        super("friend", "bungee.command.friend", "friends");
+        super("friend", "bungee.command.friend", "friends", "f");
         FM = plugin.getFriendManager();
         MB = Main.getMB();
     }

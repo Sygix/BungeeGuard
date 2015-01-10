@@ -1,6 +1,7 @@
 package net.uhcwork.BungeeGuard.Managers;
 
 import com.google.common.collect.Iterables;
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
@@ -24,6 +25,7 @@ public class PartyManager {
 
     public void setParties(Map<String, Party> parties) {
         this.parties = parties;
+        clean();
     }
 
     public void clean() {
@@ -94,26 +96,26 @@ public class PartyManager {
         parties.remove(name);
     }
 
-    /**
-     * Part of net.uhcwork.BungeeGuard.Party (bungeeguard)
-     * Date: 09/09/2014
-     * Time: 20:10
-     * May be open-source & be sold (by mguerreiro, of course !)
-     */
     public static class Party implements Serializable {
         private static final long serialVersionUID = 7009960713031110863L;
+        @SerializedName("chatMembers")
         final List<UUID> chatMembers = new ArrayList<>();
         @Getter
+        @SerializedName("members")
         final List<UUID> members = new ArrayList<>();
+        @SerializedName("invitations")
         final List<UUID> invitations = new ArrayList<>();
         @Getter
         @Setter
+        @SerializedName("name")
         String name = "";
         @Getter
         @Setter
+        @SerializedName("owner")
         UUID owner = UUID.randomUUID();
         @Getter
         @Setter
+        @SerializedName("publique")
         boolean publique = false;
 
         public Party(String nom, UUID owner) {

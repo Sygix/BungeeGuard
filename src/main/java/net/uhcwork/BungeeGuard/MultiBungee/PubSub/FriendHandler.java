@@ -2,6 +2,7 @@ package net.uhcwork.BungeeGuard.MultiBungee.PubSub;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.uhcwork.BungeeGuard.Main;
@@ -26,9 +27,11 @@ public class FriendHandler {
         p.sendMessage(TextComponent.fromLegacyText("[" + ChatColor.RED + "♥" + ChatColor.WHITE + "] " + ChatColor.GREEN + userNameA + ChatColor.YELLOW + " vient de vous ajouter à sa liste d'amis."));
         if (plugin.getFriendManager().getFriendship(userA, userB).equals(FriendManager.STATE.MUTUAL))
             return;
-        MyBuilder mb = new MyBuilder(ChatColor.YELLOW + "Ajoutez le à votre tour ! ");
-        mb.append(ChatColor.AQUA + "/friend add " + ChatColor.ITALIC + userNameA);
-        mb.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend + " + userNameA));
+        MyBuilder mb = new MyBuilder(ChatColor.YELLOW + "Ajoutez le à votre tour ! ")
+                .append(ChatColor.AQUA + "/friend add " + ChatColor.ITALIC + userNameA)
+                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friends add " + userNameA))
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GREEN + "Clique ici pour ajouter " + userNameA + " en ami !")))
+                .append("");
         p.sendMessage(mb.create());
     }
 
