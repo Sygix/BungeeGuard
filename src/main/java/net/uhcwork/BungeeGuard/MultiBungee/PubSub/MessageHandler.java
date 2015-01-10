@@ -40,7 +40,13 @@ public class MessageHandler {
         }
 
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(receiver);
-        BaseComponent[] mp = new ComponentBuilder("[").color(ChatColor.GRAY).append(sender).color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" ").create();
+        BaseComponent[] mp = new ComponentBuilder("[").color(ChatColor.GRAY)
+                .append(sender).color(ChatColor.GREEN)
+                .append(" ➠ ").color(ChatColor.GRAY)
+                .append("Moi").color(ChatColor.GREEN)
+                .append("]").color(ChatColor.GRAY)
+                .append(" ")
+                .create();
 
         if (p != null) {
             p.sendMessage(ObjectArrays.concat(mp, contenu, BaseComponent.class));
@@ -58,7 +64,8 @@ public class MessageHandler {
                         .append("] ").color(ChatColor.GRAY)
                         .append(sender).color(ChatColor.AQUA)
                         .append(" > /msg ").color(ChatColor.WHITE)
-                        .append(Main.getMB().getNameFromUuid(receiver) + " ").create();
+                        .append(Main.getMB().getNameFromUuid(receiver) + " ")
+                        .create();
                 admin.sendMessage(ObjectArrays.concat(mp, contenu, BaseComponent.class));
             } catch (Exception ignored) {
             }

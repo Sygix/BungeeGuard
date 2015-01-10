@@ -81,7 +81,13 @@ public class CommandMsg extends Command {
 
             Main.getMB().sendPrivateMessage(p.getName(), receiverUUID, text);
 
-            BaseComponent[] contenu = new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(args[0]).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" ").create();
+            BaseComponent[] contenu = new ComponentBuilder("[").color(ChatColor.GRAY)
+                    .append("Moi").color(ChatColor.GREEN)
+                    .append(" ➠ ").color(ChatColor.GRAY)
+                    .append(args[0]).color(ChatColor.GREEN)
+                    .append("]").color(ChatColor.GRAY)
+                    .append(" ")
+                    .create();
 
             if (p.hasPermission("bungee.colormsg"))
                 contenu = ObjectArrays.concat(contenu, PrettyLinkComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', text)), BaseComponent.class);
