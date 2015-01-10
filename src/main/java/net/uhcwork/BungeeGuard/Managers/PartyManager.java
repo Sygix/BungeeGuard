@@ -167,6 +167,8 @@ public class PartyManager {
         }
 
         public void setPartyChat(UUID uuid, boolean isPartyChat) {
+            if (uuid == null)
+                return;
             if (isPartyChat)
                 chatMembers.add(uuid);
             else
@@ -174,10 +176,14 @@ public class PartyManager {
         }
 
         public void addInvitation(UUID u) {
+            if (u == null)
+                return;
             invitations.add(u);
         }
 
         public void removeMember(UUID u) {
+            if (u == null)
+                return;
             members.remove(u);
             chatMembers.remove(u);
             if (owner.equals(u)) {

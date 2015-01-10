@@ -20,6 +20,8 @@ public class FriendHandler {
         plugin.getFriendManager().addFriend(userA, userB, false);
 
         ProxiedPlayer p = plugin.getProxy().getPlayer(userB);
+        if (p == null)
+            return;
         String userNameA = Main.getMB().getNameFromUuid(userA);
         p.sendMessage(TextComponent.fromLegacyText("[" + ChatColor.RED + "♥" + ChatColor.WHITE + "] " + ChatColor.GREEN + userNameA + ChatColor.YELLOW + " vient de vous ajouter à sa liste d'amis."));
         if (plugin.getFriendManager().getFriendship(userA, userB).equals(FriendManager.STATE.MUTUAL))
@@ -34,7 +36,6 @@ public class FriendHandler {
     public static void onFriendDel(Main plugin, PubSubMessageEvent e) {
         UUID userA = UUID.fromString(e.getArg(0));
         UUID userB = UUID.fromString(e.getArg(1));
-        System.out.println("-" + userA + ", " + userB);
         plugin.getFriendManager().removeFriend(userA, userB, false);
 
     }

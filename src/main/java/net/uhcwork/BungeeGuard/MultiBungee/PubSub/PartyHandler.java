@@ -96,7 +96,7 @@ public class PartyHandler {
         String partyName = e.getArg(0);
         UUID u = UUID.fromString(e.getArg(1));
         PartyManager.Party party = plugin.getPartyManager().getParty(partyName);
-        if (party == null)
+        if (party == null || u == null)
             return;
         party.addInvitation(u);
 

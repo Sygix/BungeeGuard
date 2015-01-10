@@ -48,6 +48,12 @@ public class CommandReply extends Command {
             p.sendMessage(new ComponentBuilder("/r je te répond après").color(ChatColor.RED).create());
             return;
         }
+
+        if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), null) && !p.hasPermission("bungee.ignore.ignore")) {
+            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous avez desactivé les messages privés !"));
+            return;
+        }
+
         UUID destinataire = plugin.getReply(p.getUniqueId());
         if (destinataire == null) {
             p.sendMessage(new ComponentBuilder("Vous n'avez personne à qui répondre !").color(ChatColor.RED).create());
@@ -55,7 +61,8 @@ public class CommandReply extends Command {
         }
         String destinataireName = Main.getMB().getNameFromUuid(destinataire);
         String message = "";
-        for (String arg : args) message += arg + " ";
+        for (String arg : args)
+            message += arg + " ";
 
         if (!Main.getMB().isPlayerOnline(destinataire)) {
             p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());

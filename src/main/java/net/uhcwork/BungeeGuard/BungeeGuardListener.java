@@ -424,6 +424,8 @@ public class BungeeGuardListener implements Listener {
                 FriendManager.STATE.PENDING_OTHER,
                 FriendManager.STATE.MUTUAL)) {
             ProxiedPlayer p = server.getPlayer(friend);
+            if (p == null)
+                continue;
             p.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.format(FRIEND_LOGIN, username)));
         }
     }

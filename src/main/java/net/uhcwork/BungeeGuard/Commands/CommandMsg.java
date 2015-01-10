@@ -48,6 +48,10 @@ public class CommandMsg extends Command {
             p.sendMessage(new ComponentBuilder("/msg NomDeMonAmi Hey ça te dit de jouer avec moi ?").color(ChatColor.RED).create());
             return;
         }
+        if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), null) && !p.hasPermission("bungee.ignore.ignore")) {
+            p.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous avez desactivé les messages privés !"));
+            return;
+        }
 
         if (args.length >= 1) {
             if (!Main.getMB().isPlayerOnline(args[0])) {
