@@ -4,6 +4,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.*;
+import lombok.AccessLevel;
+import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -18,12 +20,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class FriendManager {
-    private static final String TAG = "[" + ChatColor.RED + "❤" + ChatColor.WHITE + "]";
+    @Getter(AccessLevel.PUBLIC)
+    private static final String TAG = "[" + ChatColor.RED + "❤" + ChatColor.WHITE + "] ";
     private static final String SEPARATOR = ChatColor.YELLOW + "-----------------------------------------------------";
-    private static final String FRIENDS_LIST = TAG + ChatColor.AQUA + " Amis en ligne " + ChatColor.WHITE +
+    private static final String FRIENDS_LIST = TAG + ChatColor.AQUA + "Amis en ligne " + ChatColor.WHITE +
             "[" + ChatColor.GOLD + "%d" + ChatColor.WHITE + "/" + ChatColor.AQUA + "%d" + ChatColor.WHITE + "] " +
             ChatColor.AQUA + ": " + ChatColor.GOLD + "%s";
-    private static final String PENDING_COUNT = TAG + ChatColor.AQUA + " Vous avez " + ChatColor.GOLD + "%d" + ChatColor.AQUA + " nouvelle%s invitation%s. Faites " + ChatColor.ITALIC + "/friends list" + ChatColor.AQUA + " pour les afficher";
+    private static final String PENDING_COUNT = TAG + ChatColor.AQUA + "Vous avez " + ChatColor.GOLD + "%d" + ChatColor.AQUA + " nouvelle%s invitation%s. Faites " + ChatColor.ITALIC + "/friends list" + ChatColor.AQUA + " pour les afficher";
     private static final Joiner joiner = Joiner.on(ChatColor.WHITE + ", " + ChatColor.GOLD);
     final Multimap<UUID, UUID> friendships = HashMultimap.create();
     Main plugin;

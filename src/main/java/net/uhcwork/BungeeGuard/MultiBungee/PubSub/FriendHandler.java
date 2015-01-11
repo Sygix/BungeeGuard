@@ -24,7 +24,7 @@ public class FriendHandler {
         if (p == null)
             return;
         String userNameA = Main.getMB().getNameFromUuid(userA);
-        p.sendMessage(TextComponent.fromLegacyText("[" + ChatColor.RED + "♥" + ChatColor.WHITE + "] " + ChatColor.GREEN + userNameA + ChatColor.YELLOW + " vient de vous ajouter à sa liste d'amis."));
+        p.sendMessage(TextComponent.fromLegacyText(FriendManager.getTAG() + ChatColor.GREEN + userNameA + ChatColor.YELLOW + " vient de vous ajouter à sa liste d'amis."));
         if (plugin.getFriendManager().getFriendship(userA, userB).equals(FriendManager.STATE.MUTUAL))
             return;
         MyBuilder mb = new MyBuilder(ChatColor.YELLOW + "Ajoutez le à votre tour ! ")
