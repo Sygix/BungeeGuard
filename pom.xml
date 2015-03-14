@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>UHCGames</groupId>
+    <groupId>PunKeel</groupId>
     <artifactId>BungeeGuard</artifactId>
     <version>1.2-SNAPSHOT</version>
     <name>BungeeGuard</name>
@@ -16,8 +16,8 @@
     </properties>
 
     <scm>
-        <connection>scm:git:https://git.uhcwork.net:uhcgames/bungeeguard.git</connection>
-        <url>https://git.uhcwork.net:uhcgames/bungeeguard.git</url>
+        <connection>scm:git:https://github.com/PunKeel/BungeeGuard.git</connection>
+        <url>https://github.com/PunKeel/BungeeGuard.git</url>
     </scm>
 
     <repositories>

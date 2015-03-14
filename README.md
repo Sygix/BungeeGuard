@@ -1,4 +1,4 @@
-Projet originalement fait pour UHCGames, mais mis dans le domaine de l'open space. Car l'open space, c'est plus swag que l'open source.
+Projet originalement fait pour un serveur français, mais mis dans le domaine de l'open space. Car l'open space, c'est plus swag que l'open source.
 
 Petit frère: https://github.com/Stornitz/UHGestion
 

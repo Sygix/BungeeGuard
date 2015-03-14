@@ -1,5 +1,5 @@
 name: BungeeGuard
-main: net.uhcwork.BungeeGuard.Main
+main: fr.PunKeel.BungeeGuard.Main
 author: PunKeel
 version: ${timestamp}-r_${buildNumber}
 depend: [RedisBungee]
