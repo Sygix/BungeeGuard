@@ -6,9 +6,9 @@ import org.javalite.activejdbc.annotations.Table;
 
 import java.util.UUID;
 
-@Table("Wallet_Accounts")
+@Table("uhgestion_wallet")
 @IdName("uuid")
-public class WalletAccountModel extends Model {
+public class WalletModel extends Model {
     public String getUUID() {
         return getString("uuid");
     }
@@ -19,14 +19,6 @@ public class WalletAccountModel extends Model {
 
     private void setUUID(String u) {
         setString("uuid", u);
-    }
-
-    public String getPlayerName() {
-        return getString("player");
-    }
-
-    public void setPlayerName(String playerName) {
-        setString("player", playerName);
     }
 
     public Double getMoney() {

@@ -8,7 +8,7 @@ import org.javalite.activejdbc.annotations.Table;
 
 import java.util.UUID;
 
-@Table("BungeeGuard_Ban")
+@Table("bungee_ban")
 public class BungeeBan extends Model {
     public void setAdminUUID(String adminUUID) {
         setString("uuidAdmin", adminUUID);
@@ -86,7 +86,7 @@ public class BungeeBan extends Model {
 
     public String getBanMessage(Long now) {
         String reason = (getReason().isEmpty()) ? "." : " avec la raison:\n" + getReason();
-        return ChatColor.RED + "Vous avez été banni " + ChatColor.RED + getDuration(now) + reason;
+        return ChatColor.RED + "Vous avez été banni" + ChatColor.RED + getDuration(now) + reason;
     }
 
     public String getDuration(Long now) {

@@ -1,6 +1,5 @@
 package fr.PunKeel.BungeeGuard.Commands;
 
-import com.google.common.base.CharMatcher;
 import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.Managers.PartyManager;
 import fr.PunKeel.BungeeGuard.MultiBungee.MultiBungee;
@@ -30,8 +29,12 @@ public class CommandParty extends Command {
             .append("/party help").color(ChatColor.GREEN)
             .append(" pour plus d'informations ...").color(ChatColor.GRAY)
             .create();
-    private final CharMatcher partyNameMatcher = CharMatcher.anyOf(".-_").or(CharMatcher.JAVA_LETTER_OR_DIGIT);
-
+    private final BaseComponent[] MSG_PARTYCHAT = new ComponentBuilder("Pour parler dans le chat").color(ChatColor.GRAY)
+            .append("Party").color(ChatColor.AQUA)
+            .append(", entrez une étoile (").color(ChatColor.GRAY)
+            .append("*").color(ChatColor.WHITE)
+            .append(") devant votre message.").color(ChatColor.GRAY)
+            .create();
 
     public CommandParty(Main plugin) {
         super("party", "bungee.party.use", "p", "g", "group", "groupe");
@@ -229,6 +232,7 @@ public class CommandParty extends Command {
 
         MB.addPlayerToParty(p, sender);
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Tu es désormais dans la Party " + ChatColor.BOLD + p.getName()));
+        sender.sendMessage(MSG_PARTYCHAT);
     }
 
     private void invite(ProxiedPlayer sender, String[] args) {
@@ -238,8 +242,11 @@ public class CommandParty extends Command {
         }
         PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous ne pouvez lancer cette commande sans être dans une Party"));
-            return;
+            PM.createParty(sender.getName(), sender.getUniqueId());
+            sender.sendMessage(MSG_CREATION);
+            sender.sendMessage(MSG_CREATION2);
+            sender.sendMessage(MSG_CREATION3);
+            sender.sendMessage(MSG_PARTYCHAT);
         }
         String joueur = args[1];
         UUID u = Main.getMB().getUuidFromName(joueur);
@@ -254,6 +261,20 @@ public class CommandParty extends Command {
         }
         Main.getMB().inviteParty(p, u);
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Joueur invité!"));
+    }
+
+    private void info(ProxiedPlayer sender) {
+        if (!PM.inParty(sender.getUniqueId())) {
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
+            return;
+        }
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Liste des membres de votre partie"));
+        TextComponent TC;
+        for (UUID uuid : PM.getPartyByPlayer(sender).getMembers()) {
+            TC = new TextComponent("- ");
+            TC.addExtra(MB.getNameFromUuid(uuid));
+            sender.sendMessage(TC);
+        }
     }
 
     private void list(ProxiedPlayer sender) {
@@ -273,29 +294,7 @@ public class CommandParty extends Command {
     }
 
     private void create(ProxiedPlayer sender, String[] args) {
-        if (PM.inParty(sender.getUniqueId())) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Il semble que vous soyez déjà membre d'une party"));
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Vous pouvez toujours la quitter en faisant " + ChatColor.GREEN + "/party leave"));
-            return;
-        }
-        if (args.length != 2) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /party create <nom>"));
-            return;
-        }
-        String nom = args[1];
-        if (!partyNameMatcher.matchesAllOf(nom)) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /party create <nom>"));
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Le nom de votre Party ne peut contenir que des chiffres ou des lettres"));
-            return;
-        }
-        if (PM.getParty(nom) != null) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Ce nom de Party est déjà pris, merci d'en choisir un autre"));
-            return;
-        }
-        sender.sendMessage(MSG_CREATION);
-        sender.sendMessage(MSG_CREATION2);
-        sender.sendMessage(MSG_CREATION3);
-        MB.createParty(nom, sender);
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Cette commande n'existe plus."));
     }
 
     private void help(CommandSender sender) {

@@ -497,7 +497,7 @@ public class MultiBungee {
             public void run() {
                 sendChannelMessage("invalidatePermissionUser", "" + u);
             }
-        }, 10, TimeUnit.MILLISECONDS);
+        }, 300, TimeUnit.MILLISECONDS);
     }
 
     public void mutePlayer(UUID muteUUID, String muteName, long muteUntilTime, String reason, String adminName, UUID adminUUID) {

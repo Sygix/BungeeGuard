@@ -8,7 +8,7 @@ import org.javalite.activejdbc.annotations.Table;
 
 import java.util.UUID;
 
-@Table("BungeeGuard_Mute")
+@Table("bungee_mute")
 public class BungeeMute extends Model {
 
     public void setAdminUUID(String adminUUID) {
@@ -79,7 +79,7 @@ public class BungeeMute extends Model {
 
     public String getMuteMessage(Long now) {
         String reason = (getReason().isEmpty()) ? "." : " avec la raison: " + ChatColor.AQUA + getReason() + ChatColor.RED + ".";
-        return ChatColor.RED + "Vous avez été mute " + ChatColor.RED + getDuration(now) + reason;
+        return ChatColor.RED + "Vous avez été mute" + ChatColor.RED + getDuration(now) + reason;
     }
 
     public String getDuration(long now) {

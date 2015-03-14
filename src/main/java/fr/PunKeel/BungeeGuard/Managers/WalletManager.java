@@ -4,7 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import fr.PunKeel.BungeeGuard.Main;
-import fr.PunKeel.BungeeGuard.Models.WalletAccountModel;
+import fr.PunKeel.BungeeGuard.Models.WalletModel;
 import fr.PunKeel.BungeeGuard.MultiBungee.MultiBungee;
 import fr.PunKeel.BungeeGuard.Persistence.SaveRunner;
 
@@ -19,16 +19,16 @@ public class WalletManager {
 
     private final Main plugin;
     private final MultiBungee MB;
-    private final LoadingCache<UUID, WalletAccountModel> walletsCache = CacheBuilder.newBuilder()
+    private final LoadingCache<UUID, WalletModel> walletsCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .expireAfterWrite(30, TimeUnit.SECONDS)
-            .build(new CacheLoader<UUID, WalletAccountModel>() {
+            .build(new CacheLoader<UUID, WalletModel>() {
                 @Override
-                public WalletAccountModel load(final UUID u) throws Exception {
-                    Future<WalletAccountModel> x = plugin.executePersistenceRunnable(new Callable<WalletAccountModel>() {
+                public WalletModel load(final UUID u) throws Exception {
+                    Future<WalletModel> x = plugin.executePersistenceRunnable(new Callable<WalletModel>() {
                         @Override
-                        public WalletAccountModel call() {
-                            WalletAccountModel WAM = WalletAccountModel.findFirst("uuid = ?", "" + u);
+                        public WalletModel call() {
+                            WalletModel WAM = WalletModel.findFirst("uuid = ?", "" + u);
                             if (WAM == null)
                                 return createAccount(u);
                             return WAM;
@@ -43,7 +43,7 @@ public class WalletManager {
         this.plugin = main;
     }
 
-    public WalletAccountModel getAccount(UUID u) {
+    public WalletModel getAccount(UUID u) {
         if (u == null)
             return null;
         try {
@@ -54,14 +54,11 @@ public class WalletManager {
         return null;
     }
 
-    WalletAccountModel createAccount(UUID u) {
+    WalletModel createAccount(UUID u) {
         String userName = MB.getNameFromUuid(u);
-        if (userName == null)
-            userName = "unknown";
-        WalletAccountModel WAM = new WalletAccountModel();
+        WalletModel WAM = new WalletModel();
         WAM.setUUID(u);
         WAM.setMoney(0);
-        WAM.setPlayerName(userName);
         plugin.executePersistenceRunnable(new SaveRunner(WAM));
         walletsCache.put(u, WAM);
         return WAM;
@@ -71,14 +68,16 @@ public class WalletManager {
         return getAccount(uniqueId).getMoney();
     }
 
+    @Deprecated
     public void setBalance(UUID uuid, double balance) {
-        WalletAccountModel WAM = getAccount(uuid);
+        WalletModel WAM = getAccount(uuid);
         WAM.setMoney(balance);
         plugin.executePersistenceRunnable(new SaveRunner(WAM));
     }
 
+    @Deprecated
     public void addToBalance(UUID uuid, double amount) {
-        WalletAccountModel WAM = getAccount(uuid);
+        WalletModel WAM = getAccount(uuid);
         WAM.setMoney(WAM.getMoney() + amount);
         plugin.executePersistenceRunnable(new SaveRunner(WAM));
     }

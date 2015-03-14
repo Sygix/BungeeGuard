@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
+import com.squareup.okhttp.OkHttpClient;
 import fr.PunKeel.BungeeGuard.Announces.AnnouncementManager;
 import fr.PunKeel.BungeeGuard.Announces.AnnouncementTask;
 import fr.PunKeel.BungeeGuard.BanHammer.AntiSpamListener;
@@ -44,6 +45,8 @@ public class Main extends Plugin {
     private static final List<UUID> spy = new ArrayList<>();
     @Getter
     private static final Random random = new Random();
+    @Getter
+    private static final OkHttpClient httpClient = new OkHttpClient();
     public static Main plugin;
     @Getter
     public static Gson gson = new Gson();
@@ -198,7 +201,7 @@ public class Main extends Plugin {
                 CommandMsg.class, CommandReply.class, CommandHelp.class, CommandBCast.class, CommandGtp.class,
                 CommandFriendVIP.class, CommandToken.class, CommandId.class, CommandPwd.class, CommandFriend.class,
                 CommandIgnore.class, CommandBPl.class, CommandBLoad.class, CommandParty.class, CommandServer.class,
-                CommandWallet.class, CommandFind.class, CommandStaff.class, CommandSeen.class, CommandMaintenance.class,
+                CommandFind.class, CommandStaff.class, CommandSeen.class, CommandMaintenance.class,
                 CommandUser.class, CommandGroups.class, CommandGtpHere.class, CommandRegister.class, CommandPings.class);
 
         for (Class<? extends Command> commande : commandes) {
@@ -234,17 +237,37 @@ public class Main extends Plugin {
         getProxy().getScheduler().schedule(this, new Runnable() {
             @Override
             public void run() {
-                if (getProxy().getOnlineCount() <= 4) {
-                    getProxy().broadcast(TextComponent.fromLegacyText(ChatColor.DARK_RED + "Redémarrage du serveur dans 3 secondes ..."));
+                Date date = new Date();
+                Calendar calendar = GregorianCalendar.getInstance();
+                calendar.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
+                calendar.setTime(date);
+                if (calendar.get(Calendar.HOUR_OF_DAY) == 5) {
+                    getProxy().broadcast(TextComponent.fromLegacyText(ChatColor.WHITE + "[UHCGames] " + ChatColor.DARK_RED + "Redémarrage du serveur dans 5 minutes ..."));
+
+                    getProxy().getScheduler().schedule(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                            getProxy().broadcast(TextComponent.fromLegacyText(ChatColor.WHITE + "[UHCGames] " + ChatColor.DARK_RED + "Redémarrage du serveur dans 1 minute ..."));
+                        }
+                    }, 4 * 60, TimeUnit.SECONDS);
+
+                    getProxy().getScheduler().schedule(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                            getProxy().broadcast(TextComponent.fromLegacyText(ChatColor.WHITE + "[UHCGames] " + ChatColor.DARK_RED + "Redémarrage du serveur dans 10 secondes ..."));
+                        }
+                    }, 5 * 60 - 10, TimeUnit.SECONDS);
+
                     getProxy().getScheduler().schedule(plugin, new Runnable() {
                         @Override
                         public void run() {
                             getProxy().stop();
                         }
-                    }, 3, TimeUnit.SECONDS);
+                    }, 5 * 60, TimeUnit.SECONDS);
                 }
             }
-        }, 6 * 60 * 60, 30, TimeUnit.SECONDS);
+        }, 1, TimeUnit.HOURS);
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 package fr.PunKeel.BungeeGuard;
 
 import com.imaginarycode.minecraft.redisbungee.events.PlayerJoinedNetworkEvent;
+import com.imaginarycode.minecraft.redisbungee.events.PlayerLeftNetworkEvent;
 import fr.PunKeel.BungeeGuard.Managers.FriendManager;
 import fr.PunKeel.BungeeGuard.Managers.PartyManager;
 import fr.PunKeel.BungeeGuard.Managers.ServerManager;
@@ -47,6 +48,7 @@ public class BungeeGuardListener implements Listener {
             ChatColor.WHITE + ChatColor.BOLD + "https://store.minecraft.com/";
 
     private static final String FRIEND_LOGIN = ChatColor.AQUA + "[" + ChatColor.RED + "❤" + ChatColor.AQUA + "] " + ChatColor.YELLOW + "%s" + ChatColor.AQUA + " vient de se connecter.";
+    private static final String FRIEND_LOGOUT = ChatColor.AQUA + "[" + ChatColor.RED + "❤" + ChatColor.AQUA + "] " + ChatColor.YELLOW + "%s" + ChatColor.RED + " vient de se déconnecter.";
     private static final BaseComponent[] header = new ComponentBuilder("MC.Minecraft.COM")
             .color(ChatColor.GOLD)
             .bold(true).create();
@@ -68,6 +70,7 @@ public class BungeeGuardListener implements Listener {
     private static final String WELCOME_MSG_3 = ChatColor.YELLOW + "Site: " + ChatColor.GREEN + "www.minecraft.com" +
             ChatColor.GRAY + " | " +
             ChatColor.YELLOW + "Boutique: " + ChatColor.GREEN + "store.minecraft.com";
+    private static final int PROTOCOL_MC_18_VERSION = 47;
 
     private final Main plugin;
     private final Method handshakeMethod;
@@ -152,6 +155,11 @@ public class BungeeGuardListener implements Listener {
                 event.setCancelReason(ban.getBanMessage());
                 return;
             }
+        }
+        if (event.getConnection().getVersion() < PROTOCOL_MC_18_VERSION) {
+            event.setCancelled(true);
+            event.setCancelReason(ChatColor.AQUA + "UHCGames nécessite la version " + ChatColor.RED + ChatColor.BOLD + "1.8" + ChatColor.AQUA + " de Minecraft pour jouer !");
+            return;
         }
         firstJoin.add(event.getConnection().getUniqueId());
     }
@@ -250,7 +258,7 @@ public class BungeeGuardListener implements Listener {
             }
 
             PartyManager.Party party = plugin.getPartyManager().getPartyByPlayer(p);
-            if (party != null && party.isPartyChat(p)) {
+            if (party != null && (party.isPartyChat(p) || e.getMessage().startsWith("*"))) {
                 Main.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage());
                 e.setCancelled(true);
             }
@@ -419,6 +427,17 @@ public class BungeeGuardListener implements Listener {
     public void onConnect(PlayerJoinedNetworkEvent e) {
         UUID u = e.getUuid();
         String username = Main.getMB().getNameFromUuid(u);
+        notifyFriends(u, TextComponent.fromLegacyText(String.format(FRIEND_LOGIN, username)));
+    }
+
+    @EventHandler
+    public void onDisconnect(PlayerLeftNetworkEvent e) {
+        UUID u = e.getUuid();
+        String username = Main.getMB().getNameFromUuid(u);
+        notifyFriends(u, TextComponent.fromLegacyText(String.format(FRIEND_LOGOUT, username)));
+    }
+
+    private void notifyFriends(UUID u, BaseComponent[] message) {
         ProxyServer server = plugin.getProxy();
         for (UUID friend : plugin.getFriendManager().getFriends(u,
                 FriendManager.STATE.PENDING_OTHER,
@@ -426,7 +445,7 @@ public class BungeeGuardListener implements Listener {
             ProxiedPlayer p = server.getPlayer(friend);
             if (p == null)
                 continue;
-            p.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.format(FRIEND_LOGIN, username)));
+            p.sendMessage(ChatMessageType.ACTION_BAR, message);
         }
     }
 }

@@ -71,6 +71,11 @@ public class AntiSpamListener implements Listener {
          * Si true, bloque le message
          */
         // Anti répétition
+
+        //Ne compte pas les commandes
+        if (message.startsWith("/"))
+            return false;
+
         if (lastMessage.containsKey(uuid)
                 && LevenshteinDistance.similarity(lastMessage.get(uuid), message) >= 0.6) {
             if (!duplicateCount.containsKey(uuid))
