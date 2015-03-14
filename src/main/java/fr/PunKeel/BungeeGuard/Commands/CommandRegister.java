@@ -47,6 +47,11 @@ public class CommandRegister extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Cette adresse mail semble invalide."));
             return;
         }
+        if (password.length() < 6) {
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Votre mot de passe doit contenir au moins 6 caractères."));
+            return;
+
+        }
 
         plugin.getProxy().getScheduler().runAsync(plugin, new Runnable() {
             @Override
