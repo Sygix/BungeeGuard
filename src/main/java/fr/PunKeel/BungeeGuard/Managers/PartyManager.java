@@ -66,9 +66,10 @@ public class PartyManager {
         return false;
     }
 
-    public void createParty(String nom, UUID owner) {
+    public Party createParty(String nom, UUID owner) {
         Party party = new Party(nom, owner);
         parties.put(nom, party);
+        return party;
     }
 
     public Party getPartyByPlayer(ProxiedPlayer player) {

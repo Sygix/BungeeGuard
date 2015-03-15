@@ -34,7 +34,7 @@ public class PubSubListener implements Listener {
     public void onPluginMessageEvent(PluginMessageEvent e) {
         if (!(e.getSender() instanceof Server))
             return;
-        if (!e.getTag().equals("Minecraft"))
+        if (!e.getTag().equals("UHCGames"))
             return;
         Server sender = (Server) e.getSender();
 
@@ -135,7 +135,7 @@ public class PubSubListener implements Listener {
 
         byte[] data = out.toByteArray();
         if (data.length != 0)
-            sender.sendData("Minecraft", data);
+            sender.sendData("UHCGames", data);
 
     }
 
@@ -162,7 +162,7 @@ public class PubSubListener implements Listener {
                     }
                     data = out.toByteArray();
                     if (data.length != 0)
-                        sender.sendData("Minecraft", data);
+                        sender.sendData("UHCGames", data);
                 }
             };
             Main.getServerManager().ping(serverName, pingBack);

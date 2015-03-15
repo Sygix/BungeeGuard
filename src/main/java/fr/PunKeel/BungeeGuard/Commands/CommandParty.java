@@ -29,7 +29,7 @@ public class CommandParty extends Command {
             .append("/party help").color(ChatColor.GREEN)
             .append(" pour plus d'informations ...").color(ChatColor.GRAY)
             .create();
-    private final BaseComponent[] MSG_PARTYCHAT = new ComponentBuilder("Pour parler dans le chat").color(ChatColor.GRAY)
+    private final BaseComponent[] MSG_PARTYCHAT = new ComponentBuilder("Pour parler dans le chat ").color(ChatColor.GRAY)
             .append("Party").color(ChatColor.AQUA)
             .append(", entrez une étoile (").color(ChatColor.GRAY)
             .append("*").color(ChatColor.WHITE)
@@ -89,6 +89,10 @@ public class CommandParty extends Command {
             case "pub":
             case "publique":
                 publique(p);
+                break;
+            case "info":
+            case "infos":
+                info(p);
                 break;
             default:
                 showHelp = true;
@@ -242,7 +246,7 @@ public class CommandParty extends Command {
         }
         PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
-            PM.createParty(sender.getName(), sender.getUniqueId());
+            p = PM.createParty(sender.getName(), sender.getUniqueId());
             sender.sendMessage(MSG_CREATION);
             sender.sendMessage(MSG_CREATION2);
             sender.sendMessage(MSG_CREATION3);

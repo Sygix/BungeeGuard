@@ -189,7 +189,7 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerListener(this, new BungeeGuardListener(this));
         getProxy().getPluginManager().registerListener(this, new RedisBungeeListener(this));
 
-        getProxy().registerChannel("Minecraft");
+        getProxy().registerChannel("UHCGames");
         getProxy().getPluginManager().registerListener(this, new PubSubListener(this));
 
         fetchParties();

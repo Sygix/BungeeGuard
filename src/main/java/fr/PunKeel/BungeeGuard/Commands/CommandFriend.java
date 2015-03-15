@@ -18,6 +18,7 @@ import net.md_5.bungee.api.plugin.Command;
 import java.util.Collection;
 import java.util.UUID;
 
+import static fr.PunKeel.BungeeGuard.Managers.FriendManager.STATE.*;
 import static net.md_5.bungee.api.chat.TextComponent.fromLegacyText;
 
 public class CommandFriend extends Command {

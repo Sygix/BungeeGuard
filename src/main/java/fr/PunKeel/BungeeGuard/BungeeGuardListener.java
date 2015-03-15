@@ -34,28 +34,28 @@ import java.util.concurrent.TimeUnit;
 public class BungeeGuardListener implements Listener {
     private static final ServerPing.PlayerInfo[] playersPing;
     private static final Map<UUID, BungeeLitycs> bungeelitycs = new ConcurrentHashMap<>();
-    private static final String BASE_MOTD = "           §f§l» §b§lMinecraft§6§l.com §a§l[BETA] §f§l«\n";
+    private static final String BASE_MOTD = "           §f§l» §b§lUHCGames§6§l.com §a§l[BETA] §f§l«\n";
     private static final String maintenance
             = ChatColor.RED + "Une maintenance est actuellement en cours.\n" +
             ChatColor.RED + "Merci de repasser plus tard.\n" +
-            ChatColor.GOLD + "A Minecraft Server";
+            ChatColor.GOLD + "UHCGames";
     private static final String MOTD_FULL = "" + ChatColor.RED + ChatColor.BOLD + "[Serveur PLEIN] " +
             ChatColor.YELLOW + ChatColor.BOLD + "Accessible aux VIP et plus !";
 
     private static final String fullNotVIP = "" + ChatColor.YELLOW + ChatColor.BOLD + "Le serveur est plein" +
             ChatColor.GOLD + ChatColor.BOLD + "\nVous pourrez le rejoindre en devenant VIP !" +
             ChatColor.RED + ChatColor.BOLD + "\nAchetez-le sur " +
-            ChatColor.WHITE + ChatColor.BOLD + "https://store.minecraft.com/";
+            ChatColor.WHITE + ChatColor.BOLD + "https://store.uhcgames.com/";
 
     private static final String FRIEND_LOGIN = ChatColor.AQUA + "[" + ChatColor.RED + "❤" + ChatColor.AQUA + "] " + ChatColor.YELLOW + "%s" + ChatColor.AQUA + " vient de se connecter.";
     private static final String FRIEND_LOGOUT = ChatColor.AQUA + "[" + ChatColor.RED + "❤" + ChatColor.AQUA + "] " + ChatColor.YELLOW + "%s" + ChatColor.RED + " vient de se déconnecter.";
-    private static final BaseComponent[] header = new ComponentBuilder("MC.Minecraft.COM")
+    private static final BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
             .color(ChatColor.GOLD)
             .bold(true).create();
     private static final BaseComponent[] footer = new ComponentBuilder("Store")
             .color(ChatColor.RED)
             .bold(true)
-            .append(".Minecraft.com")
+            .append(".uhcgames.com")
             .bold(true)
             .color(ChatColor.AQUA).create();
     private static final String MOTD_MAINTENANCE = ChatColor.BLACK + "        " +
@@ -63,13 +63,13 @@ public class BungeeGuardListener implements Listener {
             ChatColor.RED + ChatColor.UNDERLINE + ChatColor.BOLD + "Serveur en maintenance" +
             ChatColor.WHITE + ChatColor.BOLD + " «";
     private static final String EMPTY_MESSAGE = " ";
-    private static final String WELCOME_MSG_1 = ChatColor.GOLD + "Bienvenue sur Minecraft, %s";
-    private static final String WELCOME_MSG_2 = ChatColor.YELLOW + "IP: " + ChatColor.GREEN + "mc.minecraft.com" +
+    private static final String WELCOME_MSG_1 = ChatColor.GOLD + "Bienvenue sur UHCGames, %s";
+    private static final String WELCOME_MSG_2 = ChatColor.YELLOW + "IP: " + ChatColor.GREEN + "mc.uhcgames.com" +
             ChatColor.GRAY + " | " +
-            ChatColor.YELLOW + "TeamSpeak: " + ChatColor.GREEN + "ts.minecraft.com";
-    private static final String WELCOME_MSG_3 = ChatColor.YELLOW + "Site: " + ChatColor.GREEN + "www.minecraft.com" +
+            ChatColor.YELLOW + "TeamSpeak: " + ChatColor.GREEN + "ts.uhcgames.com";
+    private static final String WELCOME_MSG_3 = ChatColor.YELLOW + "Site: " + ChatColor.GREEN + "www.uhcgames.com" +
             ChatColor.GRAY + " | " +
-            ChatColor.YELLOW + "Boutique: " + ChatColor.GREEN + "store.minecraft.com";
+            ChatColor.YELLOW + "Boutique: " + ChatColor.GREEN + "store.uhcgames.com";
     private static final int PROTOCOL_MC_18_VERSION = 47;
 
     private final Main plugin;
@@ -82,7 +82,7 @@ public class BungeeGuardListener implements Listener {
         lines.add(ChatColor.GRAY + " ");
         lines.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Un serveur de jeux UltraHardCore !");
         lines.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "  Stress, Difficulté, Travail d'équipe");
-        lines.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "      Vous allez aimer Minecraft !");
+        lines.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "      Vous allez aimer UHCGames !");
         lines.add(ChatColor.GRAY + " ");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.RED + "Kill The Patrick");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.YELLOW + "Ultra HungerGames");
@@ -140,7 +140,7 @@ public class BungeeGuardListener implements Listener {
         if (!Permissions.hasPerm(event.getConnection().getUniqueId(), "bungee.can.bypass_host") &&
                 !plugin.getConfig().getForcedHosts().containsKey(hostString)) {
             event.setCancelled(true);
-            event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".minecraft.com");
+            event.setCancelReason(ChatColor.RED + "" + ChatColor.BOLD + "Merci de vous connecter avec " + '\n' + ChatColor.WHITE + "" + ChatColor.BOLD + "MC" + ChatColor.AQUA + "" + ChatColor.BOLD + ".uhcgames.com");
         } else {
             ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
                 @Override
@@ -167,7 +167,7 @@ public class BungeeGuardListener implements Listener {
     private void showWelcomeTitle(ProxiedPlayer p) {
         Title title = ProxyServer.getInstance().createTitle();
         title.fadeOut(25);
-        title.title(TextComponent.fromLegacyText(ChatColor.GOLD + "Minecraft"));
+        title.title(TextComponent.fromLegacyText(ChatColor.GOLD + "UHCGames"));
         title.subTitle(TextComponent.fromLegacyText(ArrayUtils.rand(plugin.getConfig().getWelcomeSubtitles())));
         title.send(p);
         p.sendMessage(TextComponent.fromLegacyText(EMPTY_MESSAGE));

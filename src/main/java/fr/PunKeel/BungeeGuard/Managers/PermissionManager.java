@@ -128,7 +128,7 @@ public class PermissionManager {
                 out.writeUTF(uuid.toString());
                 out.writeUTF(Main.getGson().toJson(data));
 
-                pp.getServer().sendData("Minecraft", out.toByteArray());
+                pp.getServer().sendData("UHCGames", out.toByteArray());
             }
         });
     }

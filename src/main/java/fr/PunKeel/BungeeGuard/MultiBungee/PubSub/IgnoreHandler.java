@@ -28,7 +28,7 @@ public class IgnoreHandler {
                 out.writeUTF("ignore");
                 out.writeBoolean(action.equals("+"));
                 byte[] data = out.toByteArray();
-                p.sendData("Minecraft", data);
+                p.sendData("UHCGames", data);
             }
         }
 
