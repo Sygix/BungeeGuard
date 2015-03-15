@@ -5,10 +5,10 @@ import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.Managers.PartyManager;
 import fr.PunKeel.BungeeGuard.MultiBungee.PubSubHandler;
 import fr.PunKeel.BungeeGuard.MultiBungee.PubSubMessageEvent;
+import fr.PunKeel.BungeeGuard.Utils.MyBuilder;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -45,12 +45,13 @@ public class PartyHandler {
         String message = e.getArg(2);
         if (p == null)
             return;
+        String playerColor = plugin.getPermissionManager().getMainGroup(u).getColor();
         ProxiedPlayer pp;
         for (UUID uuid : p.getMembers()) {
             pp = ProxyServer.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
-            pp.sendMessage(TextComponent.fromLegacyText(PartyManager.CHAT_TAG + ChatColor.RESET + playerName + ": " + message));
+            pp.sendMessage(TextComponent.fromLegacyText(PartyManager.CHAT_TAG + ChatColor.RESET + playerColor + playerName + ": " + message));
 
         }
     }
@@ -98,10 +99,10 @@ public class PartyHandler {
         TC.addExtra(party.getDisplay());
         p.sendMessage(TC);
 
-        p.sendMessage(new ComponentBuilder("  >> ").color(ChatColor.YELLOW)
-                .append("Cliquez ici pour accepter").color(ChatColor.GREEN)
+        p.sendMessage(new MyBuilder(PartyManager.TAG + ChatColor.YELLOW + "  >> ")
+                .append(ChatColor.GREEN + "Cliquez ici pour accepter")
                 .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party join " + partyName))
-                .append(" << ").color(ChatColor.YELLOW)
+                .append(ChatColor.YELLOW + " << ")
                 .create());
     }
 
@@ -121,7 +122,7 @@ public class PartyHandler {
                 pp = ProxyServer.getInstance().getPlayer(uuid);
                 if (pp == null)
                     continue;
-                pp.sendMessage(new TextComponent(ChatColor.RED + "- " + playerName + " a été kické de la Party"));
+                pp.sendMessage(new TextComponent(PartyManager.TAG + ChatColor.RED + "- " + playerName + " a été kické de la Party"));
             }
         }
         p.removeMember(u);
@@ -154,7 +155,7 @@ public class PartyHandler {
                 pp = ProxyServer.getInstance().getPlayer(uuid);
                 if (pp == null)
                     continue;
-                pp.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "- " + playerName + " a quitté la Party"));
+                pp.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "- " + playerName + " a quitté la Party"));
             }
         }
     }
@@ -200,7 +201,7 @@ public class PartyHandler {
                 && !player.getServer().getInfo().equals(target)
                 && player.getServer().getInfo().getName().startsWith("lobby")) {
             player.connect(target);
-            player.sendMessage(TextComponent.fromLegacyText(ChatColor.GOLD + "Envoi sur le serveur " + Main.getServerManager().getPrettyName(target.getName()) + ChatColor.RESET + ChatColor.GOLD + " ..."));
+            player.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GOLD + "Envoi sur le serveur " + Main.getServerManager().getPrettyName(target.getName()) + ChatColor.RESET + ChatColor.GOLD + " ..."));
         }
     }
 }

@@ -182,6 +182,7 @@ public class BungeeGuardListener implements Listener {
     public void onServerConnect(final ServerConnectEvent e) {
         final ProxiedPlayer p = e.getPlayer();
         if (firstJoin.contains(p.getUniqueId())) {
+            notifyFriends(p.getUniqueId(), TextComponent.fromLegacyText(String.format(FRIEND_LOGIN, p.getName())));
             showWelcomeTitle(p);
             plugin.getFriendManager().sendJoinMessage(p);
             firstJoin.remove(p.getUniqueId());
@@ -283,6 +284,7 @@ public class BungeeGuardListener implements Listener {
             plugin.executePersistenceRunnable(new SaveRunner(old_bl));
             bungeelitycs.remove(p.getUniqueId());
         }
+        notifyFriends(p.getUniqueId(), TextComponent.fromLegacyText(String.format(FRIEND_LOGOUT, p.getName())));
         SM.resetLastLobby(p.getUniqueId());
     }
 
