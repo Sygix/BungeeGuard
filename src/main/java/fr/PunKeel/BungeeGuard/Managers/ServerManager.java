@@ -30,7 +30,7 @@ public class ServerManager {
     @Getter
     Cache<String, Optional<ServerPing>> serversCache = CacheBuilder.newBuilder()
             .maximumSize(500)
-            .expireAfterWrite(1, TimeUnit.SECONDS)
+            .expireAfterWrite(3, TimeUnit.SECONDS)
             .build();
     @Getter
     private Map<String, Lobby> lobbies = new HashMap<>();
@@ -75,7 +75,8 @@ public class ServerManager {
 
         if (SP == null) {
             if (isRestricted(serverName)) {
-                pingBack.done(restrictedPing, null);
+                if (pingBack != null)
+                    pingBack.done(restrictedPing, null);
                 return;
             }
             final Callback<ServerPing> pingCallback = new Callback<ServerPing>() {
@@ -83,7 +84,8 @@ public class ServerManager {
                 public void done(ServerPing serverPing, Throwable throwable) {
                     Optional<ServerPing> serverPingOptional = Optional.fromNullable(serverPing);
                     getServersCache().put(serverName, serverPingOptional);
-                    pingBack.done(serverPing, throwable);
+                    if (pingBack != null)
+                        pingBack.done(serverPing, throwable);
                 }
             };
             ProxyServer.getInstance().getServerInfo(serverName).ping(pingCallback);
@@ -122,6 +124,22 @@ public class ServerManager {
                             }
                         };
                         ping(serverInfo.getName(), pingBack);
+                    }
+                }
+                Iterator<String> i = lobbies.keySet().iterator();
+                while (i.hasNext()) {
+                    // Supprime les lobbies qui ont été supprimés de la liste des serveurs
+                    if (plugin.getProxy().getServerInfo(i.next()) == null)
+                        i.remove();
+                }
+            }
+        }, 1, 1, TimeUnit.SECONDS);
+        ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
+            @Override
+            public void run() {
+                for (final ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
+                    if (!isLobbyName(serverInfo.getName())) {
+                        ping(serverInfo.getName(), null);
                     }
                 }
                 Iterator<String> i = lobbies.keySet().iterator();
