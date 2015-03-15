@@ -27,6 +27,8 @@ public class ReloadConfHandler {
         plugin.getLogger().info("Checking the new configuration");
 
         config.load();
+        plugin.getProxy().getConfig().getServers().clear();
+        plugin.getProxy().getConfig().getServers().putAll(config.getServers());
 
         Iterator<Map.Entry<String, ServerInfo>> it = config.getServers().entrySet().iterator();
         String serverName;
