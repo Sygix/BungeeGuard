@@ -89,16 +89,26 @@ public class CommandParty extends Command {
     }
 
     private void disband(ProxiedPlayer sender, String[] args) {
-        if (!sender.hasPermission("bungee.party.disband")) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Permission refusée."));
-            return;
+        String partyName;
+        if (args.length == 2) {
+            if (!sender.hasPermission("bungee.party.disband")) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Permission refusée."));
+                return;
+            }
+            partyName = args[1];
+        } else {
+            PartyManager.Party p = PM.getPartyByPlayer(sender);
+            if (p == null) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune party."));
+                return;
+            }
+            if (!p.isOwner(sender)) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu dois être owner de la party pour la dissoudre."));
+                return;
+            }
+            partyName = p.getName();
         }
-        if (args.length != 2) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /party disband <nom de la party>"));
-            return;
-        }
-        String partyName = args[1];
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Party dissolvatée."));
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Party dissoute."));
         MB.disbandParty(partyName);
     }
 
@@ -262,6 +272,7 @@ public class CommandParty extends Command {
                 "&6/party join [nom] &e: Rejoindre une party publique avec le nom indiqué\n" +
                 "&6/party leave &e: Quitter la party \n" +
                 "&6/party kick [pseudo] &e: Expulse le joueur indiqué\n" +
+                "&6/party disband &e: Dissout la party\n" +
                 "&6/party owner [pseudo] &e: Rend le joueur indiqué chef de la party\n" +
                 "&r\n" +
                 "&e-----------------------------------------------------")));
