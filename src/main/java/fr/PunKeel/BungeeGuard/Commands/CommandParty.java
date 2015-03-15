@@ -48,11 +48,7 @@ public class CommandParty extends Command {
         switch (action) {
             case "create":
             case "c":
-                create(p, args);
-                break;
-            case "list":
-            case "ls":
-                list(p);
+                create(p);
                 break;
             case "invite":
             case "inv":
@@ -244,24 +240,9 @@ public class CommandParty extends Command {
         sender.sendMessage(Main.SEPARATOR);
     }
 
-    private void list(ProxiedPlayer sender) {
-        PM.clean();
-        if (PM.getParties().values().size() == 0) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Il n'y a aucune Party."));
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vous pouvez en créer une: " + ChatColor.GREEN + "/party create <nom>"));
-            return;
-        }
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Liste des Party"));
-        TextComponent TC;
-        for (PartyManager.Party p : PM.getParties().values()) {
-            TC = new TextComponent("- ");
-            TC.addExtra(p.getDisplay());
-            sender.sendMessage(TC);
-        }
-    }
-
-    private void create(ProxiedPlayer sender, String[] args) {
+    private void create(ProxiedPlayer sender) {
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Cette commande n'existe plus."));
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Utilisez directement " + ChatColor.GREEN + "/party invite " + ChatColor.YELLOW + "joueur"));
     }
 
     private void help(CommandSender sender) {
@@ -270,6 +251,7 @@ public class CommandParty extends Command {
                 "&r\n" +
                 "&6/party invite [pseudo] &e: Inviter le joueur dans votre party\n" +
                 "&6/party join [nom] &e: Rejoindre une party publique avec le nom indiqué\n" +
+                "&6/party info [nom] &e: Liste les joueurs dans votre party\n" +
                 "&6/party leave &e: Quitter la party \n" +
                 "&6/party kick [pseudo] &e: Expulse le joueur indiqué\n" +
                 "&6/party disband &e: Dissout la party\n" +
