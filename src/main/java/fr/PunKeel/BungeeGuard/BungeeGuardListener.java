@@ -258,8 +258,8 @@ public class BungeeGuardListener implements Listener {
             }
 
             PartyManager.Party party = plugin.getPartyManager().getPartyByPlayer(p);
-            if (party != null && (party.isPartyChat(p) || e.getMessage().startsWith("*"))) {
-                Main.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage());
+            if (party != null && e.getMessage().startsWith("*")) {
+                Main.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage().substring(1));
                 e.setCancelled(true);
             }
             if (plugin.isSilenced(p.getServer().getInfo().getName())) {
@@ -439,13 +439,12 @@ public class BungeeGuardListener implements Listener {
 
     private void notifyFriends(UUID u, BaseComponent[] message) {
         ProxyServer server = plugin.getProxy();
-        for (UUID friend : plugin.getFriendManager().getFriends(u,
-                FriendManager.STATE.PENDING_OTHER,
-                FriendManager.STATE.MUTUAL)) {
+        for (UUID friend : plugin.getFriendManager().getFriends(u, FriendManager.STATE.MUTUAL)) {
             ProxiedPlayer p = server.getPlayer(friend);
             if (p == null)
                 continue;
             p.sendMessage(ChatMessageType.ACTION_BAR, message);
+            p.sendMessage(message);
         }
     }
 }

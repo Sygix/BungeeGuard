@@ -22,7 +22,6 @@ import java.util.UUID;
 public class FriendManager {
     @Getter(AccessLevel.PUBLIC)
     private static final String TAG = "[" + ChatColor.RED + "❤" + ChatColor.WHITE + "] ";
-    private static final String SEPARATOR = ChatColor.YELLOW + "-----------------------------------------------------";
     private static final String FRIENDS_LIST = TAG + ChatColor.AQUA + "Amis en ligne " + ChatColor.WHITE +
             "[" + ChatColor.GOLD + "%d" + ChatColor.WHITE + "/" + ChatColor.AQUA + "%d" + ChatColor.WHITE + "] " +
             ChatColor.AQUA + ": " + ChatColor.GOLD + "%s";
@@ -134,7 +133,7 @@ public class FriendManager {
             }
         });
         if (friends.size() + friends_other_pending.size() != 0) {
-            p.sendMessage(TextComponent.fromLegacyText(SEPARATOR));
+            p.sendMessage(Main.SEPARATOR);
 
             if (online_friends.size() != 0)
                 p.sendMessage(TextComponent.fromLegacyText(String.format(FRIENDS_LIST, online_friends.size(), friends.size(), joiner.join(online_friends))));
@@ -145,7 +144,7 @@ public class FriendManager {
                 p.sendMessage(TextComponent.fromLegacyText(String.format(PENDING_COUNT, friends_other_pending.size(), _s, _s)));
             }
 
-            p.sendMessage(TextComponent.fromLegacyText(SEPARATOR));
+            p.sendMessage(Main.SEPARATOR);
         }
     }
 

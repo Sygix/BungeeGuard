@@ -55,17 +55,6 @@ public class PartyHandler {
         }
     }
 
-    @PubSubHandler("setPartyChat")
-    public static void setPartyChat(Main plugin, PubSubMessageEvent e) {
-        String partyName = e.getArg(0);
-        UUID uuid = UUID.fromString(e.getArg(1));
-        boolean isPartyChat = Boolean.parseBoolean(e.getArg(2));
-        PartyManager.Party p = plugin.getPartyManager().getParty(partyName);
-        if (p == null)
-            return;
-        p.setPartyChat(uuid, isPartyChat);
-    }
-
     @PubSubHandler("createParty")
     public static void createParty(Main plugin, PubSubMessageEvent e) {
         // partyName(), "" + joueur
@@ -168,13 +157,6 @@ public class PartyHandler {
                 pp.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "- " + playerName + " a quitté la Party"));
             }
         }
-    }
-
-    @PubSubHandler("setPartyPublique")
-    public static void setPartyPublique(Main plugin, PubSubMessageEvent e) {
-        String partyName = e.getArg(0);
-        boolean isPublique = Boolean.parseBoolean(e.getArg(1));
-        plugin.getPartyManager().getParty(partyName).setPublique(isPublique);
     }
 
     @PubSubHandler("@partyReply")

@@ -430,9 +430,6 @@ public class MultiBungee {
         sendChannelMessage("addPartyMember", party.getName(), "" + uniqueId);
     }
 
-    public void setPartyPublique(PartyManager.Party p, boolean publique) {
-        sendChannelMessage("setPartyPublique", p.getName(), "" + publique);
-    }
 
     public void playerLeaveParty(PartyManager.Party p, ProxiedPlayer sender) {
         playerLeaveParty(p, sender.getUniqueId());
@@ -440,10 +437,6 @@ public class MultiBungee {
 
     private void playerLeaveParty(PartyManager.Party p, UUID uniqueId) {
         sendChannelMessage("playerLeaveParty", p.getName(), "" + uniqueId);
-    }
-
-    public void setPartyChat(PartyManager.Party p, UUID uniqueId, boolean isPartyChat) {
-        sendChannelMessage("setPartyChat", p.getName(), "" + uniqueId, "" + isPartyChat);
     }
 
     public void setPartyOwner(PartyManager.Party p, UUID u) {

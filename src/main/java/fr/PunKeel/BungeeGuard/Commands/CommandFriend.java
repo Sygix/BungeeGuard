@@ -34,7 +34,7 @@ public class CommandFriend extends Command {
     };
     FriendManager FM;
     MultiBungee MB;
-    Joiner joiner = Joiner.on(ChatColor.RESET + ", " + ChatColor.YELLOW).skipNulls();
+    Joiner joiner = Joiner.on(ChatColor.RESET + ", " + ChatColor.YELLOW);
 
     public CommandFriend(final Main plugin) {
         super("friend", "bungee.command.friend", "friends", "f");
@@ -157,7 +157,7 @@ public class CommandFriend extends Command {
             friendList = new MyBuilder(ChatColor.RED + "Amis : ");
             first = true;
             for (UUID _u : friendsMutual) {
-                String name = Main.getMB().getNameFromUuid(_u);
+                String name = Main.getMB().getNameFromUuid(_u, true);
                 if (first)
                     first = false;
                 else

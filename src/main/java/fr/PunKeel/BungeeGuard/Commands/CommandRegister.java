@@ -1,9 +1,9 @@
 package fr.PunKeel.BungeeGuard.Commands;
 
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
+import com.imaginarycode.minecraft.redisbungee.internal.okhttp.FormEncodingBuilder;
+import com.imaginarycode.minecraft.redisbungee.internal.okhttp.OkHttpClient;
+import com.imaginarycode.minecraft.redisbungee.internal.okhttp.Request;
+import com.imaginarycode.minecraft.redisbungee.internal.okhttp.RequestBody;
 import fr.PunKeel.BungeeGuard.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -25,7 +25,7 @@ public class CommandRegister extends Command {
     public CommandRegister(Main plugin) {
         super("register", "");
         this.plugin = plugin;
-        httpClient = Main.getHttpClient();
+        httpClient = new OkHttpClient();
     }
 
     @Override

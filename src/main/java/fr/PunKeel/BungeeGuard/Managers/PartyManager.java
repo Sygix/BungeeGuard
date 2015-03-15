@@ -140,7 +140,7 @@ public class PartyManager {
 
         private boolean canJoin(UUID uniqueId) {
             if (getSize() < 20) {
-                if (isPublique() || isInvited(uniqueId)) {
+                if (isInvited(uniqueId)) {
                     invitations.remove(uniqueId);
                     return true;
                 }
@@ -158,24 +158,6 @@ public class PartyManager {
 
         private boolean isOwner(UUID uniqueId) {
             return owner.equals(uniqueId);
-        }
-
-
-        public boolean isPartyChat(ProxiedPlayer sender) {
-            return isPartyChat(sender.getUniqueId());
-        }
-
-        private boolean isPartyChat(UUID uniqueId) {
-            return chatMembers.contains(uniqueId);
-        }
-
-        public void setPartyChat(UUID uuid, boolean isPartyChat) {
-            if (uuid == null)
-                return;
-            if (isPartyChat)
-                chatMembers.add(uuid);
-            else
-                chatMembers.remove(uuid);
         }
 
         public void addInvitation(UUID u) {

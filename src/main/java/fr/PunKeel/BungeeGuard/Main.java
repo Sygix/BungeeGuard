@@ -4,7 +4,6 @@ import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
-import com.squareup.okhttp.OkHttpClient;
 import fr.PunKeel.BungeeGuard.Announces.AnnouncementManager;
 import fr.PunKeel.BungeeGuard.Announces.AnnouncementTask;
 import fr.PunKeel.BungeeGuard.BanHammer.AntiSpamListener;
@@ -21,6 +20,7 @@ import fr.PunKeel.BungeeGuard.Utils.ShopTask;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -37,6 +37,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends Plugin {
+    public static final BaseComponent[] SEPARATOR = TextComponent.fromLegacyText(ChatColor.YELLOW + "-----------------------------------------------------");
     public static final String ADMIN_TAG = ChatColor.RED + "[BungeeGuard] " + ChatColor.RESET;
     private static final List<String> forbiddenCommands = new ArrayList<>();
     @Getter
@@ -45,8 +46,6 @@ public class Main extends Plugin {
     private static final List<UUID> spy = new ArrayList<>();
     @Getter
     private static final Random random = new Random();
-    @Getter
-    private static final OkHttpClient httpClient = new OkHttpClient();
     public static Main plugin;
     @Getter
     public static Gson gson = new Gson();

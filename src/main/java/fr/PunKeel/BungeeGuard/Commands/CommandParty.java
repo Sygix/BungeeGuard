@@ -3,6 +3,7 @@ package fr.PunKeel.BungeeGuard.Commands;
 import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.Managers.PartyManager;
 import fr.PunKeel.BungeeGuard.MultiBungee.MultiBungee;
+import fr.PunKeel.BungeeGuard.Utils.MyBuilder;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -17,20 +18,12 @@ public class CommandParty extends Command {
     private final Main plugin;
     private final PartyManager PM;
     private final MultiBungee MB;
-    private final BaseComponent[] MSG_CREATION = new ComponentBuilder("Vous venez de créer une ").color(ChatColor.GRAY)
-            .append("Party").color(ChatColor.GREEN)
-            .append(" !").color(ChatColor.GRAY)
-            .create();
-    private final BaseComponent[] MSG_CREATION2 = new ComponentBuilder("Tapez ").color(ChatColor.GRAY)
-            .append("/party invite <nom de joueur>").color(ChatColor.GREEN)
-            .append(" pour inviter un joueur").color(ChatColor.GRAY)
-            .create();
-    private final BaseComponent[] MSG_CREATION3 = new ComponentBuilder("Tapez ").color(ChatColor.GRAY)
+    private final BaseComponent[] MSG_HELP = new ComponentBuilder("Tapez ").color(ChatColor.GRAY)
             .append("/party help").color(ChatColor.GREEN)
-            .append(" pour plus d'informations ...").color(ChatColor.GRAY)
+            .append(" pour plus d'informations …").color(ChatColor.GRAY)
             .create();
     private final BaseComponent[] MSG_PARTYCHAT = new ComponentBuilder("Pour parler dans le chat ").color(ChatColor.GRAY)
-            .append("Party").color(ChatColor.AQUA)
+            .append("party").color(ChatColor.AQUA)
             .append(", entrez une étoile (").color(ChatColor.GRAY)
             .append("*").color(ChatColor.WHITE)
             .append(") devant votre message.").color(ChatColor.GRAY)
@@ -76,19 +69,11 @@ public class CommandParty extends Command {
             case "disband":
                 disband(p, args);
                 break;
-            case "chat":
-                chat(p);
-                break;
             case "owner":
                 owner(p, args);
                 break;
             case "kick":
                 kick(p, args);
-                break;
-            case "public":
-            case "pub":
-            case "publique":
-                publique(p);
                 break;
             case "info":
             case "infos":
@@ -172,20 +157,6 @@ public class CommandParty extends Command {
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Owner: " + MB.getNameFromUuid(p.getOwner())));
     }
 
-    private void chat(ProxiedPlayer sender) {
-        PartyManager.Party p = PM.getPartyByPlayer(sender);
-        if (p == null) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
-            return;
-        }
-        boolean isPartyChat = !p.isPartyChat(sender);
-        if (isPartyChat)
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Party Chat " + ChatColor.BOLD + "activé."));
-        else
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Party Chat " + ChatColor.BOLD + "désactivé."));
-        MB.setPartyChat(p, sender.getUniqueId(), isPartyChat);
-    }
-
     private void leave(ProxiedPlayer sender) {
         PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
@@ -194,24 +165,6 @@ public class CommandParty extends Command {
         }
         MB.playerLeaveParty(p, sender);
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Tu as quitté ta Party"));
-    }
-
-    private void publique(ProxiedPlayer sender) {
-        PartyManager.Party p = PM.getPartyByPlayer(sender);
-        if (p == null) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
-            return;
-        }
-        if (!p.isOwner(sender)) {
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'as pas le droit de faire ceci."));
-            return;
-        }
-        boolean publique = !p.isPublique();
-        MB.setPartyPublique(p, publique);
-        if (publique)
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Tout le monde peut désormais rejoindre cette Party sans invitation"));
-        else
-            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "Une invitation est requise pour rejoindre cette Party"));
     }
 
     private void join(ProxiedPlayer sender, String[] args) {
@@ -244,14 +197,6 @@ public class CommandParty extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /party invite <pseudo>"));
             return;
         }
-        PartyManager.Party p = PM.getPartyByPlayer(sender);
-        if (p == null) {
-            p = PM.createParty(sender.getName(), sender.getUniqueId());
-            sender.sendMessage(MSG_CREATION);
-            sender.sendMessage(MSG_CREATION2);
-            sender.sendMessage(MSG_CREATION3);
-            sender.sendMessage(MSG_PARTYCHAT);
-        }
         String joueur = args[1];
         UUID u = Main.getMB().getUuidFromName(joueur);
         if (u == null || !Main.getMB().isPlayerOnline(u)) {
@@ -263,8 +208,14 @@ public class CommandParty extends Command {
             sender.sendMessage(TextComponent.fromLegacyText("Ce joueur est déjà dans une Party."));
             return;
         }
+        PartyManager.Party p = PM.getPartyByPlayer(sender);
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Vous venez d'inviter " + ChatColor.YELLOW + joueur + ChatColor.GREEN + "dans votre party !"));
+        if (p == null) {
+            p = PM.createParty(sender.getName(), sender.getUniqueId());
+            sender.sendMessage(MSG_HELP);
+            sender.sendMessage(MSG_PARTYCHAT);
+        }
         Main.getMB().inviteParty(p, u);
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Joueur invité!"));
     }
 
     private void info(ProxiedPlayer sender) {
@@ -272,13 +223,15 @@ public class CommandParty extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
             return;
         }
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Liste des membres de votre partie"));
-        TextComponent TC;
-        for (UUID uuid : PM.getPartyByPlayer(sender).getMembers()) {
-            TC = new TextComponent("- ");
-            TC.addExtra(MB.getNameFromUuid(uuid));
-            sender.sendMessage(TC);
+        sender.sendMessage(Main.SEPARATOR);
+        PartyManager.Party p = PM.getPartyByPlayer(sender.getUniqueId());
+        MyBuilder partyList = new MyBuilder(ChatColor.AQUA + "Joueurs dans votre Party : ");
+        partyList.append(ChatColor.GREEN + MB.getNameFromUuid(p.getOwner()));
+        for (UUID uuid : p.getMembers()) {
+            partyList.append(ChatColor.GREEN + MB.getNameFromUuid(uuid));
         }
+        sender.sendMessage(partyList.create());
+        sender.sendMessage(Main.SEPARATOR);
     }
 
     private void list(ProxiedPlayer sender) {
@@ -305,12 +258,9 @@ public class CommandParty extends Command {
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&e-----------------------------------------------------\n" +
                 "&a&nAide : Commande /party\n" +
                 "&r\n" +
-                "&6/party create [nom] &e: Créer une party avec un nom défini\n" +
                 "&6/party invite [pseudo] &e: Inviter le joueur dans votre party\n" +
                 "&6/party join [nom] &e: Rejoindre une party publique avec le nom indiqué\n" +
                 "&6/party leave &e: Quitter la party \n" +
-                "&6/party public &e: Rend la party publique\n" +
-                "&6/party chat &e: Vous permet de parler en chat party\n" +
                 "&6/party kick [pseudo] &e: Expulse le joueur indiqué\n" +
                 "&6/party owner [pseudo] &e: Rend le joueur indiqué chef de la party\n" +
                 "&r\n" +
