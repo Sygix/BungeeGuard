@@ -32,7 +32,7 @@ public class PartyHandler {
             pp = ProxyServer.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
-            pp.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "+ " + Main.getMB().getNameFromUuid(u) + ChatColor.RESET + " a rejoint la Party"));
+            pp.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "+ " + Main.getMB().getNameFromUuid(u) + ChatColor.RESET + " a rejoint la Party"));
         }
     }
 
@@ -50,7 +50,7 @@ public class PartyHandler {
             pp = ProxyServer.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
-            pp.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "[Party:" + p.getName() + "] " + ChatColor.RESET + playerName + ": " + message));
+            pp.sendMessage(TextComponent.fromLegacyText(PartyManager.CHAT_TAG + ChatColor.RESET + playerName + ": " + message));
 
         }
     }
@@ -74,7 +74,7 @@ public class PartyHandler {
             pp = ProxyServer.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
-            pp.sendMessage(TextComponent.fromLegacyText(ChatColor.GRAY + "[Party:" + p.getName() + "] " + ChatColor.RED + "Party dissoute."));
+            pp.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Party dissoute."));
         }
         plugin.getPartyManager().removeParty(p);
     }
@@ -85,7 +85,7 @@ public class PartyHandler {
         String partyName = e.getArg(0);
         UUID u = UUID.fromString(e.getArg(1));
         PartyManager.Party party = plugin.getPartyManager().getParty(partyName);
-        if (party == null || u == null)
+        if (party == null)
             return;
         party.addInvitation(u);
 
@@ -93,7 +93,7 @@ public class PartyHandler {
         if (p == null)
             return;
 
-        TextComponent TC = new TextComponent("Ceci est une invitation à rejoindre la Party ");
+        TextComponent TC = new TextComponent(PartyManager.TAG + "Ceci est une invitation à rejoindre la Party de ");
         TC.setColor(ChatColor.GRAY);
         TC.addExtra(party.getDisplay());
         p.sendMessage(TC);

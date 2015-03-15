@@ -260,6 +260,8 @@ public class ServerManager {
         }
 
         public double getScore(ProxiedPlayer p) {
+            double target = .8;
+            // With a target of .8, the lobbies will be filled at 80% before sending people to another one.
             double bonus = 0;
             if (p != null && getLastLobby(p.getUniqueId()) != null)
                 if (getLastLobby(p.getUniqueId()).equals(name))
@@ -268,7 +270,7 @@ public class ServerManager {
                 return -Double.MAX_VALUE;
             }
             int onlinePlayers = result.getPlayers().getOnline();
-            return (1 + onlinePlayers) * (maxPlayers / 2 - onlinePlayers) + bonus;
+            return (1 + onlinePlayers) * (maxPlayers * target - onlinePlayers) + bonus;
         }
     }
 }

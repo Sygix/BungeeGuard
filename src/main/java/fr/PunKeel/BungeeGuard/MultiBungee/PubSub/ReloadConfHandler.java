@@ -20,7 +20,7 @@ public class ReloadConfHandler {
         if (Main.getRandom().nextInt(1000) == 5) {
             plugin.getPermissionManager().loadUsers();
         }
-        plugin.getLogger().info("Saving current configuration");
+
         MysqlConfigAdapter config = plugin.getConfig();
         TMap<String, ServerInfo> oldServerInfos = new CaseInsensitiveMap<>(config.getServers());
 

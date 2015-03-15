@@ -16,6 +16,9 @@ import java.io.Serializable;
 import java.util.*;
 
 public class PartyManager {
+    public static final String TAG = ChatColor.WHITE + "[" + ChatColor.RED + "Party" + ChatColor.WHITE + "]  ";
+    public static final String CHAT_TAG = ChatColor.WHITE + "[" + ChatColor.RED + "Party Chat" + ChatColor.WHITE + "] ";
+
     private Map<String, Party> parties = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public Map<String, Party> getParties() {

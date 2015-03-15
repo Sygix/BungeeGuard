@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class CommandRegister extends Command {
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private static final String API_ENDPOINT = "https://forum.uhcgames.com/api_register.php";
-    private static final String API_TOKEN = "";
+    private static final String API_TOKEN = "token";
 
     private final Main plugin;
     private final OkHttpClient httpClient;
@@ -66,17 +66,21 @@ public class CommandRegister extends Command {
                             .build();
                     Request request = new Request.Builder().url(API_ENDPOINT).post(formBody).build();
                     int code = httpClient.newCall(request).execute().code();
+
+                    if (p.hasPermission("bungee.debug.register"))
+                        p.sendMessage(TextComponent.fromLegacyText(ChatColor.DARK_GRAY + "Code retour: " + ChatColor.GREEN + code));
+
                     switch (code) {
                         case 200:
                             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Votre compte a été créé avec succès !"));
                             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Connectez-vous sur " + ChatColor.WHITE + "https://forum.uhcgames.com/"));
                             break;
+                        case 413:
+                            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Il me semble que vous avez déjà un compte."));
+                            break;
                         case 410:
                         default:
                             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Une erreur est survenue."));
-                            if (p.hasPermission("bungee.debug.register")) {
-                                p.sendMessage(TextComponent.fromLegacyText(ChatColor.DARK_GRAY + "Code retour: " + ChatColor.GREEN + code));
-                            }
                             break;
                     }
                 } catch (IOException e) {

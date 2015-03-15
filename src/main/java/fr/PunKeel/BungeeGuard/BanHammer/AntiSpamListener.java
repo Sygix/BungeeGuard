@@ -55,7 +55,7 @@ public class AntiSpamListener implements Listener {
         long now = System.currentTimeMillis();
         long lastMsgMillis = lastMessageTime.containsKey(uuid) ? lastMessageTime.get(uuid) : 0;
         // Anti flood
-        if (now - lastMsgMillis < 800) {
+        if (now - lastMsgMillis < 1000) {
             int fastMsgCount = 1 + (fastMessageCount.containsKey(uuid) ? fastMessageCount.get(uuid) : 0);
             fastMessageCount.put(uuid, fastMsgCount);
             if (fastMsgCount >= 2)
@@ -70,14 +70,16 @@ public class AntiSpamListener implements Listener {
         /*
          * Si true, bloque le message
          */
-        // Anti répétition
 
-        //Ne compte pas les commandes
-        if (message.startsWith("/"))
+        long now = System.currentTimeMillis();
+        long lastMsgMillis = lastMessageTime.containsKey(uuid) ? lastMessageTime.get(uuid) : 0;
+
+        if (now - lastMsgMillis > 3000)
             return false;
 
+        // Anti répétition
         if (lastMessage.containsKey(uuid)
-                && LevenshteinDistance.similarity(lastMessage.get(uuid), message) >= 0.6) {
+                && LevenshteinDistance.similarity(lastMessage.get(uuid), message) >= 0.8) {
             if (!duplicateCount.containsKey(uuid))
                 duplicateCount.put(uuid, 0);
             duplicateCount.put(uuid, duplicateCount.get(uuid) + 1);
