@@ -265,7 +265,7 @@ public class Main extends Plugin {
                     }, 5 * 60, TimeUnit.SECONDS);
                 }
             }
-        }, 1, TimeUnit.HOURS);
+        }, 10, TimeUnit.MINUTES);
 
     }
 
