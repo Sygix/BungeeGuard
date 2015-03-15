@@ -217,7 +217,7 @@ public class CommandParty extends Command {
             return;
         }
         PartyManager.Party p = PM.getPartyByPlayer(sender);
-        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Vous venez d'inviter " + ChatColor.YELLOW + joueur + ChatColor.GREEN + "dans votre party !"));
+        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Vous venez d'inviter " + ChatColor.YELLOW + joueur + ChatColor.GREEN + " dans votre party !"));
         if (p == null) {
             p = PM.createParty(sender.getName(), sender.getUniqueId());
             sender.sendMessage(MSG_HELP);
