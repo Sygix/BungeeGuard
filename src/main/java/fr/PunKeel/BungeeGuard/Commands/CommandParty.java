@@ -256,8 +256,7 @@ public class CommandParty extends Command {
                 "&a&nAide : Commande /party\n" +
                 "&r\n" +
                 "&6/party invite [pseudo] &e: Inviter le joueur dans votre party\n" +
-                "&6/party join [nom] &e: Rejoindre une party publique avec le nom indiqué\n" +
-                "&6/party info [nom] &e: Liste les joueurs dans votre party\n" +
+                "&6/party info &e: Liste les joueurs dans votre party\n" +
                 "&6/party leave &e: Quitter la party \n" +
                 "&6/party kick [pseudo] &e: Expulse le joueur indiqué\n" +
                 "&6/party disband &e: Dissout la party\n" +
