@@ -19,6 +19,7 @@ import fr.PunKeel.BungeeGuard.Utils.MyReconnectHandler;
 import fr.PunKeel.BungeeGuard.Utils.ShopTask;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -315,5 +316,9 @@ public class Main extends Plugin {
 
     boolean isMaintenance() {
         return serverManager.isRestricted("hub");
+    }
+
+    public static void missPermission(CommandSender sender, String permissionNode) {
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Permission refusée (" + ChatColor.WHITE + permissionNode + ChatColor.RED + ")"));
     }
 }

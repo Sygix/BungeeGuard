@@ -78,6 +78,10 @@ public class CommandUser extends Command {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Groupe inexistant"));
                 return;
             }
+            if (!sender.hasPermission("bungee.ranks.can_" + action + "." + group_id)) {
+                Main.missPermission(sender, "bungee.ranks.can_" + action + "." + group_id);
+                return;
+            }
             final String duration = (args.length == 4) ? args[3] : "";
             if (action.equalsIgnoreCase("add")) {
                 if (duration.isEmpty())
