@@ -43,6 +43,10 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     @SuppressWarnings("unchecked")
     @Override
     public void load() {
+        // Do nothing here, to make it fast :3
+    }
+
+    public void load(boolean async) {
         Future<Void> x = plugin.executePersistenceRunnable(new VoidRunner() {
             @Override
             protected void run() {
@@ -53,6 +57,8 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
                 loadWelcomeTitles();
             }
         });
+        if (!async)
+            return;
         try {
             x.get();
         } catch (ExecutionException e) {
