@@ -2,16 +2,20 @@ package fr.PunKeel.BungeeGuard.Commands;
 
 import fr.PunKeel.BungeeGuard.BungeeGuardUtils;
 import fr.PunKeel.BungeeGuard.Main;
+import fr.PunKeel.BungeeGuard.Models.BungeeMute;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.UUID;
 
 public class CommandSay extends Command {
+    Main plugin;
 
     public CommandSay(Main plugin) {
         super("say", "bungee.say");
+        this.plugin = plugin;
     }
 
     @Override
@@ -20,9 +24,15 @@ public class CommandSay extends Command {
             BungeeGuardUtils.msgPluginCommand(sender);
             return;
         }
+        UUID uuid = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : null;
+
+        BungeeMute mute = plugin.getSanctionManager().findMute(uuid);
+        if (mute != null) {
+            sender.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
+            return;
+        }
 
         if (args.length > 0) {
-            UUID uuid = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : null;
             String msg = "";
             for (String m : args)
                 msg += m + " ";

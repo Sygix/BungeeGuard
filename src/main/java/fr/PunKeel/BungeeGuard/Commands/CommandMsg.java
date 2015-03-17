@@ -34,12 +34,7 @@ public class CommandMsg extends Command {
 
         BungeeMute mute = plugin.getSanctionManager().findMute(p.getUniqueId());
         if (mute != null) {
-            if (mute.isMute()) {
-                p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
-            } else {
-                plugin.getSanctionManager().unmute(mute, "TimeEnd", "Automatique", true);
-                Main.getMB().unmutePlayer(p.getUniqueId());
-            }
+            p.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
             return;
         }
 

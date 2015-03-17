@@ -3,7 +3,9 @@ package fr.PunKeel.BungeeGuard.Commands;
 import com.google.common.base.Joiner;
 import fr.PunKeel.BungeeGuard.BungeeGuardUtils;
 import fr.PunKeel.BungeeGuard.Main;
+import fr.PunKeel.BungeeGuard.Models.BungeeMute;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -27,12 +29,18 @@ public class CommandBCast extends Command {
             BungeeGuardUtils.msgPluginCommand(sender);
             return;
         }
+        UUID uuid = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : null;
+
+        BungeeMute mute = plugin.getSanctionManager().findMute(uuid);
+        if (mute != null) {
+            sender.sendMessage(TextComponent.fromLegacyText(mute.getMuteMessage()));
+            return;
+        }
 
         if (args.length > 0) {
             String msg = "";
             for (String m : args)
                 msg += m + " ";
-            UUID uuid = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : null;
             List<String> serversList = new ArrayList<>();
 
             for (ServerInfo server : Main.getServerManager().getOnlineLobbies()) {

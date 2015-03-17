@@ -41,6 +41,8 @@ public class SanctionManager {
     }
 
     public BungeeBan findBan(UUID uuid) {
+        if (uuid == null)
+            return null;
         for (BungeeBan ban : new CopyOnWriteArrayList<>(banList)) {
             if (ban.getBannedUUID().equals(uuid)) {
                 if (ban.isBanned())
@@ -106,6 +108,8 @@ public class SanctionManager {
     }
 
     public BungeeMute findMute(UUID uuid) {
+        if (uuid == null)
+            return null;
         for (BungeeMute mute : new CopyOnWriteArrayList<>(muteList)) {
             if (mute.getMutedUUID().equals(uuid)) {
                 if (mute.isMute())

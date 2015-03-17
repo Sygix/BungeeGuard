@@ -238,6 +238,13 @@ public class BungeeGuardListener implements Listener {
         if (e.isCancelled())
             return;
         if (!e.isCommand()) {
+
+            PartyManager.Party party = plugin.getPartyManager().getPartyByPlayer(p);
+            if (party != null && e.getMessage().startsWith("*")) {
+                Main.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage().substring(1));
+                e.setCancelled(true);
+                return;
+            }
             if (p.hasPermission("bungee.staffchat")) {
                 boolean isDefault = p.hasPermission("bungee.staffchat.default");
                 if (e.getMessage().startsWith("!!") != isDefault) {
@@ -256,12 +263,6 @@ public class BungeeGuardListener implements Listener {
                 }
                 if (isDefault)
                     e.setMessage(e.getMessage().substring(2));
-            }
-
-            PartyManager.Party party = plugin.getPartyManager().getPartyByPlayer(p);
-            if (party != null && e.getMessage().startsWith("*")) {
-                Main.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage().substring(1));
-                e.setCancelled(true);
             }
             if (plugin.isSilenced(p.getServer().getInfo().getName())) {
                 if (!p.hasPermission("bungee.bypasschat")) {
