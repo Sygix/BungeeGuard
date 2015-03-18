@@ -89,9 +89,8 @@ public class ServerManager {
                 }
             };
             ProxyServer.getInstance().getServerInfo(serverName).ping(pingCallback);
-        } else {
+        } else if (pingBack != null)
             pingBack.done(SP.orNull(), null);
-        }
     }
 
     public boolean isRestricted(String serverName) {
