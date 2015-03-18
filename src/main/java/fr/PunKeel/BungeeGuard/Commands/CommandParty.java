@@ -94,6 +94,7 @@ public class CommandParty extends Command {
                 return;
             }
             partyName = args[1];
+            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Party dissoute."));
         } else {
             PartyManager.Party p = PM.getPartyByPlayer(sender);
             if (p == null) {
@@ -106,7 +107,6 @@ public class CommandParty extends Command {
             }
             partyName = p.getName();
         }
-        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Party dissoute."));
         MB.disbandParty(partyName);
     }
 
@@ -234,12 +234,14 @@ public class CommandParty extends Command {
         }
         sender.sendMessage(Main.SEPARATOR);
         PartyManager.Party p = PM.getPartyByPlayer(sender.getUniqueId());
-        UUID owner = p.getOwner();
+        final UUID owner = p.getOwner();
         MyBuilder partyList = new MyBuilder(PartyManager.TAG + ChatColor.AQUA + "Joueurs dans votre Party : ");
         partyList.append(ChatColor.GREEN + MB.getNameFromUuid(owner) + " ");
         partyList.append(ChatColor.YELLOW + Joiner.on(" ").skipNulls().join(Collections2.transform(p.getMembers(), new Function<UUID, String>() {
             @Override
             public String apply(UUID uuid) {
+                if (uuid == owner)
+                    return null;
                 return MB.getNameFromUuid(uuid);
             }
         })));
