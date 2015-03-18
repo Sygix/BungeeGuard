@@ -158,6 +158,7 @@ public class Main extends Plugin {
         System.out.println("Welcome to MultiBungee ~ With ORM ~ Crafted with love, and a small cache.");
         getProxy().setReconnectHandler(new MyReconnectHandler());
         config = new MysqlConfigAdapter(this);
+        config.load();
         getProxy().setConfigurationAdapter(config);
     }
 
