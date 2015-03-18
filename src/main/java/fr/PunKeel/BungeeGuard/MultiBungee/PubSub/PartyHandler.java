@@ -51,7 +51,7 @@ public class PartyHandler {
             pp = ProxyServer.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
-            pp.sendMessage(TextComponent.fromLegacyText(PartyManager.CHAT_TAG + ChatColor.RESET + playerColor + playerName + ": " + message));
+            pp.sendMessage(TextComponent.fromLegacyText(PartyManager.CHAT_TAG + ChatColor.RESET + playerColor + playerName + ChatColor.RESET + ": " + message));
 
         }
     }
