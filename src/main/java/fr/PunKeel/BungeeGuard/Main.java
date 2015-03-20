@@ -13,7 +13,7 @@ import fr.PunKeel.BungeeGuard.Managers.*;
 import fr.PunKeel.BungeeGuard.Models.BungeeBlockedCommands;
 import fr.PunKeel.BungeeGuard.MultiBungee.MultiBungee;
 import fr.PunKeel.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
-import fr.PunKeel.BungeeGuard.MultiBungee.PubSubListener;
+import fr.PunKeel.BungeeGuard.PluginMessage.PluginMessageListener;
 import fr.PunKeel.BungeeGuard.MultiBungee.RedisBungeeListener;
 import fr.PunKeel.BungeeGuard.Utils.MyReconnectHandler;
 import fr.PunKeel.BungeeGuard.Utils.ShopTask;
@@ -191,7 +191,7 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerListener(this, new RedisBungeeListener(this));
 
         getProxy().registerChannel("UHCGames");
-        getProxy().getPluginManager().registerListener(this, new PubSubListener(this));
+        getProxy().getPluginManager().registerListener(this, new PluginMessageListener(this));
 
         fetchParties();
         Set<Class<? extends Command>> commandes = new HashSet<>();

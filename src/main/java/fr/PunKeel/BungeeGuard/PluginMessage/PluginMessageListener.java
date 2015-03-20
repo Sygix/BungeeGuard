@@ -1,10 +1,11 @@
-package fr.PunKeel.BungeeGuard.MultiBungee;
+package fr.PunKeel.BungeeGuard.PluginMessage;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.Managers.ServerManager;
+import fr.PunKeel.BungeeGuard.MultiBungee.MultiBungee;
 import net.md_5.bungee.Util;
 import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ProxyServer;
@@ -19,12 +20,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class PubSubListener implements Listener {
+public class PluginMessageListener implements Listener {
     private final Main plugin;
     private final MultiBungee MB;
     private final ServerManager SM;
 
-    public PubSubListener(Main plugin) {
+    public PluginMessageListener(Main plugin) {
         this.plugin = plugin;
         this.MB = Main.getMB();
         SM = Main.getServerManager();
@@ -32,11 +33,12 @@ public class PubSubListener implements Listener {
 
     @EventHandler
     public void onPluginMessageEvent(PluginMessageEvent e) {
-        if (!(e.getSender() instanceof Server))
+        if (!(e.getSender() instanceof Server && e.getReceiver() instanceof ProxiedPlayer))
             return;
         if (!e.getTag().equals("UHCGames"))
             return;
         Server sender = (Server) e.getSender();
+        ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
 
         ByteArrayDataInput in = ByteStreams.newDataInput(e.getData());
         String subchannel = in.readUTF();
@@ -68,6 +70,13 @@ public class PubSubListener implements Listener {
             sendServersPing(sender);
         }
 
+        if (subchannel.equals("Party")) {
+            PartyHandler.handle(plugin, in, out, p);
+        }
+        if (subchannel.equals("Friend")) {
+            FriendHandler.handle(plugin, in, out, p);
+        }
+
         if (subchannel.equals("PlayerList")) {
             String target = in.readUTF();
             out.writeUTF("PlayerList");
@@ -91,7 +100,6 @@ public class PubSubListener implements Listener {
         }
 
         if (subchannel.equals("ignore")) {
-            ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
             boolean new_state = in.readBoolean();
             MB.ignorePlayer(p.getUniqueId(), new_state ? '+' : '-', null);
         }
