@@ -37,7 +37,7 @@ public class FriendHandler {
 
     private static void listFriends(final Main plugin, final ByteArrayDataOutput out, ProxiedPlayer p) {
         Collection<UUID> friendsByUuid = plugin.getFriendManager().getFriends(p.getUniqueId(), FriendManager.STATE.MUTUAL);
-        out.writeUTF("UHCGames");
+        out.writeUTF("Friend");
         out.writeUTF("ListFriends");
         final MultiBungee MB = Main.getMB();
         final Collection<FriendData> friends = Collections2.transform(friendsByUuid, new Function<UUID, FriendData>() {
