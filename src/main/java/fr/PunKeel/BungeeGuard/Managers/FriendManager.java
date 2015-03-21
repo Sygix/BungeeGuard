@@ -14,10 +14,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class FriendManager {
     @Getter(AccessLevel.PUBLIC)
@@ -45,6 +42,15 @@ public class FriendManager {
                 }
                 friendships.clear();
                 friendships.putAll(_friendships);
+                Calendar cal = new GregorianCalendar();
+                cal.add(Calendar.DAY_OF_MONTH, -7);
+                Date aWeekAgo = cal.getTime();
+
+                for (BungeeFriend bf : friends) {
+                    if (!getFriendship(bf.getSender(), bf.getReceiver()).equals(STATE.MUTUAL) && aWeekAgo.after(bf.getCreationDate())) {
+                        bf.delete();
+                    }
+                }
             }
         });
     }
@@ -65,6 +71,18 @@ public class FriendManager {
 
     public boolean askedFriend(final UUID userA, final UUID userB) {
         return friendships.containsEntry(userA, userB);
+    }
+
+    public void removeFriend(final BungeeFriend bf, final boolean saveToBdd) {
+        friendships.remove(bf.getSender(), bf.getReceiver());
+        if (!saveToBdd)
+            return;
+        plugin.executePersistenceRunnable(new VoidRunner() {
+            @Override
+            protected void run() {
+                bf.delete();
+            }
+        });
     }
 
     public void removeFriend(final UUID userA, final UUID userB, final boolean saveToBdd) {

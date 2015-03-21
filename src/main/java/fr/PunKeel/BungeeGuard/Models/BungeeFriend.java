@@ -4,10 +4,12 @@ import fr.PunKeel.BungeeGuard.Utils.UUIDUtils;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Table("bungee_friends")
 public class BungeeFriend extends Model {
+
     public static BungeeFriend find(UUID userA, UUID userB) {
         return findFirst("uuid1=? AND uuid2=?", UUIDUtils.toBytes(userA), UUIDUtils.toBytes(userB));
     }
@@ -26,5 +28,9 @@ public class BungeeFriend extends Model {
 
     public void setReceiver(UUID uuid) {
         set("uuid2", UUIDUtils.toBytes(uuid));
+    }
+
+    public Timestamp getCreationDate() {
+        return getTimestamp("created_at");
     }
 }
