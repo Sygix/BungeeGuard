@@ -68,14 +68,12 @@ public class WalletManager {
         return getAccount(uniqueId).getMoney();
     }
 
-    @Deprecated
     public void setBalance(UUID uuid, double balance) {
         WalletModel WAM = getAccount(uuid);
         WAM.setMoney(balance);
         plugin.executePersistenceRunnable(new SaveRunner(WAM));
     }
 
-    @Deprecated
     public void addToBalance(UUID uuid, double amount) {
         WalletModel WAM = getAccount(uuid);
         WAM.setMoney(WAM.getMoney() + amount);

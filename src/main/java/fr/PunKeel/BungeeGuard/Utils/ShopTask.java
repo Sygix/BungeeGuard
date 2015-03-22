@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ShopTask implements Runnable {
     private final Main plugin;
@@ -95,13 +96,19 @@ public class ShopTask implements Runnable {
     private void wallet(Map<String, Object> params) {
         Preconditions.checkArgument(params.containsKey("pseudo"));
         String pseudo = (String) params.get("pseudo");
+        UUID uuid = Main.getMB().getUuidFromName(pseudo, true);
+
+        if (uuid == null)
+            return;
+
         if (params.containsKey("set")) {
             double amount = (double) params.get("set");
-            plugin.getProxy().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), "wallet set " + pseudo + " " + (int) amount);
+            plugin.getWalletManager().setBalance(uuid, amount);
         }
+
         if (params.containsKey("add")) {
             double amount = (double) params.get("add");
-            plugin.getProxy().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), "wallet add " + pseudo + " " + (int) amount);
+            plugin.getWalletManager().addToBalance(uuid, amount);
         }
     }
 }

@@ -124,6 +124,7 @@ public class PluginMessageListener implements Listener {
             double amount = in.readDouble();
             plugin.getWalletManager().addToBalance(uuid, amount);
         }
+
         if (subchannel.equalsIgnoreCase("cheat")) {
             String playerName = in.readUTF();
             String cheatName = in.readUTF();
@@ -132,6 +133,11 @@ public class PluginMessageListener implements Listener {
                 return;
             }
             plugin.getCheatManager().addCheat(sender.getInfo().getName(), playerName, cheatName, score);
+        }
+
+        if (subchannel.equalsIgnoreCase("GetLobbies")) {
+            out.writeUTF("GetLobbies");
+            out.writeUTF(Main.getGson().toJson(Main.getServerManager().getLobbiesInfo()));
         }
 
         if (subchannel.equalsIgnoreCase("BanCheat")) {

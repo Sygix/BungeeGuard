@@ -12,14 +12,18 @@ import com.google.common.collect.Ordering;
 import com.google.gson.Gson;
 import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.Models.BungeeServer;
+import fr.PunKeel.BungeeGuard.Permissions.Group;
 import fr.PunKeel.BungeeGuard.Permissions.Permissions;
 import lombok.Getter;
 import net.md_5.bungee.api.Callback;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -236,7 +240,17 @@ public class ServerManager {
         lastLobby.remove(uuid);
     }
 
-    public static class Lobby {
+    public Map<String, LobbyInfo> getLobbiesInfo() {
+        Map<String, LobbyInfo> servers = new HashMap<>();
+        for (Map.Entry<String, ServerManager.Lobby> entry : Main.getServerManager().getLobbies().entrySet()) {
+            servers.put(entry.getKey(), new LobbyInfo(entry.getValue()));
+        }
+        return servers;
+    }
+
+
+    public static class Lobby implements Serializable {
+        @Getter
         private final ServerPing result;
         @Getter
         private String name = "";
@@ -288,6 +302,45 @@ public class ServerManager {
             }
             int onlinePlayers = result.getPlayers().getOnline();
             return (1 + onlinePlayers) * (maxPlayers * target - onlinePlayers) + bonus;
+        }
+    }
+
+    private class LobbyInfo {
+        String name = "";
+        boolean isOnline = false;
+        int maxPlayers = 0;
+        int onlinePlayers = 0;
+        int port = 0;
+        Map<String, Integer> ranks = new HashMap<>();
+
+
+        public LobbyInfo(ServerManager.Lobby lobby) {
+            name = lobby.getName();
+            port = lobby.getServerInfo().getAddress().getPort();
+            isOnline = lobby.isOnline();
+            if (!isOnline)
+                return;
+            maxPlayers = lobby.getResult().getPlayers().getMax();
+            onlinePlayers = lobby.getResult().getPlayers().getOnline();
+            Map<Group, Integer> _ranks = new TreeMap<>(new Comparator<Group>() {
+                public int compare(Group o1, Group o2) {
+                    Integer weight1 = o1.getWeight();
+                    Integer weight2 = o2.getWeight();
+                    return weight1.compareTo(weight2);
+                }
+            });
+            for (UUID uuid : Main.getMB().getPlayersOnServer(name)) {
+                Group main = plugin.getPermissionManager().getMainGroup(uuid);
+                int online = _ranks.containsKey(main) ? _ranks.get(main) : 0;
+                _ranks.put(main, online + 1);
+            }
+            for (Group g : _ranks.keySet()) {
+                String displayName = g.getColor() + g.getName();
+                if (Objects.equals(g.getId(), "default")) {
+                    displayName = ChatColor.GRAY + "Joueurs";
+                }
+                ranks.put(displayName, (ranks.containsKey(displayName) ? ranks.get(displayName) : 0) + _ranks.get(g));
+            }
         }
     }
 }
