@@ -277,8 +277,8 @@ public class ServerManager {
         }
 
         public double getScore(ProxiedPlayer p) {
-            double target = .8;
-            // With a target of .8, the lobbies will be filled at 80% before sending people to another one.
+            double target = .6;
+            // With a target of .6, the lobbies will be filled at 60% before sending people to another one.
             double bonus = 0;
             if (p != null && getLastLobby(p.getUniqueId()) != null)
                 if (getLastLobby(p.getUniqueId()).equals(name))
