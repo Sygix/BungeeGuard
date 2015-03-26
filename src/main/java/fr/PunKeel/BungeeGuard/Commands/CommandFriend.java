@@ -132,6 +132,10 @@ public class CommandFriend extends Command {
         }
         ServerInfo SIA = Main.getMB().getServerFor(userA);
         ServerInfo SIB = Main.getMB().getServerFor(userB);
+        if (SIB == null) {
+            p.sendMessage(fromLegacyText(ChatColor.RED + "Ce joueur n'est pas en ligne."));
+            return;
+        }
         if (SIA.equals(SIB)) {
             p.sendMessage(fromLegacyText(ChatColor.RED + "Vous êtes sur le même serveur."));
             return;

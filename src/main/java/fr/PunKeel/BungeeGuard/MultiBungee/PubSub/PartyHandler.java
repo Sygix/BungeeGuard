@@ -165,7 +165,7 @@ public class PartyHandler {
         String data = e.getArg(0);
         Type type = new TypeToken<Map<String, PartyManager.Party>>() {
         }.getType();
-        System.out.println("[MB] Parties: received" + data);
+        plugin.getLogger().fine("[MB] Parties: received" + data);
         plugin.getPartyManager().setParties(Main.getGson().<Map<String, PartyManager.Party>>fromJson(data, type));
     }
 

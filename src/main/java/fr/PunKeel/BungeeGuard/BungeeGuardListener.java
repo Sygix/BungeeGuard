@@ -182,18 +182,21 @@ public class BungeeGuardListener implements Listener {
     public void onServerConnect(final ServerConnectEvent e) {
         final ProxiedPlayer p = e.getPlayer();
         if (firstJoin.contains(p.getUniqueId())) {
-            notifyFriends(p.getUniqueId(), TextComponent.fromLegacyText(String.format(FRIEND_LOGIN, p.getName())));
             showWelcomeTitle(p);
-            plugin.getFriendManager().sendJoinMessage(p);
+            ProxyServer.getInstance().getScheduler().runAsync(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    notifyFriends(p.getUniqueId(), TextComponent.fromLegacyText(String.format(FRIEND_LOGIN, p.getName())));
+                    plugin.getFriendManager().sendJoinMessage(p);
+                }
+            });
             firstJoin.remove(p.getUniqueId());
         }
         p.setTabHeader(header, footer);
         if (e.getTarget().getName().equalsIgnoreCase("hub")) {
-            System.out.println("Recuperation du meilleur lobby pour " + p.getName());
             String l = Main.getServerManager().getBestLobbyFor(p);
             if (l != null) {
                 e.setTarget(plugin.getProxy().getServerInfo(l));
-                System.out.println("Lobby selectionné: " + l);
             } else {
                 e.getPlayer().disconnect(new ComponentBuilder(ChatColor.RED + "Nos services sont momentanément indisponibles" + '\n' + ChatColor.RED + "Veuillez réessayer dans quelques instants").create());
             }

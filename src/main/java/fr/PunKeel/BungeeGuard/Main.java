@@ -13,8 +13,8 @@ import fr.PunKeel.BungeeGuard.Managers.*;
 import fr.PunKeel.BungeeGuard.Models.BungeeBlockedCommands;
 import fr.PunKeel.BungeeGuard.MultiBungee.MultiBungee;
 import fr.PunKeel.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
-import fr.PunKeel.BungeeGuard.PluginMessage.PluginMessageListener;
 import fr.PunKeel.BungeeGuard.MultiBungee.RedisBungeeListener;
+import fr.PunKeel.BungeeGuard.PluginMessage.PluginMessageListener;
 import fr.PunKeel.BungeeGuard.Utils.MyReconnectHandler;
 import fr.PunKeel.BungeeGuard.Utils.ShopTask;
 import lombok.Getter;
@@ -94,11 +94,11 @@ public class Main extends Plugin {
             public T call() throws Exception {
                 T value = null;
                 try {
-                    System.out.println("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :)");
+                    plugin.getLogger().finest("[ORM] Creation de la connexion SQL pour " + Thread.currentThread().toString() + " ... :)");
                     setup();
                     value = callable.call();
                 } finally {
-                    System.out.println("[ORM] Fermeture pour " + Thread.currentThread().toString() + " ... :D");
+                    plugin.getLogger().finest("[ORM] Fermeture pour " + Thread.currentThread().toString() + " ... :D");
                     cleanup();
                 }
                 return value;
@@ -118,12 +118,10 @@ public class Main extends Plugin {
         return F;
     }
 
-
     private String getEnv(String name, String def, Properties prop) {
         String property = (prop == null) ? def : prop.getProperty(name, def);
         return MoreObjects.firstNonNull(System.getenv(name), property);
     }
-
 
     @Override
     public void onLoad() {

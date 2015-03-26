@@ -35,7 +35,6 @@ public class MultiBungee {
     }
 
     public void init() {
-        System.out.println("Getting RedisBungee [...]");
         redisbungee = (RedisBungee) ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee");
         api = RedisBungee.getApi();
         try {
@@ -43,7 +42,6 @@ public class MultiBungee {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("RedisBungee API: OK.");
     }
 
     public final int getPlayerCount() {

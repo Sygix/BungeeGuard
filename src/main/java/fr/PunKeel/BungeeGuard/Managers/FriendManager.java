@@ -147,7 +147,7 @@ public class FriendManager {
         }), new Function<UUID, String>() {
             @Override
             public String apply(UUID uuid) {
-                return Main.getMB().getNameFromUuid(uuid);
+                return Main.getMB().getNameFromUuid(uuid, true);
             }
         });
         if (friends.size() + friends_other_pending.size() != 0) {
