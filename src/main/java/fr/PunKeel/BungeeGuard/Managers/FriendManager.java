@@ -23,7 +23,7 @@ public class FriendManager {
             "[" + ChatColor.GOLD + "%d" + ChatColor.WHITE + "/" + ChatColor.AQUA + "%d" + ChatColor.WHITE + "] " +
             ChatColor.AQUA + ": " + ChatColor.GOLD + "%s";
     private static final String PENDING_COUNT = TAG + ChatColor.AQUA + "Vous avez " + ChatColor.GOLD + "%d" + ChatColor.AQUA + " nouvelle%s invitation%s. Faites " + ChatColor.ITALIC + "/friends list" + ChatColor.AQUA + " pour les afficher";
-    private static final Joiner joiner = Joiner.on(ChatColor.WHITE + ", " + ChatColor.GOLD);
+    private static final Joiner joiner = Joiner.on(ChatColor.WHITE + ", " + ChatColor.GOLD).skipNulls();
     final Multimap<UUID, UUID> friendships = HashMultimap.create();
     Main plugin;
 
