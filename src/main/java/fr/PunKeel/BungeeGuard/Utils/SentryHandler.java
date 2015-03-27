@@ -31,10 +31,16 @@ public class SentryHandler extends Handler {
         // Do not log the event if the current thread is managed by raven
         if (!isLoggable(record))
             return;
+
         if (record.getLevel().intValue() < Level.WARNING.intValue())
             return;
+
         if (record.getMessage().contains("Handler - IOException: Connection reset by peer"))
             return;
+
+        if (record.getMessage().contains("] <-> InitialHandler - read timed out"))
+            return;
+
         try {
             final Event event = buildEvent(record);
             ProxyServer.getInstance().getScheduler().runAsync(Main.plugin, new Runnable() {

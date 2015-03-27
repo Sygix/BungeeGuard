@@ -179,8 +179,8 @@
                             <include>org.javalite:javalite-common</include>
                             <include>org.slf4j:slf4j-api</include>
                             <!-- to debug: <include>org.slf4j:slf4j-jdk14</include> -->
-                            <!--<include>net.kencochrane.raven:raven</include>
-                            <include>com.fasterxml.jackson.core:jackson-core</include>-->
+                            <include>net.kencochrane.raven:raven</include>
+                            <include>com.fasterxml.jackson.core:jackson-core</include>
 
                         </includes>
                     </artifactSet>
