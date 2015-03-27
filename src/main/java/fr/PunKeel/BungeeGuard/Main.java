@@ -134,7 +134,7 @@ public class Main extends Plugin {
         // RAVEN
         RavenFactory.registerFactory(new DefaultRavenFactory());
         Raven raven = RavenFactory.ravenInstance("https://e0cb123c9b3d4488b2584b32beb97fdd:db2bf46f241c4d7f924de6ec10b2ab07@app.getsentry.com/40574?raven.async=false");
-        ProxyServer.getInstance().getLogger().addHandler(new SentryHandler(raven));
+        ProxyServer.getInstance().getLogger().addHandler(new SentryHandler(raven, getDescription().getVersion()));
         // END RAVEN
         serverManager = new ServerManager(this);
         Properties prop = null;

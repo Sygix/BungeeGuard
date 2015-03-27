@@ -18,10 +18,12 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 public class SentryHandler extends Handler {
-    Raven raven;
+    private Raven raven;
+    private String version;
 
-    public SentryHandler(Raven raven) {
+    public SentryHandler(Raven raven, String version) {
         this.raven = raven;
+        this.version = version;
     }
 
     @Override
@@ -64,7 +66,7 @@ public class SentryHandler extends Handler {
      * @param level original level as defined in JUL.
      * @return log level used within raven.
      */
-    protected static Event.Level getLevel(Level level) {
+    protected static Event.Level getLevel(final Level level) {
         if (level.intValue() >= Level.SEVERE.intValue())
             return Event.Level.ERROR;
         else if (level.intValue() >= Level.WARNING.intValue())
@@ -111,7 +113,7 @@ public class SentryHandler extends Handler {
             eventBuilder.withCulprit(record.getLoggerName());
         }
         eventBuilder.withServerName(Main.getMB().getServerId());
-
+        eventBuilder.withExtra("version", version);
         raven.runBuilderHelpers(eventBuilder);
         return eventBuilder.build();
     }
