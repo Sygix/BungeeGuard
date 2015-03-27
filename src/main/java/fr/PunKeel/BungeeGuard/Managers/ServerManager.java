@@ -21,7 +21,6 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.connection.Server;
 
 import java.io.Serializable;
 import java.util.*;
@@ -99,7 +98,7 @@ public class ServerManager {
 
     public boolean isRestricted(String serverName) {
         Preconditions.checkArgument(ProxyServer.getInstance().getServerInfo(serverName) != null, "Server does not exist");
-        return getServerModel(serverName).isRestricted();
+        return getServerModel(serverName) != null && getServerModel(serverName).isRestricted();
     }
 
     public String getShortName(String serverName) {
@@ -145,10 +144,10 @@ public class ServerManager {
                         ping(serverInfo.getName(), null);
                     }
                 }
-                Iterator<String> i = lobbies.keySet().iterator();
+                Iterator<Lobby> i = lobbies.values().iterator();
                 while (i.hasNext()) {
-                    // Supprime les lobbies qui ont été supprimés de la liste des serveurs
-                    if (plugin.getProxy().getServerInfo(i.next()) == null)
+                    // Remove obsolete lobbies
+                    if (i.next().getServerInfo() == null)
                         i.remove();
                 }
             }
@@ -188,7 +187,7 @@ public class ServerManager {
         return Collections2.transform(Collections2.filter(getLobbies().values(), new Predicate<Lobby>() {
             @Override
             public boolean apply(Lobby lobby) {
-                return lobby != null && lobby.isOnline();
+                return lobby != null && lobby.isOnline() && lobby.getServerInfo() != null;
             }
         }), new Function<Lobby, ServerInfo>() {
             @Override

@@ -47,7 +47,7 @@ public class IgnoreHandler {
         String data = e.getArg(0);
         Type type = new TypeToken<Map<UUID, Collection<UUID>>>() {
         }.getType();
-        plugin.getLogger().fine(("[MB] Ignores: received" + data);
+        plugin.getLogger().fine("[MB] Ignores: received" + data);
         plugin.getIgnoreManager().setIgnoreList(Main.getGson().<Map<UUID, Collection<UUID>>>fromJson(data, type));
     }
 

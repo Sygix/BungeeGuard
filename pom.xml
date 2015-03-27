@@ -77,19 +77,31 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.14.8</version>
+            <version>1.16.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.5</version>
+            <version>1.7.9</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.7.9</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Raven dependency -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.5.0</version>
         </dependency>
         <dependency>
             <groupId>net.kencochrane.raven</groupId>
             <artifactId>raven</artifactId>
-            <version>4.0</version>
+            <version>6.0.0</version>
         </dependency>
     </dependencies>
 
@@ -165,8 +177,11 @@
                         <includes>
                             <include>org.javalite:activejdbc</include>
                             <include>org.javalite:javalite-common</include>
-                            <include>org.slf4j:slf4j-simple</include>
                             <include>org.slf4j:slf4j-api</include>
+                            <!-- to debug: <include>org.slf4j:slf4j-jdk14</include> -->
+                            <!--<include>net.kencochrane.raven:raven</include>
+                            <include>com.fasterxml.jackson.core:jackson-core</include>-->
+
                         </includes>
                     </artifactSet>
                     <filters>
@@ -174,7 +189,6 @@
                             <artifact>*:*</artifact>
                             <excludes>
                                 <exclude>META-INF/license/**</exclude>
-                                <exclude>META-INF/*</exclude>
                                 <exclude>META-INF/maven/**</exclude>
                                 <exclude>LICENSE</exclude>
                                 <exclude>NOTICE</exclude>

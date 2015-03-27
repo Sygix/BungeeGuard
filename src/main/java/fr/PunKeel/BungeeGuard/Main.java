@@ -16,8 +16,12 @@ import fr.PunKeel.BungeeGuard.MultiBungee.PubSub.ReloadConfHandler;
 import fr.PunKeel.BungeeGuard.MultiBungee.RedisBungeeListener;
 import fr.PunKeel.BungeeGuard.PluginMessage.PluginMessageListener;
 import fr.PunKeel.BungeeGuard.Utils.MyReconnectHandler;
+import fr.PunKeel.BungeeGuard.Utils.SentryHandler;
 import fr.PunKeel.BungeeGuard.Utils.ShopTask;
 import lombok.Getter;
+import net.kencochrane.raven.DefaultRavenFactory;
+import net.kencochrane.raven.Raven;
+import net.kencochrane.raven.RavenFactory;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -76,7 +80,6 @@ public class Main extends Plugin {
     private WalletManager walletManager = new WalletManager(this);
     private String MYSQL_USER, MYSQL_HOST, MYSQL_DATABASE, MYSQL_PASS;
 
-
     public List<String> getForbiddenCommands() {
         return forbiddenCommands;
     }
@@ -127,6 +130,12 @@ public class Main extends Plugin {
     public void onLoad() {
         plugin = this;
         startTime = System.currentTimeMillis();
+
+        // RAVEN
+        RavenFactory.registerFactory(new DefaultRavenFactory());
+        Raven raven = RavenFactory.ravenInstance("https://e0cb123c9b3d4488b2584b32beb97fdd:db2bf46f241c4d7f924de6ec10b2ab07@app.getsentry.com/40574?raven.async=false");
+        ProxyServer.getInstance().getLogger().addHandler(new SentryHandler(raven));
+        // END RAVEN
         serverManager = new ServerManager(this);
         Properties prop = null;
         try {
