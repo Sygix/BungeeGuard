@@ -329,7 +329,7 @@ public class ServerManager {
                 public int compare(Group o1, Group o2) {
                     Integer weight1 = o1.getWeight();
                     Integer weight2 = o2.getWeight();
-                    return weight1.compareTo(weight2);
+                    return -1 * weight1.compareTo(weight2); // inverted order
                 }
             });
             for (UUID uuid : Main.getMB().getPlayersOnServer(name)) {
@@ -339,9 +339,13 @@ public class ServerManager {
             }
             for (Group g : _ranks.keySet()) {
                 String displayName = g.getColor() + g.getName();
+                if (g.hasPermission("lobby.vanishjoin"))
+                    continue;
+
                 if (Objects.equals(g.getId(), "default")) {
                     displayName = ChatColor.GRAY + "Joueurs";
                 }
+                // Used to merge common groups
                 ranks.put(displayName, (ranks.containsKey(displayName) ? ranks.get(displayName) : 0) + _ranks.get(g));
             }
         }

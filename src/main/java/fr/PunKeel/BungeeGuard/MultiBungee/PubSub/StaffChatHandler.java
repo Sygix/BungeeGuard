@@ -31,7 +31,7 @@ public class StaffChatHandler {
                 .append(ChatColor.RED + "]")
                 .append(g.getColor() + " ■ ").event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(g.getColor() + g.getName())))
                 .append(ChatColor.RED + senderName + ": ")
-                .append(message)
+                .append(ChatColor.RED + message)
                 .create();
 
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
