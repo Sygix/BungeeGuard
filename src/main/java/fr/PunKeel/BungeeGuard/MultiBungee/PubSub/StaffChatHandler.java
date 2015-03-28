@@ -31,7 +31,7 @@ public class StaffChatHandler {
                 .append(ChatColor.RED + "]")
                 .append(g.getColor() + " ■ ").event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(g.getColor() + g.getName())))
                 .append(ChatColor.RED + senderName + ": ")
-                .append(" _______ ").event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.RED + message)))
+                .append(message)
                 .create();
 
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
@@ -87,7 +87,7 @@ public class StaffChatHandler {
     }
 
     @PubSubHandler("runCommand")
-    public static void runCommand(final Main plugin, PubSubMessageEvent e) {
+    public static void runCommand(PubSubMessageEvent e) {
         String playerName = e.getArg(0);
         final String command = e.getArg(1);
 
@@ -101,7 +101,7 @@ public class StaffChatHandler {
     }
 
     @PubSubHandler("maintenance")
-    public static void setMaintenance(final Main plugin, PubSubMessageEvent e) {
+    public static void setMaintenance(PubSubMessageEvent e) {
         String serverName = e.getArg(0);
         boolean restricted = e.getArg(1).equals("+");
         Main.getServerManager().setRestricted(serverName, restricted);

@@ -1,5 +1,6 @@
 package fr.PunKeel.BungeeGuard.Utils;
 
+import com.google.common.base.Throwables;
 import fr.PunKeel.BungeeGuard.Main;
 import net.kencochrane.raven.Raven;
 import net.kencochrane.raven.event.Event;
@@ -24,6 +25,39 @@ public class SentryHandler extends Handler {
     public SentryHandler(Raven raven, String version) {
         this.raven = raven;
         this.version = version;
+    }
+
+    /**
+     * Transforms a {@link Level} into an {@link Event.Level}.
+     *
+     * @param level original level as defined in JUL.
+     * @return log level used within raven.
+     */
+    protected static Event.Level getLevel(final Level level) {
+        if (level.intValue() >= Level.SEVERE.intValue())
+            return Event.Level.ERROR;
+        else if (level.intValue() >= Level.WARNING.intValue())
+            return Event.Level.WARNING;
+        else if (level.intValue() >= Level.INFO.intValue())
+            return Event.Level.INFO;
+        else if (level.intValue() >= Level.ALL.intValue())
+            return Event.Level.DEBUG;
+        else return null;
+    }
+
+    /**
+     * Extracts message parameters into a List of Strings.
+     * <p/>
+     * null parameters are kept as null.
+     *
+     * @param parameters parameters provided to the logging system.
+     * @return the parameters formatted as Strings in a List.
+     */
+    protected static List<String> formatMessageParameters(Object[] parameters) {
+        List<String> formattedParameters = new ArrayList<>(parameters.length);
+        for (Object parameter : parameters)
+            formattedParameters.add((parameter != null) ? parameter.toString() : null);
+        return formattedParameters;
     }
 
     @Override
@@ -54,7 +88,6 @@ public class SentryHandler extends Handler {
         }
     }
 
-
     @Override
     public void flush() {
 
@@ -64,24 +97,6 @@ public class SentryHandler extends Handler {
     public void close() throws SecurityException {
         if (raven != null)
             raven.closeConnection();
-    }
-
-    /**
-     * Transforms a {@link Level} into an {@link Event.Level}.
-     *
-     * @param level original level as defined in JUL.
-     * @return log level used within raven.
-     */
-    protected static Event.Level getLevel(final Level level) {
-        if (level.intValue() >= Level.SEVERE.intValue())
-            return Event.Level.ERROR;
-        else if (level.intValue() >= Level.WARNING.intValue())
-            return Event.Level.WARNING;
-        else if (level.intValue() >= Level.INFO.intValue())
-            return Event.Level.INFO;
-        else if (level.intValue() >= Level.ALL.intValue())
-            return Event.Level.DEBUG;
-        else return null;
     }
 
     /**
@@ -108,9 +123,9 @@ public class SentryHandler extends Handler {
         eventBuilder.withMessage(message);
 
         Throwable throwable = record.getThrown();
-        if (throwable != null)
-            eventBuilder.withSentryInterface(new ExceptionInterface(throwable));
-
+        if (throwable != null) {
+            eventBuilder.withSentryInterface(new ExceptionInterface(Throwables.getRootCause(throwable))); // Just a test.
+        }
         if (record.getSourceClassName() != null && record.getSourceMethodName() != null) {
             StackTraceElement fakeFrame = new StackTraceElement(record.getSourceClassName(),
                     record.getSourceMethodName(), null, -1);
@@ -119,23 +134,8 @@ public class SentryHandler extends Handler {
             eventBuilder.withCulprit(record.getLoggerName());
         }
         eventBuilder.withServerName(Main.getMB().getServerId());
-        eventBuilder.withExtra("version", version);
+        eventBuilder.withTag("version", version);
         raven.runBuilderHelpers(eventBuilder);
         return eventBuilder.build();
-    }
-
-    /**
-     * Extracts message parameters into a List of Strings.
-     * <p/>
-     * null parameters are kept as null.
-     *
-     * @param parameters parameters provided to the logging system.
-     * @return the parameters formatted as Strings in a List.
-     */
-    protected static List<String> formatMessageParameters(Object[] parameters) {
-        List<String> formattedParameters = new ArrayList<>(parameters.length);
-        for (Object parameter : parameters)
-            formattedParameters.add((parameter != null) ? parameter.toString() : null);
-        return formattedParameters;
     }
 }

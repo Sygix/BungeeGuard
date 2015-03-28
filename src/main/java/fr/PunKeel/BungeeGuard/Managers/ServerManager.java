@@ -74,6 +74,9 @@ public class ServerManager {
     public void ping(final String serverName, final Callback<ServerPing> pingBack) {
         if (serverName == null || serverName.isEmpty())
             return;
+        ServerInfo server = ProxyServer.getInstance().getServerInfo(serverName);
+        if (server == null)
+            return;
         final Optional<ServerPing> SP = getServersCache().getIfPresent(serverName);
 
         if (SP == null) {
@@ -91,7 +94,7 @@ public class ServerManager {
                         pingBack.done(serverPing, throwable);
                 }
             };
-            ProxyServer.getInstance().getServerInfo(serverName).ping(pingCallback);
+            server.ping(pingCallback);
         } else if (pingBack != null)
             pingBack.done(SP.orNull(), null);
     }
@@ -115,7 +118,8 @@ public class ServerManager {
         ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                for (final ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
+                Collection<ServerInfo> servers = ProxyServer.getInstance().getServers().values();
+                for (final ServerInfo serverInfo : servers) {
                     if (isLobbyName(serverInfo.getName())) {
                         Callback<ServerPing> pingBack = new Callback<ServerPing>() {
                             @Override
@@ -139,7 +143,8 @@ public class ServerManager {
         ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                for (final ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
+                Collection<ServerInfo> servers = ProxyServer.getInstance().getServers().values();
+                for (final ServerInfo serverInfo : servers) {
                     if (!isLobbyName(serverInfo.getName())) {
                         ping(serverInfo.getName(), null);
                     }
@@ -154,7 +159,6 @@ public class ServerManager {
         }, 1, 1, TimeUnit.SECONDS);
     }
 
-    @SuppressWarnings("UnusedParameters")
     public String getBestLobbyFor(final ProxiedPlayer p) {
         Collection<Lobby> lobbies = Collections2.filter(getLobbies().values(), isOnline(p));
         ImmutableSortedSet<Lobby> sortedLobbies = ImmutableSortedSet.orderedBy(getScoreOrdering(p)).addAll(lobbies).build();
@@ -310,7 +314,7 @@ public class ServerManager {
         int maxPlayers = 0;
         int onlinePlayers = 0;
         int port = 0;
-        Map<String, Integer> ranks = new HashMap<>();
+        Map<String, Integer> ranks = new TreeMap<>();
 
 
         public LobbyInfo(ServerManager.Lobby lobby) {

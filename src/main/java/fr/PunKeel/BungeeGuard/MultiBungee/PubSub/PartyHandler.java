@@ -161,7 +161,7 @@ public class PartyHandler {
     }
 
     @PubSubHandler("@partyReply")
-    public static void partyRepl(Main plugin, PubSubMessageEvent e) {
+    public static void partyReply(Main plugin, PubSubMessageEvent e) {
         String data = e.getArg(0);
         Type type = new TypeToken<Map<String, PartyManager.Party>>() {
         }.getType();
