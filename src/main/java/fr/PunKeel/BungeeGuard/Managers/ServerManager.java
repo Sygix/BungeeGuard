@@ -118,7 +118,7 @@ public class ServerManager {
         ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                Collection<ServerInfo> servers = ProxyServer.getInstance().getServers().values();
+                Collection<ServerInfo> servers = new HashSet<>(ProxyServer.getInstance().getServers().values());
                 for (final ServerInfo serverInfo : servers) {
                     if (isLobbyName(serverInfo.getName())) {
                         Callback<ServerPing> pingBack = new Callback<ServerPing>() {
@@ -143,7 +143,7 @@ public class ServerManager {
         ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                Collection<ServerInfo> servers = ProxyServer.getInstance().getServers().values();
+                Collection<ServerInfo> servers = new HashSet<>(ProxyServer.getInstance().getServers().values());
                 for (final ServerInfo serverInfo : servers) {
                     if (!isLobbyName(serverInfo.getName())) {
                         ping(serverInfo.getName(), null);
