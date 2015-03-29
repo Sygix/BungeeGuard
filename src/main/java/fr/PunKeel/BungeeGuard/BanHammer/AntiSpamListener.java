@@ -74,8 +74,10 @@ public class AntiSpamListener implements Listener {
         long now = System.currentTimeMillis();
         long lastMsgMillis = lastMessageTime.containsKey(uuid) ? lastMessageTime.get(uuid) : 0;
 
-        if (now - lastMsgMillis > 3000)
+        if (now - lastMsgMillis > 3000){
+            duplicateCount.put(uuid, 0);
             return false;
+        }
 
         // Anti répétition
         if (lastMessage.containsKey(uuid)
