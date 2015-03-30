@@ -170,6 +170,15 @@ public class FriendManager {
         return (size > 1) ? "s" : "";
     }
 
+    public Collection<UUID> getOnlineFriends(UUID uuid) {
+        return Collections2.filter(getFriends(uuid, STATE.MUTUAL), new Predicate<UUID>() {
+            @Override
+            public boolean apply(UUID uuid) {
+                return Main.getMB().isPlayerOnline(uuid);
+            }
+        });
+    }
+
     public enum STATE {PENDING, PENDING_OTHER, MUTUAL, NONE}
     // Pending: user A asked B and waits for a reply
     // Pending_other: user B asked A and waits for a reply

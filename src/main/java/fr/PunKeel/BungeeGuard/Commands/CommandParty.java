@@ -2,6 +2,7 @@ package fr.PunKeel.BungeeGuard.Commands;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.Managers.PartyManager;
@@ -11,9 +12,11 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public class CommandParty extends Command {
@@ -77,6 +80,14 @@ public class CommandParty extends Command {
             case "infos":
                 info(p);
                 break;
+            case "tp":
+            case "teleport":
+                teleport(p);
+                break;
+            case "friend":
+            case "friends":
+                friends(p);
+                break;
             default:
                 showHelp = true;
                 break;
@@ -85,6 +96,62 @@ public class CommandParty extends Command {
             help(sender);
 
     }
+
+    private void friends(ProxiedPlayer sender) {
+        Collection<UUID> friends = plugin.getFriendManager().getOnlineFriends(sender.getUniqueId());
+        if (friends.size() == 0) {
+            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous n'avez aucun ami en ligne."));
+            return;
+        }
+        friends = Collections2.filter(friends, new Predicate<UUID>() {
+            @Override
+            public boolean apply(UUID uuid) {
+                PartyManager.Party p = PM.getPartyByPlayer(uuid);
+                return p == null;
+            }
+        });
+        if (friends.size() == 0) {
+            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tous vos amis sont déjà dans une party."));
+            return;
+        }
+        PartyManager.Party p = PM.getPartyByPlayer(sender);
+        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Vous venez d'inviter vos amis dans votre party !"));
+        if (p == null) {
+            p = PM.createParty(sender.getName(), sender.getUniqueId());
+            MB.createParty(sender.getName(), sender);
+            sender.sendMessage(MSG_HELP);
+            sender.sendMessage(MSG_PARTYCHAT);
+        }
+        for (UUID friend : friends) {
+            Main.getMB().inviteParty(p, friend);
+        }
+    }
+
+    private void teleport(ProxiedPlayer sender) {
+        PartyManager.Party p = PM.getPartyByPlayer(sender);
+        if (p == null) {
+            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
+            return;
+        }
+        if (p.isOwner(sender)) {
+            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous êtes déjà sur le même serveur"));
+            return;
+        }
+        UUID owner = p.getOwner();
+        ServerInfo server = MB.getServerFor(owner);
+        String serverName = server.getName();
+        if (serverName.equals(sender.getServer().getInfo().getName())) {
+            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous êtes déjà sur le même serveur"));
+            return;
+        }
+        if (!server.canAccess(sender)) {
+            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "L'accès à ce serveur vous est interdit"));
+            return;
+        }
+        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Envoi sur le serveur " + Main.getServerManager().getPrettyName(serverName)));
+        sender.connect(server);
+    }
+
 
     private void disband(ProxiedPlayer sender, String[] args) {
         String partyName;
