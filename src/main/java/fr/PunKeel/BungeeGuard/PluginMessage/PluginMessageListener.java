@@ -157,6 +157,8 @@ public class PluginMessageListener implements Listener {
         Callback<ServerPing> pingBack;
         Set<String> servers = new CopyOnWriteArraySet<>(ProxyServer.getInstance().getServers().keySet());
         for (final String serverName : servers) {
+            final String prettyName = SM.getPrettyName(serverName);
+            final String shortName = SM.getShortName(serverName);
             pingBack = new Callback<ServerPing>() {
                 @Override
                 public void done(ServerPing serverPing, Throwable throwable) {
@@ -165,8 +167,8 @@ public class PluginMessageListener implements Listener {
                     out = ByteStreams.newDataOutput();
                     out.writeUTF("PingServers");
                     out.writeUTF(serverName);
-                    out.writeUTF(SM.getPrettyName(serverName));
-                    out.writeUTF(SM.getShortName(serverName));
+                    out.writeUTF(prettyName);
+                    out.writeUTF(shortName);
                     if (throwable != null || serverPing == null) {
                         out.writeInt(-1);
                     } else {

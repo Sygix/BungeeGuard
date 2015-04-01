@@ -22,9 +22,11 @@ public class SentryHandler extends Handler {
     private Raven raven;
     private String version;
 
-    private String[] blacklist = new String[]{"Handler - IOException: Connection reset by peer",
+    private String[] blacklist = new String[]{
+            "Handler - IOException: Connection reset by peer",
             "] <-> InitialHandler - read timed out",
-            "] <-> InitialHandler - IOException: Connection reset by peer"};
+            "] <-> InitialHandler - IOException: Connection reset by peer"
+    };
 
     public SentryHandler(Raven raven, String version) {
         this.raven = raven;
