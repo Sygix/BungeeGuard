@@ -22,6 +22,10 @@ public class SentryHandler extends Handler {
     private Raven raven;
     private String version;
 
+    private String[] blacklist = new String[]{"Handler - IOException: Connection reset by peer",
+            "] <-> InitialHandler - read timed out",
+            "] <-> InitialHandler - IOException: Connection reset by peer"};
+
     public SentryHandler(Raven raven, String version) {
         this.raven = raven;
         this.version = version;
@@ -69,10 +73,13 @@ public class SentryHandler extends Handler {
         if (record.getLevel().intValue() < Level.WARNING.intValue())
             return;
 
-        if (record.getMessage().contains("Handler - IOException: Connection reset by peer"))
-            return;
+        for (String blacklisted_message : blacklist) {
+            if (record.getMessage().contains(blacklisted_message))
+                return;
+        }
 
-        if (record.getMessage().contains("] <-> InitialHandler - read timed out"))
+        //noinspection ThrowableResultOfMethodCallIgnored
+        if (record.getThrown() == null)
             return;
 
         try {
