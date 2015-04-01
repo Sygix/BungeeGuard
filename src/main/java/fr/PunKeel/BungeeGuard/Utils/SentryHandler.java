@@ -23,6 +23,7 @@ public class SentryHandler extends Handler {
     private String version;
 
     private String[] blacklist = new String[]{
+            "] <-> InitialHandler - encountered exception",
             "Handler - IOException: Connection reset by peer",
             "] <-> InitialHandler - read timed out",
             "] <-> InitialHandler - IOException: Connection reset by peer"
