@@ -72,10 +72,6 @@ public class BungeeGuardListener implements Listener {
             ChatColor.YELLOW + "Boutique: " + ChatColor.GREEN + "store.uhcgames.com";
     private static final int PROTOCOL_MC_18_VERSION = 47;
 
-    private final Main plugin;
-    private final Method handshakeMethod;
-    private final Set<UUID> firstJoin = new HashSet<>();
-
     static {
         List<String> lines = new ArrayList<>();
         lines.add(ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "         " + ChatColor.RESET + "" + ChatColor.BOLD + "«" + ChatColor.GOLD + "" + ChatColor.BOLD + " UHC " + ChatColor.AQUA + "" + ChatColor.BOLD + "Network " + ChatColor.RESET + "" + ChatColor.BOLD + "»" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "         ");
@@ -100,6 +96,9 @@ public class BungeeGuardListener implements Listener {
         playersPing = players;
     }
 
+    private final Main plugin;
+    private final Method handshakeMethod;
+    private final Set<UUID> firstJoin = new HashSet<>();
     ServerManager SM;
 
     public BungeeGuardListener(final Main plugin) {
@@ -362,6 +361,10 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onTabCompleteEvent(TabCompleteEvent e) {
         String[] args = e.getCursor().split(" ");
+        if (e.getCursor().equals("/")) {
+            e.setCancelled(true);
+            return;
+        }
 
         final String checked = (args.length > 0 ? args[args.length - 1] : e.getCursor()).toLowerCase();
 
