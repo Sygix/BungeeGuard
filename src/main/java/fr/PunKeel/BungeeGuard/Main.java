@@ -80,6 +80,14 @@ public class Main extends Plugin {
     private WalletManager walletManager = new WalletManager(this);
     private String MYSQL_USER, MYSQL_HOST, MYSQL_DATABASE, MYSQL_PASS;
 
+    public static void missPermission(CommandSender sender, String permissionNode) {
+        if (!sender.hasPermission("bungee.debug.permissions")) {
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Permission refusée"));
+            return;
+        }
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Permission refusée (" + ChatColor.WHITE + permissionNode + ChatColor.RED + ")"));
+    }
+
     public List<String> getForbiddenCommands() {
         return forbiddenCommands;
     }
@@ -324,9 +332,5 @@ public class Main extends Plugin {
 
     boolean isMaintenance() {
         return serverManager.isRestricted("hub");
-    }
-
-    public static void missPermission(CommandSender sender, String permissionNode) {
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Permission refusée (" + ChatColor.WHITE + permissionNode + ChatColor.RED + ")"));
     }
 }

@@ -86,7 +86,7 @@ public class BungeeGuardListener implements Listener {
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.AQUA + "Fatality");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.LIGHT_PURPLE + "Tower");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.GREEN + "Monster Defense");
-        lines.add(ChatColor.GRAY + "Et bien d'autres jeux ...");
+        lines.add(ChatColor.GRAY + "➟ " + ChatColor.GOLD + "UltraLucky");
 
 
         ServerPing.PlayerInfo[] players = new ServerPing.PlayerInfo[lines.size()];
@@ -227,7 +227,7 @@ public class BungeeGuardListener implements Listener {
                 return;
             }
         }
-        if (!p.hasPermission("bungee.can.repeat_message")) {
+        if (!p.hasPermission("bungee.can.repeat_message") || e.isCommand()) {
             plugin.getAntiSpamListener().onChat(e);
         }
         if (!p.hasPermission("bungee.admin")) {
