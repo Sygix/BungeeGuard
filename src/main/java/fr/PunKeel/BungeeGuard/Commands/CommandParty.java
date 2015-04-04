@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.UUID;
 
 public class CommandParty extends Command {
+    private static final String HELP_FRIENDS = "&6/party friends &e: Invite tous vos amis dans votre party\n";
+    private static final String HELP_TELEPORT = "&6/party teleport &e: Vous envoie sur le serveur du chef de party\n";
     private final Main plugin;
     private final PartyManager PM;
     private final MultiBungee MB;
@@ -98,6 +100,10 @@ public class CommandParty extends Command {
     }
 
     private void friends(ProxiedPlayer sender) {
+        if (!sender.hasPermission("bungee.party.friends")) {
+            Main.missPermission(sender, "bungee.party.friends");
+            return;
+        }
         Collection<UUID> friends = plugin.getFriendManager().getOnlineFriends(sender.getUniqueId());
         if (friends.size() == 0) {
             sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous n'avez aucun ami en ligne."));
@@ -128,6 +134,10 @@ public class CommandParty extends Command {
     }
 
     private void teleport(ProxiedPlayer sender) {
+        if (!sender.hasPermission("bungee.party.teleport")) {
+            Main.missPermission(sender, "bungee.party.teleport");
+            return;
+        }
         PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
             sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
@@ -139,6 +149,7 @@ public class CommandParty extends Command {
         }
         UUID owner = p.getOwner();
         ServerInfo server = MB.getServerFor(owner);
+        assert server != null;
         String serverName = server.getName();
         if (serverName.equals(sender.getServer().getInfo().getName())) {
             sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous êtes déjà sur le même serveur"));
@@ -157,7 +168,7 @@ public class CommandParty extends Command {
         String partyName;
         if (args.length == 2) {
             if (!sender.hasPermission("bungee.party.disband")) {
-                sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Permission refusée."));
+                Main.missPermission(sender, "bungee.party.disband");
                 return;
             }
             partyName = args[1];
@@ -326,11 +337,13 @@ public class CommandParty extends Command {
                 "&a&nAide : Commande /party\n" +
                 "&r\n" +
                 "&6/party invite [pseudo] &e: Inviter le joueur dans votre party\n" +
+                (sender.hasPermission("bungee.party.friends") ? HELP_FRIENDS : "") +
                 "&6/party info &e: Liste les joueurs dans votre party\n" +
                 "&6/party leave &e: Quitter la party \n" +
                 "&6/party kick [pseudo] &e: Expulse le joueur indiqué\n" +
                 "&6/party disband &e: Dissout la party\n" +
                 "&6/party owner [pseudo] &e: Rend le joueur indiqué chef de la party\n" +
+                (sender.hasPermission("bungee.party.teleport") ? HELP_TELEPORT : "") +
                 "&r\n" +
                 "&e-----------------------------------------------------")));
     }
