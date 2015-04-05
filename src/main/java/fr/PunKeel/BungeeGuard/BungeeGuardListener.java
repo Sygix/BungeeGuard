@@ -227,7 +227,7 @@ public class BungeeGuardListener implements Listener {
                 return;
             }
         }
-        if (!p.hasPermission("bungee.can.repeat_message") || e.isCommand()) {
+        if (!p.hasPermission("bungee.can.repeat_message") && !e.isCommand()) {
             plugin.getAntiSpamListener().onChat(e);
         }
         if (!p.hasPermission("bungee.admin")) {
