@@ -73,7 +73,7 @@ public class Main extends Plugin {
     @Getter
     private IgnoreManager ignoreManager = new IgnoreManager(this);
     @Getter
-    private AntiSpamListener antiSpamListener = new AntiSpamListener(this);
+    private AntiSpamListener antiSpamListener = new AntiSpamListener();
     @Getter
     private AnnouncementManager announcementManager = new AnnouncementManager();
     @Getter

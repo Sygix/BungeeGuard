@@ -1,6 +1,5 @@
 package fr.PunKeel.BungeeGuard.BanHammer;
 
-import fr.PunKeel.BungeeGuard.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -12,15 +11,13 @@ import java.util.Map;
 import java.util.UUID;
 
 public class AntiSpamListener implements Listener {
-    private final Main plugin;
     private final Map<UUID, String> lastMessage = new HashMap<>();
     private final Map<UUID, Long> lastMessageTime = new HashMap<>();
     private final Map<UUID, Integer> fastMessageCount = new HashMap<>();
     private final Map<UUID, Integer> duplicateCount = new HashMap<>();
     private final Map<UUID, Long> mutes = new HashMap<>();
 
-    public AntiSpamListener(Main plugin) {
-        this.plugin = plugin;
+    public AntiSpamListener() {
     }
 
     public void onChat(ChatEvent e) {
@@ -55,7 +52,7 @@ public class AntiSpamListener implements Listener {
         long now = System.currentTimeMillis();
         long lastMsgMillis = lastMessageTime.containsKey(uuid) ? lastMessageTime.get(uuid) : 0;
         // Anti flood
-        if (now - lastMsgMillis < 1000) {
+        if (now - lastMsgMillis < 800) {
             int fastMsgCount = 1 + (fastMessageCount.containsKey(uuid) ? fastMessageCount.get(uuid) : 0);
             fastMessageCount.put(uuid, fastMsgCount);
             if (fastMsgCount >= 2)
