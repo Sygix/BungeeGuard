@@ -74,6 +74,8 @@ public class CommandRegister extends Command {
                         case 200:
                             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Votre compte a été créé avec succès !"));
                             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Connectez-vous sur " + ChatColor.WHITE + "https://forum.uhcgames.com/"));
+                            plugin.getWalletManager().addToBalance(p.getUniqueId(), 100);
+                            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.AQUA + "Vous gagnez 100 UHCoins grâce à votre inscription ! Bien joué !"));
                             break;
                         case 413:
                             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Il me semble que vous avez déjà un compte."));
