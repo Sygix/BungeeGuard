@@ -70,7 +70,12 @@ public class CommandBan extends PlayerCommand {
         bannedUntilTime = duration ? now + bannedTime : -1;
         InetAddress ipA = MB.getPlayerIp(bannedUUID);
         String ip = (ipA == null ? null : ipA.getHostAddress());
-        BungeeBan ban = SM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, false);
+        BungeeBan ban = SM.findBan(bannedUUID);
+
+        if (ban != null)
+            SM.unban(ban, adminName, "Reban", true);
+
+        ban = SM.ban(bannedUUID, bannedName, bannedUntilTime, reason, adminName, adminUUID, false);
         ban.setIp(ip);
         plugin.executePersistenceRunnable(new SaveRunner(ban));
         String adminNotification = ban.getAdminNotification(now);
