@@ -205,6 +205,8 @@ public class BungeeGuardListener implements Listener {
                 Main.getMB().summonParty(party.getName(), e.getTarget().getName());
             }
         }
+        plugin.getPluginMessageManager().sendFriendList(p);
+        plugin.getPluginMessageManager().sendPartyInfo(p);
         if ((p.getServer() != null && p.getServer().getInfo().equals(e.getTarget())) || !e.getTarget().canAccess(p)) {
             e.setCancelled(true);
         }

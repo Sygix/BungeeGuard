@@ -19,6 +19,8 @@ public class FriendHandler {
         UUID userA = UUID.fromString(e.getArg(0));
         UUID userB = UUID.fromString(e.getArg(1));
         plugin.getFriendManager().addFriend(userA, userB, false);
+        if (plugin.getFriendManager().getFriendship(userA, userB) == FriendManager.STATE.MUTUAL)
+            plugin.getPluginMessageManager().sendFriendAdd(userA, userB);
 
         ProxiedPlayer p = plugin.getProxy().getPlayer(userB);
         if (p == null)
@@ -40,6 +42,6 @@ public class FriendHandler {
         UUID userA = UUID.fromString(e.getArg(0));
         UUID userB = UUID.fromString(e.getArg(1));
         plugin.getFriendManager().removeFriend(userA, userB, false);
-
+        plugin.getPluginMessageManager().sendFriendRemove(userA, userB);
     }
 }

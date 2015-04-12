@@ -32,6 +32,7 @@ public class PartyHandler {
             pp = ProxyServer.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
+            plugin.getPluginMessageManager().sendPartyAddMember(pp, u);
             pp.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "+ " + Main.getMB().getNameFromUuid(u) + ChatColor.RESET + " a rejoint la Party"));
         }
     }
@@ -62,6 +63,9 @@ public class PartyHandler {
         String partyName = e.getArg(0);
         UUID u = UUID.fromString(e.getArg(1));
         plugin.getPartyManager().createParty(partyName, u);
+        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(u);
+        if (p != null)
+            plugin.getPluginMessageManager().sendPartyInfo(p);
     }
 
     @PubSubHandler("disbandParty")
@@ -75,6 +79,7 @@ public class PartyHandler {
             pp = ProxyServer.getInstance().getPlayer(uuid);
             if (pp == null)
                 continue;
+            plugin.getPluginMessageManager().sendPartyDisband(pp, p);
             pp.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Party dissoute."));
         }
         plugin.getPartyManager().removeParty(p);
@@ -122,6 +127,7 @@ public class PartyHandler {
                 pp = ProxyServer.getInstance().getPlayer(uuid);
                 if (pp == null)
                     continue;
+                plugin.getPluginMessageManager().sendPartyKick(pp, u);
                 pp.sendMessage(new TextComponent(PartyManager.TAG + ChatColor.RED + "- " + playerName + " a été kické de la Party"));
             }
         }
@@ -155,6 +161,7 @@ public class PartyHandler {
                 pp = ProxyServer.getInstance().getPlayer(uuid);
                 if (pp == null)
                     continue;
+                plugin.getPluginMessageManager().sendPartyKick(pp, u);
                 pp.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "- " + playerName + " a quitté la Party"));
             }
         }

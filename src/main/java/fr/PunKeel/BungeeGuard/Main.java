@@ -64,6 +64,8 @@ public class Main extends Plugin {
     @Getter
     CheatManager cheatManager = new CheatManager(this);
     @Getter
+    PluginMessageManager pluginMessageManager = new PluginMessageManager(this);
+    @Getter
     MysqlConfigAdapter config;
     @Getter
     FriendManager friendManager = new FriendManager(this);

@@ -163,8 +163,7 @@ public class PluginMessageListener implements Listener {
                 @Override
                 public void done(ServerPing serverPing, Throwable throwable) {
                     byte[] data;
-                    ByteArrayDataOutput out;
-                    out = ByteStreams.newDataOutput();
+                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
                     out.writeUTF("PingServers");
                     out.writeUTF(serverName);
                     out.writeUTF(prettyName);
