@@ -81,7 +81,7 @@ public class BungeeGuardListener implements Listener {
         lines.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "      Vous allez aimer UHCGames !");
         lines.add(ChatColor.GRAY + " ");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.RED + "Kill The Patrick");
-        lines.add(ChatColor.GRAY + "➟ " + ChatColor.YELLOW + "Ultra HungerGames");
+        lines.add(ChatColor.GRAY + "➟ " + ChatColor.YELLOW + "Ultra Hunger Games");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.BLUE + "Rush");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.AQUA + "Fatality");
         lines.add(ChatColor.GRAY + "➟ " + ChatColor.LIGHT_PURPLE + "Tower");
@@ -205,8 +205,7 @@ public class BungeeGuardListener implements Listener {
                 Main.getMB().summonParty(party.getName(), e.getTarget().getName());
             }
         }
-        plugin.getPluginMessageManager().sendFriendList(p);
-        plugin.getPluginMessageManager().sendPartyInfo(p);
+
         if ((p.getServer() != null && p.getServer().getInfo().equals(e.getTarget())) || !e.getTarget().canAccess(p)) {
             e.setCancelled(true);
         }
@@ -392,6 +391,14 @@ public class BungeeGuardListener implements Listener {
                 hasPerm = Permissions.hasPerm(p.getUniqueId(), e.getPermission());
             e.setHasPermission(hasPerm);
         }
+    }
+
+    @EventHandler
+    public void onConnected(final ServerConnectedEvent e) {
+        final ProxiedPlayer p = e.getPlayer();
+        System.out.println(p.getServer());
+        plugin.getPluginMessageManager().sendFriendList(p);
+        plugin.getPluginMessageManager().sendPartyInfo(p);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

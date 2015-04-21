@@ -47,7 +47,10 @@ public class FriendHandler {
             playTime = Main.plugin.executePersistenceRunnable(new Callable<Long>() {
                 @Override
                 public Long call() throws Exception {
-                    return Long.valueOf(String.valueOf(Base.firstCell("SELECT SUM(TIME_TO_SEC(TIMEDIFF(leaved_at, joined_at))) FROM bungeelitycs WHERE uuid = ? AND leaved_at IS NOT NULL", UUIDUtils.toBytes(uuid))));
+                    Object onlineTime = Base.firstCell("SELECT SUM(TIME_TO_SEC(TIMEDIFF(leaved_at, joined_at))) FROM bungeelitycs WHERE uuid = ? AND leaved_at IS NOT NULL", UUIDUtils.toBytes(uuid));
+                    if (onlineTime == null)
+                        return 0l;
+                    return Long.valueOf(String.valueOf(onlineTime));
                 }
             }).get(20, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {

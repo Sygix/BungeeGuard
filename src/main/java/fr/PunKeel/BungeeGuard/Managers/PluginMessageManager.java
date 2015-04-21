@@ -27,7 +27,6 @@ public class PluginMessageManager {
         Collection<UUID> friendsByUuid = plugin.getFriendManager().getFriends(p.getUniqueId(), FriendManager.STATE.MUTUAL);
         out.writeUTF("Friend");
         out.writeUTF("ListFriends");
-        final MultiBungee MB = Main.getMB();
         final Collection<FriendData> friends = Collections2.transform(friendsByUuid, new Function<UUID, FriendData>() {
             @Override
             public FriendData apply(final UUID uuid) {
