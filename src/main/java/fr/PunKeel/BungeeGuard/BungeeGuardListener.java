@@ -295,6 +295,18 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onProxyPing(ProxyPingEvent e) {
         ServerPing sp = e.getResponse();
+        InetSocketAddress virtualHost = e.getConnection().getVirtualHost();
+        if (virtualHost != null) {
+            String hostname = virtualHost.getHostName().replace(".popcorp.eu", "");
+            if (hostname != null) {
+                if (hostname.endsWith(".info.uhcgames.com")) {
+                    String serverType = hostname.replace(".info.uhcgames.com", "");
+                    sp.getPlayers().setOnline(Main.getServerManager().getPlayersOn(serverType + "*").size());
+                    e.setResponse(sp);
+                    return;
+                }
+            }
+        }
         if (plugin.isMaintenance()) {
             sp.getPlayers().setMax(0);
             sp.getPlayers().setOnline(0);

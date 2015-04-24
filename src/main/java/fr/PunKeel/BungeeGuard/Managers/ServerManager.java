@@ -253,6 +253,14 @@ public class ServerManager {
         return servers;
     }
 
+    public Collection<UUID> getPlayersOn(String serverType) {
+        Collection<UUID> players = new HashSet<>();
+        for (String server : matchServer(serverType)) {
+            players.addAll(Main.getMB().getPlayersOnServer(server));
+        }
+        return players;
+    }
+
 
     public static class Lobby implements Serializable {
         @Getter
