@@ -37,7 +37,7 @@ public class CommandFriend extends Command {
     Joiner joiner = Joiner.on(ChatColor.RESET + ", " + ChatColor.YELLOW);
 
     public CommandFriend(final Main plugin) {
-        super("friend", "bungee.command.friend", "friends", "f");
+        super("friend", "bungee.command.friend", "friends", "f", "ami", "amis");
         FM = plugin.getFriendManager();
         MB = Main.getMB();
     }
@@ -213,6 +213,9 @@ public class CommandFriend extends Command {
                         .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend + " + name));
             }
             p.sendMessage(friendList.create());
+        }
+        if (!friendsPending.isEmpty() || !friendsInvitations.isEmpty()) {
+            p.sendMessage(fromLegacyText(ChatColor.RED + "/!\\ Les demandes d'amis expirent au bout d'une semaine si elles ne sont pas acceptés !"));
         }
         if (friendsMutual.isEmpty() && friendsPending.isEmpty()) {
             p.sendMessage(fromLegacyText(ChatColor.RED + "Vous n'avez aucun ami ... Pour le moment."));
