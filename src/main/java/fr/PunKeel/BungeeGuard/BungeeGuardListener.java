@@ -27,6 +27,7 @@ import net.md_5.bungee.protocol.packet.Handshake;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -310,7 +311,7 @@ public class BungeeGuardListener implements Listener {
                 sp.setDescription(BASE_MOTD + plugin.getConfig().getMotd());
             e.getResponse().getPlayers().setSample(playersPing);
         }
-        e.setResponse(sp);
+        e.setResponse(sp); // sp might be a new ServerPing instance
     }
 
     @EventHandler
@@ -396,9 +397,8 @@ public class BungeeGuardListener implements Listener {
     @EventHandler
     public void onConnected(final ServerConnectedEvent e) {
         final ProxiedPlayer p = e.getPlayer();
-        System.out.println(p.getServer());
-        plugin.getPluginMessageManager().sendFriendList(p);
-        plugin.getPluginMessageManager().sendPartyInfo(p);
+        plugin.getPluginMessageManager().sendFriendList(p, e.getServer());
+        plugin.getPluginMessageManager().sendPartyInfo(p, e.getServer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

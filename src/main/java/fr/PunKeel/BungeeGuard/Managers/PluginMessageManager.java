@@ -11,6 +11,7 @@ import fr.PunKeel.BungeeGuard.PluginMessage.FriendHandler.FriendData;
 import net.md_5.bungee.Util;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class PluginMessageManager {
         this.plugin = plugin;
     }
 
-    public void sendFriendList(ProxiedPlayer p) {
+    public void sendFriendList(ProxiedPlayer p, Server server) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         Collection<UUID> friendsByUuid = plugin.getFriendManager().getFriends(p.getUniqueId(), FriendManager.STATE.MUTUAL);
         out.writeUTF("Friend");
@@ -35,7 +36,7 @@ public class PluginMessageManager {
         });
 
         out.writeUTF(Main.getGson().toJson(friends));
-        p.getServer().sendData("UHCGames", out.toByteArray());
+        server.sendData("UHCGames", out.toByteArray());
     }
 
     public void sendFriendRemove(UUID userA, UUID userB) {
@@ -69,7 +70,7 @@ public class PluginMessageManager {
             p.getServer().sendData("UHCGames", out.toByteArray());
     }
 
-    public void sendPartyInfo(ProxiedPlayer p) {
+    public void sendPartyInfo(ProxiedPlayer p, Server server) {
         PartyManager.Party party = plugin.getPartyManager().getPartyByPlayer(p);
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Party");
@@ -84,7 +85,7 @@ public class PluginMessageManager {
                 }
             })));
         }
-        p.getServer().sendData("UHCGames", out.toByteArray());
+        server.sendData("UHCGames", out.toByteArray());
     }
 
     public void sendPartyAddMember(ProxiedPlayer p, UUID u) {

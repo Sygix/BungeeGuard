@@ -25,14 +25,10 @@ public class FriendHandler {
                 teleportTo(in, p);
                 break;
             case "ListFriends":
-                plugin.getPluginMessageManager().sendFriendList(p);
+                plugin.getPluginMessageManager().sendFriendList(p, p.getServer());
                 break;
 
         }
-    }
-
-    private static void listFriends(final Main plugin, ProxiedPlayer p) {
-
     }
 
     private static void teleportTo(ByteArrayDataInput in, ProxiedPlayer p) {

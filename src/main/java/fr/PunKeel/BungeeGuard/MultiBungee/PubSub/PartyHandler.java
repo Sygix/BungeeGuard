@@ -65,7 +65,7 @@ public class PartyHandler {
         plugin.getPartyManager().createParty(partyName, u);
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(u);
         if (p != null)
-            plugin.getPluginMessageManager().sendPartyInfo(p);
+            plugin.getPluginMessageManager().sendPartyInfo(p, p.getServer());
     }
 
     @PubSubHandler("disbandParty")
