@@ -300,8 +300,8 @@ public class BungeeGuardListener implements Listener {
         if (virtualHost != null) {
             String hostname = virtualHost.getHostName().replace(".popcorp.eu", "");
             if (hostname != null) {
-                if (hostname.endsWith(".info.uhcgames.com")) {
-                    String serverType = hostname.replace(".info.uhcgames.com", "");
+                if (hostname.endsWith(".info.uhcwork.net")) {
+                    String serverType = hostname.replace(".info.uhcwork.net", "");
                     sp.getPlayers().setOnline(Main.getServerManager().getPlayersOn(serverType + "*").size());
                     e.setResponse(sp);
                     return;
