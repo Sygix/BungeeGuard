@@ -25,8 +25,10 @@ import net.kencochrane.raven.RavenFactory;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.javalite.activejdbc.Base;
@@ -253,6 +255,11 @@ public class Main extends Plugin {
     private void setupStopSchedule() {
         // Auto reboot après 6 heures, dès qu'il y a peu de joueurs
         getProxy().getScheduler().schedule(this, new Runnable() {
+            Title title = ProxyServer.getInstance().createTitle()
+                    .fadeIn(5)
+                    .fadeOut(5)
+                    .stay(15);
+
             @Override
             public void run() {
                 Date date = new Date();
@@ -260,19 +267,19 @@ public class Main extends Plugin {
                 calendar.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
                 calendar.setTime(date);
                 if (calendar.get(Calendar.HOUR_OF_DAY) == 5) {
-                    getProxy().broadcast(TextComponent.fromLegacyText(ChatColor.WHITE + "[UHCGames] " + ChatColor.DARK_RED + "Redémarrage du serveur dans 5 minutes ..."));
+                    broadcast(TextComponent.fromLegacyText(ChatColor.WHITE + "[UHCGames] " + ChatColor.DARK_RED + "Redémarrage du serveur dans 5 minutes ..."));
 
                     getProxy().getScheduler().schedule(plugin, new Runnable() {
                         @Override
                         public void run() {
-                            getProxy().broadcast(TextComponent.fromLegacyText(ChatColor.WHITE + "[UHCGames] " + ChatColor.DARK_RED + "Redémarrage du serveur dans 1 minute ..."));
+                            broadcast(TextComponent.fromLegacyText(ChatColor.WHITE + "[UHCGames] " + ChatColor.DARK_RED + "Redémarrage du serveur dans 1 minute ..."));
                         }
                     }, 4 * 60, TimeUnit.SECONDS);
 
                     getProxy().getScheduler().schedule(plugin, new Runnable() {
                         @Override
                         public void run() {
-                            getProxy().broadcast(TextComponent.fromLegacyText(ChatColor.WHITE + "[UHCGames] " + ChatColor.DARK_RED + "Redémarrage du serveur dans 10 secondes ..."));
+                            broadcast(TextComponent.fromLegacyText(ChatColor.WHITE + "[UHCGames] " + ChatColor.DARK_RED + "Redémarrage du serveur dans 10 secondes ..."));
                         }
                     }, 5 * 60 - 10, TimeUnit.SECONDS);
 
@@ -283,6 +290,12 @@ public class Main extends Plugin {
                         }
                     }, 5 * 60, TimeUnit.SECONDS);
                 }
+            }
+
+            private void broadcast(BaseComponent[] message) {
+                getProxy().broadcast(message);
+                title.title(message);
+                broadcastTitle(title);
             }
         }, 10, 10, TimeUnit.MINUTES);
 
@@ -334,5 +347,11 @@ public class Main extends Plugin {
 
     boolean isMaintenance() {
         return serverManager.isRestricted("hub");
+    }
+
+    public void broadcastTitle(Title title) {
+        for (ProxiedPlayer p : getProxy().getPlayers()) {
+            title.send(p);
+        }
     }
 }
