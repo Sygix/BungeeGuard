@@ -19,14 +19,14 @@ public class PartyManager {
     public static final String TAG = ChatColor.WHITE + "[" + ChatColor.RED + "Party" + ChatColor.WHITE + "] ";
     public static final String CHAT_TAG = ChatColor.WHITE + "[" + ChatColor.RED + "Party Chat" + ChatColor.WHITE + "] ";
 
-    private Map<String, Party> parties = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private Map<UUID, Party> parties = new HashMap<>();
 
-    public Map<String, Party> getParties() {
+    public Map<UUID, Party> getParties() {
         clean();
         return parties;
     }
 
-    public void setParties(Map<String, Party> parties) {
+    public void setParties(Map<UUID, Party> parties) {
         this.parties = parties;
         clean();
     }
@@ -36,8 +36,8 @@ public class PartyManager {
         Iterator<UUID> joueurs;
         UUID u;
         Set<Party> to_remove = new HashSet<>();
-        for (String partyName : parties.keySet()) {
-            Party p = parties.get(partyName);
+        for (UUID owner : parties.keySet()) {
+            Party p = parties.get(owner);
             joueurs = p.getMembers().iterator();
             while (joueurs.hasNext()) {
                 u = joueurs.next();
@@ -51,13 +51,13 @@ public class PartyManager {
         }
         for (Party p : to_remove) {
             removeParty(p);
-            Main.getMB().disbandParty(p.getName());
+            Main.getMB().disbandParty(p.getOwner());
         }
 
     }
 
-    public Party getParty(String nom) {
-        return parties.containsKey(nom) ? parties.get(nom) : null;
+    public Party getParty(UUID owner) {
+        return parties.containsKey(owner) ? parties.get(owner) : null;
     }
 
     public boolean inParty(UUID joueur) {
@@ -69,9 +69,9 @@ public class PartyManager {
         return false;
     }
 
-    public Party createParty(String nom, UUID owner) {
-        Party party = new Party(nom, owner);
-        parties.put(nom, party);
+    public Party createParty(UUID owner) {
+        Party party = new Party(owner);
+        parties.put(owner, party);
         return party;
     }
 
@@ -93,11 +93,18 @@ public class PartyManager {
     }
 
     public void removeParty(Party p) {
-        removeParty(p.getName());
+        removeParty(p.getOwner());
     }
 
-    private void removeParty(String name) {
-        parties.remove(name);
+    private void removeParty(UUID owner) {
+        parties.remove(owner);
+    }
+
+    public void changePartyOwner(UUID partyOwner, UUID u) {
+        Party p = getParty(partyOwner);
+        p.setOwner(u);
+        parties.remove(partyOwner);
+        parties.put(u, p);
     }
 
     public static class Party implements Serializable {
@@ -111,19 +118,14 @@ public class PartyManager {
         final List<UUID> invitations = new ArrayList<>();
         @Getter
         @Setter
-        @SerializedName("name")
-        String name = "";
-        @Getter
-        @Setter
         @SerializedName("owner")
-        UUID owner = UUID.randomUUID();
+        UUID owner;
         @Getter
         @Setter
         @SerializedName("publique")
         boolean publique = false;
 
-        public Party(String nom, UUID owner) {
-            this.name = nom;
+        public Party(UUID owner) {
             this.owner = owner;
             addMember(owner);
         }
@@ -195,6 +197,10 @@ public class PartyManager {
             result.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                     new ComponentBuilder(membres).create()));
             return result;
+        }
+
+        public String getName() {
+            return Main.getMB().getNameFromUuid(getOwner());
         }
     }
 }

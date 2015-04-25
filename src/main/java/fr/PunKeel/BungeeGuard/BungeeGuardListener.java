@@ -203,7 +203,7 @@ public class BungeeGuardListener implements Listener {
         } else if (!e.getTarget().getName().startsWith("lobby")) {
             final PartyManager.Party party = plugin.getPartyManager().getPartyByPlayer(p);
             if (party != null && party.isOwner(p)) {
-                Main.getMB().summonParty(party.getName(), e.getTarget().getName());
+                Main.getMB().summonParty(party.getOwner(), e.getTarget().getName());
             }
         }
 
@@ -245,7 +245,7 @@ public class BungeeGuardListener implements Listener {
 
             PartyManager.Party party = plugin.getPartyManager().getPartyByPlayer(p);
             if (party != null && e.getMessage().startsWith("*")) {
-                Main.getMB().partyChat(party.getName(), p.getUniqueId(), e.getMessage().substring(1));
+                Main.getMB().partyChat(party.getOwner(), p.getUniqueId(), e.getMessage().substring(1));
                 e.setCancelled(true);
                 return;
             }

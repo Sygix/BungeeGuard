@@ -20,9 +20,9 @@ import java.util.UUID;
 public class PartyHandler {
     @PubSubHandler("addPartyMember")
     public static void addPartyMember(Main plugin, PubSubMessageEvent e) {
-        String partyName = e.getArg(0);
+        UUID partyOwner = UUID.fromString(e.getArg(0));
         UUID u = UUID.fromString(e.getArg(1));
-        PartyManager.Party p = plugin.getPartyManager().getParty(partyName);
+        PartyManager.Party p = plugin.getPartyManager().getParty(partyOwner);
         if (p == null)
             return;
         p.addMember(u);
@@ -39,9 +39,9 @@ public class PartyHandler {
 
     @PubSubHandler("partyChat")
     public static void partyChat(Main plugin, PubSubMessageEvent e) {
-        String partyName = e.getArg(0);
+        UUID partyOwner = UUID.fromString(e.getArg(0));
         UUID u = UUID.fromString(e.getArg(1));
-        PartyManager.Party p = plugin.getPartyManager().getParty(partyName);
+        PartyManager.Party p = plugin.getPartyManager().getParty(partyOwner);
         String playerName = Main.getMB().getNameFromUuid(u);
         String message = e.getArg(2);
         if (p == null)
@@ -60,9 +60,8 @@ public class PartyHandler {
     @PubSubHandler("createParty")
     public static void createParty(Main plugin, PubSubMessageEvent e) {
         // partyName(), "" + joueur
-        String partyName = e.getArg(0);
-        UUID u = UUID.fromString(e.getArg(1));
-        plugin.getPartyManager().createParty(partyName, u);
+        UUID u = UUID.fromString(e.getArg(0));
+        plugin.getPartyManager().createParty(u);
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(u);
         if (p != null)
             plugin.getPluginMessageManager().sendPartyInfo(p, p.getServer());
@@ -70,8 +69,8 @@ public class PartyHandler {
 
     @PubSubHandler("disbandParty")
     public static void disbandParty(Main plugin, PubSubMessageEvent e) {
-        String partyName = e.getArg(0);
-        PartyManager.Party p = plugin.getPartyManager().getParty(partyName);
+        UUID partyOwner = UUID.fromString(e.getArg(0));
+        PartyManager.Party p = plugin.getPartyManager().getParty(partyOwner);
         if (p == null)
             return;
         ProxiedPlayer pp;
@@ -87,10 +86,10 @@ public class PartyHandler {
 
     @PubSubHandler("inviteParty")
     public static void partyInvite(Main plugin, PubSubMessageEvent e) {
-        // party.getName(), "" + joueur
-        String partyName = e.getArg(0);
+        // party.getOwner(), "" + joueur
+        UUID partyOwner = UUID.fromString(e.getArg(0));
         UUID u = UUID.fromString(e.getArg(1));
-        PartyManager.Party party = plugin.getPartyManager().getParty(partyName);
+        PartyManager.Party party = plugin.getPartyManager().getParty(partyOwner);
         if (party == null)
             return;
         party.addInvitation(u);
@@ -106,16 +105,16 @@ public class PartyHandler {
 
         p.sendMessage(new MyBuilder(PartyManager.TAG + ChatColor.YELLOW + "  >> ")
                 .append(ChatColor.GREEN + "Cliquez ici pour accepter")
-                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party join " + partyName))
+                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party join " + Main.getMB().getNameFromUuid(partyOwner)))
                 .append(ChatColor.YELLOW + " << ")
                 .create());
     }
 
     @PubSubHandler("kickFromParty")
     public static void kickFromParty(Main plugin, PubSubMessageEvent e) {
-        String partyName = e.getArg(0);
+        UUID partyOwner = UUID.fromString(e.getArg(0));
         UUID u = UUID.fromString(e.getArg(1));
-        PartyManager.Party p = plugin.getPartyManager().getParty(partyName);
+        PartyManager.Party p = plugin.getPartyManager().getParty(partyOwner);
         String playerName = Main.getMB().getNameFromUuid(u);
         if (p == null)
             return;
@@ -136,19 +135,28 @@ public class PartyHandler {
 
     @PubSubHandler("setPartyOwner")
     public static void setPartyOwner(Main plugin, PubSubMessageEvent e) {
-        String partyName = e.getArg(0);
+        UUID partyOwner = UUID.fromString(e.getArg(0));
         UUID u = UUID.fromString(e.getArg(1));
-        PartyManager.Party p = plugin.getPartyManager().getParty(partyName);
+        String ownerName = Main.getMB().getNameFromUuid(u);
+        PartyManager.Party p = plugin.getPartyManager().getParty(partyOwner);
+        plugin.getPartyManager().changePartyOwner(partyOwner, u);
         if (p == null)
             return;
-        p.setOwner(u);
+        ProxiedPlayer pp;
+        for (UUID uuid : p.getMembers()) {
+            pp = ProxyServer.getInstance().getPlayer(uuid);
+            if (pp == null)
+                continue;
+            plugin.getPluginMessageManager().sendPartyKick(pp, u);
+            pp.sendMessage(new TextComponent(PartyManager.TAG + ChatColor.GREEN + ownerName + ChatColor.GRAY + " est désormais le chef de party"));
+        }
     }
 
     @PubSubHandler("playerLeaveParty")
     public static void playerLeaveParty(Main plugin, PubSubMessageEvent e) {
-        String partyName = e.getArg(0);
+        UUID partyOwner = UUID.fromString(e.getArg(0));
         UUID u = UUID.fromString(e.getArg(1));
-        PartyManager.Party p = plugin.getPartyManager().getParty(partyName);
+        PartyManager.Party p = plugin.getPartyManager().getParty(partyOwner);
         String playerName = Main.getMB().getNameFromUuid(u);
         if (p == null)
             return;
@@ -170,10 +178,10 @@ public class PartyHandler {
     @PubSubHandler("@partyReply")
     public static void partyReply(Main plugin, PubSubMessageEvent e) {
         String data = e.getArg(0);
-        Type type = new TypeToken<Map<String, PartyManager.Party>>() {
+        Type type = new TypeToken<Map<UUID, PartyManager.Party>>() {
         }.getType();
         plugin.getLogger().fine("[MB] Parties: received" + data);
-        plugin.getPartyManager().setParties(Main.getGson().<Map<String, PartyManager.Party>>fromJson(data, type));
+        plugin.getPartyManager().setParties(Main.getGson().<Map<UUID, PartyManager.Party>>fromJson(data, type));
     }
 
     @PubSubHandler("@partyRequest")
@@ -184,10 +192,10 @@ public class PartyHandler {
 
     @PubSubHandler("summonParty")
     public static void summonParty(Main plugin, PubSubMessageEvent e) {
-        String partyName = e.getArg(0);
+        UUID partyOwner = UUID.fromString(e.getArg(0));
         String serverName = e.getArg(1);
         ServerInfo SI = ProxyServer.getInstance().getServerInfo(serverName);
-        PartyManager.Party p = plugin.getPartyManager().getParty(partyName);
+        PartyManager.Party p = plugin.getPartyManager().getParty(partyOwner);
         if (SI == null)
             return;
         if (p == null)

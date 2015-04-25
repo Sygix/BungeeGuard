@@ -11,13 +11,14 @@ import fr.PunKeel.BungeeGuard.Utils.MyBuilder;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Collection;
 import java.util.UUID;
+
+import static net.md_5.bungee.api.chat.TextComponent.fromLegacyText;
 
 public class CommandParty extends Command {
     private static final String HELP_FRIENDS = "&6/party friends &e: Invite tous vos amis dans votre party\n";
@@ -73,6 +74,9 @@ public class CommandParty extends Command {
                 disband(p, args);
                 break;
             case "owner":
+            case "chef":
+            case "lead":
+            case "leader":
                 owner(p, args);
                 break;
             case "kick":
@@ -80,6 +84,7 @@ public class CommandParty extends Command {
                 break;
             case "info":
             case "infos":
+            case "list":
                 info(p);
                 break;
             case "tp":
@@ -106,7 +111,7 @@ public class CommandParty extends Command {
         }
         Collection<UUID> friends = plugin.getFriendManager().getOnlineFriends(sender.getUniqueId());
         if (friends.size() == 0) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous n'avez aucun ami en ligne."));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous n'avez aucun ami en ligne."));
             return;
         }
         friends = Collections2.filter(friends, new Predicate<UUID>() {
@@ -117,14 +122,14 @@ public class CommandParty extends Command {
             }
         });
         if (friends.size() == 0) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tous vos amis sont déjà dans une party."));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tous vos amis sont déjà dans une party."));
             return;
         }
         PartyManager.Party p = PM.getPartyByPlayer(sender);
-        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Vous venez d'inviter vos amis dans votre party !"));
+        sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Vous venez d'inviter vos amis dans votre party !"));
         if (p == null) {
-            p = PM.createParty(sender.getName(), sender.getUniqueId());
-            MB.createParty(sender.getName(), sender);
+            p = PM.createParty(sender.getUniqueId());
+            MB.createParty(sender);
             sender.sendMessage(MSG_HELP);
             sender.sendMessage(MSG_PARTYCHAT);
         }
@@ -140,11 +145,11 @@ public class CommandParty extends Command {
         }
         PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
             return;
         }
         if (p.isOwner(sender)) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous êtes déjà sur le même serveur"));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous êtes déjà sur le même serveur"));
             return;
         }
         UUID owner = p.getOwner();
@@ -152,45 +157,51 @@ public class CommandParty extends Command {
         assert server != null;
         String serverName = server.getName();
         if (serverName.equals(sender.getServer().getInfo().getName())) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous êtes déjà sur le même serveur"));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous êtes déjà sur le même serveur"));
             return;
         }
         if (!server.canAccess(sender)) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "L'accès à ce serveur vous est interdit"));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "L'accès à ce serveur vous est interdit"));
             return;
         }
-        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Envoi sur le serveur " + Main.getServerManager().getPrettyName(serverName)));
+        sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Envoi sur le serveur " + Main.getServerManager().getPrettyName(serverName)));
         sender.connect(server);
     }
 
 
     private void disband(ProxiedPlayer sender, String[] args) {
-        String partyName;
+        UUID partyOwner;
         if (args.length == 2) {
             if (!sender.hasPermission("bungee.party.disband")) {
                 Main.missPermission(sender, "bungee.party.disband");
                 return;
             }
-            partyName = args[1];
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Party dissoute."));
+            String partyName = args[1];
+            partyOwner = UUID.fromString(partyName);
+            if (plugin.getPartyManager().getParty(partyOwner) == null) {
+                sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Party " + partyName + " inexistante."));
+                return;
+            }
+
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Party " + partyName + " dissoute."));
         } else {
             PartyManager.Party p = PM.getPartyByPlayer(sender);
             if (p == null) {
-                sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune party."));
+                sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune party."));
                 return;
             }
             if (!p.isOwner(sender)) {
-                sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu dois être owner de la party pour la dissoudre."));
+                sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu dois être owner de la party pour la dissoudre."));
                 return;
             }
-            partyName = p.getName();
+            partyOwner = p.getOwner();
         }
-        MB.disbandParty(partyName);
+        MB.disbandParty(partyOwner);
     }
 
     private void kick(ProxiedPlayer sender, String[] args) {
         if (args.length != 2) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Usage: /party kick <joueur>"));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Usage: /party kick <joueur>"));
             return;
         }
         String player = args[1];
@@ -199,21 +210,21 @@ public class CommandParty extends Command {
         if (!sender.hasPermission("bungee.party.kick")) {
             PartyManager.Party p = PM.getPartyByPlayer(sender);
             if (p == null) {
-                sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
+                sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
                 return;
             }
             if (!p.isOwner(sender)) {
-                sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Accès refusé."));
+                sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Accès refusé."));
                 return;
             }
             if (!p.isMember(u)) {
-                sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur n'est pas dans ta Party."));
+                sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur n'est pas dans ta Party."));
                 return;
             }
         }
 
         if (u == null || !MB.isPlayerOnline(u)) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur n'est pas connecté."));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur n'est pas connecté."));
             return;
         }
 
@@ -223,82 +234,87 @@ public class CommandParty extends Command {
     private void owner(ProxiedPlayer sender, String[] args) {
         PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
             return;
         }
         if (p.isOwner(sender) && args.length == 2) {
             String player = args[1];
             UUID u = MB.getUuidFromName(player);
             if (u == null || !MB.isPlayerOnline(u)) {
-                sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur n'est pas connecté."));
+                sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur n'est pas connecté."));
                 return;
             }
             if (!p.isMember(u)) {
-                sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur n'est pas dans ta Party."));
+                sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur n'est pas dans ta Party."));
                 return;
             }
             MB.setPartyOwner(p, u);
             return;
         }
-        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Owner: " + MB.getNameFromUuid(p.getOwner())));
+        sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.GRAY + "Chef de party: " + ChatColor.GREEN + MB.getNameFromUuid(p.getOwner())));
     }
 
     private void leave(ProxiedPlayer sender) {
         PartyManager.Party p = PM.getPartyByPlayer(sender);
         if (p == null) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
             return;
         }
         MB.playerLeaveParty(p, sender);
-        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Tu as quitté ta Party"));
+        sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Tu as quitté ta Party"));
     }
 
     private void join(ProxiedPlayer sender, String[] args) {
         if (args.length != 2) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Usage: /party join <nom>"));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Usage: /party join <nom>"));
             return;
         }
         if (PM.inParty(sender)) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu es déjà dans une Party. Tu ne peux pas en rejoindre une autre."));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu es déjà dans une Party. Tu ne peux pas en rejoindre une autre."));
             return;
         }
         String party = args[1];
-        PartyManager.Party p = PM.getParty(party);
+        UUID partyOwner = MB.getUuidFromName(party);
+        if (partyOwner == null) {
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "La Party " + party + " n'existe pas."));
+            return;
+        }
+        PartyManager.Party p = PM.getParty(partyOwner);
         if (p == null) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "La Party " + party + " n'existe pas."));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "La Party " + party + " n'existe pas."));
             return;
         }
         if (!p.canJoin(sender)) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Il vous est impossible de rejoindre cette Party."));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Il vous est impossible de rejoindre cette Party."));
             return;
         }
 
         MB.addPlayerToParty(p, sender);
-        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Tu es désormais dans la Party de " + ChatColor.BOLD + p.getName()));
+        sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Tu es désormais dans la Party de " + ChatColor.BOLD + p.getName()));
         sender.sendMessage(MSG_PARTYCHAT);
     }
 
     private void invite(ProxiedPlayer sender, String[] args) {
         if (args.length != 2) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Usage: /party invite <pseudo>"));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Usage: /party invite <pseudo>"));
             return;
         }
         String joueur = args[1];
         UUID u = Main.getMB().getUuidFromName(joueur);
         if (u == null || !Main.getMB().isPlayerOnline(u)) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur n'est pas en ligne"));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur n'est pas en ligne"));
             return;
         }
         PartyManager.Party p2 = PM.getPartyByPlayer(u);
         if (p2 != null) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur est déjà dans une Party."));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur est déjà dans une Party."));
             return;
         }
         PartyManager.Party p = PM.getPartyByPlayer(sender);
-        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Vous venez d'inviter " + ChatColor.YELLOW + joueur + ChatColor.GREEN + " dans votre party !"));
+        sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Vous venez d'inviter " + ChatColor.YELLOW + joueur + ChatColor.GREEN + " dans votre party !"));
         if (p == null) {
-            p = PM.createParty(sender.getName(), sender.getUniqueId());
-            MB.createParty(sender.getName(), sender);
+            p = PM.createParty(sender.getUniqueId());
+            MB.createParty(sender);
             sender.sendMessage(MSG_HELP);
             sender.sendMessage(MSG_PARTYCHAT);
         }
@@ -307,7 +323,7 @@ public class CommandParty extends Command {
 
     private void info(ProxiedPlayer sender) {
         if (!PM.inParty(sender.getUniqueId())) {
-            sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
             return;
         }
         sender.sendMessage(Main.SEPARATOR);
@@ -318,7 +334,7 @@ public class CommandParty extends Command {
         partyList.append(ChatColor.YELLOW + Joiner.on(" ").skipNulls().join(Collections2.transform(p.getMembers(), new Function<UUID, String>() {
             @Override
             public String apply(UUID uuid) {
-                if (uuid == owner)
+                if (uuid.equals(owner))
                     return null;
                 return MB.getNameFromUuid(uuid);
             }
@@ -328,12 +344,12 @@ public class CommandParty extends Command {
     }
 
     private void create(ProxiedPlayer sender) {
-        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Cette commande n'existe plus."));
-        sender.sendMessage(TextComponent.fromLegacyText(PartyManager.TAG + ChatColor.RED + "Utilisez directement " + ChatColor.GREEN + "/party invite " + ChatColor.YELLOW + "joueur"));
+        sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Cette commande n'existe plus."));
+        sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Utilisez directement " + ChatColor.GREEN + "/party invite " + ChatColor.YELLOW + "joueur"));
     }
 
     private void help(CommandSender sender) {
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&e-----------------------------------------------------\n" +
+        sender.sendMessage(fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&e-----------------------------------------------------\n" +
                 "&a&nAide : Commande /party\n" +
                 "&r\n" +
                 "&6/party invite [pseudo] &e: Inviter le joueur dans votre party\n" +
