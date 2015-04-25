@@ -1,6 +1,5 @@
 package fr.PunKeel.BungeeGuard.Commands;
 
-import fr.PunKeel.BungeeGuard.BungeeGuardUtils;
 import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.Managers.ServerManager;
 import fr.PunKeel.BungeeGuard.MultiBungee.MultiBungee;
@@ -27,7 +26,7 @@ public class CommandGtp extends Command {
         ProxiedPlayer p = (ProxiedPlayer) sender;
 
         if (args.length != 1) {
-            BungeeGuardUtils.msgPluginCommand(sender);
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /gtp <pseudo> " + ChatColor.WHITE + "- Vous téléporte au joueur"));
             return;
         }
         String playerName = args[0];

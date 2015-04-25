@@ -1,8 +1,8 @@
 package fr.PunKeel.BungeeGuard.Commands;
 
-import fr.PunKeel.BungeeGuard.BungeeGuardUtils;
 import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.Models.BungeeMute;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -21,7 +21,7 @@ public class CommandSay extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            BungeeGuardUtils.msgPluginCommand(sender);
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /say <message> " + ChatColor.WHITE + "- Envoi d'un message sur tous les serveurs"));
             return;
         }
         UUID uuid = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : null;

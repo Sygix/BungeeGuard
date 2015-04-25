@@ -1,9 +1,9 @@
 package fr.PunKeel.BungeeGuard.Commands;
 
 import com.google.common.base.Joiner;
-import fr.PunKeel.BungeeGuard.BungeeGuardUtils;
 import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.Models.BungeeMute;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -26,7 +26,7 @@ public class CommandBCast extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            BungeeGuardUtils.msgPluginCommand(sender);
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /broadcast <message> " + ChatColor.WHITE + "- Envoi d'un message sur tous les lobbies"));
             return;
         }
         UUID uuid = (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId() : null;

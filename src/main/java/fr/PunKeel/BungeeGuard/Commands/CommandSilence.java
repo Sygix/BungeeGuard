@@ -1,10 +1,10 @@
 package fr.PunKeel.BungeeGuard.Commands;
 
-import fr.PunKeel.BungeeGuard.BungeeGuardUtils;
 import fr.PunKeel.BungeeGuard.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -26,18 +26,17 @@ public class CommandSilence extends Command {
 
         ProxiedPlayer p = (ProxiedPlayer) sender;
 
-        if (args.length == 0) {
-            String servName = p.getServer().getInfo().getName();
-            boolean silenced = !plugin.isSilenced(servName);
-            Main.getMB().silenceServer(servName, silenced);
-            Main.getMB().notifyStaff(Main.ADMIN_TAG + ChatColor.GRAY + "Le chat du serveur "
-                    + ChatColor.AQUA + servName + ChatColor.GRAY +
-                    " a été " +
-                    (silenced ? ChatColor.RED + "désactivé " : ChatColor.GREEN + "activé")
-                    + ChatColor.GRAY + "!");
-        } else {
-            BungeeGuardUtils.msgPluginCommand(sender);
+        if (args.length != 0) {
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Usage: /silence " + ChatColor.WHITE + "- Réduit le serveur au silence"));
+            return;
         }
+        String servName = p.getServer().getInfo().getName();
+        boolean silenced = !plugin.isSilenced(servName);
+        Main.getMB().silenceServer(servName, silenced);
+        Main.getMB().notifyStaff(Main.ADMIN_TAG + ChatColor.GRAY + "Le chat du serveur "
+                + ChatColor.AQUA + servName + ChatColor.GRAY +
+                " a été " +
+                (silenced ? ChatColor.RED + "désactivé " : ChatColor.GREEN + "activé")
+                + ChatColor.GRAY + "!");
     }
-
 }
