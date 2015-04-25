@@ -357,8 +357,8 @@ public class MultiBungee {
         sendChannelMessage("kick", "" + player, reason);
     }
 
-    public void sendPrivateMessage(String senderName, UUID receiverUUID, String message) {
-        sendChannelMessage("privateMessage", senderName, "" + receiverUUID, message);
+    public void sendPrivateMessage(UUID senderUUID, UUID receiverUUID, String message) {
+        sendChannelMessage("privateMessage", "" + senderUUID, "" + receiverUUID, message);
     }
 
     public void broadcastServers(List<String> serversList, String message) {
@@ -417,7 +417,7 @@ public class MultiBungee {
     }
 
     public void inviteParty(PartyManager.Party party, UUID joueur) {
-        sendChannelMessage("inviteParty", party.getName(), "" + joueur);
+        sendChannelMessage("inviteParty", "" + party.getOwner(), "" + joueur);
     }
 
     public void addPlayerToParty(PartyManager.Party party, ProxiedPlayer player) {
@@ -425,7 +425,7 @@ public class MultiBungee {
     }
 
     private void addPlayerToParty(PartyManager.Party party, UUID uniqueId) {
-        sendChannelMessage("addPartyMember", party.getName(), "" + uniqueId);
+        sendChannelMessage("addPartyMember", "" + party.getOwner(), "" + uniqueId);
     }
 
 
@@ -434,27 +434,27 @@ public class MultiBungee {
     }
 
     private void playerLeaveParty(PartyManager.Party p, UUID uniqueId) {
-        sendChannelMessage("playerLeaveParty", p.getName(), "" + uniqueId);
+        sendChannelMessage("playerLeaveParty", "" + p.getOwner(), "" + uniqueId);
     }
 
     public void setPartyOwner(PartyManager.Party p, UUID u) {
-        sendChannelMessage("setPartyOwner", p.getName(), "" + u);
+        sendChannelMessage("setPartyOwner", "" + p.getOwner(), "" + u);
     }
 
     public void kickFromParty(PartyManager.Party p, UUID u) {
-        sendChannelMessage("kickFromParty", p.getName(), "" + u);
+        sendChannelMessage("kickFromParty", "" + p.getOwner(), "" + u);
     }
 
-    public void partyChat(String party, UUID uniqueId, String message) {
-        sendChannelMessage("partyChat", party, "" + uniqueId, message);
+    public void partyChat(UUID party, UUID uniqueId, String message) {
+        sendChannelMessage("partyChat", "" + party, "" + uniqueId, message);
     }
 
-    public void summonParty(String party, String server) {
-        sendChannelMessage("summonParty", party, server);
+    public void summonParty(UUID party, String server) {
+        sendChannelMessage("summonParty", "" + party, server);
     }
 
-    public void createParty(String nom, ProxiedPlayer owner) {
-        sendChannelMessage("createParty", nom, "" + owner.getUniqueId());
+    public void createParty(ProxiedPlayer owner) {
+        sendChannelMessage("createParty", "" + owner.getUniqueId());
     }
 
     public void silenceServer(String serverName, boolean state) {
@@ -478,8 +478,8 @@ public class MultiBungee {
         return -1;
     }
 
-    public void disbandParty(String name) {
-        sendChannelMessage("disbandParty", name);
+    public void disbandParty(UUID owner) {
+        sendChannelMessage("disbandParty", "" + owner);
     }
 
     public void invalidatePermissionUser(final UUID u) {

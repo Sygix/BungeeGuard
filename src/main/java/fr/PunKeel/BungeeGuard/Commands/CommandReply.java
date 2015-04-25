@@ -1,12 +1,9 @@
 package fr.PunKeel.BungeeGuard.Commands;
 
-import com.google.common.collect.ObjectArrays;
 import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.Models.BungeeMute;
-import fr.PunKeel.BungeeGuard.Utils.PrettyLinkComponent;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -59,7 +56,6 @@ public class CommandReply extends Command {
             p.sendMessage(new ComponentBuilder("Vous n'avez personne à qui répondre !").color(ChatColor.RED).create());
             return;
         }
-        String destinataireName = Main.getMB().getNameFromUuid(destinataire);
         String message = "";
         for (String arg : args)
             message += arg + " ";
@@ -83,16 +79,6 @@ public class CommandReply extends Command {
             return;
         }
 
-        BaseComponent[] contenu = new ComponentBuilder("[").color(ChatColor.GRAY).append("Moi").color(ChatColor.GREEN).append(" ➠ ").color(ChatColor.GRAY).append(destinataireName).color(ChatColor.GREEN).append("]").color(ChatColor.GRAY).append(" ").create();
-
-        if (p.hasPermission("bungee.colormsg"))
-            contenu = ObjectArrays.concat(contenu, PrettyLinkComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)), BaseComponent.class);
-        else
-            contenu = ObjectArrays.concat(contenu, new TextComponent(message));
-
-        p.sendMessage(contenu);
-        plugin.setReply(p.getUniqueId(), destinataire);
-        plugin.setReply(destinataire, p.getUniqueId());
-        Main.getMB().sendPrivateMessage(p.getName(), destinataire, message);
+        Main.getMB().sendPrivateMessage(p.getUniqueId(), destinataire, message);
     }
 }
