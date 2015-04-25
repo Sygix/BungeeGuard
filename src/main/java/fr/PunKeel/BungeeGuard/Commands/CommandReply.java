@@ -61,7 +61,7 @@ public class CommandReply extends Command {
             message += arg + " ";
 
         if (!Main.getMB().isPlayerOnline(destinataire)) {
-            p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());
+            p.sendMessage(new ComponentBuilder("Le joueur que vous cherchez à contacter n'est pas en ligne !").color(ChatColor.RED).create());
             return;
         }
 
@@ -71,7 +71,7 @@ public class CommandReply extends Command {
         }
 
         if (plugin.getIgnoreManager().playerIgnores(destinataire, p.getUniqueId()) && !p.hasPermission("bungee.ignore.ignore")) {
-            p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
+            p.sendMessage(new ComponentBuilder("Ce joueur vous ignore.").color(ChatColor.RED).create());
             return;
         }
         if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), destinataire) && !p.hasPermission("bungee.ignore.ignore")) {

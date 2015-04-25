@@ -24,7 +24,7 @@ public class CommandMsg extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(new ComponentBuilder("Vous devez etre un joueur pour executer cette commande !").color(ChatColor.RED).create());
+            sender.sendMessage(new ComponentBuilder("Vous devez être un joueur pour executer cette commande !").color(ChatColor.RED).create());
             return;
         }
 
@@ -48,7 +48,7 @@ public class CommandMsg extends Command {
 
         if (args.length >= 1) {
             if (!Main.getMB().isPlayerOnline(args[0])) {
-                p.sendMessage(new ComponentBuilder("Le joueur que vous chercher a contacter n'est pas en ligne !").color(ChatColor.RED).create());
+                p.sendMessage(new ComponentBuilder("Le joueur que vous cherchez à contacter n'est pas en ligne !").color(ChatColor.RED).create());
                 return;
             }
             if (args.length <= 1) {
@@ -63,11 +63,11 @@ public class CommandMsg extends Command {
                 }
 
                 if (plugin.getIgnoreManager().playerIgnores(receiverUUID, p.getUniqueId())) {
-                    p.sendMessage(new ComponentBuilder("Ce joueur vous a ignoré.").color(ChatColor.RED).create());
+                    p.sendMessage(new ComponentBuilder("Ce joueur vous ignore.").color(ChatColor.RED).create());
                     return;
                 }
                 if (plugin.getIgnoreManager().playerIgnores(p.getUniqueId(), receiverUUID)) {
-                    p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler a un joueur ignoré.").color(ChatColor.RED).create());
+                    p.sendMessage(new ComponentBuilder("Vous ne pouvez pas parler à un joueur ignoré.").color(ChatColor.RED).create());
                     return;
                 }
             }
