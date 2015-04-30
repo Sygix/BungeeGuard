@@ -10,6 +10,7 @@ import fr.PunKeel.BungeeGuard.MultiBungee.MultiBungee;
 import fr.PunKeel.BungeeGuard.Utils.MyBuilder;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -260,6 +261,10 @@ public class CommandParty extends Command {
             sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu n'es dans aucune Party, cette commande t'es interdite."));
             return;
         }
+        if (p.isOwner(sender)) {
+            ProxyServer.getInstance().getPluginManager().dispatchCommand(sender, "/party disband");
+            return;
+        }
         MB.playerLeaveParty(p, sender);
         sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Tu as quitté ta Party"));
     }
@@ -270,8 +275,7 @@ public class CommandParty extends Command {
             return;
         }
         if (PM.inParty(sender)) {
-            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tu es déjà dans une Party. Tu ne peux pas en rejoindre une autre."));
-            return;
+            ProxyServer.getInstance().getPluginManager().dispatchCommand(sender, "/party leave");
         }
         String party = args[1];
         UUID partyOwner = MB.getUuidFromName(party);
@@ -301,16 +305,19 @@ public class CommandParty extends Command {
         }
         String joueur = args[1];
         UUID u = Main.getMB().getUuidFromName(joueur);
+        joueur = Main.getMB().getNameFromUuid(u); // fix case
         if (u == null || !Main.getMB().isPlayerOnline(u)) {
             sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur n'est pas en ligne"));
             return;
         }
         PartyManager.Party p2 = PM.getPartyByPlayer(u);
-        if (p2 != null) {
-            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur est déjà dans une Party."));
+        PartyManager.Party p = PM.getPartyByPlayer(sender);
+
+        if (p != null && p.equals(p2)) {
+            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Ce joueur est déjà dans votre Party !"));
             return;
         }
-        PartyManager.Party p = PM.getPartyByPlayer(sender);
+
         sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.GREEN + "Vous venez d'inviter " + ChatColor.YELLOW + joueur + ChatColor.GREEN + " dans votre party !"));
         if (p == null) {
             p = PM.createParty(sender.getUniqueId());

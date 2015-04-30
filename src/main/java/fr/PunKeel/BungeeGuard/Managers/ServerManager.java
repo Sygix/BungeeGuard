@@ -144,7 +144,7 @@ public class ServerManager {
         ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                Iterator<String> servers = ProxyServer.getInstance().getServers().keySet().iterator();
+                Iterator<String> servers = new HashSet<>(ProxyServer.getInstance().getServers().keySet()).iterator();
                 String server;
                 while (servers.hasNext()) {
                     server = servers.next();

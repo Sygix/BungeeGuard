@@ -59,7 +59,7 @@ public class PartyHandler {
 
     @PubSubHandler("createParty")
     public static void createParty(Main plugin, PubSubMessageEvent e) {
-        // partyName(), "" + joueur
+        // owner
         UUID u = UUID.fromString(e.getArg(0));
         plugin.getPartyManager().createParty(u);
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(u);
@@ -160,6 +160,10 @@ public class PartyHandler {
         String playerName = Main.getMB().getNameFromUuid(u);
         if (p == null)
             return;
+        if (p.isOwner(u)) {
+            disbandParty(plugin, e);
+            return;
+        }
         p.removeMember(u);
         if (p.getSize() == 0)
             plugin.getPartyManager().removeParty(p);

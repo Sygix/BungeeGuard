@@ -347,6 +347,9 @@ public class BungeeGuardListener implements Listener {
             }
             String l = Main.getServerManager().getBestLobbyFor(p);
             ServerInfo server = plugin.getProxy().getServerInfo(l);
+            if (server == null) {
+                return;
+            }
             p.setReconnectServer(server);
 
             ProxyServer.getInstance().getConsole().sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "[BungeeGuard] " + p.getName() + " a perdu la connection (" + e.getState().toString() + " - " + reason + ")"));

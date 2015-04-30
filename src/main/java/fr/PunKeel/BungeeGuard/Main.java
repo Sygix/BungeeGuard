@@ -142,7 +142,6 @@ public class Main extends Plugin {
     public void onLoad() {
         plugin = this;
         startTime = System.currentTimeMillis();
-
         // RAVEN
         RavenFactory.registerFactory(new DefaultRavenFactory());
         Raven raven = RavenFactory.ravenInstance("http://83a4012580d74a88918c2c613bf3e359:dcf4c2f8498644a78da7301c87bfed28@sentry.uhcwork.net/2?raven.async=false");

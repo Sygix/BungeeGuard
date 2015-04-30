@@ -81,10 +81,6 @@ public class SentryHandler extends Handler {
                 return;
         }
 
-        //noinspection ThrowableResultOfMethodCallIgnored
-        if (record.getThrown() == null)
-            return;
-
         try {
             final Event event = buildEvent(record);
             ProxyServer.getInstance().getScheduler().runAsync(Main.plugin, new Runnable() {

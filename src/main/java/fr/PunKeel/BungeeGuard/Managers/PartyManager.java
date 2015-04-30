@@ -1,6 +1,5 @@
 package fr.PunKeel.BungeeGuard.Managers;
 
-import com.google.common.collect.Iterables;
 import com.google.gson.annotations.SerializedName;
 import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.MultiBungee.MultiBungee;
@@ -35,7 +34,6 @@ public class PartyManager {
         MultiBungee MB = Main.getMB();
         Iterator<UUID> joueurs;
         UUID u;
-        Set<Party> to_remove = new HashSet<>();
         for (UUID owner : parties.keySet()) {
             Party p = parties.get(owner);
             joueurs = p.getMembers().iterator();
@@ -46,14 +44,9 @@ public class PartyManager {
                 }
             }
             if (p.getSize() == 0) {
-                to_remove.add(p);
+                Main.getMB().disbandParty(p.getOwner());
             }
         }
-        for (Party p : to_remove) {
-            removeParty(p);
-            Main.getMB().disbandParty(p.getOwner());
-        }
-
     }
 
     public Party getParty(UUID owner) {
@@ -61,6 +54,8 @@ public class PartyManager {
     }
 
     public boolean inParty(UUID joueur) {
+        if (Main.getRandom().nextInt(4) == 2)
+            clean();
         for (Party p : parties.values()) {
             if (p.isMember(joueur)) {
                 return true;
@@ -161,7 +156,7 @@ public class PartyManager {
             return isOwner(sender.getUniqueId());
         }
 
-        private boolean isOwner(UUID uniqueId) {
+        public boolean isOwner(UUID uniqueId) {
             return owner.equals(uniqueId);
         }
 
@@ -176,9 +171,6 @@ public class PartyManager {
                 return;
             members.remove(u);
             chatMembers.remove(u);
-            if (owner.equals(u)) {
-                owner = Iterables.getFirst(members, null);
-            }
         }
 
         public int getSize() {
