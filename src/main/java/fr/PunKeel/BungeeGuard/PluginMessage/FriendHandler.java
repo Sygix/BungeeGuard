@@ -48,7 +48,7 @@ public class FriendHandler {
                         return 0l;
                     return Long.valueOf(String.valueOf(onlineTime));
                 }
-            }).get(20, TimeUnit.MILLISECONDS);
+            }).get(200, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             e.printStackTrace();
         }

@@ -105,12 +105,14 @@ public class ServerManager {
     }
 
     public String getShortName(String serverName) {
-        Preconditions.checkArgument(ProxyServer.getInstance().getServerInfo(serverName) != null, "Server does not exist");
+        if (getServerModel(serverName) == null)
+            return serverName;
         return getServerModel(serverName).getShortName();
     }
 
     public String getPrettyName(String serverName) {
-        Preconditions.checkArgument(ProxyServer.getInstance().getServerInfo(serverName) != null, "Server does not exist");
+        if (getServerModel(serverName) == null)
+            return serverName;
         return getServerModel(serverName).getPrettyName();
     }
 

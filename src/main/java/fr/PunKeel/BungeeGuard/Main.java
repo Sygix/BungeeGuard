@@ -42,6 +42,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class Main extends Plugin {
     public static final BaseComponent[] SEPARATOR = TextComponent.fromLegacyText(ChatColor.YELLOW + "-----------------------------------------------------");
@@ -90,6 +91,10 @@ public class Main extends Plugin {
             return;
         }
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Permission refusée (" + ChatColor.WHITE + permissionNode + ChatColor.RED + ")"));
+    }
+
+    public static Logger logger() {
+        return Main.plugin.getLogger();
     }
 
     public List<String> getForbiddenCommands() {
@@ -142,11 +147,6 @@ public class Main extends Plugin {
     public void onLoad() {
         plugin = this;
         startTime = System.currentTimeMillis();
-        // RAVEN
-        RavenFactory.registerFactory(new DefaultRavenFactory());
-        Raven raven = RavenFactory.ravenInstance("https://e0cb123c9b3d4488b2584b32beb97fdd:db2bf46f241c4d7f924de6ec10b2ab07@app.getsentry.com/40574?raven.async=false");
-        ProxyServer.getInstance().getLogger().addHandler(new SentryHandler(raven, getDescription().getVersion()));
-        // END RAVEN
         serverManager = new ServerManager(this);
         Properties prop = null;
         try {
@@ -161,6 +161,13 @@ public class Main extends Plugin {
             e.printStackTrace();
         }
 
+        // RAVEN
+        RavenFactory.registerFactory(new DefaultRavenFactory());
+        String SENTRY_ENDPOINT = getEnv("SENTRY_ENDPOINT", "https://e0cb123c9b3d4488b2584b32beb97fdd:db2bf46f241c4d7f924de6ec10b2ab07@app.getsentry.com/40574?raven.async=false", prop);
+        Raven raven = RavenFactory.ravenInstance(SENTRY_ENDPOINT);
+        ProxyServer.getInstance().getLogger().addHandler(new SentryHandler(raven, getDescription().getVersion()));
+        // END RAVEN
+
         MYSQL_HOST = getEnv("MYSQL_HOST", "localhost", prop);
         MYSQL_DATABASE = getEnv("MYSQL_DATABASE", "plugin", prop);
         MYSQL_USER = getEnv("MYSQL_USER", "root", prop);
@@ -173,7 +180,7 @@ public class Main extends Plugin {
         }
 
         new BungeeGuardUtils(this);
-        System.out.println("Welcome to MultiBungee ~ With ORM ~ Crafted with love, and a small cache.");
+        System.out.println("Welcome to BungeeGuard ~ Crafted with " + ChatColor.RED + "♥");
         getProxy().setReconnectHandler(new MyReconnectHandler());
         config = new MysqlConfigAdapter(this);
         config.load(true);

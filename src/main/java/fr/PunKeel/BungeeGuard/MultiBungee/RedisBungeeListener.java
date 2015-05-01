@@ -51,7 +51,7 @@ public class RedisBungeeListener implements Listener {
                 if (method.getParameterTypes().length == 2)
                     method.invoke(null, plugin, event);
             } catch (Exception e) {
-                System.err.println("Could not invoke event handler!");
+                System.err.println("Could not invoke event handler for " + event);
                 e.printStackTrace(System.err);
             }
         }

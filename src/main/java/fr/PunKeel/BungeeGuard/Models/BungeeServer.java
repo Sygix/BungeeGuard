@@ -29,4 +29,5 @@ public class BungeeServer extends Model {
     public void setRestricted(boolean isRestricted) {
         setBoolean("restricted", isRestricted);
     }
+
 }

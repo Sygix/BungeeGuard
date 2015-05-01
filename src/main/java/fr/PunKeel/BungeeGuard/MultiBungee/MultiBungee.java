@@ -409,11 +409,11 @@ public class MultiBungee {
     }
 
     public void requestParties(String server) {
-        sendChannelMessage("@" + server + "/partyRequest", getServerId());
+        sendChannelMessage("@" + server + "/partyRequest2", getServerId());
     }
 
     public void replyParties(String server, String data) {
-        sendChannelMessage("@" + server + "/partyReply", data);
+        sendChannelMessage("@" + server + "/partyReply2", data);
     }
 
     public void inviteParty(PartyManager.Party party, UUID joueur) {

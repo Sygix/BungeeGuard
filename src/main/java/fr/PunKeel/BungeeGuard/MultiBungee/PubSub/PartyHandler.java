@@ -156,6 +156,9 @@ public class PartyHandler {
     public static void playerLeaveParty(Main plugin, PubSubMessageEvent e) {
         UUID partyOwner = UUID.fromString(e.getArg(0));
         UUID u = UUID.fromString(e.getArg(1));
+        //noinspection ConstantConditions - occurs if the parsed UUID is invalid
+        if (partyOwner == null || u == null)
+            return;
         PartyManager.Party p = plugin.getPartyManager().getParty(partyOwner);
         String playerName = Main.getMB().getNameFromUuid(u);
         if (p == null)
@@ -179,7 +182,7 @@ public class PartyHandler {
         }
     }
 
-    @PubSubHandler("@partyReply")
+    @PubSubHandler("@partyReply2")
     public static void partyReply(Main plugin, PubSubMessageEvent e) {
         String data = e.getArg(0);
         Type type = new TypeToken<Map<UUID, PartyManager.Party>>() {
@@ -188,7 +191,7 @@ public class PartyHandler {
         plugin.getPartyManager().setParties(Main.getGson().<Map<UUID, PartyManager.Party>>fromJson(data, type));
     }
 
-    @PubSubHandler("@partyRequest")
+    @PubSubHandler("@partyRequest2")
     public static void partyRequest(Main plugin, PubSubMessageEvent e) {
         String serveur = e.getArg(0);
         Main.getMB().replyParties(serveur, Main.getGson().toJson(plugin.getPartyManager().getParties()));

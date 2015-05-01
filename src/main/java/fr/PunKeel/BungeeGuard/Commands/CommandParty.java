@@ -2,7 +2,6 @@ package fr.PunKeel.BungeeGuard.Commands;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import fr.PunKeel.BungeeGuard.Main;
 import fr.PunKeel.BungeeGuard.Managers.PartyManager;
@@ -113,17 +112,6 @@ public class CommandParty extends Command {
         Collection<UUID> friends = plugin.getFriendManager().getOnlineFriends(sender.getUniqueId());
         if (friends.size() == 0) {
             sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Vous n'avez aucun ami en ligne."));
-            return;
-        }
-        friends = Collections2.filter(friends, new Predicate<UUID>() {
-            @Override
-            public boolean apply(UUID uuid) {
-                PartyManager.Party p = PM.getPartyByPlayer(uuid);
-                return p == null;
-            }
-        });
-        if (friends.size() == 0) {
-            sender.sendMessage(fromLegacyText(PartyManager.TAG + ChatColor.RED + "Tous vos amis sont déjà dans une party."));
             return;
         }
         PartyManager.Party p = PM.getPartyByPlayer(sender);

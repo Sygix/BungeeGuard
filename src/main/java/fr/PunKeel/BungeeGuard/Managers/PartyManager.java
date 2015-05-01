@@ -161,7 +161,7 @@ public class PartyManager {
         }
 
         public void addInvitation(UUID u) {
-            if (u == null)
+            if (u == null || isInvited(u))
                 return;
             invitations.add(u);
         }

@@ -109,6 +109,18 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     }
 
     void setServers(HashMap<String, ServerInfo> new_servers, HashMap<String, BungeeServer> _new_servers) {
+        for (String servername : _servers.keySet()) {
+            if (!_new_servers.containsKey(servername))
+                continue;
+            BungeeServer oldS = _servers.get(servername);
+            BungeeServer newS = _new_servers.get(servername);
+            if (oldS.getAddress().equals(newS.getAddress())
+                    && oldS.getName().equals(newS.getAddress())
+                    && oldS.getPrettyName().equals(newS.getPrettyName())
+                    && oldS.getShortName().equals(newS.getShortName())
+                    && oldS.isRestricted() == newS.isRestricted())
+                _new_servers.put(servername, _servers.get(servername));
+        }
         servers.clear();
         servers.putAll(new_servers);
 
@@ -233,6 +245,6 @@ public class MysqlConfigAdapter implements ConfigurationAdapter {
     }
 
     public BungeeServer getServer(String serverName) {
-        return _servers.get(serverName);
+        return _servers.containsKey(serverName) ? _servers.get(serverName) : null;
     }
 }

@@ -1,13 +1,41 @@
-Projet originalement fait pour un serveur français, mais mis dans le domaine de l'open space. Car l'open space, c'est plus swag que l'open source.
+BungeeGuard
+========
 
-Petit frère: https://github.com/Stornitz/UHGestion
+![](http://ci.uhcwork.net/badge/BungeeGuard)
 
-Dedans, il y a du code fait pour du Multi Bungee, le système de friends, la gestion des serveurs, des lobbies, du Ping, un anti spam/flood bancal, et d'autres choses.
+BungeeGuard is the BungeeCord plugin handling everything on the  [UHCGames](http://UHCGames.com) server.
 
-Comme le précédent plugin que j'ai rendu open source, il est livré sans garantie de fonctionnement ni même de support.
+Features
+--------
 
-Venez comme vous êtes, et ne prenez pas les gens pour des cons.
+- Dynamic server list reloading
+- Dynamic configuration (in database)
+- Permissions
+- Friends
+- Party
+- Sanctions (kick, mute, ban)
+- Private messages, ignores
+- Announces and broadcasts
+- Shop interactions with players (grant rank, coins, broadcast a message ...)
 
+Installation
+------------
 
+Install BungeeGuard as a BungeeCord plugin. It has no configuration file, it uses environment variables instead.
+Namely: `SENTRY_ENDPOINT`, `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASS`
 
-With Love.
+Contribute
+----------
+
+- [Issue Tracker](http://git.uhcwork.net/bungee-uhcgames/bungeeguard/issues)
+- [Source Code](http://git.uhcwork.net/bungee-uhcgames/bungeeguard)
+
+Support
+-------
+
+If you are having issues, please let us know via issues.
+
+License
+-------
+
+The project is licensed under the _Apache License 2.0_.

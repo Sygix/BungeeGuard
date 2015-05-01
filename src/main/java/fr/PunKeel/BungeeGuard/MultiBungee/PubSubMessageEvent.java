@@ -1,6 +1,7 @@
 package fr.PunKeel.BungeeGuard.MultiBungee;
 
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Splitter;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Event;
@@ -22,5 +23,14 @@ public class PubSubMessageEvent extends Event {
 
     public String getArg(int i) {
         return (args.size() > i) ? args.get(i) : "";
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("channel", channel)
+                .add("message", message)
+                .omitNullValues()
+                .toString();
     }
 }

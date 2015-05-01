@@ -8,4 +8,8 @@ public class BungeeCommandModel extends Model {
     public String getAction() {
         return getString("action");
     }
+
+    public String getCondition() {
+        return getString("condition");
+    }
 }
