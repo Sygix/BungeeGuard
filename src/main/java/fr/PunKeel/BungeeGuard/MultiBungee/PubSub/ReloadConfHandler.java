@@ -79,10 +79,11 @@ public class ReloadConfHandler {
         }
         plugin.getLogger().info("-Configuration reloaded !-");
 
-
-        plugin.getLogger().info("Reloading bans/mutes");
-        plugin.getSanctionManager().loadBans();
-        plugin.getSanctionManager().loadMutes();
+        if (Main.getRandom().nextInt(1000) == 5) {
+            plugin.getLogger().info("Reloading bans/mutes");
+            plugin.getSanctionManager().loadBans();
+            plugin.getSanctionManager().loadMutes();
+        }
 
     }
 
