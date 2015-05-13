@@ -32,8 +32,8 @@ public class CommandFriend extends Command {
             return Ints.compare(scoreA, scoreB);
         }
     };
-    FriendManager FM;
-    MultiBungee MB;
+    final FriendManager FM;
+    final MultiBungee MB;
     Joiner joiner = Joiner.on(ChatColor.RESET + ", " + ChatColor.YELLOW);
 
     public CommandFriend(final Main plugin) {

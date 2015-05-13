@@ -11,7 +11,7 @@ import net.md_5.bungee.api.plugin.Command;
 import java.util.UUID;
 
 public class CommandSay extends Command {
-    Main plugin;
+    final Main plugin;
 
     public CommandSay(Main plugin) {
         super("say", "bungee.say");

@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class CommandId extends Command {
+    final Joiner joiner;
     private final PermissionManager PM;
-    Joiner joiner;
 
     public CommandId(Main plugin) {
         super("id", "bungee.command.id");

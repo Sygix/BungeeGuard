@@ -59,6 +59,8 @@ public class Main extends Plugin {
     public static Gson gson = new Gson();
     @Getter
     static ServerManager serverManager;
+    @Getter
+    final FriendManager friendManager = new FriendManager(this);
     private final List<String> silencedServers = new ArrayList<>();
     @Getter
     private final SanctionManager sanctionManager = new SanctionManager(this);
@@ -70,8 +72,6 @@ public class Main extends Plugin {
     PluginMessageManager pluginMessageManager = new PluginMessageManager(this);
     @Getter
     MysqlConfigAdapter config;
-    @Getter
-    FriendManager friendManager = new FriendManager(this);
     private long startTime;
     @Getter
     private PartyManager partyManager = new PartyManager();
@@ -261,7 +261,7 @@ public class Main extends Plugin {
     private void setupStopSchedule() {
         // Auto reboot après 6 heures, dès qu'il y a peu de joueurs
         getProxy().getScheduler().schedule(this, new Runnable() {
-            Title title = ProxyServer.getInstance().createTitle()
+            final Title title = ProxyServer.getInstance().createTitle()
                     .fadeIn(5)
                     .fadeOut(5)
                     .stay(15);

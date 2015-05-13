@@ -5,7 +5,6 @@ import com.google.common.collect.Collections2;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import fr.PunKeel.BungeeGuard.Main;
-import fr.PunKeel.BungeeGuard.MultiBungee.MultiBungee;
 import fr.PunKeel.BungeeGuard.PluginMessage.FriendHandler;
 import fr.PunKeel.BungeeGuard.PluginMessage.FriendHandler.FriendData;
 import net.md_5.bungee.Util;

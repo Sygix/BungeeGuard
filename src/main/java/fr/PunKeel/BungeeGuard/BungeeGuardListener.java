@@ -50,15 +50,20 @@ public class BungeeGuardListener implements Listener {
 
     private static final String FRIEND_LOGIN = ChatColor.AQUA + "[" + ChatColor.RED + "❤" + ChatColor.AQUA + "] " + ChatColor.YELLOW + "%s" + ChatColor.AQUA + " vient de se connecter.";
     private static final String FRIEND_LOGOUT = ChatColor.AQUA + "[" + ChatColor.RED + "❤" + ChatColor.AQUA + "] " + ChatColor.YELLOW + "%s" + ChatColor.RED + " vient de se déconnecter.";
-    private static final BaseComponent[] header = new ComponentBuilder("MC.UHCGames.COM")
+    private static final BaseComponent[] header = new ComponentBuilder("Vous jouez sur")
+            .color(ChatColor.AQUA)
+            .append("UHCGames")
             .color(ChatColor.GOLD)
-            .bold(true).create();
-    private static final BaseComponent[] footer = new ComponentBuilder("Store")
+            .append(" - ")
+            .color(ChatColor.AQUA)
+            .append("mc.uhcgames.com")
             .color(ChatColor.RED)
-            .bold(true)
-            .append(".uhcgames.com")
-            .bold(true)
-            .color(ChatColor.AQUA).create();
+            .create();
+    private static final BaseComponent[] footer = new ComponentBuilder("Boutique:")
+            .color(ChatColor.GREEN)
+            .append("store.uhcgames.com")
+            .color(ChatColor.GOLD)
+            .create();
     private static final String MOTD_MAINTENANCE = ChatColor.BLACK + "        " +
             ChatColor.WHITE + ChatColor.BOLD + "» " +
             ChatColor.RED + ChatColor.UNDERLINE + ChatColor.BOLD + "Serveur en maintenance" +
@@ -97,10 +102,10 @@ public class BungeeGuardListener implements Listener {
         playersPing = players;
     }
 
+    final ServerManager SM;
     private final Main plugin;
     private final Method handshakeMethod;
     private final Set<UUID> firstJoin = new HashSet<>();
-    ServerManager SM;
 
     public BungeeGuardListener(final Main plugin) {
         this.plugin = plugin;
@@ -168,8 +173,11 @@ public class BungeeGuardListener implements Listener {
         Title title = ProxyServer.getInstance().createTitle();
         title.fadeOut(25);
         title.title(TextComponent.fromLegacyText(ChatColor.GOLD + "UHCGames"));
-        title.subTitle(TextComponent.fromLegacyText(ArrayUtils.rand(plugin.getConfig().getWelcomeSubtitles())));
-        title.send(p);
+        String welcomeTitle = ArrayUtils.rand(plugin.getConfig().getWelcomeSubtitles());
+        if (welcomeTitle != null && !welcomeTitle.isEmpty()) {
+            title.subTitle(TextComponent.fromLegacyText(welcomeTitle));
+            title.send(p);
+        }
         p.sendMessage(TextComponent.fromLegacyText(EMPTY_MESSAGE));
         Group g = plugin.getPermissionManager().getMainGroup(p.getUniqueId());
         p.sendMessage(TextComponent.fromLegacyText(String.format(WELCOME_MSG_1, g.getChatPrefix() + p.getName())));

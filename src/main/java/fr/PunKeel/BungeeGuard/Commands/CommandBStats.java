@@ -11,7 +11,7 @@ import org.javalite.activejdbc.Base;
 
 public class CommandBStats extends Command {
     private final static int VERSION_18 = 47;
-    Main plugin;
+    final Main plugin;
 
     public CommandBStats(Main plugin) {
         super("b:stats", "bungee.bstats");

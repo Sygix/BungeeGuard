@@ -17,8 +17,8 @@ public class CommandFriendVIP extends Command {
     private static final BaseComponent[] already_given = TextComponent.fromLegacyText(ChatColor.RED + "Vous avez déjà offert un VIP il y a moins d'une heure.");
     private static final BaseComponent[] unknown_user = TextComponent.fromLegacyText(ChatColor.RED + "Le nom spécifié semble incorrect.");
     private static final BaseComponent[] vip_ajoute = TextComponent.fromLegacyText(ChatColor.GREEN + "*Pof* Une heure de VIP vient d'être offerte !");
-    Main plugin;
-    int cooldown = 3600; // temps en secondes entre deux utilisations
+    final Main plugin;
+    final int cooldown = 3600; // temps en secondes entre deux utilisations
 
     public CommandFriendVIP(Main plugin) {
         super("friendvip", "bungee.command.friendvip");

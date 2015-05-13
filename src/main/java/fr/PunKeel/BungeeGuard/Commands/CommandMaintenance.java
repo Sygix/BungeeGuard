@@ -14,11 +14,10 @@ import net.md_5.bungee.api.plugin.Command;
 import java.util.Collection;
 
 public class CommandMaintenance extends Command {
+    final Joiner joiner = Joiner.on(", ").skipNulls();
+    final ServerManager SM;
+    final MultiBungee MB;
     private final Main plugin;
-    Joiner joiner = Joiner.on(", ").skipNulls();
-    ServerManager SM;
-
-    MultiBungee MB;
 
     public CommandMaintenance(Main plugin) {
         super("maintenance", "bungee.maintenance");
