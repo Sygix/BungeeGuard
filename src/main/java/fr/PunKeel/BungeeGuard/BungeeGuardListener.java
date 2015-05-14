@@ -50,7 +50,7 @@ public class BungeeGuardListener implements Listener {
 
     private static final String FRIEND_LOGIN = ChatColor.AQUA + "[" + ChatColor.RED + "❤" + ChatColor.AQUA + "] " + ChatColor.YELLOW + "%s" + ChatColor.AQUA + " vient de se connecter.";
     private static final String FRIEND_LOGOUT = ChatColor.AQUA + "[" + ChatColor.RED + "❤" + ChatColor.AQUA + "] " + ChatColor.YELLOW + "%s" + ChatColor.RED + " vient de se déconnecter.";
-    private static final BaseComponent[] header = new ComponentBuilder("Vous jouez sur")
+    private static final BaseComponent[] header = new ComponentBuilder("Vous jouez sur ")
             .color(ChatColor.AQUA)
             .append("UHCGames")
             .color(ChatColor.GOLD)
@@ -59,7 +59,7 @@ public class BungeeGuardListener implements Listener {
             .append("mc.uhcgames.com")
             .color(ChatColor.RED)
             .create();
-    private static final BaseComponent[] footer = new ComponentBuilder("Boutique:")
+    private static final BaseComponent[] footer = new ComponentBuilder("Boutique: ")
             .color(ChatColor.GREEN)
             .append("store.uhcgames.com")
             .color(ChatColor.GOLD)
