@@ -14,7 +14,7 @@ public class CommandHelp extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Alerte enlèvement !"));
-        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vu pour la dernière fois le 14 Mai 2015," +
+        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Vue pour la dernière fois le 14 Mai 2015," +
                 "cette commande est depuis portée disparue et activement recherchée par les forces de l'ordre."));
         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Si vous possédez la moindre information, " +
                 "contactez-nous sur Twitter: @UHCGames."));
